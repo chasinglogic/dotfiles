@@ -1,0 +1,19 @@
+---
+prompt_for_commit_message: true
+always_sync_modules: true
+mappings:
+  - match: ".*gpg-agent.conf"
+    target_os:
+      - "Darwin"
+
+hooks:
+  after_sync:
+    - emacs -batch -f batch-byte-compile ~/.emacs.d/**/*.el
+  before_link:
+    - emacs --batch -l org README.org -f org-babel-tangle
+  after_link:
+    - "[ ! -f $HOME/.gnupg/pubring.kbx ] && $HOME/.local/bin/export_keybase"
+
+modules:
+  # My encrypted secret files
+  - repo: keybase://private/chasinglogic/secrets
