@@ -501,7 +501,7 @@
     #+BEGIN_SRC bash :tangle .bashrc
       ORANGE=$(tput setaf 166)
       RED=$(tput setaf 160)
-      VIOLET="\e[0;35;40m"
+      VIOLET="\e[35m"
       BLUE=$(tput setaf 33)
       CYAN=$(tput setaf 37)
       NO_COLOR="\e[0m"
