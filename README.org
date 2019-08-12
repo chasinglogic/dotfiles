@@ -228,8 +228,8 @@
      it often anymore.
 
      #+BEGIN_SRC bash :tangle .bashrc 
-       if [[ -f ~/.bash :tangle .bashrc_extras ]]; then
-           source ~/.bash :tangle .bashrc_extras
+       if [[ -f ~/.bashrc_extras ]]; then
+           source ~/.bashrc_extras
        fi
      #+END_SRC
 
@@ -239,7 +239,7 @@
      #+BEGIN_SRC bash :tangle .bashrc 
        if [[ $(uname) == "Darwin" ]]; then
            source ~/.profile
-           source ~/.bash :tangle .bashrc_profile
+           source ~/.bashrc
        fi
      #+END_SRC
 
@@ -490,7 +490,7 @@
     PS1 can cause some programs to go totally whack if it's enabled for
     non-interactive sessions.
 
-    #+BEGIN_SRC bash 
+    #+BEGIN_SRC bash :tangle .bashrc 
       if [ -t 1 ]; then
     #+END_SRC
 
@@ -498,10 +498,10 @@
     work but they don't always actually come out to match the English
     names of the variables. So YMMV.
 
-    #+BEGIN_SRC bash
+    #+BEGIN_SRC bash :tangle .bashrc
       ORANGE=$(tput setaf 166)
       RED=$(tput setaf 160)
-      VIOLET=$(tput setaf 61)
+      VIOLET="\e[0;35;40m"
       BLUE=$(tput setaf 33)
       CYAN=$(tput setaf 37)
       NO_COLOR="\e[0m"
@@ -513,7 +513,7 @@
     substitute out the =refs/heads/= and what we're left with is
     =branch-name=.
 
-    #+BEGIN_SRC bash
+    #+BEGIN_SRC bash :tangle .bashrc
       function parse_git_branch {
           ref=$(git symbolic-ref HEAD 2> /dev/null) || return
           echo "${ref#refs/heads/} "
@@ -532,7 +532,7 @@
     =lambda_or_delta= then calls this to check if the repo is dirty and
     if so it =echo='s the delta symbol instead of the lambda symbol.
 
-    #+BEGIN_SRC bash
+    #+BEGIN_SRC bash :tangle .bashrc
       function asterisk_if_dirty {
           [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]] && echo "*"
       }
@@ -549,7 +549,7 @@
     Super simple function that adds =!!= in red to the front of the
     prompt if the last command exited with code 1.
     
-    #+BEGIN_SRC bash
+    #+BEGIN_SRC bash :tangle .bashrc
       function last_command_status {
           if [[ $? == "0" ]]; then
               return
@@ -567,7 +567,7 @@
     =pwd= command output and returns a string that looks like
     =pwd_parent/pwd=
 
-    #+BEGIN_SRC bash
+    #+BEGIN_SRC bash :tangle .bashrc
       # Make the pwd look pretty
       function pretty_pwd {
           dir=`pwd | awk -F\/ '{print $(NF-1),$(NF)}' | sed 's/ /\\//'`
@@ -579,8 +579,8 @@
     defines the colors of each section as defined by the functions
     above.
     
-    #+BEGIN_SRC bash
-      PS1="\[$RED\]\$(last_command_status)\[$VIOLET\]@$HOSTNAME\[$BLUE\]\$(pretty_pwd) \[$CYAN\]\$(parse_git_branch)\[$ORANGE\]\$(lambda_or_delta) \[$NO_COLOR\]"
+    #+BEGIN_SRC bash :tangle .bashrc
+      PS1="\[$RED\]\$(last_command_status)\[$VIOLET\]@$HOSTNAME\[$BLUE\] \$(pretty_pwd) \[$CYAN\]\$(parse_git_branch)\[$ORANGE\]\$(lambda_or_delta) \[$NO_COLOR\]"
       fi
     #+END_SRC
 
@@ -898,7 +898,100 @@
        echo "Must include a JIRA ticket or WIP in your commit message"
        exit 1
      #+END_SRC
+
+**** pre-push
+
+     Before the [[https://github.com/evergreen-ci/evergreen/wiki/Commit-Queue][Evergreen Commit Queue]] it was possible to push topic
+     branches to the mongodb/mongo repository. It's still possible To
+     prevent this I wrote this pre-push hook that validates, when
+     you're pushing to a MongoDB repository, that the branch your
+     pushing to isn't a topic branch. If it's not a topic branch then
+     it confirms that you actually want to push to whatever branch you
+     actually are pushing to.
      
+     First get the name of the currently checked out local
+     branch. This works the same as in my [[Bash Prompt]].
+     
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       #!/bin/bash
+
+       current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+     #+END_SRC
+
+     Next get the command line of the currently running git command
+     using =ps= to find it by our parent PID.
+
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       push_command=$(ps -ocommand= -p $PPID)
+     #+END_SRC
+
+     Now grab the remote url for pushing to origin. Sometime in the
+     future I'll probably need to use a fork based workflow and this
+     will need to be upstream.
+     
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       origin_remote=$(git remote -v | grep origin | grep push)
+     #+END_SRC
+
+     Check if the =origin_remote= is a MongoDB repository. If it's not
+     then it doesn't matter what we're pushing so =exit 0=.
+     
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       if [[ $origin_remote != *"mongo"* && $origin_remote != *"10gen"* ]]; then
+           echo "Not pushing a mongodb repo. Safe to push to origin."
+           exit 0
+       fi
+     #+END_SRC
+
+     Next verify we are pushing to origin. If not then =exit 0=
+     because it means we are pushing to our fork where we are allowed
+     to create topic branches.
+
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       if [[ "$push_command" != *"origin"* ]]; then
+           echo "Not pushing to origin, safe to push."
+           exit 0
+       fi
+     #+END_SRC
+
+     Next create a function called confirm that steals control of the
+     terminal from the parent PID and pauses execution using some
+     nifty tricks with =exec=. It checks if scons is available and if
+     so it will run lint. It then asks for a one letter =y= or
+     =n= confirmation that you actually want to keep pushing where you
+     were pushing to. If =n= then it =exit 1=.
+
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       function confirm() {
+           exec < /dev/tty
+
+           read -p "Are you sure you want to push to $current_branch? " -n 1 -r
+           echo    # (optional) move to a new line
+
+           exec <&- 
+
+           if [[ $REPLY =~ ^[Nn]$ ]]
+           then
+               exit 1
+           fi
+       }
+     #+END_SRC
+
+     Next we check if we are not in a topic branch by verifying the
+     current branch name against known patterns of branches that
+     are not topic branches. These branches include any v3.X branch,
+     v4.X branch, and master. If we are trying to push to a valid
+     branch then run confirm from above.
+     
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       case $current_branch in
+           "master") confirm ;;
+           "v4."*) confirm ;;
+           "v3."*) confirm ;;
+           ,*) echo "Trying to push a topic branch: $current_branch to origin, preventing." && exit 1 ;;
+       esac
+     #+END_SRC
+   
 ** =ctags=
 
    =ctags= has many options and some of them make the most sense to
@@ -1013,110 +1106,6 @@
    the  mapping.   To  specify  restore the default language mappings for all lan‐
    guages, specify "--langmap=default".  Note  that  file  extensions  are  tested
    before file name patterns when inferring the language of a file.
-
-**** pre-push
-
-     Before the [[https://github.com/evergreen-ci/evergreen/wiki/Commit-Queue][Evergreen Commit Queue]] it was possible to push topic
-     branches to the mongodb/mongo repository. It's still possible To
-     prevent this I wrote this pre-push hook that validates, when
-     you're pushing to a MongoDB repository, that the branch your
-     pushing to isn't a topic branch. If it's not a topic branch then
-     it confirms that you actually want to push to whatever branch you
-     actually are pushing to.
-     
-     First get the name of the currently checked out local
-     branch. This works the same as in my [[Bash Prompt]].
-     
-     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
-       #!/bin/bash
-
-       current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-     #+END_SRC
-
-     Next get the command line of the currently running git command
-     using =ps= to find it by our parent PID.
-
-     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
-       push_command=$(ps -ocommand= -p $PPID)
-     #+END_SRC
-
-     Now grab the remote url for pushing to origin. Sometime in the
-     future I'll probably need to use a fork based workflow and this
-     will need to be upstream.
-     
-     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
-       origin_remote=$(git remote -v | grep origin | grep push)
-     #+END_SRC
-
-     Check if the =origin_remote= is a MongoDB repository. If it's not
-     then it doesn't matter what we're pushing so =exit 0=.
-     
-     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
-       if [[ $origin_remote != *"mongo"* && $origin_remote != *"10gen"* ]]; then
-           echo "Not pushing a mongodb repo. Safe to push to origin."
-           exit 0
-       fi
-     #+END_SRC
-
-     Next verify we are pushing to origin. If not then =exit 0=
-     because it means we are pushing to our fork where we are allowed
-     to create topic branches.
-
-     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
-       if [[ "$push_command" != *"origin"* ]]; then
-           echo "Not pushing to origin, safe to push."
-           exit 0
-       fi
-     #+END_SRC
-
-     Next create a function called confirm that steals control of the
-     terminal from the parent PID and pauses execution using some
-     nifty tricks with =exec=. It checks if scons is available and if
-     so it will run lint. It then asks for a one letter =y= or
-     =n= confirmation that you actually want to keep pushing where you
-     were pushing to. If =n= then it =exit 1=.
-
-     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
-       function confirm() {
-           exec < /dev/tty
-
-           read -p "Are you sure you want to push to $current_branch? " -n 1 -r
-           echo    # (optional) move to a new line
-
-           exec <&- 
-
-           if [[ $REPLY =~ ^[Nn]$ ]]
-           then
-               exit 1
-           fi
-       }
-     #+END_SRC
-
-     Next we check if we are not in a topic branch by verifying the
-     current branch name against known patterns of branches that
-     are not topic branches. These branches include any v3.X branch,
-     v4.X branch, and master. If we are trying to push to a valid
-     branch then run confirm from above.
-     
-     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
-       case $current_branch in
-           "master") confirm ;;
-           "v4."*) confirm ;;
-           "v3."*) confirm ;;
-           ,*) echo "Trying to push a topic branch: $current_branch to origin, preventing." && exit 1 ;;
-       esac
-     #+END_SRC
-
-     Finally, run =lint= if =buildscripts/scons.py= is available.
-
-     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
-       PROJECT_ROOT=$(git rev-parse --show-toplevel)
-       if [[ -f $PROJECT_ROOT/buildscripts/scons.py ]]; then
-           echo "In MongoDB server repo, running lint..."
-           $PROJECT_ROOT/buildscripts/scons.py lint
-           exit $?
-       fi
-     #+END_SRC
 
 ** Local Convenience Scripts
 *** AWS: get_password
