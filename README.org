@@ -1,0 +1,1845 @@
+#+PROPERTY: header-args :mkdirp yes
+
+* ChasingLogic's Dotfiles
+
+  These are my dotfiles in a literate Emacs Org mode file. I do not keep
+  my Emacs configuration in a literate org mode file for various reasons
+  but every other dotfile I maintain gets generated from this file.
+
+  You can generate the files from the command line with:
+
+  #+BEGIN_SRC bash 
+    emacs --batch -l org README.org -f org-babel-tangle
+  #+END_SRC
+
+  If you want to use them to their fullest I recommend checking out my
+  [[https://github.com/chasinglogic/dfm][dotfile manager]]. If you use =dfm= it will tangle this file for you.
+  
+** Bash Configuration
+*** =shopt='s
+    When writing the history file append to it instead of overwriting
+    it. This allows me to share history between multiple terminal
+    Windows. Additionally we're telling history to not write duplicates.
+
+    #+BEGIN_SRC bash :tangle .bashrc
+      export HISTCONTROL=ignoredups:erasedups  
+      shopt -s histappend
+    #+END_SRC
+
+    Constantly update the values of LINES and COLUMNS after each command
+    if necessary. This makes some TUIs play much better with resizing
+    windows.
+
+    #+BEGIN_SRC bash :tangle .bashrc
+      shopt -s checkwinsize
+    #+END_SRC
+
+    Allow recursive globbing with =**=.
+
+    #+BEGIN_SRC bash :tangle .bashrc
+      shopt -s globstar
+    #+END_SRC
+
+*** Environment
+**** =.profile=
+     
+     I've spent a lot of time trying to make my login environment
+     match my expected environment. This is because Emacs uses the
+     login environment for sub-processes and shells so I want them to
+     work the same as in my normal terminal emulator. I've also tried
+     to make it clean and idempotent.
+
+***** Functions
+      First we create a function for sourcing other files. It will
+      perform a simple file existence check and if found source it.
+
+      #+BEGIN_SRC bash :tangle .profile
+        function source_if_exists() {
+            if [[ -f $1 ]]; then
+                source $1
+            fi
+        }
+      #+END_SRC
+
+      Next create a function that adds a directory to the =$PATH= if
+      the directory exists and is not already in the =$PATH=.
+
+      #+BEGIN_SRC bash :tangle .profile
+        function add_to_path() {
+            if [[ "$PATH" != "${PATH/$1/}" ]]; then
+                return 0;
+            fi
+
+            if [[ -d $1 ]]; then
+                export PATH="$1:$PATH"
+            fi
+        }
+      #+END_SRC
+
+***** Static Environment Variables
+      
+      Now we set some environment variables that are login safe and
+      always statically defined.
+
+      [[https://packer.io][Packer]] is a tool I use to build system images sometimes and it's
+      colorized output can really cause some problems, such as when
+      running from a Makefile. I don't think the colors add a lot of
+      value so I just disable them globally.
+      
+      #+BEGIN_SRC bash :tangle .profile
+        export PACKER_NO_COLOR="1"
+      #+END_SRC
+      
+      This defaults GPG to use the current =tty= on MacOS since there
+      isn't a nice pinentry option there that works all the time.
+      
+      #+BEGIN_SRC bash :tangle .profile
+        export GPG_TTY=$(tty)
+      #+END_SRC
+
+      I set =$CARGOBIN= to the location that =cargo install= puts
+      binaries. This is simply for adding to the =$PATH= later.
+      
+      #+BEGIN_SRC bash :tangle .profile
+        export CARGOBIN="$HOME/.cargo/bin"
+      #+END_SRC
+
+      Set =$GOPATH= so it doesn't dump stuff in =$HOME/go=. I don't
+      write go much anymore but this is still here for whenever I need
+      to quickly touch on something.
+      
+      #+BEGIN_SRC bash :tangle .profile
+        export GOPATH="$HOME/Code/go"
+      #+END_SRC
+
+      Set =LANG= settings for better compatibility with older terminals
+      and emulators.
+      
+      #+BEGIN_SRC bash :tangle .profile
+        export LANG=en_US.UTF-8
+        export LC_ALL="en_US.UTF-8"
+      #+END_SRC
+
+      Set default bash history settings. I overwrite these in the
+      =.bashrc= but we set them here as well for use with external
+      programs.
+      
+      #+BEGIN_SRC bash :tangle .profile
+        # don't put duplicate lines or lines starting with space in the history.
+        # See bash(1) for more options
+        export HISTCONTROL=ignoreboth
+        # number of commands to save in history file
+        export HISTSIZE=1000
+        # number of lines to save in history file
+        export HISTFILESIZE=2000
+      #+END_SRC
+
+      If =emacsclient= is available on this system then set =$EDITOR=
+      and =$VISUAL= to it. Otherwise make =$EDITOR= set to =vi=.
+      
+      #+BEGIN_SRC bash :tangle .profile
+        if [[ -x $(which emacsclient) ]]; then
+            export EDITOR="emacsclient --create-frame --tty --alternate-editor=vi"
+            export VISUAL="$EDITOR"
+        else
+            export EDITOR="vi"
+        fi
+      #+END_SRC
+
+      Some Mac specific environment fixes 
+      
+      #+BEGIN_SRC bash :tangle .profile
+        # Mac specific fixes
+        if [[ "$(uname)" == "Darwin" ]]; then
+      #+END_SRC
+
+      Fix fork problems with Ansible on MacOS. It can cause the
+      python interpreter to segfault. This fix is taken from this
+      [[https://github.com/ansible/ansible/issues/32499][Github Issue #32499]] on the Ansible issue tracker.
+      
+      #+BEGIN_SRC bash :tangle .profile
+        export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+      #+END_SRC
+
+      Make =ls= colors work a little better on MacOS.
+      #+BEGIN_SRC bash :tangle .profile
+        export CLICOLOR=1
+      #+END_SRC
+
+      End the if MacOS specific variables.
+      
+      #+BEGIN_SRC bash :tangle .profile
+        fi
+      #+END_SRC
+      
+***** Sourcing other Environment scripts
+
+      Source =$HOME/.env.bash= if it exists. This file is used on some
+      of my systems to store secrets or other sensitive settings.
+
+      #+BEGIN_SRC bash :tangle .profile
+        source_if_exists $HOME/.env.bash
+      #+END_SRC
+
+      Some of my systems have the nix package manager set up and it
+      requires that you source this script to make it work. 
+
+      #+BEGIN_SRC bash :tangle .profile 
+        source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
+      #+END_SRC
+
+
+***** Setting up the =$PATH=
+
+      Make sure all of these directories are in the =$PATH= on systems
+      they exist. This is the reason that the =add_to_path= function
+      is idempotent because not all of these directories exist on all
+      my systems.
+
+      #+BEGIN_SRC bash :tangle .profile
+        add_to_path $CARGOBIN
+        add_to_path $GOPATH/bin
+        add_to_path $HOME/.cargo/bin
+        add_to_path $HOME/.local/bin
+        add_to_path /Users/chasinglogic/.cask/bin
+        add_to_path /home/chasinglogic/.cask/bin
+        add_to_path /opt/local/bin
+        add_to_path /usr/local/bin
+        add_to_path /usr/local/sbin
+        add_to_path /usr/bin
+        add_to_path /bin
+      #+END_SRC
+
+***** Miscellaneous
+
+      Here we do some final setup to make utilities behave a little
+      better on systems which support it. For the lesspipe change see
+      =man lesspipe=.
+
+      #+BEGIN_SRC bash :tangle .profile 
+        [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+        [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
+      #+END_SRC
+
+**** =.bashrc= environment setup
+
+     If my bash .bashrc_extras file exists source it. I used to hold
+     some secrets or other machine specific stuff in here. I don't use
+     it often anymore.
+
+     #+BEGIN_SRC bash :tangle .bashrc 
+       if [[ -f ~/.bash :tangle .bashrc_extras ]]; then
+           source ~/.bash :tangle .bashrc_extras
+       fi
+     #+END_SRC
+
+     If on MacOS we need to source =~/.profile= and =~/.bash :tangle .bashrc_profile=
+     because shells be whack on MacOS yo.
+
+     #+BEGIN_SRC bash :tangle .bashrc 
+       if [[ $(uname) == "Darwin" ]]; then
+           source ~/.profile
+           source ~/.bash :tangle .bashrc_profile
+       fi
+     #+END_SRC
+
+*** Aliases and Functions that behave like Aliases
+**** Emacs and Dotfiles
+     
+     These functions allow me to reasonably use emacsclient with
+     different options. =et= spawns an in-terminal emacsclient while
+     =ec= spawns a graphical emacsclient. =et= importantly falls back to
+     =vi= if the emacs daemon isn't running, but let's be honest, it's
+     always running.
+
+     #+BEGIN_SRC bash :tangle .bashrc 
+       function et() {
+           emacsclient --tty -a 'vi' $@
+       }
+
+       function ec() {
+           emacsclient --no-wait $@
+       }
+     #+END_SRC
+
+     Sometimes I just need to get to my dotfiles quickly. Use my dotfile
+     manager's =where= feature to find the dir and switch there.
+
+     #+BEGIN_SRC bash :tangle .bashrc 
+       function dotfiles() {
+           cd $(dfm where)
+       }
+     #+END_SRC
+     
+**** ls and cd aliases for quick movement
+
+     This sets up three =ls= aliases. =ll= runs =ls= with the long
+     listing, list all (hidden), and classify. The classify option adds
+     special characters to the end of files (and there symlink targets)
+     to gives some information about them. For example =*=
+     indicates a file is executable.
+     
+     #+BEGIN_SRC bash :tangle .bashrc 
+       alias ll="ls -alF"
+       alias la="ls -a"
+       alias l="ls -CF"
+     #+END_SRC
+
+     This sets up three aliases. One is a "doh" alias to fix what happens
+     when I forget a space when trying to run =cd ..= and instead type
+     =cd..=. The other two switch me to commonly accessed directories
+     where I store git repositories.
+
+     #+BEGIN_SRC bash :tangle .bashrc 
+       alias cd..="cd .."
+       alias cdc="cd $HOME/Code"
+       alias cdw="cd $HOME/Work"
+     #+END_SRC
+
+**** Package Managers
+
+     At some point in my life I've used all these package
+     managers. I've also forgotten to sudo them so I make sure that
+     doesn't happen anymore with these aliases.
+
+     #+BEGIN_SRC bash :tangle .bashrc
+       alias apt="sudo apt"
+       alias zyp="sudo zypper"
+       alias dnf="sudo dnf"
+       alias pca="pacaur"
+       alias pac="sudo pacman"
+       alias pacman="sudo pacman"
+     #+END_SRC
+
+**** Git Aliases
+
+     Reduce key presses by making my most used git commands three or
+     less letters.
+
+     #+BEGIN_SRC bash :tangle .bashrc 
+       alias g="git"
+       alias gc="git commit -v"
+       alias ga="git add"
+       alias gb="git branch"
+       alias gp="git push"
+       alias gpl="git pull"
+       alias gck="git checkout"
+       alias gcp="git cherry-pick"
+       alias gst="git status"
+       alias gru="git remote update"
+     #+END_SRC
+
+**** AWS and other DevOps aliases
+
+     This just gives me aliases that match the services I want to
+     use. Also terraform is a lot of letters so make it two since I run
+     it so much.
+
+     #+BEGIN_SRC bash :tangle .bashrc 
+       alias ec2="aws ec2"
+       alias s3="aws s3"
+       alias tf="terraform"
+     #+END_SRC
+
+**** Python / Virtualenvs
+
+     Shorten common Python commands and virtualenv creation.
+
+     #+BEGIN_SRC bash :tangle .bashrc
+       alias p="python"
+       alias p3="python3"
+       alias ve="python3 -m venv"
+       alias venv="python3 -m venv"
+     #+END_SRC
+
+     This function checks for my two most common virtualenv names and
+     if they exist it sources it. Otherwise it creates a virtualenv
+     then sources that. I use virtualenv wrapper mostly now but this is
+     really handy for short term python projects.
+
+     #+BEGIN_SRC bash :tangle .bashrc 
+       function v() {
+           if [ -d .venv ]; then
+               source .venv/bin/activate
+           elif [ -d venv ]; then
+               source venv/bin/activate
+           else
+               ve .venv
+               v
+           fi
+       }
+     #+END_SRC
+
+*** =virtualenvwrapper=
+
+    On MacOS =virtualenvwrapper= gets stored in =/usr/local/bin= so
+    check if we have it there and load it.
+
+    #+BEGIN_SRC bash :tangle .bashrc 
+      if [[ -f /usr/local/bin/virtualenvwrapper.sh ]]; then
+          export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
+          source /usr/local/bin/virtualenvwrapper.sh
+      fi
+    #+END_SRC
+    
+*** Projector integration
+
+    I wrote a cool git repo managemen ttool called [[https://github.com/chasinglogic/projector][Projector]] that I use a lot. One of the
+    features is searching for projects by name. This function lets me
+    type =sp proj-name= and cd to it instantly. Additionally it will
+    check if there is a virtualenv made by =virtualenvwrapper= with the
+    same name as the project and if so it will activate it.
+
+    #+BEGIN_SRC bash :tangle .bashrc 
+      function sp() {
+          PROJ_NAME=""
+          if [[ -n $1 ]]; then
+              PROJ_NAME="$1"
+          else
+              echo -n "Project name: "
+              read PROJ_NAME
+          fi
+
+          cd $(projector find $PROJ_NAME)
+          if [[ -d $(pwd)/.git ]]; then
+              NAME=$(basename $(git rev-parse --show-toplevel))
+              if [[ -d ~/.virtualenvs/$NAME ]]; then
+                  workon $NAME
+              fi
+          fi
+      }
+    #+END_SRC
+
+*** tmux integration
+
+    Back in the day I used to be a heavy tmux user. I don't use it so
+    much anymore, because Emacs, but I keep these around for those
+    times when I really do need it.
+
+    =new_sess= will create the given session by name if it does not
+    exist. It will then either attach to it or if already in a tmux
+    session it will switch the current client to it.
+
+    #+BEGIN_SRC bash :tangle .bashrc 
+      function new_sess {
+          tmux has-session -t $1
+          if [ $? != 0 ]; then
+              tmux new-session -d -s $1
+          fi
+
+          if [[ $TMUX != "" ]]; then
+              tmux switch-client -t $1
+          else
+              tmux attach -t $1
+          fi
+      }
+    #+END_SRC
+
+    A one letter function =t= is how I make most of my new sessions. It
+    grabs the basename of the current directory does some =sed='ing to
+    remove invalid characters and calls new_sess with that name.
+    
+    #+BEGIN_SRC bash :tangle .bashrc 
+      function t {
+          new_sess $(sed s/\\./_/g $(sed s%/%_%g $(basename $(pwd))))
+      }
+    #+END_SRC
+    
+    =syncpanes= is just an easier to remember way to make all panes in the
+    current tmux window sync. You call it with 1 to enable and 0 to disable.
+
+    #+BEGIN_SRC bash :tangle .bashrc 
+      function syncpanes() {
+          tmux setw synchronize-panes $1
+      }
+    #+END_SRC
+
+    =tssh= creates a tmux session locally that uses a sanitized
+    version of the hostname / ip you're =ssh='ing to. It then runs
+    =ssh= to that host. It uses bash :tangle .bashrc magic variable syntax to get the
+    last argument to ssh and assumes that's the hostname. It then
+    converts that to a safe tmux session name by turning all dots into
+    dashes and turning the =@= symbol into =-at-=. This makes session
+    names like =nc-chasinglogic-io= or =mat-at-nc-chasinglogic-io=
+    which is fairly human readable. It will then pass all arguments to
+    ssh when creating the tmux session, if the tmux session already
+    exists it will just switch to it.
+
+    #+BEGIN_SRC bash :tangle .bashrc 
+      function tssh() {
+          HOST_NAME=${@: -1}
+          SAFE_NAME=${HOST_NAME//./-}
+          SAFE_NAME=${SAFE_NAME//@/-at-}
+
+          tmux has-session -t $SAFE_NAME
+          if [ $? != 0 ]; then
+              tmux new-session -d -s $SAFE_NAME "ssh $@"
+          fi
+
+          if [[ $TMUX != "" ]]; then
+              tmux switch-client -t $SAFE_NAME
+          else
+              tmux attach -t $SAFE_NAME
+          fi
+      }
+    #+END_SRC
+
+*** Bash Prompt
+
+    =if [ -t 1 ]= checks if we're running an interactive terminal. The
+    PS1 can cause some programs to go totally whack if it's enabled for
+    non-interactive sessions.
+
+    #+BEGIN_SRC bash 
+      if [ -t 1 ]; then
+    #+END_SRC
+
+    Set the colors we will use in the bash prompt. These values always
+    work but they don't always actually come out to match the English
+    names of the variables. So YMMV.
+
+    #+BEGIN_SRC bash
+      ORANGE=$(tput setaf 166)
+      RED=$(tput setaf 160)
+      VIOLET=$(tput setaf 61)
+      BLUE=$(tput setaf 33)
+      CYAN=$(tput setaf 37)
+      NO_COLOR="\e[0m"
+    #+END_SRC
+
+    This uses git to get the symbolic-ref of the current git commit
+    =HEAD=. The result of this command looks like
+    =refs/heads/branch-name= so we use bash variable magic to
+    substitute out the =refs/heads/= and what we're left with is
+    =branch-name=.
+
+    #+BEGIN_SRC bash
+      function parse_git_branch {
+          ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+          echo "${ref#refs/heads/} "
+      }
+    #+END_SRC
+
+    I really like functional programming so using mathematical symbols
+    to indicate if the current git repo is in a dirty state or not
+    makes me feel cool inside. We have two functions,
+    =asterisk_if_dirty= does the bulk of the work. It uses =git diff='s
+    =--shortstat= option that just returns the one line explanation of
+    the current diff, something like =2 files changed, 26
+    insertions(+), 4 deletions(-)=. We grab this one line and check if
+    it's empty or not. If so we echo out the =*= character.
+
+    =lambda_or_delta= then calls this to check if the repo is dirty and
+    if so it =echo='s the delta symbol instead of the lambda symbol.
+
+    #+BEGIN_SRC bash
+      function asterisk_if_dirty {
+          [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]] && echo "*"
+      }
+
+      function lambda_or_delta {
+          if [[ $(asterisk_if_dirty) == "*" ]]; then
+              echo "Δ"
+              return
+          fi
+          echo "λ"
+      }
+    #+END_SRC
+    
+    Super simple function that adds =!!= in red to the front of the
+    prompt if the last command exited with code 1.
+    
+    #+BEGIN_SRC bash
+      function last_command_status {
+          if [[ $? == "0" ]]; then
+              return
+          fi
+
+          echo "!! "
+      }
+    #+END_SRC
+
+    I do not like long full path to working directories in the
+    prompt. I originally had this just print the basename of the =$PWD=
+    but that became confusing quickly when working on python projects
+    where it's common to have a subfolder of a project that's the same
+    name as the project folder. So this wicked =awk= script takes the
+    =pwd= command output and returns a string that looks like
+    =pwd_parent/pwd=
+
+    #+BEGIN_SRC bash
+      # Make the pwd look pretty
+      function pretty_pwd {
+          dir=`pwd | awk -F\/ '{print $(NF-1),$(NF)}' | sed 's/ /\\//'`
+          echo "$dir"
+      }
+    #+END_SRC
+
+    Finally set the PS1 variable that bash uses as the prompt. This
+    defines the colors of each section as defined by the functions
+    above.
+    
+    #+BEGIN_SRC bash
+      PS1="\[$RED\]\$(last_command_status)\[$VIOLET\]@$HOSTNAME\[$BLUE\]\$(pretty_pwd) \[$CYAN\]\$(parse_git_branch)\[$ORANGE\]\$(lambda_or_delta) \[$NO_COLOR\]"
+      fi
+    #+END_SRC
+
+** Git Configuration
+*** Global Git Config
+
+    Default author information for git.
+
+    #+BEGIN_SRC toml :tangle .gitconfig
+      [user]
+      email = chasinglogic@gmail.com
+      name = Mathew Robinson
+    #+END_SRC
+
+    I have some settings that are machine local like which signing key
+    to use etc. These settings are always in a file called
+    =$HOME/.gitconfig_local= so we include that file here.
+
+    #+BEGIN_SRC toml :tangle .gitconfig
+      [include]
+      path = ~/.gitconfig_local
+    #+END_SRC
+
+    Prevent myself from pushing unless I specify the remote and branch
+    I want to push to. I work professionally on open source
+    repositories that I have push access to. This prevents me from
+    pushing topic branches to the remote or from pushing something
+    onto master that I didn't intend.
+
+    #+BEGIN_SRC toml :tangle .gitconfig
+      [push]
+      default = nothing
+    #+END_SRC
+
+    Default =git pull= to pull from the upstream branch that I'm
+    working on. Pulling is a lot less scary than pushing so I don't
+    care about always being explicit here.
+
+    #+BEGIN_SRC toml :tangle .gitconfig
+      [pull]
+      default = current
+    #+END_SRC
+
+    I use =magit= a lot and I already donated so hide the campaign.
+    
+    #+BEGIN_SRC toml :tangle .gitconfig
+      [magit]
+      hideCampaign = true
+    #+END_SRC
+
+    These add my global gitignore patterns and global githooks to
+    every repository. See [[Global Git Ignores]] and [[Global Git Hooks]].  
+    
+    #+BEGIN_SRC toml :tangle .gitconfig
+      [core]
+      excludesfile = ~/.gitignore_global
+      hooksPath = ~/.githooks
+    #+END_SRC
+
+    When running =git add= and =git commit= always be verbose. For
+    =git commit= this prints the diff into the =COMMIT_MSG= file so
+    you can see what you're actually writing the commit message
+    about. For =git add= this prints files as they're staged.
+    
+    #+BEGIN_SRC toml :tangle .gitconfig
+      [add]
+      verbose = true
+      [commit]
+      verbose = true
+    #+END_SRC
+
+    =olcolor= is a git pretty-format alias that makes each column of
+    output it's own color to help readability with running =git log
+    --oneline --pretty=olcolor=. See the aliases in the next snippet
+    for shorter ways to get this output.
+    
+    #+BEGIN_SRC toml :tangle .gitconfig
+      [pretty]
+      olcolor = %Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>
+    #+END_SRC
+
+    Various aliases for common git operations that don't make sense as
+    a bash alias. The following aliases are available:
+
+    - =git unstage FILE=: Unstage the staged file =FILE=
+    - =git amend=: Amend the currently staged changes to the commit at
+      HEAD without prompting for a commit message (will just reuse the
+      commit message of HEAD)
+    - =git vader=: Used for force pushing. Uses the =with-lease=
+      variant of force.
+    - =git contains COMMIT=: Find the branch that contains the commit
+      has =COMMIT=.  Have other aliases for the same thing since I
+      always type some variant of these when I want this
+      functionality. The other duplicate aliases are:
+      - =git where COMMIT=
+      - =git whereis COMMIT=
+    - =git cp=: Simple alias for =cherry-pick=
+    - =git l=: Run =git log= with =--oneline= using the pretty format =olcolor=
+      specified above.
+    - =git upd= and =git ru=: Simple aliases for =git remote update=.
+    - =git ck=: Simple alias for =git checkout=.
+      
+    #+BEGIN_SRC toml :tangle .gitconfig
+      [alias]
+      unstage = reset HEAD --
+      amend = commit --amend --no-edit
+      vader = push --force-with-lease
+      contains = branch -a --contains
+      where = branch -a --contains
+      whereis = branch -a --contains
+      cp = cherry-pick
+      l = log --graph --date-order  --pretty=olcolor
+      upd = remote update
+      ru = remote update
+      ck = checkout 
+    #+END_SRC
+
+    Disable implicit paging for =git branch=. Usually, I have so few
+    branches available locally that running them in a pager is more
+    hassle than just putting the output to terminal. For bigger
+    variants of this command, ex: =git branch -a=, I just pipe it into
+    a pager like =less=. 
+    
+    #+BEGIN_SRC toml :tangle .gitconfig
+      [pager]
+      branch = false
+    #+END_SRC
+
+    When doing third party library upgrades and other such extremely
+    large / re-vendoring changes git can sometimes get upset when I'm
+    generating patches for code review. This sets the =renameLimit= to
+    a sufficiently large number that I rarely get a warning or error
+    about this now.
+    
+    #+BEGIN_SRC toml :tangle .gitconfig
+      [diff]
+      renameLimit = 4487
+    #+END_SRC
+*** Global Git Ignores
+
+    Emacs can sometimes leave temporary files in git directories. I
+    love Emacs backup feature but I do not want them showing up in git
+    output so these ignore all the temporary files I know about.
+
+    Additionally, this adds =.dir-locals.el= to the ignore which I use
+    to store project-specific Emacs settings.
+
+    #+BEGIN_SRC text :tangle .gitignore_global
+      ,*flycheck*
+      ,*#*#
+      ,*.#*
+      .dir-locals.el
+    #+END_SRC
+
+    There are some directories and file extensions I use on every
+    project that are for temporary / not-to-be-committed files. This
+    section adds those patterns.
+    
+    #+BEGIN_SRC text :tangle .gitignore_global
+      ,*.bak
+      ,*.log
+      ,*.tar*
+      build/*
+      target/*
+    #+END_SRC
+
+    Some tools and Operating Systems I use or have used leave what I
+    call "filesystem droppings" when they are used. These patterns
+    make git ignore those files.
+    
+    #+BEGIN_SRC text :tangle .gitignore_global
+      ,*DS_Store*
+      .dropbox*
+      .vscode/*
+      Icon*
+      clang+llvm*/
+      node_modules/*
+    #+END_SRC
+
+    I use Language Server Protocol servers and some other tools /
+    linters that create local to the project caches. I ignore those
+    directories here.
+    
+    #+BEGIN_SRC text :tangle .gitignore_global
+      ,*mypy_cache*
+      .ccls-cache/*
+    #+END_SRC
+
+    MongoDB's CI system Evergreen supports a project local config that
+    lets me as a user set different defaults for different
+    projects. But since it's user specific I leave it out of git.
+    
+    #+BEGIN_SRC text :tangle .gitignore_global
+      .evergreen.local.yml
+    #+END_SRC
+
+    Ctags should never be committed.
+    
+    #+BEGIN_SRC text :tangle .gitignore_global
+      .tags
+      TAGStmp/*
+    #+END_SRC
+
+    I use vagrant a lot for quick testing in an environment or for
+    integration testing Ansible / Chef configuration. I never want to
+    commit vagrant's metadata though so leave it out here.
+    
+    #+BEGIN_SRC text :tangle .gitignore_global
+      .vagrant/*
+    #+END_SRC
+
+    I mostly use =virtualenvwrapper= now but sometimes I have a
+    project with an old =virtualenv= or just use a quick one for a
+    project I won't keep around. This prevents git from including it
+    since I always call it one of two names when creating a local
+    virtualenv.
+    
+    #+BEGIN_SRC text :tangle .gitignore_global
+      .venv/*
+      venv*
+    #+END_SRC
+
+    The MongoDB toolchain builder creates a lot of temporary files in
+    various directories for different stages of the build. This
+    ignores all of those directories.
+    
+    #+BEGIN_SRC text :tangle .gitignore_global
+      infra/*
+      logs/*
+      products/*
+      tarballs/*
+      tmp/*
+    #+END_SRC
+
+    These ignore files that in the MongoDB repository can confuse
+    git. For example it sees the enterprise module as a submodule and
+    tries to convince you to add it as such or it wants to commit the
+    compiled mongo-tools.
+    
+    #+BEGIN_SRC text :tangle .gitignore_global
+      src/db/modules/enterprise*
+      src/db/modules/enterprise/*
+      src/mongo-tools*
+      src/mongo/installer/compass/install_compass
+    #+END_SRC
+
+*** Global Git Hooks
+**** commit-msg
+
+     This hook verifies that all of my commits to work related git
+     repositories have a JIRA ticket. It also allows a shorter version
+     I use frequently with the [[wip commit script]] when working on a
+     topic branch that's intended to be squashed.
+
+     First verify that I'm in a Work repository. I keep all of my work
+     related repositories in =$HOME/Work= so a simple validation that
+     =Work= exists in the present working directory is sufficient. If
+     we're not in a work repository *or* we're in =kernel-tools= which
+     is a work repository that has different commit message
+     requirements we =exit 0= to indicate it's safe to write the
+     commit with no validation.
+
+     #+BEGIN_SRC bash :tangle .githooks/commit-msg :tangle-mode (identity #o755)
+       #!/bin/bash
+
+       # Not a mongo repo
+       if [[ "$(pwd)" != *"Work"* ]]; then
+           exit 0
+       fi
+
+       # Kernel Tools doesn't play by the same rules
+       if [[ "$(pwd)" == *"kernel-tools"* ]]; then
+           exit 0
+       fi
+     #+END_SRC
+
+     Next create a function called check_pattern that takes two
+     arguments, the commit message and a pattern to match against. It
+     will then match this pattern against the first line of the commit
+     message in order to get the summary line of the commit. It only
+     matches against this summary. If the summary matches it calls
+     =exit 0= to indicate that it found the commit message to be a
+     valid commit.
+     
+     #+BEGIN_SRC bash :tangle .githooks/commit-msg :tangle-mode (identity #o755)
+       check_pattern() {
+           head -n 1 $1 | grep "$2" > /dev/null
+           if [[ $? == 0 ]]; then
+               exit 0
+           fi
+       }
+     #+END_SRC
+
+     Finally we define the patterns that we will match the commit
+     summaries against. These patterns check for two conditions:
+     - The commit summary starts with a JIRA ticket specifier of the form
+       =$PROJECT_KEY-$TICKET_NUMBER= for example: =PROJECT-123=
+     - The commit summary starts with any variation of wip that I
+       commonly use. These patterns include: =wip=, =WIP:=, and
+       =wip:=. Usually I generate WIP commits with my [[wip commit
+       script]] that uses the =WIP:= form.
+
+     #+BEGIN_SRC bash :tangle .githooks/commit-msg :tangle-mode (identity #o755)
+       check_pattern $1 "^[A-Z]\{3,\}-[0-9]\{1,\}"
+       check_pattern $1 "^WIP: .*"
+       check_pattern $1 "^wip: .*"
+       check_pattern $1 "^wip .*"
+     #+END_SRC
+
+     Otherwise if none of the check_pattern calls caused the script to
+     exit early with success then we =exit 1= to make git reject the
+     commit message.
+
+     #+BEGIN_SRC bash :tangle .githooks/commit-msg :tangle-mode (identity #o755)
+       echo "Must include a JIRA ticket or WIP in your commit message"
+       exit 1
+     #+END_SRC
+     
+** =ctags=
+
+   =ctags= has many options and some of them make the most sense to
+   apply globally. It supports this with a =~/.ctags= file that
+   contains a newline separated list of flags to globally apply. Docs
+   for each flag are taken from =man ctags=
+
+   #+BEGIN_SRC text :tangle .ctags
+     --recurse=yes
+   #+END_SRC
+
+   Recurse into directories encountered in the list of supplied files. If the list
+   of supplied files is empty and no file list is specified with  the  -L  option,
+   then  the current directory (i.e. ".") is assumed. Symbolic links are followed.
+   If you don't like these behaviors, either explicitly specify the files or  pipe
+   the  output  of  find(1)  into ctags -L- instead. Note: This option is not sup‐
+   ported on all platforms at present.  It is  available  if  the  output  of  the
+   --help  option  includes this option.  See, also, the --exclude to limit recur‐
+   sion.
+
+   #+BEGIN_SRC text :tangle .ctags 
+     -f .tags
+   #+END_SRC
+   
+   Use the name specified by tagfile for the  tag  file  (default  is  "tags",  or
+   "TAGS"  when  running  in etags mode). Ctags will stubbornly refuse to
+   take  orders if tagfile exists and its first line contains something other than
+   a valid tags line. This will save your neck if you mistakenly  type  "ctags  -f
+   *.c", which would otherwise overwrite your first C file with the tags generated
+   by the rest! It will also refuse to accept a multi-character  file  name  which
+   begins  with a '-' (dash) character, since this most likely means that you left
+   out the tag file name and this option tried to grab the next option as the file
+   name.  If  you  really want to name your output tag file "-ugly", specify it as
+   "./-ugly". This option must appear before the first file name.
+
+   #+BEGIN_SRC text :tangle .ctags 
+     --tag-relative=yes
+   #+END_SRC
+
+   Indicates that the file paths recorded in the tag file should  be  relative  to
+   the  directory  containing  the  tag  file, rather than relative to the current
+   directory, unless the files supplied on the command  line  are  specified  with
+   absolute paths. This option must appear before the first file name. The default
+   is yes when running in etags mode (see the -e option), no otherwise.
+
+   Note that the file name reference above does not the file specified
+   by the =-f= flag above.
+
+   #+BEGIN_SRC text :tangle .ctags
+     --exclude='.git'
+     --exclude='venv'
+     --exclude='.venv'
+     --exclude='build'
+     --exclude='dist'
+   #+END_SRC
+
+   Add  pattern  to  a  list of excluded files and directories. This option may be
+   specified as many times as desired. For each file  name  considered  by  ctags,
+   each pattern specified using this option will be compared against both the com‐
+   plete path (e.g. some/path/base.ext) and the base name (e.g. base.ext)  of  the
+   file,  thus allowing patterns which match a given file name irrespective of its
+   path, or match only a specific path. If appropriate support is  available  from
+   the  runtime  library  of  your  C compiler, then pattern may contain the usual
+   shell wildcards (not regular expressions) common on Unix (be sure to quote  the
+   option  parameter  to  protect  the  wildcards from being expanded by the shell
+   before being passed to ctags; also be aware that wildcards can match the  slash
+   character,  '/').  You  can  determine if shell wildcards are available on your
+   platform by examining the output of the --version option,  which  will  include
+   "+wildcards"  in  the  compiled  feature  list;  otherwise,  pattern is matched
+   against file names using a simple textual comparison.
+
+   If pattern begins with the character '@', then the rest of the string is inter‐
+   preted  as  a file name from which to read exclusion patterns, one per line. If
+   pattern is empty, the list of excluded patterns is cleared.  Note that at  pro‐
+   gram  startup,  the  default exclude list contains "EIFGEN", "SCCS", "RCS", and
+   "CVS", which are names of directories for which it is generally  not  desirable
+   to descend while processing the --recurse option.
+
+   #+BEGIN_SRC text :tangle .ctags 
+     --langmap=python:+(SConstruct)
+     --langmap=python:+(SConscript)
+   #+END_SRC
+
+   Controls  how  file names are mapped to languages (see the --list-maps option).
+   Each comma-separated map consists of the language name (either  a  built-in  or
+   user-defined language), a colon, and a list of file extensions and/or file name
+   patterns. A file extension is specified  by  preceding  the  extension  with  a
+   period  (e.g.  ".c"). A file name pattern is specified by enclosing the pattern
+   in parentheses (e.g. "([Mm]akefile)"). If appropriate support is available from
+   the  runtime library of your C compiler, then the file name pattern may contain
+   the usual shell wildcards common on Unix (be sure to quote the option parameter
+   to  protect  the wildcards from being expanded by the shell before being passed
+   to ctags). You can determine if shell wildcards are available on your  platform
+   by  examining  the  output  of the --version option, which will include "+wild‐
+   cards" in the compiled feature list; otherwise,  the  file  name  patterns  are
+   matched  against  file  names using a simple textual comparison. When mapping a
+   file extension, it will first be unmapped from any other languages.
+
+   If the first character in a map is a plus sign, then the  extensions  and  file
+   name  patterns  in  that  map will be appended to the current map for that lan‐
+   guage; otherwise, the map will replace the current map. For example, to specify
+   that  only  files  with extensions of .c and .x are to be treated as C language
+   files, use "--langmap=c:.c.x"; to also add files with extensions of .j as  Java
+   language  files,  specify  "--langmap=c:.c.x,java:+.j".  To map makefiles (e.g.
+   files named either "Makefile", "makefile", or having the extension ".mak") to a
+   language  called  "make",  specify  "--langmap=make:([Mm]akefile).mak".  To map
+   files having no extension, specify a period not followed by a non-period  char‐
+   acter  (e.g. ".", "..x", ".x."). To clear the mapping for a particular language
+   (thus inhibiting automatic generation of tags for that  language),  specify  an
+   empty  extension list (e.g.  "--langmap=fortran:"). To restore the default lan‐
+   guage mappings for all a particular language, supply the keyword "default"  for
+   the  mapping.   To  specify  restore the default language mappings for all lan‐
+   guages, specify "--langmap=default".  Note  that  file  extensions  are  tested
+   before file name patterns when inferring the language of a file.
+
+**** pre-push
+
+     Before the [[https://github.com/evergreen-ci/evergreen/wiki/Commit-Queue][Evergreen Commit Queue]] it was possible to push topic
+     branches to the mongodb/mongo repository. It's still possible To
+     prevent this I wrote this pre-push hook that validates, when
+     you're pushing to a MongoDB repository, that the branch your
+     pushing to isn't a topic branch. If it's not a topic branch then
+     it confirms that you actually want to push to whatever branch you
+     actually are pushing to.
+     
+     First get the name of the currently checked out local
+     branch. This works the same as in my [[Bash Prompt]].
+     
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       #!/bin/bash
+
+       current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+     #+END_SRC
+
+     Next get the command line of the currently running git command
+     using =ps= to find it by our parent PID.
+
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       push_command=$(ps -ocommand= -p $PPID)
+     #+END_SRC
+
+     Now grab the remote url for pushing to origin. Sometime in the
+     future I'll probably need to use a fork based workflow and this
+     will need to be upstream.
+     
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       origin_remote=$(git remote -v | grep origin | grep push)
+     #+END_SRC
+
+     Check if the =origin_remote= is a MongoDB repository. If it's not
+     then it doesn't matter what we're pushing so =exit 0=.
+     
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       if [[ $origin_remote != *"mongo"* && $origin_remote != *"10gen"* ]]; then
+           echo "Not pushing a mongodb repo. Safe to push to origin."
+           exit 0
+       fi
+     #+END_SRC
+
+     Next verify we are pushing to origin. If not then =exit 0=
+     because it means we are pushing to our fork where we are allowed
+     to create topic branches.
+
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       if [[ "$push_command" != *"origin"* ]]; then
+           echo "Not pushing to origin, safe to push."
+           exit 0
+       fi
+     #+END_SRC
+
+     Next create a function called confirm that steals control of the
+     terminal from the parent PID and pauses execution using some
+     nifty tricks with =exec=. It checks if scons is available and if
+     so it will run lint. It then asks for a one letter =y= or
+     =n= confirmation that you actually want to keep pushing where you
+     were pushing to. If =n= then it =exit 1=.
+
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       function confirm() {
+           exec < /dev/tty
+
+           read -p "Are you sure you want to push to $current_branch? " -n 1 -r
+           echo    # (optional) move to a new line
+
+           exec <&- 
+
+           if [[ $REPLY =~ ^[Nn]$ ]]
+           then
+               exit 1
+           fi
+       }
+     #+END_SRC
+
+     Next we check if we are not in a topic branch by verifying the
+     current branch name against known patterns of branches that
+     are not topic branches. These branches include any v3.X branch,
+     v4.X branch, and master. If we are trying to push to a valid
+     branch then run confirm from above.
+     
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       case $current_branch in
+           "master") confirm ;;
+           "v4."*) confirm ;;
+           "v3."*) confirm ;;
+           ,*) echo "Trying to push a topic branch: $current_branch to origin, preventing." && exit 1 ;;
+       esac
+     #+END_SRC
+
+     Finally, run =lint= if =buildscripts/scons.py= is available.
+
+     #+BEGIN_SRC bash :tangle .githooks/pre-push :tangle-mode (identity #o755)
+       PROJECT_ROOT=$(git rev-parse --show-toplevel)
+       if [[ -f $PROJECT_ROOT/buildscripts/scons.py ]]; then
+           echo "In MongoDB server repo, running lint..."
+           $PROJECT_ROOT/buildscripts/scons.py lint
+           exit $?
+       fi
+     #+END_SRC
+
+** Local Convenience Scripts
+*** AWS: get_password
+
+    This script is invaluable when working with Windows hosts in
+    EC2. It takes a single argument which can be the instance id or
+    hostname of the Windows instance. It will then use the AWS CLI to
+    get the RDP password for that host. Note this only works if you
+    have correct permissions for that host.
+    
+    #+BEGIN_SRC bash :tangle .local/bin/get_password :shebang "#!/bin/bash"
+      PRIV_KEY=$2
+      if [[ $PRIV_KEY == "" ]]; then
+          PRIV_KEY="~/.ssh/id_rsa"
+      fi
+
+      INSTANCE_ID=$1
+      if [[ $INSTANCE_ID != i-* ]]; then
+          echo "Finding instance ID...."
+          INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=dns-name,Values=$INSTANCE_ID" --output text --query 'Reservations[*].Instances[*].InstanceId')
+      fi
+
+      aws ec2 get-password-data --instance-id $INSTANCE_ID --priv-launch-key $PRIV_KEY --query 'PasswordData' | sed 's/"//g'
+    #+END_SRC
+    
+*** AWS: launch_instance
+
+    The AWS CLI is a great and powerful tool. Unfortunately it's crazy
+    unwieldy at times and is too focused on matching the API instead
+    of user workflows / stories. This is one of my scripts that
+    focuses in the simple user story of "I want to launch an AWS
+    instance with an AMI ID then get that hostname so I can connect to
+    it". So that's exactly what it does, it takes an AMI ID launches
+    the instance waits for it to become ready and prints out the
+    hostname that was assigned to it.
+    
+    #+BEGIN_SRC bash :tangle .local/bin/launch_instance :shebang "#!/bin/bash"
+
+      set -o errexit
+
+      EXPIRE_ON=$(/bin/date -v+1d '+%Y-%d-%m %H:%M:%S')
+      INSTANCE_TYPE="m5.large"
+      AMI_ID=""
+      EXTRA_FLAGS=""
+
+      while getopts ":s:a:n:i:p:" o
+      do
+          case "$o" in
+              a) AMI_ID="$OPTARG" ;;
+              i) INSTANCE_TYPE="$OPTARG" ;;
+              s) EXTRA_FLAGS+=" --security-group-ids $OPTARG" ;;
+              n) EXTRA_FLAGS+=" --subnet-id $OPTARG" ;;
+              p) EXTRA_FLAGS+=" --profile $OPTARG --region us-east-1" ;;
+              \?) echo "Invalid option: -$OPTARG" >&2 ; exit 1 ;;
+          esac
+      done
+
+      echo "AMI: $AMI_ID"
+      echo "EXTRA: $EXTRA_FLAGS"
+
+      echo "Launching instance..."
+      INSTANCE_INFO=$(aws ec2 run-instances --tag-specifications "ResourceType=instance,Tags=[{Key='expire-on',Value='$EXPIRE_ON'}]" \
+                          $EXTRA_FLAGS \
+                          --instance-type $INSTANCE_TYPE \
+                          --key-name mathewrobinson \
+                          --image-id $AMI_ID)
+
+      echo $INSTANCE_INFO
+      INSTANCE_ID=$(echo $INSTANCE_INFO | grep InstanceId | grep -o '"i-[0-9A-z]*"' | sed 's/\"//g')
+      echo "Id: $INSTANCE_ID"
+      echo "Waiting for instance to become ready..."
+      while true; do
+          STATE=$(aws ec2 describe-instances --instance-id $INSTANCE_ID | jq ".Reservations[0].Instances[0].State.Name")
+          if [[ $STATE == *running* ]]; then
+              break
+          fi
+      done
+
+      echo "Getting PublicDnsName"
+      DNS_NAME=""
+      while [[ $DNS_NAME == "" ]]; do
+          DNS_NAME=$(aws ec2 describe-instances --instance-id $INSTANCE_ID | jq ".Reservations[0].Instances[0].PublicDnsName" | sed 's/\"//g')
+      done
+
+      echo "Instance ready!"
+      echo "Hostname: $DNS_NAME"
+    #+END_SRC
+    
+*** AWS: share_amis
+
+    Another user story "I want to share multiple AMIs with another AWS
+    account". The command here is only a single command which is nice
+    but it requires typing of JSON into your shell which is always a
+    special quoting hell. This simplifies the user experience by
+    making it a simple command of the form =share_amis
+    ACCOUNT_ID_TO_SHARE_WITH AMI_IDS...=.
+    
+    #+BEGIN_SRC bash :tangle .local/bin/share_amis :shebang "#!/bin/bash"
+      if [[ $1 == *"help"* ]]; then
+          echo "Usage: share_image \$AWS_ACCOUNT_ID \$AMI_IDS..."
+          exit 0
+      fi
+
+      aws_account_id=$1
+      for build_image_id in ${@:2}; do
+          aws ec2 modify-image-attribute --image-id $build_image_id --launch-permission "{\"Add\": [{\"UserId\":\"$aws_account_id\"}]}"
+      done
+    #+END_SRC
+    
+*** bump_version
+
+    This script takes two arguments, the old version and the new
+    version. It then performs a simple =sed= on all the files returned
+    by =git ls-files= that will transform old version to new
+    version. I wrote this because sometimes I need to store the
+    version in something like =setup.py= but also in a constant inside
+    the main script as well for printing to users.
+
+    #+BEGIN_SRC bash :tangle .local/bin/bump_version :shebang "#!/bin/bash"
+
+      if [[ $1 == *"help"* ]]; then
+          echo "Usage: bump_version old_version_string new_version_string"
+          exit 0
+      fi
+
+
+      OLD_VERSION=$1
+      NEW_VERSION=$2
+      PATTERN="s/$OLD_VERSION/$NEW_VERSION/g"
+      FILES=$(git ls-files | grep -v vendor | grep -v '.*lock$')
+
+      if [[ $(uname) == "Darwin" ]]; then
+          sed -i '' $PATTERN $FILES
+      else
+          sed -i $PATTERN $FILES
+      fi
+
+    #+END_SRC
+
+*** CHEF: knife_bootstrap.sh
+
+    When I was on teams that use Chef it was always annoying to
+    bootstrap them with chef. This script automates the process with
+    easy to use flags instead of requiring me to type raw JSON into my
+    shell which is a quoting nightmare.
+    
+    #+BEGIN_SRC bash :tangle .local/bin/knife_bootstrap.sh :shebang "#!/bin/bash"
+
+      hostname=""
+      runlist=""
+      sshuser=""
+      group=""
+
+      while getopts "u:b:r:d:g:h" flag; do
+          case "${flag}" in
+              b) hostname="${OPTARG}" ;;
+              u) sshuser="${OPTARG}" ;;
+              r) runlist="${OPTARG}" ;;
+              g) group="${OPTARG}" ;;
+              h) echo 'Usage:
+      knife_bootstrap.sh -g $GROUP -b $BUILDHOST -d $DOMAIN -r $RUNLIST -u $SSHUSER'; exit 0 ;;
+          esac
+      done
+
+      if [[ ${hostname} == "" ]]; then
+          echo "Must provide hostname with -b flag."
+          exit 1
+      fi
+
+      if [[ ${runlist} == "" ]]; then
+          rolename="$(echo ${hostname} | awk -F'-' '{ print $1 }')"
+          runlist="role[base-build-${rolename}]"
+      fi
+
+      domain="$(echo ${hostname} | sed 's/^[A-z0-9-]*\.//')"
+      echo "Bootstrapping ${sshuser}@${hostname} with ${runlist} in domain ${domain}"
+      knife bootstrap -E build -j '{ "'${group}'": { "hostname": "'${hostname}'", "domain": "'${domain}'"}}' -r "${runlist}" -N ${hostname} --sudo --ssh-user ${sshuser} ${hostname} --bootstrap-version 12.14.60
+    #+END_SRC
+    
+*** EVG: get_evg_distros.py
+
+    I used to use this script for various things when I needed to
+    generate files for Evergreen distros. I mostly keep it around now
+    as an example use of the Evergreen API.
+    
+    #+BEGIN_SRC python :tangle .local/bin/get_evg_distros.py :shebang "#!/usr/bin/env python3"
+      import os
+      import pyyaml
+      import requests
+
+      evg_config = os.path.join(os.getenv('HOME'), '.evergreen.yml')
+      with open(evg_config) as ec:
+          cfg = yaml.load(ec)
+
+      res = requests.get('{}/rest/v2/distros'.format(cfg['api_server_host']))
+      j = res.json()
+
+      names = [d['name'] for d in j]
+      new_names = []
+
+      for name in names:
+          split = name.split('-')
+          new_names.append(split[0]
+                           if len(split) < 3 else '-'.join([split[0], split[1]]))
+    
+          new_names = list(set(new_names))
+
+      for name in new_names:
+          print(name)
+    #+END_SRC
+    
+*** EVG: pch
+
+    Automatically populate =evergreen patch= flags with values derived
+    from git information. Things like the description or the
+    =--browse= flag that I always want set end up here.
+    
+    #+BEGIN_SRC bash :tangle .local/bin/pch :shebang "#!/bin/bash"
+      ref="$(git symbolic-ref HEAD 2> /dev/null)"
+      DESCRIPTION="$(echo ${ref#refs/heads/}): $(git log -n 1 --format='%s')"
+      evergreen patch \
+                --description "$DESCRIPTION" \
+                --yes \
+                --browse \
+                $@
+    #+END_SRC
+    
+*** export_keybase
+
+    This script exports my keybase keys into my local gpg
+    keystore. I've mostly stopped using keybase but occasionally this
+    script is still useful so I keep it around.
+
+    #+BEGIN_SRC bash :tangle .local/bin/export_keybase :shebang "#!/bin/bash"
+      export GPG_TTY=$(tty)
+      echo "Importing public keys"
+      keybase pgp export | gpg --import
+      echo "Importing secret keys"
+      keybase pgp export --secret | gpg --allow-secret-key-import --import
+      killall gpg-agent
+    #+END_SRC
+
+*** GIT: clean_branches
+
+    This script removes all branches that have been merged to master
+    (except for develop). It then prunes all remotes so they also no
+    longer have these branches. If the =--hard= option is specified it
+    deletes all local branches except for master.
+
+    #+BEGIN_SRC bash :tangle .local/bin/clean_branches :shebang "#!/bin/bash"
+
+      if [[ $1 == "--hard" ]]; then
+          git branch | grep -v master | xargs git branch -D
+      elif [[ $1 == "--help" ]]; then
+          echo "Use --hard to really blow stuff up"
+      else
+          git branch --merged | grep -v master | grep -v develop | xargs git branch -d
+      fi
+
+      for remote in $(git remote); do git remote prune $remote; done
+    #+END_SRC
+
+*** GITLAB: gitlab_bulk_delete_projects.py
+
+    This script uses the Gitlab API to bulk delete all of your
+    projects on Gitlab except for the projects whose names are in a
+    comma separated list in the environment variable
+    =GITLAB_SAVE_PROJECTS=.
+
+    I wrote this because one time I accidentally migrated all of my
+    Github repositories to Gitlab and I did not want them to exist in
+    two places.
+
+    #+BEGIN_SRC python :tangle .local/bin/gitlab_bulk_delete_projects.py :shebang "#!/usr/bin/env python3"
+      import requests
+      import os
+
+      TOKEN = os.getenv("GITLAB_TOKEN")
+      BASE_URL = "https://gitlab.com/api/v4/"
+      HEADERS = {"Private-Token": TOKEN}
+
+      save_projects = os.getenv("GITLAB_SAVE_PROJECTS").split(",")
+
+      projects = requests.get(
+          "https://gitlab.com/api/v4/users/chasinglogic/projects?visibility=public",
+          headers=HEADERS,
+      ).json()
+
+      projects_to_delete = [
+          project for project in projects if project["name"] not in save_projects
+      ]
+
+      print([project["name"] for project in projects_to_delete])
+
+      for project in projects_to_delete:
+          print("Deleting:", project["name"])
+          r = requests.delete(BASE_URL + "projects/" + str(project["id"]), headers=HEADERS)
+          print(r.status_code)
+          print(r.text)
+    #+END_SRC
+
+*** GITLAB: gitlab_migrate_tickets.py
+    
+    There was a time in my life when I was like I'm gonna move
+    everything to Gitlab! I don't remember the reason but it was
+    probably something to do with my general dislike of proprietary
+    software (Github is proprietary) and something else that made me
+    want to try Gitlab (for example I think they have the best CI
+    platform available). I obviously still use Github for most things
+    so this script is kept around in case my paranoia or some other
+    catastrophic event happens and I need to GTFO Github.
+
+    In short this script will migrate all Github Issues into
+    Gitlab. Gitlab already has great import functionality for
+    repositories but it leaves all your tickets and bugs behind. This
+    closes that gap.
+    
+    #+BEGIN_SRC python :tangle .local/bin/gitlab_migrate_tickets.py :shebang "#!/usr/bin/env python3"
+      import os
+      import sys
+      from github import Github
+      from gitlab import Gitlab
+
+      if len(sys.argv) != 3:
+          print('Usage: gitlab_migration.py github_user/repo gitlab_user/repo')
+          print('Make sure to set $GITHUB_TOKEN and $GITLAB_TOKEN')
+          sys.exit(1)
+
+          gh = Github(os.getenv('GITHUB_TOKEN'))
+          gh_repo = gh.get_repo(sys.argv[0])
+          gh_issues = [issue for issue in gh_repo.get_issues()]
+
+          gl = Gitlab('https://gitlab.com', private_token=os.getenv('GITLAB_TOKEN'))
+          taskforge = gl.projects.get(sys.argv[1])
+
+          for issue in gh_issues:
+              print('Creating ticket:')
+              print('\tSummary:', issue.title)
+              print('\tDescription:', issue.body)
+
+              gl_issue = taskforge.issues.create({
+                  'title': issue.title,
+                  'description': issue.body
+              })
+              gl_issue.labels = [label.name for label in issue.get_labels()]
+
+              for comment in issue.get_comments():
+                  print('\t\tComment Body:', comment.body)
+                  gl_issue.notes.create({
+                      'body':
+                      'Original Commenter: {}\n\n{}'.format(comment.user.name,
+                                                            comment.body)
+                  })
+
+                  gl_issue.save()
+    #+END_SRC
+    
+*** GIT: sync_branches
+
+    Fetch the branches from origin removing local references that no
+    longer exist on the remote. Then remove local branches that
+    correspond to the pruned references.
+    
+    #+BEGIN_SRC bash :tangle .local/bin/sync_branches :shebang "#!/bin/bash"
+      git fetch origin --prune && git branch --merged | grep -v master | xargs git branch -D
+    #+END_SRC
+    
+*** GIT: wip
+
+    This lets me easily generate wip commits. I wish there was a way
+    to make this an actual alias in the git config but I couldn't find
+    a way to add in the message manipulation part. It also sets
+    =--no-gpg-sign= because I sign my commits but wip commits are
+    going to get squashed anyway so don't bother asking me for
+    pinentry on those.
+    
+    #+BEGIN_SRC bash :tangle .local/bin/wip :shebang "#!/bin/bash"
+      git commit --no-gpg-sign -m "WIP: $(echo $@)"
+    #+END_SRC
+    
+*** MAC: fix_mac_framework_links.sh
+
+    One time an Xcode upgrade broke some Framework symlinks and I wasn't
+    able to compile anything. I rarely work on MacOS anymore but when
+    I hit this problem again I don't want to have to do the deep dark
+    internet diving that I did the first time to find the symlinks to
+    recreate.
+
+    #+BEGIN_SRC bash :tangle .local/bin/fix_mac_framework_links.sh :shebang "#!/bin/bash"
+      sudo ln -s  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework /Library/Frameworks/CoreFoundation.framework
+      sudo ln -s  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Security.framework /Library/Frameworks/Security.framework
+    #+END_SRC    
+    
+*** MAC: fix_mac_icons
+
+    Sometimes MacOS just decides that Icons are no longer cool and
+    instead all apps should uniformly have question marks for icon
+    names. This is really helpful for deciding what app to open when
+    you're looking at a MacOS dock and all the apps look the same /s.
+
+    I found this command somewhere deep in stack overflow that cleared
+    the cache and made the dock start working again.
+    
+    #+BEGIN_SRC bash :tangle .local/bin/fix_mac_icons :shebang "#!/bin/bash"
+      sudo find /private/var/folders/ -name com.apple.dock.iconcache -exec rm {} \;
+      sudo find /private/var/folders -name com.apple.iconservices -exec rm -rf {} \;
+    #+END_SRC
+    
+*** nv
+
+    One time in my life I was a sad boi and I stopped using Emacs for
+    a time. =nvim= was an ok refuge but it was annoying that when
+    doing things like running =git= from the integrated terminal it
+    would run =nvim= (as the =$EDITOR= was =nvim=) in that integrated
+    terminal and not connect it with my already open =nvim= because
+    the keybindings would conflict in the two and I would never be
+    able to actually save the =COMMIT_MSG=. This script is meant to be
+    used as a drop in replacement for the =nvim= command and it just
+    attaches to an existing =nvim= session if one exists. I stole this
+    from somewhere on stack overflow. Thankfully I saw the light and
+    returned to our savior Emacs.
+    
+    #+BEGIN_SRC python :tangle .local/bin/nv :shebang "#!/usr/bin/env python3"
+      import os
+      import sys
+
+      from neovim import attach
+
+      args = sys.argv[1:]
+
+      addr = os.environ.get("NVIM_LISTEN_ADDRESS")
+      if not addr:
+          os.execvp('nvim', ('nvim', ) + tuple(args))
+
+      nvim = attach("socket", path=addr)
+
+      def normalizePath(name):
+          return os.path.abspath(name).replace(" ", "\\ ")
+
+      def openFiles():
+          # To escape terminal mode. Not sure if bug.
+          nvim.feedkeys('', "n")
+          for x in args:
+              nvim.command("tabedit {}".format(normalizePath(x)))
+
+      openFiles()
+    #+END_SRC
+    
+** Projector Configuration
+
+   I wrote a tool called [[https://github.com/chasinglogic/projector][Projector]] that searches directories for git
+   repos and let's you perform operations on them. I use it pretty
+   extensively for setting projector projects in Emacs, updating lots
+   of repositories that contain tools that I use, and for switching
+   directories in my shell to projects quickly. This configures the
+   tool to find git repositories where I keep them and to filter out
+   results I don't want it to look at.
+
+   First set up the =code_dirs= option. I keep all of my personal
+   projects in =$HOME/Code=, all of my work projects in =$HOME/Work=,
+   and all of my dotfile repositories in
+   =$HOME/.config/dfm/profiles=. This simply tells projector to search
+   all three.
+
+   #+BEGIN_SRC yaml :tangle .projector.yml
+       code_dirs:
+         - ~/Code
+         - ~/Work
+         - ~/.config/dfm/profiles
+   #+END_SRC
+
+   Next we set up the exclude patterns. This single pattern excludes
+   every go repository. I do this because =go get= will put all the
+   dependencies for everything in =go/src= unless a vendoring solution
+   is used. This means that directory can get really polluted with
+   dependencies that may not even be for projects I work on, they can
+   be for tools that I've installed with =go get=. The next section
+   handles including projects that are in =go/src= that I do want to see.
+
+   #+BEGIN_SRC yaml :tangle .project.yml
+       excludes:
+         - go/src
+   #+END_SRC
+
+   The only go projects I work on will be in one of these three
+   directories. Projector works with excludes by verifying they do not
+   also match an include. This way you can have really general exclude
+   patterns then specifically override it with an include pattern. So
+   we do that here.
+   
+   #+BEGIN_SRC yaml :tangle .project.yml
+       includes:
+         - go/src/github\.com/chasinglogic
+         - go/src/github\.com/mongodb
+         - go/src/github\.com/evergreen-ci
+   #+END_SRC
+
+** tmux Configuration
+
+   I don't use tmux much these days so this doesn't get updated
+   much. But I was an extensive user in the past so this is all of the
+   configuration I used to make it behave how I wanted and interact
+   properly with the programs I used at the time.
+
+   First up we set up some bind-keys to make tmux behave a little
+   more naturally.
+
+   First make =C-b r= reload the tmux configuration.
+
+   #+BEGIN_SRC text :tangle .tmux.conf
+     bind-key r source-file ~/.tmux.conf
+   #+END_SRC
+
+   Now use more natural keys for splitting. These letters correspond
+   to vim splits so that =C-b v= splits the window vertically and
+   =C-b s= splits the window horizontally.
+
+   #+BEGIN_SRC text :tangle .tmux.conf
+     bind-key v split-window -h
+     bind-key s split-window -v
+   #+END_SRC
+
+   This sets up a non-prefix keybinding that allows me to quickly
+   cycle windows with =C-]=. I chose =C-]= because it's one of the
+   few keys that doesn't conflict with any shell or editor
+   keybindings that I use.
+
+   #+BEGIN_SRC text :tangle .tmux.conf
+     bind-key -n C-] next-window
+   #+END_SRC
+
+   Make selecting panes use vim style motions with the prefix
+   key: i.e. =C-b {h,j,k,l}=.
+
+   #+BEGIN_SRC text :tangle .tmux.conf
+     bind-key h select-pane -L
+     bind-key j select-pane -D
+     bind-key k select-pane -U
+     bind-key l select-pane -R
+   #+END_SRC
+
+   Then overwrite the default kill-pane keybinding =C-b x= with a
+   version that just kills the pane without prompting for confirmation.
+
+   #+BEGIN_SRC text :tangle .tmux.conf
+     bind-key x kill-pane
+   #+END_SRC
+
+   Now that the keybindings are correct the last thing to do is to make
+   terminal programs use the correct color capabilities.
+
+   #+BEGIN_SRC text :tangle .tmux.conf
+     set -g default-terminal "screen-256color"
+   #+END_SRC
+
+** Isync (mbsync) Configuration
+
+   I use Emacs for reading my email for a few reasons. First I spend a
+   lot of time getting the most readable color scheme set up in Emacs
+   because I stare at it all day anyway. Same for font I spend a lot
+   of time making sure the font looks the way I like on any
+   screen. That work gets completely erased when I use a third party
+   or web based email client. Not to mention those clients do not
+   offer much in the way of customization for those settings. Finally,
+   I spend even more time making Emacs the most efficient editing
+   environment for me so why not compose my emails in it as well?
+
+   For syncing my email to my local machine I use the isync suite
+   (specifically mbsync). I've found it to be the most reliable,
+   easiest to setup, and fastest solution. This is the configuration I
+   use for my multiple gmail accounts.
+   
+*** Work Email Account
+
+    In mbsync you set up =IMAPAccount='s and map them to local
+    =IMAPStore='s using Channels.
+
+    This block sets up an =IMAPAccount= for work that maps to my work
+    gmail account. I use =PassCmd= to decrypt a gpg encrypted file
+    that contains my password for that account. The =IMAPStore= is
+    used for mapping to the local Maildir and Channel.
+
+    #+BEGIN_SRC text :tangle .mbsyncrc
+      IMAPAccount work
+      Host imap.gmail.com
+      User mathew.robinson@10gen.com
+      PassCmd "gpg -q --for-your-eyes-only --no-tty --exit-on-status-write-error --batch -d ~/.work.gmail.password.gpg"
+      AuthMechs LOGIN
+      SSLType IMAPS
+
+      IMAPStore work-remote
+      Account work
+    #+END_SRC
+
+    Create the local =MaildirStore= for work. This indicates the local
+    file system paths we will store the email at.
+
+    #+BEGIN_SRC text :tangle .mbsyncrc
+      MaildirStore work-local
+      Path ~/Mail/work/
+      Inbox ~/Mail/work/INBOX
+    #+END_SRC
+
+    Now we map remote IMAP folders to local Maildir folders via
+    Channels. We only need to map three remote folders: inbox, trash,
+    and all. All is where gmail keeps archived emails so we keep that
+    in sync since =mu4e= is configured to refile emails there when
+    archiving. Inbox and trash I believe are self explanatory. We only
+    need these three folders because I do not organize emails in
+    folders but via =mu4e= search bookmarks that operate on all of my
+    email.
+
+    #+BEGIN_SRC text :tangle .mbsyncrc
+      Channel work-inbox
+      Master :work-remote:
+      Slave :work-local:
+      Patterns "INBOX"
+      Create Both
+      Expunge Both
+      SyncState *
+
+      Channel work-trash
+      Master :work-remote:"[Gmail]/Trash"
+      Slave :work-local:"trash"
+      Create Both
+      Expunge Both
+      SyncState *
+
+      Channel work-all
+      Master :work-remote:"[Gmail]/All Mail"
+      Slave :work-local:"archive"
+      Create Both
+      Expunge Both
+      SyncState *
+    #+END_SRC
+
+    Finally we tie all of these channels into a group for
+    syncing. When you run =mbsync= you need to give a group name like
+    =mbsync work= in this case. I usually run =mbsync= via a SystemD
+    timer that runs =mbysnc -a= which syncs all groups. It's still
+    required to put the Channels into a Group however or else it
+    wouldn't get synced.
+
+    #+BEGIN_SRC text :tangle .mbsyncrc
+      Group work
+      Channel work-inbox
+      Channel work-trash
+      Channel work-all
+    #+END_SRC
+
+
+*** Personal Email Account
+
+    My personal email account setup is identical to my [[Work Email
+    Account]] setup. If the person reading this is looking for an
+    explanation of these options look there.
+
+    #+BEGIN_SRC text :tangle .mbsyncrc
+      IMAPAccount personal
+      Host imap.gmail.com
+      User chasinglogic@gmail.com
+      PassCmd "gpg -q --for-your-eyes-only --no-tty --exit-on-status-write-error --batch -d ~/.personal.gmail.password.gpg"
+      AuthMechs LOGIN
+      SSLType IMAPS
+
+      IMAPStore personal-remote
+      Account personal
+
+      MaildirStore personal-local
+      Path ~/Mail/personal/
+      Inbox ~/Mail/personal/INBOX
+
+      Channel personal-inbox
+      Master :personal-remote:
+      Slave :personal-local:
+      Patterns "INBOX"
+      Create Both
+      Expunge Both
+      SyncState *
+
+      Channel personal-trash
+      Master :personal-remote:"[Gmail]/Trash"
+      Slave :personal-local:"trash"
+      Create Both
+      Expunge Both
+      SyncState *
+
+      Channel personal-all
+      Master :personal-remote:"[Gmail]/All Mail"
+      Slave :personal-local:"archive"
+      Create Both
+      Expunge Both
+      SyncState *
+
+      Group personal
+      Channel personal-inbox
+      Channel personal-trash
+      Channel personal-all
+    #+END_SRC
+
+* License
+
+  MIT License so do what you want:
+
+  #+BEGIN_SRC text
+    Copyright 2018 Mathew Robinson
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+    LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  #+END_SRC
