@@ -233,14 +233,14 @@
        fi
      #+END_SRC
 
-     If on MacOS we need to source =~/.profile= and =~/.bash :tangle .bashrc_profile=
-     because shells be whack on MacOS yo.
+     Resource =~/.profile= in =.bashrc= and =.bash_profile= to get variables only available after login.
 
      #+BEGIN_SRC bash :tangle .bashrc 
-       if [[ $(uname) == "Darwin" ]]; then
-           source ~/.profile
-           source ~/.bashrc
-       fi
+     source ~/.profile
+     #+END_SRC
+
+     #+BEGIN_SRC bash :tangle .bash_profile
+     source ~/.profile
      #+END_SRC
 
 *** Aliases and Functions that behave like Aliases
