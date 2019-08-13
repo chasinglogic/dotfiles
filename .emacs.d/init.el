@@ -601,6 +601,26 @@ ARGS is ignored."
   :after org
   :config (require 'ox-reveal))
 
+(use-package org2blog
+  :after org
+  :commands (
+             org2blog/wp-login
+             org2blog/wp-new-entry
+             org2blog/wp-post-buffer
+             org2blog/wp-post-subtree
+             org2blog/wp-preview-buffer-post
+             )
+  :config
+  (require 'auth-source)
+  (let* ((credentials (auth-source-user-and-password "chasinglogic.wordpress.com"))
+         (username (nth 0 credentials))
+         (password (nth 1 credentials))
+         (config `("wordpress"
+                   :url "https://chasinglogic.wordpress.com/xmlrpc.php"
+                   :username ,username
+                   :password ,password)))
+    (setq org2blog/wp-blog-alist (list config))))
+
 (use-package evil-org
   :after org
   :config
