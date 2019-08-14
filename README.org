@@ -1806,6 +1806,264 @@
       Channel personal-all
     #+END_SRC
 
+** Sway Configuration
+
+   I use the sway window manager because everything else I try crashes
+   and I would much rather have a non-crashy simple environment than a
+   crashy pretty one.
+
+   Tiling window management is pretty ok too once you get used to it.
+
+*** Global Variables
+
+    First set some global variables that I use throughout the config.
+
+    Use =Mod4= as the modifier key. This is the "Logo" or Windows
+    key. I tried =Mod1= but it conflicted with my Emacs and Firefox
+    bindings too much.
+    
+    #+BEGIN_SRC conf :tangle .config/sway/config
+    set $mod Mod4
+    #+END_SRC
+
+    Next set some nice aliases for the VIM directional keys. I use
+    evil as you've probably seen by now so these are second nature.
+    
+    #+BEGIN_SRC conf :tangle .config/sway/config
+    set $left h
+    set $down j
+    set $up k
+    set $right l
+    #+END_SRC
+
+    This variable references whatever terminal emulator to open with
+    =$mod+Enter=. I use termite for now though it'd be nice to switch
+    to something that's actually packaged with my distro.
+
+    #+BEGIN_SRC conf :tangle .config/sway/config
+    set $term termite
+    #+END_SRC
+
+    Finally, set =$menu= to whatever command I use to launch
+    programs. I'm so used to a Spotlight/Krunner/Gnome Application
+    workflow I needed something to fill that void.
+    
+    #+BEGIN_SRC conf :tangle .config/sway/config
+    set $menu rofi -show drun
+    #+END_SRC
+
+*** Display Configuration
+
+    This configures my outputs or "displays".
+
+    First set a wallpaper to one of my photos. Note this requires you
+    have [[https://github.com/swaywm/swaybg][swaybg]] installed for this to work. Otherwise it's just ignored.
+
+    #+BEGIN_SRC conf :tangle .config/sway/config 
+    output "*" bg "/home/chasinglogic/Nextcloud/Pictures/Lightroom Exports/DSCF0308-4.jpg" fill
+    #+END_SRC
+
+    Enable "ClamShell" mode for my laptop. When the lid is closed and
+    another output is available disable the laptop's screen.
+
+    #+BEGIN_SRC conf :tangle .config/sway/config
+    set $laptop eDP-1
+    bindswitch lid:on output $laptop disable
+    bindswitch lid:off output $laptop enable
+    #+END_SRC
+
+    Set the gaps for inner and outer to 5. I've found this is not just
+    aesthetically pleasing but helps me better visually separate
+    windows.
+
+    #+BEGIN_SRC conf :tangle .config/sway/config 
+    set $gap_size 5
+    gaps inner $gap_size
+    gaps outer $gap_size
+    #+END_SRC
+    
+*** Idle Configuration
+
+    This will use =swayidle= to lock the screen after 300 seconds (5
+    minutes) and turn off the displays after 600 seconds. This
+    requires both =swaylock= and =swayidle= be installed. They do not
+    come with the default sway source installation.
+
+    #+BEGIN_SRC conf :tangle .config/sway/config 
+    exec swayidle -w \
+         timeout 300 'swaylock -f -c 000000' \
+         timeout 600 'swaymsg "output * dpms off"' \
+              resume 'swaymsg "output * dpms on"' \
+         before-sleep 'swaylock -f -c 000000'
+    #+END_SRC
+
+*** Input Configuration
+
+    This configures what Sway calls "inputs". Which is basically what
+    it sounds like. I set all of these options as "*" because I want
+    them to behave the same regardless of which peripheral I'm
+    using. It works because sway is smart about applying these options
+    only to the inputs which support them.
+
+    It does three important things:
+    - Disable tap to click for the touchpad
+    - Enable natural scrolling for all mouse-esque inputs
+    - Make CapsLock act as Control for all Keyboards.
+
+    #+BEGIN_SRC conf :tangle .config/sway/config 
+    input "*" tap disabled
+    input "*" natural_scroll enabled
+    input "*" xkb_options ctrl:nocaps
+    #+END_SRC
+
+*** Custom Modes
+
+    Sway has a concept of modes that lets you change what keys do
+    while a mode is active. You can define basically any custom modes
+    you wish.
+
+**** Resize Mode
+
+     This is resize mode and is taken directly from the default sway
+     configuration file.
+
+     #+BEGIN_SRC conf :tangle .config/sway/config 
+       mode "resize" {
+           # left will shrink the containers width
+           # right will grow the containers width
+           # up will shrink the containers height
+           # down will grow the containers height
+           bindsym $left resize shrink width 10px
+           bindsym $down resize grow height 10px
+           bindsym $up resize shrink height 10px
+           bindsym $right resize grow width 10px
+    
+           # Ditto, with arrow keys
+           bindsym Left resize shrink width 10px
+           bindsym Down resize grow height 10px
+           bindsym Up resize shrink height 10px
+           bindsym Right resize grow width 10px
+    
+           # Return to default mode
+           bindsym Return mode "default"
+           bindsym Escape mode "default"
+       }
+     #+END_SRC
+
+*** Key Bindings
+
+    This is the big one. Here is a table of my keybindings. I keep
+    this table up I find the table easier to read. I generate the
+    configuration from this table with a little Emacs / Python magic.
+
+    #+tblname: keybindings
+    | Keybinding                            | Command                                          | Description                                         |
+    |---------------------------------------+--------------------------------------------------+-----------------------------------------------------|
+    | $mod+Return                           | exec $term                                       | Launch my terminal                                  |
+    | $mod+Shift+q                          | kill                                             | Kill the focused window                             |
+    | $mod+d                                | exec $menu                                       | Launch my krunner equivalent                        |
+    | $mod+Shift+e                          | exit                                             | Exit sway                                           |
+    | XF86MonBrightnessDown                 | exec light -b -U 2                               | Decrease brightness with the function keys          |
+    | XF86MonBrightnessUp                   | exec light -b -A 2                               | Increase brightness with the function keys          |
+    | XF86AudioRaiseVolume                  | exec pactl set-sink-volume @DEFAULT_SINK@ +5%    | Increase volume with volume up key                  |
+    | XF86AudioLowerVolume                  | exec pactl set-sink-volume @DEFUALT_SINK@ -5%    | Decrease volume with the volume down key            |
+    | XF86AudioMute                         | exec pactl set-sink-volume @DEFAULT_SINK@ toggle | Mute volume with the mute key                       |
+    | $mod+$left                            | focus left                                       | Focus to the left window                            |
+    | $mod+$right                           | focus right                                      | Focus to the right window                           |
+    | $mod+$up                              | focus up                                         | Focus to the up window                              |
+    | $mod+$down                            | focus down                                       | Focus to the down window                            |
+    | $mod+Shift+$left                      | move left                                        | Move window to the left                             |
+    | $mod+Shift+$right                     | move right                                       | Move window to the right                            |
+    | $mod+Shift+$up                        | move up                                          | Move window to the up                               |
+    | $mod+Shift+$down                      | move down                                        | Move window to the down                             |
+    | $mod+1                                | workspace code                                   | Switch to code workspace                            |
+    | $mod+2                                | workspace web                                    | Switch to web workspace                             |
+    | $mod+3                                | workspace chat                                   | Switch to chat workspace                            |
+    | $mod+4                                | workspace email                                  | Switch to email workspace                           |
+    | $mod+5                                | workspace misc                                   | Switch to misc workspace                            |
+    | $mod+6                                | workspace 6                                      | Switch to 6 workspace                               |
+    | $mod+7                                | workspace 7                                      | Switch to 7 workspace                               |
+    | $mod+8                                | workspace 8                                      | Switch to 8 workspace                               |
+    | $mod+9                                | workspace 9                                      | Switch to 9 workspace                               |
+    | $mod+0                                | workspace 10                                     | Switch to 10 workspace                              |
+    | $mod+Shift+1                          | move container to workspace code                 | Move window to code workspace                       |
+    | $mod+Shift+2                          | move container to workspace web                  | Move window to web workspace                        |
+    | $mod+Shift+3                          | move container to workspace chat                 | Move window to chat workspace                       |
+    | $mod+Shift+4                          | move container to workspace email                | Move window to email workspace                      |
+    | $mod+Shift+5                          | move container to workspace misc                 | Move window to misc workspace                       |
+    | $mod+Shift+6                          | move container to workspace 6                    | Move window to 6 workspace                          |
+    | $mod+Shift+7                          | move container to workspace 7                    | Move window to 7 workspace                          |
+    | $mod+Shift+8                          | move container to workspace 8                    | Move window to 8 workspace                          |
+    | $mod+Shift+9                          | move container to workspace 9                    | Move window to 9 workspace                          |
+    | $mod+Shift+0                          | move container to workspace 10                   | Move window to 10 workspace                         |
+    | $mod+w                                | layout tabbed                                    | Make the layout for the container tabbed            |
+    | $mod+e                                | layout toggle split                              | Toggle the layout to split                          |
+    | $mod+f                                | fullscreen                                       | Make the current window fullscreen                  |
+    | $mod+Shift+space                      | floating toggle                                  | Toggle the floating state of the current window     |
+    | $mod+space                            | focus mode_toggle                                | Swap focus from the titling area and floating area  |
+    | $mod+a                                | focus parent                                     | Move focus to the parent container                  |
+    | $mod+Shift+minus                      | move scratchpad                                  | Move the currently focused window to the scratchpad |
+    | $mod+minus                            | scratchpad show                                  | Show the next window in the scratchpad              |
+    | $mod+r                                | mode resize                                      | Switch to resize mode. See [[resize mode]]              |
+    | $mod+l                                | exec swaylock                                    | Lock the session                                    |
+
+    #+name: generate-keybindings
+    #+BEGIN_SRC python :results output raw code replace :eval yes :tangle no :wrap "src conf :tangle .config/sway/config" :var keybindings=keybindings
+      for binding in keybindings:
+          print("  bindsym {} {}".format(binding[0], binding[1]))
+    #+END_SRC
+
+    #+RESULTS: generate-keybindings
+    #+begin_src conf :tangle .config/sway/config
+      bindsym $mod+Return exec $term
+      bindsym $mod+Shift+q kill
+      bindsym $mod+d exec $menu
+      bindsym $mod+Shift+e exit
+      bindsym XF86MonBrightnessDown exec light -b -U 2
+      bindsym XF86MonBrightnessUp exec light -b -A 2
+      bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+      bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFUALT_SINK@ -5%
+      bindsym XF86AudioMute exec pactl set-sink-volume @DEFAULT_SINK@ toggle
+      bindsym $mod+$left focus left
+      bindsym $mod+$right focus right
+      bindsym $mod+$up focus up
+      bindsym $mod+$down focus down
+      bindsym $mod+Shift+$left move left
+      bindsym $mod+Shift+$right move right
+      bindsym $mod+Shift+$up move up
+      bindsym $mod+Shift+$down move down
+      bindsym $mod+1 workspace code
+      bindsym $mod+2 workspace web
+      bindsym $mod+3 workspace chat
+      bindsym $mod+4 workspace email
+      bindsym $mod+5 workspace misc
+      bindsym $mod+6 workspace 6
+      bindsym $mod+7 workspace 7
+      bindsym $mod+8 workspace 8
+      bindsym $mod+9 workspace 9
+      bindsym $mod+0 workspace 10
+      bindsym $mod+Shift+1 move container to workspace code
+      bindsym $mod+Shift+2 move container to workspace web
+      bindsym $mod+Shift+3 move container to workspace chat
+      bindsym $mod+Shift+4 move container to workspace email
+      bindsym $mod+Shift+5 move container to workspace misc
+      bindsym $mod+Shift+6 move container to workspace 6
+      bindsym $mod+Shift+7 move container to workspace 7
+      bindsym $mod+Shift+8 move container to workspace 8
+      bindsym $mod+Shift+9 move container to workspace 9
+      bindsym $mod+Shift+0 move container to workspace 10
+      bindsym $mod+w layout tabbed
+      bindsym $mod+e layout toggle split
+      bindsym $mod+f fullscreen
+      bindsym $mod+Shift+space floating toggle
+      bindsym $mod+space focus mode_toggle
+      bindsym $mod+a focus parent
+      bindsym $mod+Shift+minus move scratchpad
+      bindsym $mod+minus scratchpad show
+      bindsym $mod+r mode resize
+      bindsym $mod+l exec swaylock
+    #+end_src
+
 * License
 
   MIT License so do what you want:
