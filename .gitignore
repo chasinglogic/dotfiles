@@ -1,0 +1,7 @@
+# Ignore everything except .emacs.d/*, .dfm.yml, and README.org
+/*
+/*/
+!/.emacs.d/
+!README.org
+!.dfm.yml
+!.gitignore
