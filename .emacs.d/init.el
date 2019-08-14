@@ -125,6 +125,7 @@
 ;;;; Keybindings
 
 (use-package which-key
+  :demand
   :diminish ""
   :config
   (which-key-mode))
@@ -151,71 +152,66 @@
 
   ;; leader keybindings
   (leader!
-    "'"   '(chasinglogic-shell :which-key "run terminal")
-    "x"   '(chasinglogic-shell :which-key "run terminal")
+    "'"    '(chasinglogic-shell :which-key "run terminal")
 
     ;; Quitting
-    "q"   '(:which-key "quit")
-    "qq"  'save-buffers-kill-terminal
-    "qf"  'delete-frame
+    "q"    '(:which-key "quit")
+    "qq"   'save-buffers-kill-terminal
+    "qf"   'delete-frame
 
     ;; Miscellaneous
-    "m"   '(:which-key "misc")
+    "m"    '(:which-key "misc")
+
     ;; Dotfile Management
-    "md"  '(:which-key "dotfiles")
-    "mdf" 'chasinglogic-find-dotfile
-    "mds" 'chasinglogic-sync-dotfiles
-    "mdr" 'chasinglogic-reload-config
+    "md"   '(:which-key "dotfiles")
+    "mdf"  'chasinglogic-find-dotfile
+    "mds"  'chasinglogic-sync-dotfiles
+    "mdr"  'chasinglogic-reload-config
+
     ;; Debugging helper
-    "mb"  'chasinglogic-copy-breakpoint-for-here
-    "mer" 'chasinglogic-evergreen-patch-required
-    "mep" 'evergreen-patch
-    "mel" 'evergreen-large-patch
+    "mb"   'chasinglogic-copy-breakpoint-for-here
+
+    ;; Evergreen
+    "mer"  'chasinglogic-evergreen-patch-required
+    "mep"  'evergreen-patch
+    "mel"  'evergreen-large-patch
 
     ;; Jumps
-    "j"   '(:which-key "jumps")
-    "j=" 'chasinglogic-indent-buffer
-    "ji" 'imenu
+    "j"    '(:which-key "jumps")
+    "j="   'chasinglogic-indent-buffer
+    "ji"   'imenu
 
     ;; Buffer Management
-    "b"   '(:which-key "buffers")
-    "bb"  'switch-to-buffer
-    "br"  'revert-buffer
-    "bm"  'ibuffer
-    "bs"  'chasinglogic-switch-to-scratch-buffer
-    "bD"  'kill-buffer
-    "bd"  'kill-current-buffer
+    "b"    '(:which-key "buffers")
+    "bb"   'switch-to-buffer
+    "br"   'revert-buffer
+    "bm"   'ibuffer
+    "bs"   'chasinglogic-switch-to-scratch-buffer
+    "bD"   'kill-buffer
+    "bd"   'kill-current-buffer
 
     ;; File Management
-    "f" '(:which-key "files")
-    "ff" 'find-file
-    "fr" 'chasinglogic-rename-file-and-buffer
-    "fR" 'chasinglogic-reload-config
-    "fs" 'save-buffer
-    "fD" 'chasinglogic-delete-current-buffer-file)
+    "f"    '(:which-key "files")
+    "ff"   'find-file
+    "fr"   'chasinglogic-rename-file-and-buffer
+    "fR"   'chasinglogic-reload-config
+    "fs"   'save-buffer
+    "fD"   'chasinglogic-delete-current-buffer-file)
 
   ;; global keybindings
-  (general-define-key "C-s" 'swiper)
   (general-define-key "M-t" 'imenu)
   (general-define-key "M-b" 'switch-to-buffer)
   (general-define-key "M-f" 'scroll-up-command)
-  (general-define-key "M-h" 'evil-window-left)
-  (general-define-key "M-j" 'evil-window-down)
-  (general-define-key "M-k" 'evil-window-up)
-  (general-define-key "M-l" 'evil-window-right)
   (general-define-key "M-w" 'delete-window)
   (general-define-key "M-W" 'delete-other-windows)
   (general-define-key "M-'" 'chasinglogic-shell)
   (general-define-key "M-/" 'comment-line)
 
-  (general-define-key "M-J" 'move-line-down)
-  (general-define-key "M-K" 'move-line-up)
+  (general-define-key "M-J" 'chasinglogic-move-line-down)
+  (general-define-key "M-K" 'chasinglogic-move-line-up)
 
   (general-evil-setup)
-  (general-nmap "K" 'org-previous-visible-heading)
-  (general-nmap "J" 'org-next-visible-heading)
   (general-nmap "-" 'chasinglogic-dired-current-file)
-  (general-nmap "TAB" 'evil-indent-line)
   (general-vmap "TAB" 'indent-region))
 
 ;;;; UI/UX
@@ -246,7 +242,7 @@
 
 ;; Color theme
 
-;; I Actually might like a default Emacs theme.
+;; I actually like a default Emacs theme.
 (load-theme 'wombat)
 (add-to-list 'default-frame-alist '(cursor-color . "#fff"))
 (set-cursor-color "#fff")
@@ -303,6 +299,8 @@
 
 (use-package ivy
   :diminish ""
+  :general
+  (general-define-key "C-s" 'swiper)
   :init
   (setq
    enable-recursive-minibuffers t
@@ -327,6 +325,11 @@
 ;; Modal editting in Emacs
 (use-package evil
   :general
+  (general-define-key "M-h" 'evil-window-left)
+  (general-define-key "M-j" 'evil-window-down)
+  (general-define-key "M-k" 'evil-window-up)
+  (general-define-key "M-l" 'evil-window-right)
+  (general-nmap "TAB" 'evil-indent-line)
   (evil-window-map
    "f" 'chasinglogic-make-and-select-frame
    "o" 'chasinglogic-ivy-get-a-frame
@@ -341,12 +344,14 @@
     "jp" 'evil-jump-backward
     "jn" 'evil-jump-forward)
   :init
+
   ;; evil-collection assumes evil-want-integration is set to nil before
   ;; loading evil and evil-collection.
   ;; See https://github.com/emacs-evil/evil-collection/issues/60 for
   ;; more details.
   (setq evil-want-keybinding nil
         evil-want-integration t)
+
   ;; Term buffers default to insert mode
   (defun chasinglogic-term-buffer-insert (&rest args)
     "Default a terminal buffer to insert mode.
@@ -360,6 +365,8 @@ ARGS is ignored."
   (advice-add 'evil-window-left :after #'chasinglogic-term-buffer-insert)
   (advice-add 'evil-window-right :after #'chasinglogic-term-buffer-insert)
   (advice-add 'other-window :after #'chasinglogic-term-buffer-insert)
+
+  ;; Enable evil mode everywhere
   (evil-mode 1))
 
 ;; EVIL bindings for most modes without Spacemacs
@@ -406,27 +413,30 @@ ARGS is ignored."
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
-  :general (leader!
-             "o"    '(:which-key "org")
-             "oTAB" 'org-global-cycle
-             "oa"   'org-agenda
-             "oc"   'org-capture
-             "or"   'org-archive-subtree
-             "ons"  'org-toggle-narrow-to-subtree
-             "mon"   (chasinglogic-find-org-file notes)
-             "moi"   (chasinglogic-find-org-file ideas)
-             "mot"   (chasinglogic-find-org-file todo)
-             "mor"  'chasinglogic-add-to-reading-list
-             "ot"   'org-todo
-             "os"   'org-schedule
-             "og"   'org-set-tags-command
-             "oP"   'org-set-property-and-value
-             "oil"  'org-insert-link
-             "oih"  'org-insert-heading
-             "op"   '(:which-key "priority")
-             "opp"  'org-priority
-             "opk"  'org-priority-up
-             "opj"  'org-priority-down)
+  :general
+  (leader!
+    "o"    '(:which-key "org")
+    "oTAB" 'org-global-cycle
+    "oa"   'org-agenda
+    "oc"   'org-capture
+    "or"   'org-archive-subtree
+    "ons"  'org-toggle-narrow-to-subtree
+    "mon"   (chasinglogic-find-org-file notes)
+    "moi"   (chasinglogic-find-org-file ideas)
+    "mot"   (chasinglogic-find-org-file todo)
+    "mor"  'chasinglogic-add-to-reading-list
+    "ot"   'org-todo
+    "os"   'org-schedule
+    "og"   'org-set-tags-command
+    "oP"   'org-set-property-and-value
+    "oil"  'org-insert-link
+    "oih"  'org-insert-heading
+    "op"   '(:which-key "priority")
+    "opp"  'org-priority
+    "opk"  'org-priority-up
+    "opj"  'org-priority-down)
+  (general-nmap "K" 'org-previous-visible-heading)
+  (general-nmap "J" 'org-next-visible-heading)
   :commands (org-capture org-insert-link)
   :ensure org-plus-contrib
   :init
@@ -693,7 +703,7 @@ ARGS is ignored."
              "gs" 'magit-status)
   :commands (magit-status)
   :init
-  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
+  (setq magit-display-buffer-function #'magit-display-buffer-traditional))
 
 (defvar kernel-tools (concat
                       (getenv "HOME")
@@ -903,8 +913,9 @@ ARGS is ignored."
              projectile-project-name)
   :general
   (leader!
-    "p"
-    '(:keymap projectile-command-map :which-key "projects" :package projectile)
+    "p" '(:keymap projectile-command-map
+                  :which-key "projects"
+                  :package projectile)
     "fh" 'projectile-find-other-file)
   (projectile-command-map
    "p" 'projectile-switch-project
@@ -914,8 +925,7 @@ ARGS is ignored."
    "F" 'projectile-find-file-in-known-projects
    "d" 'projectile-find-dir
    "b" 'projectile-switch-to-buffer)
-  :init
-  (global-set-key (kbd "M-p") 'projectile-switch-project)
+  (general-define-key "M-p" 'projectile-switch-project)
   :config
   (setq-default
    projectile-require-project-root t
