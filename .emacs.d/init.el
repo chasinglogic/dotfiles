@@ -584,6 +584,11 @@ ARGS is ignored."
        "r")
       (org-capture-finalize)))
 
+  (setq-default org-babel-load-languages
+                '((emacs-lisp . t)
+                  (rust . t)
+                  (python . t)))
+
   ;; Exporting
   (setq-default
    org-export-headline-levels 6)
