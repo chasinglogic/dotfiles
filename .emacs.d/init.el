@@ -199,20 +199,8 @@
     "fD"   'chasinglogic-delete-current-buffer-file)
 
   ;; global keybindings
-  (general-define-key "M-t" 'imenu)
-  (general-define-key "M-b" 'switch-to-buffer)
-  (general-define-key "M-f" 'scroll-up-command)
-  (general-define-key "M-w" 'delete-window)
-  (general-define-key "M-W" 'delete-other-windows)
-  (general-define-key "M-'" 'chasinglogic-shell)
-  (general-define-key "M-/" 'comment-line)
-
-  (general-define-key "M-J" 'chasinglogic-move-line-down)
-  (general-define-key "M-K" 'chasinglogic-move-line-up)
-
-  (general-evil-setup)
-  (general-nmap "-" 'chasinglogic-dired-current-file)
-  (general-vmap "TAB" 'indent-region))
+  (general-define-key "M-<up>" 'chasinglogic-move-line-down)
+  (general-define-key "M-<down>" 'chasinglogic-move-line-up))
 
 ;;;; UI/UX
 
@@ -319,91 +307,6 @@
     "my"  'counsel-yank-pop
     "SPC" 'counsel-M-x)
   (general-define-key "M-x" 'counsel-M-x))
-
-;;;; EVIL
-
-;; Modal editting in Emacs
-(use-package evil
-  :general
-  (general-define-key "M-h" 'evil-window-left)
-  (general-define-key "M-j" 'evil-window-down)
-  (general-define-key "M-k" 'evil-window-up)
-  (general-define-key "M-l" 'evil-window-right)
-  (general-nmap "TAB" 'evil-indent-line)
-  (evil-window-map
-   "f" 'chasinglogic-make-and-select-frame
-   "o" 'chasinglogic-ivy-get-a-frame
-   "m" 'delete-other-windows
-   "M" 'delete-other-frames
-   "d" 'evil-window-delete)
-  (leader!
-    ;; Window Management
-    "w"   '(:keymap evil-window-map :which-key "windows" :package evil)
-    
-    ;; Jumps
-    "jp" 'evil-jump-backward
-    "jn" 'evil-jump-forward)
-  :init
-
-  ;; evil-collection assumes evil-want-integration is set to nil before
-  ;; loading evil and evil-collection.
-  ;; See https://github.com/emacs-evil/evil-collection/issues/60 for
-  ;; more details.
-  (setq evil-want-keybinding nil
-        evil-want-integration t)
-
-  ;; Term buffers default to insert mode
-  (defun chasinglogic-term-buffer-insert (&rest args)
-    "Default a terminal buffer to insert mode.
-
-ARGS is ignored."
-    (when (derived-mode-p 'term-mode)
-      (evil-insert-state)))
-  (advice-add 'switch-to-buffer :after #'chasinglogic-term-buffer-insert)
-  (advice-add 'evil-window-up :after #'chasinglogic-term-buffer-insert)
-  (advice-add 'evil-window-bottom :after #'chasinglogic-term-buffer-insert)
-  (advice-add 'evil-window-left :after #'chasinglogic-term-buffer-insert)
-  (advice-add 'evil-window-right :after #'chasinglogic-term-buffer-insert)
-  (advice-add 'other-window :after #'chasinglogic-term-buffer-insert)
-
-  ;; Enable evil mode everywhere
-  (evil-mode 1))
-
-;; EVIL bindings for most modes without Spacemacs
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
-
-(use-package evil-magit
-  :after (evil magit)
-  :config (evil-magit-init))
-
-;; Toggle comments with gc
-(use-package evil-commentary
-  :diminish ""
-  :after evil
-  :config
-  (evil-commentary-mode 1))
-
-;; Make % more powerful
-(use-package evil-matchit
-  :after evil
-  :config
-  (global-evil-matchit-mode 1))
-
-;; Use fd to escape from insert mode
-(use-package evil-escape
-  :diminish ""
-  :after evil
-  :config
-  (evil-escape-mode 1))
-
-;; Surround things with S
-(use-package evil-surround
-  :after evil
-  :config
-  (global-evil-surround-mode 1))
 
 ;;;; Org / Notes
 
@@ -603,9 +506,7 @@ ARGS is ignored."
    org-agenda-sorting-strategy '((agenda todo-state-up priority-down timestamp-down)
                                  (todo todo-state-up priority-down timestamp-down)
                                  (tags priority-down timestamp-down)
-                                 (search priority-down timestamp-down)))
-
-  (add-hook 'org-capture-mode-hook 'evil-insert-state))
+                                 (search priority-down timestamp-down))))
 
 (use-package org-bullets
   :after org
@@ -635,20 +536,6 @@ ARGS is ignored."
                    :username ,username
                    :password ,password)))
     (setq org2blog/wp-blog-alist (list config))))
-
-(use-package evil-org
-  :after org
-  :config
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  (add-hook 'evil-org-mode-hook
-            (lambda ()
-              (evil-org-set-key-theme)))
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys)
-  (defun chasinglogic-give-me-leader-back ()
-    (local-unset-key (kbd "SPC")))
-  (add-hook 'org-mode-hook 'chasinglogic-give-me-leader-back)
-  (add-hook 'org-agenda-mode-hook 'chasinglogic-give-me-leader-back))
 
 ;;;; Linting
 

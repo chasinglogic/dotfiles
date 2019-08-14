@@ -147,20 +147,6 @@ If SYNC provided will run make command synchronously"
        (executable-find "zsh")
        shell-buf-name))))
 
-;; when switching to a buffer if it's a shell automatically go to
-;; insert mode
-(defvar previous-buffer-name (buffer-name))
-(defun insert-mode-in-term-hook (&rest _args)
-  "When going into a term mode set evil to insert mode."
-  (when (and
-         (string-match-p
-          (regexp-quote "-shell") (buffer-name))
-         (not (eq (buffer-name) previous-buffer-name)))
-    (setq previous-buffer-name (buffer-name))
-    (evil-insert-state)))
-(add-hook 'buffer-list-update-hook 'insert-mode-in-term-hook)
-
-
 (defun chasinglogic-raza ()
   "Tramp into my MongoDB repo on my work dev machine."
   (interactive)
