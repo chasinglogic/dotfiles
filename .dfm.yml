@@ -5,6 +5,8 @@ mappings:
   - match: ".*gpg-agent.conf"
     target_os:
       - "Darwin"
+  - match: "README.org"
+    skip: true
 
 hooks:
   after_sync:
