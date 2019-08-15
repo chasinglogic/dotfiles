@@ -1881,6 +1881,13 @@
     gaps inner $gap_size
     gaps outer $gap_size
     #+END_SRC
+
+    Don't show title bars for windows. Makes gaps weird.
+
+    #+BEGIN_SRC conf :tangle .config/sway/config
+    default_border pixel
+    #+END_SRC
+
     
 *** Idle Configuration
 
@@ -1957,55 +1964,56 @@
     configuration from this table with a little Emacs / Python magic.
 
     #+tblname: keybindings
-    | Keybinding                            | Command                                          | Description                                         |
-    |---------------------------------------+--------------------------------------------------+-----------------------------------------------------|
-    | $mod+Return                           | exec $term                                       | Launch my terminal                                  |
-    | $mod+Shift+q                          | kill                                             | Kill the focused window                             |
-    | $mod+d                                | exec $menu                                       | Launch my krunner equivalent                        |
-    | $mod+Shift+e                          | exit                                             | Exit sway                                           |
-    | XF86MonBrightnessDown                 | exec light -b -U 2                               | Decrease brightness with the function keys          |
-    | XF86MonBrightnessUp                   | exec light -b -A 2                               | Increase brightness with the function keys          |
-    | XF86AudioRaiseVolume                  | exec pactl set-sink-volume @DEFAULT_SINK@ +5%    | Increase volume with volume up key                  |
-    | XF86AudioLowerVolume                  | exec pactl set-sink-volume @DEFUALT_SINK@ -5%    | Decrease volume with the volume down key            |
-    | XF86AudioMute                         | exec pactl set-sink-volume @DEFAULT_SINK@ toggle | Mute volume with the mute key                       |
-    | $mod+$left                            | focus left                                       | Focus to the left window                            |
-    | $mod+$right                           | focus right                                      | Focus to the right window                           |
-    | $mod+$up                              | focus up                                         | Focus to the up window                              |
-    | $mod+$down                            | focus down                                       | Focus to the down window                            |
-    | $mod+Shift+$left                      | move left                                        | Move window to the left                             |
-    | $mod+Shift+$right                     | move right                                       | Move window to the right                            |
-    | $mod+Shift+$up                        | move up                                          | Move window to the up                               |
-    | $mod+Shift+$down                      | move down                                        | Move window to the down                             |
-    | $mod+1                                | workspace code                                   | Switch to code workspace                            |
-    | $mod+2                                | workspace web                                    | Switch to web workspace                             |
-    | $mod+3                                | workspace chat                                   | Switch to chat workspace                            |
-    | $mod+4                                | workspace email                                  | Switch to email workspace                           |
-    | $mod+5                                | workspace misc                                   | Switch to misc workspace                            |
-    | $mod+6                                | workspace 6                                      | Switch to 6 workspace                               |
-    | $mod+7                                | workspace 7                                      | Switch to 7 workspace                               |
-    | $mod+8                                | workspace 8                                      | Switch to 8 workspace                               |
-    | $mod+9                                | workspace 9                                      | Switch to 9 workspace                               |
-    | $mod+0                                | workspace 10                                     | Switch to 10 workspace                              |
-    | $mod+Shift+1                          | move container to workspace code                 | Move window to code workspace                       |
-    | $mod+Shift+2                          | move container to workspace web                  | Move window to web workspace                        |
-    | $mod+Shift+3                          | move container to workspace chat                 | Move window to chat workspace                       |
-    | $mod+Shift+4                          | move container to workspace email                | Move window to email workspace                      |
-    | $mod+Shift+5                          | move container to workspace misc                 | Move window to misc workspace                       |
-    | $mod+Shift+6                          | move container to workspace 6                    | Move window to 6 workspace                          |
-    | $mod+Shift+7                          | move container to workspace 7                    | Move window to 7 workspace                          |
-    | $mod+Shift+8                          | move container to workspace 8                    | Move window to 8 workspace                          |
-    | $mod+Shift+9                          | move container to workspace 9                    | Move window to 9 workspace                          |
-    | $mod+Shift+0                          | move container to workspace 10                   | Move window to 10 workspace                         |
-    | $mod+w                                | layout tabbed                                    | Make the layout for the container tabbed            |
-    | $mod+e                                | layout toggle split                              | Toggle the layout to split                          |
-    | $mod+f                                | fullscreen                                       | Make the current window fullscreen                  |
-    | $mod+Shift+space                      | floating toggle                                  | Toggle the floating state of the current window     |
-    | $mod+space                            | focus mode_toggle                                | Swap focus from the titling area and floating area  |
-    | $mod+a                                | focus parent                                     | Move focus to the parent container                  |
-    | $mod+Shift+minus                      | move scratchpad                                  | Move the currently focused window to the scratchpad |
-    | $mod+minus                            | scratchpad show                                  | Show the next window in the scratchpad              |
-    | $mod+r                                | mode resize                                      | Switch to resize mode. See [[resize mode]]              |
-    | $mod+l                                | exec swaylock                                    | Lock the session                                    |
+    | Keybinding            | Command                                          | Description                                         |
+    |-----------------------+--------------------------------------------------+-----------------------------------------------------|
+    | $mod+$down            | focus down                                       | Focus to the down window                            |
+    | $mod+$left            | focus left                                       | Focus to the left window                            |
+    | $mod+$right           | focus right                                      | Focus to the right window                           |
+    | $mod+$up              | focus up                                         | Focus to the up window                              |
+    | $mod+0                | workspace 10                                     | Switch to 10 workspace                              |
+    | $mod+1                | workspace code                                   | Switch to code workspace                            |
+    | $mod+2                | workspace web                                    | Switch to web workspace                             |
+    | $mod+3                | workspace chat                                   | Switch to chat workspace                            |
+    | $mod+4                | workspace email                                  | Switch to email workspace                           |
+    | $mod+5                | workspace misc                                   | Switch to misc workspace                            |
+    | $mod+6                | workspace 6                                      | Switch to 6 workspace                               |
+    | $mod+7                | workspace 7                                      | Switch to 7 workspace                               |
+    | $mod+8                | workspace 8                                      | Switch to 8 workspace                               |
+    | $mod+9                | workspace 9                                      | Switch to 9 workspace                               |
+    | $mod+a                | focus parent                                     | Move focus to the parent container                  |
+    | $mod+Control+l        | exec swaylock                                    | Lock the session                                    |
+    | $mod+d                | exec $menu                                       | Launch my krunner equivalent                        |
+    | $mod+e                | layout toggle split                              | Toggle the layout to split                          |
+    | $mod+f                | fullscreen                                       | Make the current window fullscreen                  |
+    | $mod+minus            | scratchpad show                                  | Show the next window in the scratchpad              |
+    | $mod+r                | mode resize                                      | Switch to resize mode. See [[resize mode]]              |
+    | $mod+Return           | exec $term                                       | Launch my terminal                                  |
+    | $mod+Shift+$down      | move down                                        | Move window to the down                             |
+    | $mod+Shift+$left      | move left                                        | Move window to the left                             |
+    | $mod+Shift+$right     | move right                                       | Move window to the right                            |
+    | $mod+Shift+$up        | move up                                          | Move window to the up                               |
+    | $mod+Shift+0          | move container to workspace 10                   | Move window to 10 workspace                         |
+    | $mod+Shift+1          | move container to workspace code                 | Move window to code workspace                       |
+    | $mod+Shift+2          | move container to workspace web                  | Move window to web workspace                        |
+    | $mod+Shift+3          | move container to workspace chat                 | Move window to chat workspace                       |
+    | $mod+Shift+4          | move container to workspace email                | Move window to email workspace                      |
+    | $mod+Shift+5          | move container to workspace misc                 | Move window to misc workspace                       |
+    | $mod+Shift+6          | move container to workspace 6                    | Move window to 6 workspace                          |
+    | $mod+Shift+7          | move container to workspace 7                    | Move window to 7 workspace                          |
+    | $mod+Shift+8          | move container to workspace 8                    | Move window to 8 workspace                          |
+    | $mod+Shift+9          | move container to workspace 9                    | Move window to 9 workspace                          |
+    | $mod+Shift+c          | reload                                           | Reload the sway configuration live                  |
+    | $mod+Shift+e          | exit                                             | Exit sway                                           |
+    | $mod+Shift+minus      | move scratchpad                                  | Move the currently focused window to the scratchpad |
+    | $mod+Shift+q          | kill                                             | Kill the focused window                             |
+    | $mod+Shift+space      | floating toggle                                  | Toggle the floating state of the current window     |
+    | $mod+space            | focus mode_toggle                                | Swap focus from the titling area and floating area  |
+    | $mod+w                | layout tabbed                                    | Make the layout for the container tabbed            |
+    | XF86AudioLowerVolume  | exec pactl set-sink-volume @DEFUALT_SINK@ -5%    | Decrease volume with the volume down key            |
+    | XF86AudioMute         | exec pactl set-sink-volume @DEFAULT_SINK@ toggle | Mute volume with the mute key                       |
+    | XF86AudioRaiseVolume  | exec pactl set-sink-volume @DEFAULT_SINK@ +5%    | Increase volume with volume up key                  |
+    | XF86MonBrightnessDown | exec light -b -U 2                               | Decrease brightness with the function keys          |
+    | XF86MonBrightnessUp   | exec light -b -A 2                               | Increase brightness with the function keys          |
 
     #+name: generate-keybindings
     #+BEGIN_SRC python :results output raw code replace :eval yes :tangle no :wrap "src conf :tangle .config/sway/config" :var keybindings=keybindings
@@ -2015,23 +2023,11 @@
 
     #+RESULTS: generate-keybindings
     #+begin_src conf :tangle .config/sway/config
-      bindsym $mod+Return exec $term
-      bindsym $mod+Shift+q kill
-      bindsym $mod+d exec $menu
-      bindsym $mod+Shift+e exit
-      bindsym XF86MonBrightnessDown exec light -b -U 2
-      bindsym XF86MonBrightnessUp exec light -b -A 2
-      bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-      bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFUALT_SINK@ -5%
-      bindsym XF86AudioMute exec pactl set-sink-volume @DEFAULT_SINK@ toggle
+      bindsym $mod+$down focus down
       bindsym $mod+$left focus left
       bindsym $mod+$right focus right
       bindsym $mod+$up focus up
-      bindsym $mod+$down focus down
-      bindsym $mod+Shift+$left move left
-      bindsym $mod+Shift+$right move right
-      bindsym $mod+Shift+$up move up
-      bindsym $mod+Shift+$down move down
+      bindsym $mod+0 workspace 10
       bindsym $mod+1 workspace code
       bindsym $mod+2 workspace web
       bindsym $mod+3 workspace chat
@@ -2041,7 +2037,19 @@
       bindsym $mod+7 workspace 7
       bindsym $mod+8 workspace 8
       bindsym $mod+9 workspace 9
-      bindsym $mod+0 workspace 10
+      bindsym $mod+a focus parent
+      bindsym $mod+Control+l exec swaylock
+      bindsym $mod+d exec $menu
+      bindsym $mod+e layout toggle split
+      bindsym $mod+f fullscreen
+      bindsym $mod+minus scratchpad show
+      bindsym $mod+r mode resize
+      bindsym $mod+Return exec $term
+      bindsym $mod+Shift+$down move down
+      bindsym $mod+Shift+$left move left
+      bindsym $mod+Shift+$right move right
+      bindsym $mod+Shift+$up move up
+      bindsym $mod+Shift+0 move container to workspace 10
       bindsym $mod+Shift+1 move container to workspace code
       bindsym $mod+Shift+2 move container to workspace web
       bindsym $mod+Shift+3 move container to workspace chat
@@ -2051,18 +2059,35 @@
       bindsym $mod+Shift+7 move container to workspace 7
       bindsym $mod+Shift+8 move container to workspace 8
       bindsym $mod+Shift+9 move container to workspace 9
-      bindsym $mod+Shift+0 move container to workspace 10
-      bindsym $mod+w layout tabbed
-      bindsym $mod+e layout toggle split
-      bindsym $mod+f fullscreen
+      bindsym $mod+Shift+c reload
+      bindsym $mod+Shift+e exit
+      bindsym $mod+Shift+minus move scratchpad
+      bindsym $mod+Shift+q kill
       bindsym $mod+Shift+space floating toggle
       bindsym $mod+space focus mode_toggle
-      bindsym $mod+a focus parent
-      bindsym $mod+Shift+minus move scratchpad
-      bindsym $mod+minus scratchpad show
-      bindsym $mod+r mode resize
-      bindsym $mod+l exec swaylock
+      bindsym $mod+w layout tabbed
+      bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFUALT_SINK@ -5%
+      bindsym XF86AudioMute exec pactl set-sink-volume @DEFAULT_SINK@ toggle
+      bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+      bindsym XF86MonBrightnessDown exec light -b -U 2
+      bindsym XF86MonBrightnessUp exec light -b -A 2
     #+end_src
+
+*** Swaybar Configuration
+
+    This configures the swaybar to display information that I find relevant in a readable font.
+
+    #+BEGIN_SRC conf :tangle .config/sway/config
+      bar {
+          position top
+
+          # When the status_command prints a new line to stdout, swaybar updates.
+          # The default just shows the current date and time.
+          status_command i3status
+
+          font = "Source Code Pro 13"
+      }
+    #+END_SRC
 
 * License
 

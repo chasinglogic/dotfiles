@@ -133,21 +133,8 @@
 (use-package general
   :demand
   :config
-  ;; Make space work everywhere
-  (setq-default
-   general-override-states '(insert
-                             emacs
-                             hybrid
-                             normal
-                             visual
-                             motion
-                             operator
-                             replace))
-  (general-override-mode)
-
   (general-create-definer leader!
-    :prefix "SPC"
-    :states '(normal motion)
+    :prefix "C-c l"
     :keymaps 'override)
 
   ;; leader keybindings
@@ -199,6 +186,13 @@
     "fD"   'chasinglogic-delete-current-buffer-file)
 
   ;; global keybindings
+  (general-define-key "M-<" 'xref-pop-marker-stack)
+  (general-define-key "M->" 'xref-find-definitions)
+  (general-define-key "M-," 'beginning-of-buffer)
+  (general-define-key "M-." 'end-of-buffer)
+  (general-define-key "M-[" 'backward-paragraph)
+  (general-define-key "M-]" 'forward-paragraph)
+  (general-define-key "C-x C-b" 'ibuffer)
   (general-define-key "M-<up>" 'chasinglogic-move-line-down)
   (general-define-key "M-<down>" 'chasinglogic-move-line-up))
 
@@ -288,7 +282,9 @@
 (use-package ivy
   :diminish ""
   :general
+  (general-define-key "M-y" 'counsel-yank-pop)
   (general-define-key "C-s" 'swiper)
+  (general-define-key "C-r" 'swiper-backward)
   :init
   (setq
    enable-recursive-minibuffers t
@@ -387,15 +383,28 @@
 
        (tags-todo
         ;; Query (filter out the reading_list)
-        "-reading_list"
+        "-reading_list-idea"
         ;; Settings
         (
          ;; Same
          (org-agenda-sorting-strategy '(tag-up priority-down))
          ;; Skip if the todo is scheduled
-         (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
-       )
-      )))
+         (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))))
+
+     ("is" "Ideas for software that need fleshed out"
+      ((tags-todo
+        ;; Query ideas
+        "+idea+software")))
+
+     ("ib" "Ideas for the blog that need fleshed out"
+      ((tags-todo
+        ;; Query ideas
+        "+idea+blog")))
+
+     ("ii" "Ideas that need fleshed out"
+      ((tags-todo
+        ;; Query ideas
+        "+idea")))))
 
   (setq-default
    ;; Set the default org-directory
@@ -489,7 +498,6 @@
 
   (setq-default org-babel-load-languages
                 '((emacs-lisp . t)
-                  (rust . t)
                   (python . t)))
 
   ;; Exporting
@@ -804,7 +812,8 @@
              projectile-project-root
              projectile-project-name)
   :general
-  (leader!
+  (general-define-key
+   :prefix "C-c"
     "p" '(:keymap projectile-command-map
                   :which-key "projects"
                   :package projectile)
@@ -819,12 +828,18 @@
    "b" 'projectile-switch-to-buffer)
   (general-define-key "M-p" 'projectile-switch-project)
   :config
+  (defun chasinglogic-switch-project-action ()
+    "Single view magit status page when switching projects."
+    (interactive)
+    (magit-status)
+    (delete-other-windows))
+  
   (setq-default
    projectile-require-project-root t
    projectile-completion-system 'ivy
    projectile-enable-caching nil
    ;; I prefer a git status when switching to a project
-   projectile-switch-project-action 'magit-status
+   projectile-switch-project-action 'chasinglogic-switch-project-action
    ;; I really don't need tags
    projectile-tags-command "")
   ;; When switching projects set frame name to project name
@@ -929,6 +944,15 @@
       (message "Not in a blacklisted project, enabling format on save.")
       (add-hook 'before-save-hook 'blacken-buffer nil t)))
   (add-hook 'python-mode-hook 'chasinglogic-python-format-hook))
+
+(use-package pyvenv
+  :commands 'pyvenv-workon
+  :init
+  (defun chasinglogic-auto-venv ()
+    "Automatically setup the venv when entering a project"
+    (when (file-exists-p (concat "~/.virtualenvs/" (projectile-project-name)))
+      (pyvenv-workon (projectile-project-name))))
+  (add-hook 'projectile-after-switch-project-hook 'chasinglogic-auto-venv))
 
 (add-hook 'python-mode-hook #'lsp)
 
