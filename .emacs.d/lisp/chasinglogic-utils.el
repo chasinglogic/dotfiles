@@ -153,11 +153,6 @@ If SYNC provided will run make command synchronously"
   (set-frame-name "raza")
   (dired "/ssh:dev:/home/chasinglogic/Code/mongodb/mongo"))
 
-(defun chasinglogic-work ()
-  "Project switch to Mongo."
-  (interactive)
-  (projectile-switch-project-by-name "mongo"))
-
 (defun chasinglogic-make-and-select-frame (&optional name)
   "Create and select a new frame.
 
@@ -177,16 +172,6 @@ Optionally set frame NAME on creation."
     (progn
       (chasinglogic-make-and-select-frame "email")
       (mu4e))))
-
-(defun chasinglogic-enable-sync-mongo-on-save ()
-  "Enable sync_mongo on save for this buffer."
-  (interactive)
-  (add-hook 'after-save-hook 'chasinglogic-sync-mongo nil t))
-
-(defun chasinglogic-disable-sync-mongo-on-save ()
-  "Disable sync_mongo on save for this buffer."
-  (interactive)
-  (remove-hook 'after-save-hook 'chasinglogic-sync-mongo nil t))
 
 (defun chasinglogic-evergreen-patch-toolchain (variants)
   "Patch the toolchain-builder project"
