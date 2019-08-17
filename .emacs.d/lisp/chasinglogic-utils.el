@@ -158,11 +158,6 @@ If SYNC provided will run make command synchronously"
   (interactive)
   (projectile-switch-project-by-name "mongo"))
 
-(defun chasinglogic-sync-mongo ()
-  "Run my sync mongo script."
-  (interactive)
-  (chasinglogic-projectile-command "sync_mongo"))
-
 (defun chasinglogic-make-and-select-frame (&optional name)
   "Create and select a new frame.
 
