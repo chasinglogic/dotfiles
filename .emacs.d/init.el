@@ -136,9 +136,9 @@
   
   (cc!
    "j" '(:which-key jumps)
-    "jb" 'chasinglogic-copy-breakpoint-for-here
-    "j="   'chasinglogic-indent-buffer
-    "ji"   'imenu)
+   "jb" 'chasinglogic-copy-breakpoint-for-here
+   "j="   'chasinglogic-indent-buffer
+   "ji"   'imenu)
 
   (unbind-key "C-x f")
   (general-define-key :prefix "C-x"
@@ -219,10 +219,10 @@
 (use-package avy
   :general
   (cc!
-    "jc" 'avy-goto-char
-    "jj" 'avy-goto-word-1
-    "jl" 'avy-goto-line
-    "jh" 'avy-goto-heading))
+   "jc" 'avy-goto-char
+   "jj" 'avy-goto-word-1
+   "jl" 'avy-goto-line
+   "jh" 'avy-goto-heading))
 
 (use-package ace-window
   :general ("M-o" 'ace-window))
