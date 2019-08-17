@@ -54,12 +54,6 @@
   (diminish 'eldoc-mode)
   (diminish 'undo-tree-mode))
 
-(use-package diminish
-  :commands 'diminish
-  :init
-  (diminish 'eldoc-mode)
-  (diminish 'undo-tree-mode))
-
 ;;;; Add my Utilities to the load-path
 ;;;; Install and setup use-package
 
@@ -136,22 +130,18 @@
 (use-package general
   :demand
   :config
-  (general-create-definer leader! :prefix "C-c l")
-  (leader! "b" 'chasinglogic-copy-breakpoint-for-here)
-
-  ;; I don't use C-j for newlines since it's hard to remember and I
-  ;; more often want <return> or M-j. I instead use it for jumping.
-  (general-create-definer jumps! :prefix "C-x j" :which-key "jumps")
-  (general-create-definer org! :prefix "C-c o" :which-key "org")
+  (general-create-definer cc! :prefix "C-c")
 
   (general-define-key "C-x '" 'chasinglogic-shell)
   
-  (jumps!
-    "="   'chasinglogic-indent-buffer
-    "i"   'imenu)
+  (cc!
+   "j" '(:which-key jumps)
+    "jb" 'chasinglogic-copy-breakpoint-for-here
+    "j="   'chasinglogic-indent-buffer
+    "ji"   'imenu)
 
   (unbind-key "C-x f")
-  (general-define-key :prefix "C-x f"
+  (general-define-key :prefix "C-x"
                       ;; File Management
                       "f"    '(:which-key "files")
                       "ff" 'find-file
@@ -228,11 +218,11 @@
 
 (use-package avy
   :general
-  (jumps!
-    "c" 'avy-goto-char
-    "j" 'avy-goto-word-1
-    "l" 'avy-goto-line
-    "h" 'avy-goto-heading))
+  (cc!
+    "jc" 'avy-goto-char
+    "jj" 'avy-goto-word-1
+    "jl" 'avy-goto-line
+    "jh" 'avy-goto-heading))
 
 (use-package ace-window
   :general ("M-o" 'ace-window))
@@ -240,16 +230,33 @@
 (use-package hydra
   :demand
   :config
+  (defhydra chasinglogic-movement-hydra (global-map "C-x m")
+    ("q" nil "quit")
+    ("n" next-line "next line")
+    ("p" previous-line "previous line")
+    ("b" backward-char "backward char")
+    ("f" forward-char "forward char")
+    ("s" swiper "swiper search")
+    ("r" counsel-ripgrep "ripgrep search")
+    ("w" forward-word "forward word")
+    ("W" backward-word "backward word")
+    ("v" scroll-up-command "scroll down")
+    ("V" scroll-down-command "scroll up")
+    ("l" recenter-top-bottom "recenter")
+    ("[" backward-paragraph "backward paragraph")
+    ("]" forward-paragraph "forward paragraph"))
   (defhydra chasinglogic-window-hydra (global-map "C-x j w")
+    ("q" nil "quit")
     ("j" ace-window "switch windows")
-    ("=" balance-window "balance windows")
+    ("=" balance-windows "balance windows")
     ("d" delete-window "delete this window")
     ("o" delete-other-windows "delete other windows")
     ("v" split-window-right "split window to right")
     ("s" split-window-below "split window below")))
 
+;; auto pair things in lisp
 (use-package paredit)
-;; auto pair things
+;; Auto do stuff that I like.
 (electric-layout-mode 1)
 (electric-indent-mode 1)
 
@@ -308,26 +315,27 @@
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :general
-  (org!
-    "TAB" 'org-global-cycle
-    "a"   'org-agenda
-    "c"   'org-capture
-    "r"   'org-archive-subtree
-    "ns"  'org-toggle-narrow-to-subtree
-    "on"  (chasinglogic-find-org-file notes)
-    "oi"  (chasinglogic-find-org-file ideas)
-    "ot"  (chasinglogic-find-org-file todo)
-    "or"  'chasinglogic-add-to-reading-list
-    "t"   'org-todo
-    "s"   'org-schedule
-    "g"   'org-set-tags-command
-    "P"   'org-set-property-and-value
-    "il"  'org-insert-link
-    "ih"  'org-insert-heading
-    "p"   '(:which-key "priority")
-    "pp"  'org-priority
-    "pk"  'org-priority-up
-    "pj"  'org-priority-down)
+  (cc!
+   "o" '(:which-key "org")
+   "oTAB" 'org-global-cycle
+   "oa"   'org-agenda
+   "oc"   'org-capture
+   "or"   'org-archive-subtree
+   "ons"  'org-toggle-narrow-to-subtree
+   "oon"  (chasinglogic-find-org-file notes)
+   "ooi"  (chasinglogic-find-org-file ideas)
+   "oot"  (chasinglogic-find-org-file todo)
+   "oor"  'chasinglogic-add-to-reading-list
+   "ot"   'org-todo
+   "os"   'org-schedule
+   "og"   'org-set-tags-command
+   "oP"   'org-set-property-and-value
+   "oil"  'org-insert-link
+   "oih"  'org-insert-heading
+   "op"   '(:which-key "priority")
+   "opp"  'org-priority
+   "opk"  'org-priority-up
+   "opj"  'org-priority-down)
   :commands (org-capture org-insert-link)
   :ensure org-plus-contrib
   :init
@@ -542,12 +550,12 @@
 (use-package flycheck
   :diminish ""
   :commands 'flycheck-mode
-  :general (leader!
-             "e"  '(:which-key "errors")
-             "el" 'flycheck-list-errors
-             "ev" 'flycheck-verify-setup
-             "en" 'flycheck-next-error
-             "ep" 'flycheck-previous-error)
+  :general (cc!
+            "e"  '(:which-key "errors")
+            "el" 'flycheck-list-errors
+            "ev" 'flycheck-verify-setup
+            "en" 'flycheck-next-error
+            "ep" 'flycheck-previous-error)
   :init
   (defun chasinglogic-enable-flycheck ()
     "Enable flycheck mode"
@@ -586,12 +594,12 @@
 ;; Enable magit the git client for Emacs
 (use-package magit
   :general (:prefix "C-c g"
-            :which-key "git"
-             "b" 'magit-blame
-             "l" 'magit-log-current
-             "a" 'magit-stage-file
-             "c" 'magit-commit
-             "s" 'magit-status)
+                    :which-key "git"
+                    "b" 'magit-blame
+                    "l" 'magit-log-current
+                    "a" 'magit-stage-file
+                    "c" 'magit-commit
+                    "s" 'magit-status)
   :commands (magit-status)
   :init
   (setq magit-display-buffer-function #'magit-display-buffer-traditional))
@@ -601,9 +609,9 @@
                       "/Work/kernel-tools/codereview"))
 (use-package xgen-cru
   :load-path kernel-tools
-  :general (leader!
-             "mcp" 'xgen-cru-post-review
-             "mcu" 'xgen-cru-update-review)
+  :general (cc!
+            "xp" 'xgen-cru-post-review
+            "xu" 'xgen-cru-update-review)
   :commands (xgen-cru-update-review xgen-cru-post-review)
   :config
   (setq-default
@@ -620,8 +628,8 @@
 (when (file-exists-p mu4e-load-path)
   (use-package mu4e
     :load-path mu4e-load-path
-    :general (leader!
-               "mm" 'mu4e)
+    :general (cc!
+              "m" 'mu4e)
     :config
     ;; Customization variables
     (setq-default mu4e-maildir "~/Mail"
@@ -803,284 +811,281 @@
              projectile-project-root
              projectile-project-name)
   :general
-  (general-define-key
-   :prefix "C-c"
-   "p" '(:keymap projectile-command-map
-                 :which-key "projects"
-                 :package projectile)
-   "fh" 'projectile-find-other-file)
-  (projectile-command-map
-   "p" 'projectile-switch-project
-   "f" 'projectile-find-file
-   "g" 'counsel-rg
-   "s" 'counsel-rg
-   "F" 'projectile-find-file-in-known-projects
-   "d" 'projectile-find-dir
-   "b" 'projectile-switch-to-buffer)
-  (general-define-key "M-p" 'projectile-switch-project)
-  :config
-  (defun chasinglogic-switch-project-action ()
-    "Single view magit status page when switching projects."
-    (interactive)
-    (magit-status)
-    (delete-other-windows))
-  
-  (setq-default
-   projectile-require-project-root t
-   projectile-completion-system 'ivy
-   projectile-enable-caching nil
-   ;; I prefer a git status when switching to a project
-   projectile-switch-project-action 'chasinglogic-switch-project-action
-   ;; I really don't need tags
-   projectile-tags-command "")
-  ;; When switching projects set frame name to project name
-  (defun set-frame-name-to-project ()
-    (set-frame-parameter (selected-frame) 'name (projectile-project-name)))
-  (add-hook 'projectile-after-switch-project-hook 'set-frame-name-to-project))
+  ("C-c p" '(:keymap projectile-command-map
+                     :which-key "projects"
+                     :package projectile)
+   (projectile-command-map
+    "p" 'projectile-switch-project
+    "f" 'projectile-find-file
+    "g" 'counsel-rg
+    "s" 'counsel-rg
+    "F" 'projectile-find-file-in-known-projects
+    "d" 'projectile-find-dir
+    "b" 'projectile-switch-to-buffer)
+   (general-define-key "M-p" 'projectile-switch-project)
+   :config
+   (defun chasinglogic-switch-project-action ()
+     "Single view magit status page when switching projects."
+     (interactive)
+     (magit-status)
+     (delete-other-windows))
+   
+   (setq-default
+    projectile-require-project-root t
+    projectile-completion-system 'ivy
+    projectile-enable-caching nil
+    ;; I prefer a git status when switching to a project
+    projectile-switch-project-action 'chasinglogic-switch-project-action
+    ;; I really don't need tags
+    projectile-tags-command "")
+   ;; When switching projects set frame name to project name
+   (defun set-frame-name-to-project ()
+     (set-frame-parameter (selected-frame) 'name (projectile-project-name)))
+   (add-hook 'projectile-after-switch-project-hook 'set-frame-name-to-project))
 
 ;;;; Language Server Protocol
 
-(setq-default
- lsp-ui-doc-enable nil
- lsp-ui-peek-enable nil
- lsp-ui-sideline-enable nil
- lsp-ui-imenu-enable nil
- lsp-ui-flycheck-enable t)
+  (setq-default
+   lsp-ui-doc-enable nil
+   lsp-ui-peek-enable nil
+   lsp-ui-sideline-enable nil
+   lsp-ui-imenu-enable nil
+   lsp-ui-flycheck-enable t)
 
-(use-package lsp-mode
-  :commands 'lsp
-  :config
+  (use-package lsp-mode
+    :commands 'lsp
+    :config
+    (setq-default
+     lsp-ui-doc-enable nil
+     lsp-ui-peek-enable nil
+     lsp-ui-sideline-enable nil
+     lsp-ui-imenu-enable nil
+     lsp-ui-flycheck-enable t
+     lsp-prefer-flymake nil
+     lsp-auto-guess-root t))
+
   (setq-default
    lsp-ui-doc-enable nil
    lsp-ui-peek-enable nil
    lsp-ui-sideline-enable nil
    lsp-ui-imenu-enable nil
    lsp-ui-flycheck-enable t
-   lsp-prefer-flymake nil
-   lsp-auto-guess-root t))
+   lsp-prefer-flymake nil)
 
-(setq-default
- lsp-ui-doc-enable nil
- lsp-ui-peek-enable nil
- lsp-ui-sideline-enable nil
- lsp-ui-imenu-enable nil
- lsp-ui-flycheck-enable t
- lsp-prefer-flymake nil)
+  (use-package lsp-ui
+    :after 'lsp-mode
+    :commands 'lsp-ui-mode)
 
-(use-package lsp-ui
-  :after 'lsp-mode
-  :commands 'lsp-ui-mode)
+  (use-package ccls
+    :hook ((c-mode c++-mode objc-mode) .
+           (lambda () (require 'ccls) (lsp))))
 
-(use-package ccls
-  :hook ((c-mode c++-mode objc-mode) .
-         (lambda () (require 'ccls) (lsp))))
-
-(use-package company-lsp
-  :commands 'company-lsp
-  :after (lsp-mode company))
+  (use-package company-lsp
+    :commands 'company-lsp
+    :after (lsp-mode company))
 
 ;;;; Frame Management
 
-;; This allows selecting a frame by name
-(require 'chasinglogic-frames)
-(defun chasinglogic-ivy-get-a-frame ()
-  "Search and select frames by name."
-  (interactive)
-  (select-frame-by-name
-   (ivy-completing-read
-    "Frame: "
-    (mapcar 'get-frame-name (frame-list)))))
+  ;; This allows selecting a frame by name
+  (require 'chasinglogic-frames)
+  (defun chasinglogic-ivy-get-a-frame ()
+    "Search and select frames by name."
+    (interactive)
+    (select-frame-by-name
+     (ivy-completing-read
+      "Frame: "
+      (mapcar 'get-frame-name (frame-list)))))
 
 ;;;; Writing
 
-(use-package writeroom-mode
-  :general (leader!
-             "mw" 'writeroom-mode)
-  :commands (writeroom-mode))
+  (use-package writeroom-mode
+    :general (cc!
+              "w" 'writeroom-mode)
+    :commands (writeroom-mode))
 
-(use-package hl-todo
-  :demand
-  :config
-  (global-hl-todo-mode))
+  (use-package hl-todo
+    :demand
+    :config
+    (global-hl-todo-mode))
 
 ;;;; Python
 
-;; Use correct Python3
-(setq-default
- python-shell-interpreter
- (if (eq system-type 'darwin)
-     "/usr/local/bin/python3"
-   "python3"))
-;; Make flycheck use the previously set python3
-(setq-default
- flycheck-python-flake8-executable python-shell-interpreter
- flycheck-python-pylint-executable python-shell-interpreter
- flycheck-python-pycompile-executable python-shell-interpreter)
+  ;; Use correct Python3
+  (setq-default
+   python-shell-interpreter
+   (if (eq system-type 'darwin)
+       "/usr/local/bin/python3"
+     "python3"))
+  ;; Make flycheck use the previously set python3
+  (setq-default
+   flycheck-python-flake8-executable python-shell-interpreter
+   flycheck-python-pylint-executable python-shell-interpreter
+   flycheck-python-pycompile-executable python-shell-interpreter)
 
-(use-package blacken
-  :commands 'blacken-buffer
-  :init
-  (defvar chasinglogic-blacken-black-list
-    '("scons"
-      "mongo"
-      "enterprise"
-      "mongo_modules_enterprise"
-      "toolchain-builder"
-      "kernel-tools")
-    "Projects who don't use black so don't auto format them.")
+  (use-package blacken
+    :commands 'blacken-buffer
+    :init
+    (defvar chasinglogic-blacken-black-list
+      '("scons"
+        "mongo"
+        "enterprise"
+        "mongo_modules_enterprise"
+        "toolchain-builder"
+        "kernel-tools")
+      "Projects who don't use black so don't auto format them.")
 
-  (defun chasinglogic-python-format-hook ()
-    "Set up blacken-buffer on save if appropriate."
-    (unless (member (projectile-project-name) chasinglogic-blacken-black-list) 
-      (message "Not in a blacklisted project, enabling format on save.")
-      (add-hook 'before-save-hook 'blacken-buffer nil t)))
-  (add-hook 'python-mode-hook 'chasinglogic-python-format-hook))
+    (defun chasinglogic-python-format-hook ()
+      "Set up blacken-buffer on save if appropriate."
+      (unless (member (projectile-project-name) chasinglogic-blacken-black-list) 
+        (message "Not in a blacklisted project, enabling format on save.")
+        (add-hook 'before-save-hook 'blacken-buffer nil t)))
+    (add-hook 'python-mode-hook 'chasinglogic-python-format-hook))
 
-(use-package pyvenv
-  :commands 'pyvenv-workon
-  :init
-  (defun chasinglogic-auto-venv ()
-    "Automatically setup the venv when entering a project"
-    (when (file-exists-p (concat "~/.virtualenvs/" (projectile-project-name)))
-      (pyvenv-workon (projectile-project-name))))
-  (add-hook 'projectile-after-switch-project-hook 'chasinglogic-auto-venv))
+  (use-package pyvenv
+    :commands 'pyvenv-workon
+    :init
+    (defun chasinglogic-auto-venv ()
+      "Automatically setup the venv when entering a project"
+      (when (file-exists-p (concat "~/.virtualenvs/" (projectile-project-name)))
+        (pyvenv-workon (projectile-project-name))))
+    (add-hook 'projectile-after-switch-project-hook 'chasinglogic-auto-venv))
 
-(add-hook 'python-mode-hook #'lsp)
+  (add-hook 'python-mode-hook #'lsp)
 
-;; Load SCons files as Python
-(add-to-list 'auto-mode-alist '("SConscript" . python-mode))
-(add-to-list 'auto-mode-alist '("SConstruct" . python-mode))
-(add-to-list 'auto-mode-alist '("\\.vars\\'" . python-mode))
+  ;; Load SCons files as Python
+  (add-to-list 'auto-mode-alist '("SConscript" . python-mode))
+  (add-to-list 'auto-mode-alist '("SConstruct" . python-mode))
+  (add-to-list 'auto-mode-alist '("\\.vars\\'" . python-mode))
 
 ;;;; TypeScript
 
-(use-package typescript-mode
-  :mode "\\.ts\\'"
-  :config
-  (add-hook typescript-mode-hook 'lsp))
+  (use-package typescript-mode
+    :mode "\\.ts\\'"
+    :config
+    (add-hook typescript-mode-hook 'lsp))
 
-;; (use-package tide
-;;   :ensure t
-;;   :after (typescript-mode company flycheck)
-;;   :hook ((typescript-mode . tide-setup)
-;;          (typescript-mode . tide-hl-identifier-mode)
-;;          (typescript-mode . eldoc-mode)
-;;          (before-save . tide-format-before-save)))
+  ;; (use-package tide
+  ;;   :ensure t
+  ;;   :after (typescript-mode company flycheck)
+  ;;   :hook ((typescript-mode . tide-setup)
+  ;;          (typescript-mode . tide-hl-identifier-mode)
+  ;;          (typescript-mode . eldoc-mode)
+  ;;          (before-save . tide-format-before-save)))
 
 ;;;; Powershell
 
-(use-package powershell :mode ("\\.ps1\\'"))
+  (use-package powershell :mode ("\\.ps1\\'"))
 
 ;;;; Groovy
 
-(use-package groovy-mode :mode ("\\.groovy$" "\\.gradle$"))
+  (use-package groovy-mode :mode ("\\.groovy$" "\\.gradle$"))
 
 ;;;; YAML
 
-(use-package yaml-mode :mode ("\\.yaml\\'" "\\.yml\\'" "\\.idl\\'"))
+  (use-package yaml-mode :mode ("\\.yaml\\'" "\\.yml\\'" "\\.idl\\'"))
 
 ;;;; TOML
 
-(use-package toml-mode :mode ("\\gitconfig\\'" "\\.toml\\'"))
+  (use-package toml-mode :mode ("\\gitconfig\\'" "\\.toml\\'"))
 
 ;;;; CMake files
 
-(use-package cmake-mode :mode ("\\CMake.*txt\\'"))
+  (use-package cmake-mode :mode ("\\CMake.*txt\\'"))
 
 ;;;; Markdown
 
-(use-package markdown-mode
-  :mode ("\\.markdown\\'" "\\.md\\'")
-  :config
-  ;; Use pandoc for exporting to HTML
-  (setq-default markdown-command "pandoc")
+  (use-package markdown-mode
+    :mode ("\\.markdown\\'" "\\.md\\'")
+    :config
+    ;; Use pandoc for exporting to HTML
+    (setq-default markdown-command "pandoc")
 
-  (defun chasinglogic-markdown-mode-hook ()
-    "Disable line numbers and auto-wrap at 80 in Markdown"
-    (markdown-toggle-fontify-code-block-natively)
-    (display-line-numbers-mode -1)
-    (flyspell-mode 1)
-    (auto-fill-mode 1))
+    (defun chasinglogic-markdown-mode-hook ()
+      "Disable line numbers and auto-wrap at 80 in Markdown"
+      (markdown-toggle-fontify-code-block-natively)
+      (display-line-numbers-mode -1)
+      (flyspell-mode 1)
+      (auto-fill-mode 1))
 
-  (add-hook 'markdown-mode-hook 'chasinglogic-markdown-mode-hook))
+    (add-hook 'markdown-mode-hook 'chasinglogic-markdown-mode-hook))
 
 ;;;; Web (HTML/JS/CSS)
 
-(use-package web-mode
-  :commands (web-mode)
-  :mode ("\\.html?\\'" "\\.tmpl\\'" "\\.css\\'"
-         "\\.scss\\'" "\\.erb\\'" "\\.djhtml\\'"
-         "\\.tsx\\'")
-  :config
-  (setq-default js-ident-level 2
-                javascript-ident-level 2
-                js2-basic-offset 2)
-  (defun chasinglogic-web-mode-hook ()
-    ;; indent case statements
-    (c-set-offset 'case-label '+))
-  (add-hook 'web-mode-hook 'chasinglogic-web-mode-hook)
-  (add-hook 'web-mode-hook 'lsp)
-  ;; (add-hook 'web-mode-hook
-  ;;           (lambda ()
-  ;;             (when (string-equal "tsx" (file-name-extension buffer-file-name))
-  ;;               (tide-setup))))
-  ;; configure jsx-tide checker to run after your default jsx checker
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)
+  (use-package web-mode
+    :commands (web-mode)
+    :mode ("\\.html?\\'" "\\.tmpl\\'" "\\.css\\'"
+           "\\.scss\\'" "\\.erb\\'" "\\.djhtml\\'"
+           "\\.tsx\\'")
+    :config
+    (setq-default js-ident-level 2
+                  javascript-ident-level 2
+                  js2-basic-offset 2)
+    (defun chasinglogic-web-mode-hook ()
+      ;; indent case statements
+      (c-set-offset 'case-label '+))
+    (add-hook 'web-mode-hook 'chasinglogic-web-mode-hook)
+    (add-hook 'web-mode-hook 'lsp)
+    ;; (add-hook 'web-mode-hook
+    ;;           (lambda ()
+    ;;             (when (string-equal "tsx" (file-name-extension buffer-file-name))
+    ;;               (tide-setup))))
+    ;; configure jsx-tide checker to run after your default jsx checker
+    (flycheck-add-mode 'javascript-eslint 'web-mode)
+    (flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)
 
-  (setq-default web-mode-markup-indent-offset 2
-                web-mode-style-indent-offset 2
-                web-mode-code-indent-offset 2))
+    (setq-default web-mode-markup-indent-offset 2
+                  web-mode-style-indent-offset 2
+                  web-mode-code-indent-offset 2))
 
 ;;;; C++ / CPP
 
-(use-package clang-format
-  :commands (clang-format-buffer)
-  :config
-  (setq clang-format-binary "/opt/mongodbtoolchain/v3/bin/clang-format"))
+  (use-package clang-format
+    :commands (clang-format-buffer)
+    :config
+    (setq clang-format-binary "/opt/mongodbtoolchain/v3/bin/clang-format"))
 
-(defun chasinglogic-cpp-mode-hook ()
-  "Set up various C++ tools and options."
-  ;; Don't indent namespaces
-  (c-set-offset 'innamespace [0])
-  (setq c-basic-offset 4)
+  (defun chasinglogic-cpp-mode-hook ()
+    "Set up various C++ tools and options."
+    ;; Don't indent namespaces
+    (c-set-offset 'innamespace [0])
+    (setq c-basic-offset 4)
 
-  ;; Tell Flycheck I write modern C++ and use src-relative includes
-  (setq
-   flycheck-clang-language-standard "c++17"
-   flycheck-clang-include-path (list (concat (projectile-project-root) "src")))
+    ;; Tell Flycheck I write modern C++ and use src-relative includes
+    (setq
+     flycheck-clang-language-standard "c++17"
+     flycheck-clang-include-path (list (concat (projectile-project-root) "src")))
 
-  ;; Auto format C/C++ buffers
-  (add-hook 'before-save-hook 'clang-format-buffer nil t))
+    ;; Auto format C/C++ buffers
+    (add-hook 'before-save-hook 'clang-format-buffer nil t))
 
-(setq compilation-scroll-output t)
-(add-hook 'c++-mode-hook 'chasinglogic-cpp-mode-hook)
-(add-hook 'c-mode-hook 'chasinglogic-cpp-mode-hook)
-(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+  (setq compilation-scroll-output t)
+  (add-hook 'c++-mode-hook 'chasinglogic-cpp-mode-hook)
+  (add-hook 'c-mode-hook 'chasinglogic-cpp-mode-hook)
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 ;;;; Emacs Lisp
 
 ;;;; Rust
 
-(use-package rust-mode
-  :mode ("\\.rs\\'")
-  :config
-  (setq rust-format-on-save t)
-  (defun chasinglogic-rust-mode-hook ()
-    (setq-local compile-command "cargo clippy && cargo test"))
-  (add-hook 'rust-mode-hook 'chasinglogic-rust-mode-hook)
-  (add-hook 'rust-mode-hook #'lsp))
+  (use-package rust-mode
+    :mode ("\\.rs\\'")
+    :config
+    (setq rust-format-on-save t)
+    (defun chasinglogic-rust-mode-hook ()
+      (setq-local compile-command "cargo clippy && cargo test"))
+    (add-hook 'rust-mode-hook 'chasinglogic-rust-mode-hook)
+    (add-hook 'rust-mode-hook #'lsp))
 
 ;;;; Post-init
 
-;; Maximize this frame
-(maximize-gui-frames (selected-frame))
+  ;; Maximize this frame
+  (maximize-gui-frames (selected-frame))
 
-;; Always load keybinds last
-(chasinglogic-add-projector-projects-to-projectile)
+  ;; Always load keybinds last
+  (chasinglogic-add-projector-projects-to-projectile)
 
-(require 'server)
-(unless (server-running-p)
-  (server-start))
+  (require 'server)
+  (unless (server-running-p)
+    (server-start))
 
 ;;; init.el ends here
