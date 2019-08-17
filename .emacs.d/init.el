@@ -96,8 +96,9 @@
 ;;;; Global variables
 
 ;; Create auto saves dir if not exist
-(when (not (file-directory-p "~/.saves"))
-  (make-directory "~/.saves"))
+(when (not (file-directory-p "~/.emacs.d/backups"))
+  (make-directory "~/.emacs.d/backups")
+  (make-directory "~/.emacs.d/autosaves"))
 
 (setq-default
  ;; Tell Emacs a bit about me
@@ -109,7 +110,9 @@
  ;; Change where Emacs saves automatic custom settings
  custom-file "~/.custom.el"
  ;; Store automatic backup files in "~/.saves" instead of `pwd`
- backup-directory-alist `((".*" . "~/.saves"))
+ backup-directory-alist `((".*" . "~/.emacs.d/backups"))
+ ;; Store auto save files in "~/.emacs.d/autosaves"
+ auto-save-file-name-transforms `((".*" "~/.emacs.d/autosaves/\\2" t))
  ;; show scratch buffer by default
  inhibit-splash-screen t
  ;; spaces not tabs
@@ -133,76 +136,56 @@
 (use-package general
   :demand
   :config
-  (general-create-definer leader!
-    :prefix "C-c l"
-    :keymaps 'override)
+  (general-create-definer leader! :prefix "C-c l")
+  (leader! "b" 'chasinglogic-copy-breakpoint-for-here)
 
-  ;; leader keybindings
-  (leader!
-    "'"    '(chasinglogic-shell :which-key "run terminal")
+  ;; I don't use C-j for newlines since it's hard to remember and I
+  ;; more often want <return> or M-j. I instead use it for jumping.
+  (general-create-definer jumps! :prefix "C-x j" :which-key "jumps")
+  (general-create-definer org! :prefix "C-c o" :which-key "org")
 
-    ;; Quitting
-    "q"    '(:which-key "quit")
-    "qq"   'save-buffers-kill-terminal
-    "qf"   'delete-frame
+  (general-define-key "C-x '" 'chasinglogic-shell)
+  
+  (jumps!
+    "="   'chasinglogic-indent-buffer
+    "i"   'imenu)
 
-    ;; Miscellaneous
-    "m"    '(:which-key "misc")
+  (unbind-key "C-x f")
+  (general-define-key :prefix "C-x f"
+                      ;; File Management
+                      "f"    '(:which-key "files")
+                      "ff" 'find-file
+                      "fr"   'chasinglogic-rename-file-and-buffer
+                      "fR"   'chasinglogic-reload-config
+                      "fs"   'save-buffer
+                      "fD"   'chasinglogic-delete-current-buffer-file)
 
-    ;; Dotfile Management
-    "md"   '(:which-key "dotfiles")
-    "mdf"  'chasinglogic-find-dotfile
-    "mds"  'chasinglogic-sync-dotfiles
-    "mdr"  'chasinglogic-reload-config
-
-    ;; Debugging helper
-    "mb"   'chasinglogic-copy-breakpoint-for-here
-
-    ;; Evergreen
-    "mer"  'chasinglogic-evergreen-patch-required
-    "mep"  'evergreen-patch
-    "mel"  'evergreen-large-patch
-
-    ;; Jumps
-    "j"    '(:which-key "jumps")
-    "j="   'chasinglogic-indent-buffer
-    "ji"   'imenu
-
-    ;; Buffer Management
-    "b"    '(:which-key "buffers")
-    "bb"   'switch-to-buffer
-    "br"   'revert-buffer
-    "bm"   'ibuffer
-    "bs"   'chasinglogic-switch-to-scratch-buffer
-    "bD"   'kill-buffer
-    "bd"   'kill-current-buffer
-
-    ;; File Management
-    "f"    '(:which-key "files")
-    "ff"   'find-file
-    "fr"   'chasinglogic-rename-file-and-buffer
-    "fR"   'chasinglogic-reload-config
-    "fs"   'save-buffer
-    "fD"   'chasinglogic-delete-current-buffer-file)
-
-  ;; global keybindings
+  ;; Reverse the M-<> keybinds with M-,. because I move to the
+  ;; beginning and end of buffers far more often than I
+  ;; xref-pop-marker-stack
   (general-define-key "M-<" 'xref-pop-marker-stack)
   (general-define-key "M->" 'xref-find-definitions)
   (general-define-key "M-," 'beginning-of-buffer)
   (general-define-key "M-." 'end-of-buffer)
+
+  ;; Bind M-[] to paragraph movement. Normally this is M-{} which
+  ;; still is bound. This is more convenient and the M-[] keys were
+  ;; bound to nighting anyway
   (general-define-key "M-[" 'backward-paragraph)
   (general-define-key "M-]" 'forward-paragraph)
+  
   (general-define-key "C-x C-b" 'ibuffer)
   (general-define-key "M-<up>" 'chasinglogic-move-line-down)
   (general-define-key "M-<down>" 'chasinglogic-move-line-up))
 
 ;;;; UI/UX
 
-;; Smooth out scrolling
-(setq
- scroll-conservatively 1001
- scroll-margin 2
- scroll-preserve-screen-position t)
+;; Expand region is like one of my favorite keydings M-h
+;; `mark-paragraph'. Except that it keeps expanding a region based on
+;; the smallest semtantic meaning near the cursor.
+(use-package expand-region :general ("C-M-h" 'er/expand-region))
+
+;; TODO: magnar's multiple cursors
 
 ;; Disable some unused chrome
 (tool-bar-mode -1)
@@ -210,13 +193,13 @@
 (scroll-bar-mode -1)
 
 ;; Font
-(setq-default chasinglogic-font-size "13")
+(setq-default chasinglogic-font-size "11")
 (when (and (display-graphic-p) (eq system-type 'darwin))
   ;; Retina display requires bigger font IMO.
   (setq chasinglogic-font-size "18"))
-(set-frame-font (format "Source Code Pro-%s" chasinglogic-font-size) nil t)
+(set-frame-font (format "Source Code Pro %s" chasinglogic-font-size) nil t)
 
-;; make title bar match color theme
+;; Make title bar match color theme on MacOS
 (add-to-list 'default-frame-alist
              '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist
@@ -232,10 +215,10 @@
 (set-face-attribute 'font-lock-variable-name-face nil :foreground "#fff")
 
 ;; pretty modeline
-(use-package all-the-icons)
-(use-package doom-modeline
-  :ensure t
-  :hook (after-init . doom-modeline-mode))
+;; (use-package all-the-icons)
+;; (use-package doom-modeline
+;;   :ensure t
+;;   :hook (after-init . doom-modeline-mode))
 
 ;;;; Editting Improvements
 
@@ -244,13 +227,28 @@
 (setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
 
 (use-package avy
-  :general (leader!
-             "jj" 'avy-goto-char
-             "jw" 'avy-goto-word-1
-             "jl" 'avy-goto-line
-             "jh" 'avy-goto-heading)
-  :commands (avy-goto-char avy-goto-line avy-goto-heading))
+  :general
+  (jumps!
+    "c" 'avy-goto-char
+    "j" 'avy-goto-word-1
+    "l" 'avy-goto-line
+    "h" 'avy-goto-heading))
 
+(use-package ace-window
+  :general ("M-o" 'ace-window))
+
+(use-package hydra
+  :demand
+  :config
+  (defhydra chasinglogic-window-hydra (global-map "C-x j w")
+    ("j" ace-window "switch windows")
+    ("=" balance-window "balance windows")
+    ("d" delete-window "delete this window")
+    ("o" delete-other-windows "delete other windows")
+    ("v" split-window-right "split window to right")
+    ("s" split-window-below "split window below")))
+
+(use-package paredit)
 ;; auto pair things
 (electric-layout-mode 1)
 (electric-indent-mode 1)
@@ -282,9 +280,8 @@
 (use-package ivy
   :diminish ""
   :general
-  (general-define-key "M-y" 'counsel-yank-pop)
-  (general-define-key "C-s" 'swiper)
-  (general-define-key "C-r" 'swiper-backward)
+  ("M-y" 'counsel-yank-pop)
+  ("C-M-s" 'swiper)
   :init
   (setq
    enable-recursive-minibuffers t
@@ -298,11 +295,9 @@
              counsel-ag
              counsel-rg)
   :general
-  (leader!
-    "fb"  'counsel-bookmark
-    "my"  'counsel-yank-pop
-    "SPC" 'counsel-M-x)
-  (general-define-key "M-x" 'counsel-M-x))
+  ("C-x r b" 'counsel-bookmark)
+  ("M-x" 'counsel-M-x)
+  ("M-y" 'counsel-yank-pop))
 
 ;;;; Org / Notes
 
@@ -313,29 +308,26 @@
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :general
-  (leader!
-    "o"    '(:which-key "org")
-    "oTAB" 'org-global-cycle
-    "oa"   'org-agenda
-    "oc"   'org-capture
-    "or"   'org-archive-subtree
-    "ons"  'org-toggle-narrow-to-subtree
-    "mon"   (chasinglogic-find-org-file notes)
-    "moi"   (chasinglogic-find-org-file ideas)
-    "mot"   (chasinglogic-find-org-file todo)
-    "mor"  'chasinglogic-add-to-reading-list
-    "ot"   'org-todo
-    "os"   'org-schedule
-    "og"   'org-set-tags-command
-    "oP"   'org-set-property-and-value
-    "oil"  'org-insert-link
-    "oih"  'org-insert-heading
-    "op"   '(:which-key "priority")
-    "opp"  'org-priority
-    "opk"  'org-priority-up
-    "opj"  'org-priority-down)
-  (general-nmap "K" 'org-previous-visible-heading)
-  (general-nmap "J" 'org-next-visible-heading)
+  (org!
+    "TAB" 'org-global-cycle
+    "a"   'org-agenda
+    "c"   'org-capture
+    "r"   'org-archive-subtree
+    "ns"  'org-toggle-narrow-to-subtree
+    "on"  (chasinglogic-find-org-file notes)
+    "oi"  (chasinglogic-find-org-file ideas)
+    "ot"  (chasinglogic-find-org-file todo)
+    "or"  'chasinglogic-add-to-reading-list
+    "t"   'org-todo
+    "s"   'org-schedule
+    "g"   'org-set-tags-command
+    "P"   'org-set-property-and-value
+    "il"  'org-insert-link
+    "ih"  'org-insert-heading
+    "p"   '(:which-key "priority")
+    "pp"  'org-priority
+    "pk"  'org-priority-up
+    "pj"  'org-priority-down)
   :commands (org-capture org-insert-link)
   :ensure org-plus-contrib
   :init
@@ -593,14 +585,13 @@
 
 ;; Enable magit the git client for Emacs
 (use-package magit
-  :general (leader!
-             ;; Git
-             "g"  '(:which-key "git")
-             "gb" 'magit-blame
-             "gl" 'magit-log-current
-             "ga" 'magit-stage-file
-             "gc" 'magit-commit
-             "gs" 'magit-status)
+  :general (:prefix "C-c g"
+            :which-key "git"
+             "b" 'magit-blame
+             "l" 'magit-log-current
+             "a" 'magit-stage-file
+             "c" 'magit-commit
+             "s" 'magit-status)
   :commands (magit-status)
   :init
   (setq magit-display-buffer-function #'magit-display-buffer-traditional))
@@ -814,10 +805,10 @@
   :general
   (general-define-key
    :prefix "C-c"
-    "p" '(:keymap projectile-command-map
-                  :which-key "projects"
-                  :package projectile)
-    "fh" 'projectile-find-other-file)
+   "p" '(:keymap projectile-command-map
+                 :which-key "projects"
+                 :package projectile)
+   "fh" 'projectile-find-other-file)
   (projectile-command-map
    "p" 'projectile-switch-project
    "f" 'projectile-find-file

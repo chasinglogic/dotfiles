@@ -134,6 +134,15 @@
         export HISTFILESIZE=2000
       #+END_SRC
 
+      I use termite on my Linux machine and it stubbornly sets the
+      =TERM= to =xterm-termite= which almost nothing I remote into
+      supports. So force =TERM= to =xterm-256color= here.
+
+      #+BEGIN_SRC bash :tangle .profile
+        export TERM="xterm-256color"
+      #+END_SRC
+
+
       If =emacsclient= is available on this system then set =$EDITOR=
       and =$VISUAL= to it. Otherwise make =$EDITOR= set to =vi=.
       
@@ -1858,7 +1867,6 @@
     set $lock swaylock -d -c 000000 --image /home/chasinglogic/Pictures/DSCF0308-4.blurred.jpg
     #+END_SRC
 
-
 *** Display Configuration
 
     This configures my outputs or "displays".
@@ -2095,6 +2103,17 @@
 
           font = "Source Code Pro 13"
       }
+    #+END_SRC
+
+*** Applications to run on Startup
+
+    These programs start whenever I start Sway. Normally I would use
+    SystemD user services for this but all of these programs are
+    things I only want to start with Sway or want to start in a Sway
+    specific way.
+
+    #+BEGIN_SRC conf :tangle .config/sway/config
+      exec mako --default-timeout 5000 --font "Source Code Pro 13"
     #+END_SRC
 
 *** Script for Compiling sway and related projects
