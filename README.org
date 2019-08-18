@@ -1774,9 +1774,10 @@
 
     #+BEGIN_SRC text :tangle .mbsyncrc
       IMAPAccount personal
-      Host imap.gmail.com
-      User chasinglogic@gmail.com
-      PassCmd "gpg -q --for-your-eyes-only --no-tty --exit-on-status-write-error --batch -d ~/.personal.gmail.password.gpg"
+      Host imap.fastmail.com
+      Port 993
+      User mathew@chasinglogic.io
+      PassCmd "gpg -q --for-your-eyes-only --no-tty --exit-on-status-write-error --batch -d ~/.personal.email.password.gpg"
       AuthMechs LOGIN
       SSLType IMAPS
 
@@ -1796,14 +1797,14 @@
       SyncState *
 
       Channel personal-trash
-      Master :personal-remote:"[Gmail]/Trash"
+      Master :personal-remote:"/Trash"
       Slave :personal-local:"trash"
       Create Both
       Expunge Both
       SyncState *
 
       Channel personal-all
-      Master :personal-remote:"[Gmail]/All Mail"
+      Master :personal-remote:"/Archive"
       Slave :personal-local:"archive"
       Create Both
       Expunge Both
