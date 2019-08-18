@@ -667,7 +667,7 @@
     (defvaralias 'mu4e-compose-signature 'message-signature)
 
     ;; Multi-account automation
-    (setq-default chasinglogic-mail-inbox-q "(maildir:/personal/INBOX or maildir:/work/INBOX) AND "
+    (setq-default chasinglogic-mail-inbox-q "(maildir:/personal/Inbox or maildir:/work/INBOX) AND "
                   mu4e-contexts
                   `(
                     ,(make-mu4e-context
@@ -680,8 +680,11 @@
                               (mu4e-sent-folder . "/work/sent")
                               (mu4e-trash-folder . "/work/trash")
                               (mu4e-refile-folder . "/work/archive")
-                              (smtpmail-smtp-user . "chasinglogic@gmail.com")
-                              (user-mail-address . "chasinglogic@gmail.com")
+                              (smtpmail-smtp-server . "smtp.fastmail.com")
+                              (smtpmail-smtp-service . 465)
+                              (smtpmail-local-domain . "chasinlogic.io")
+                              (smtpmail-smtp-user . "mathew@chasinglogic.io")
+                              (user-mail-address . "mathew@chasinglogic.io")
                               )
                       )
                     ,(make-mu4e-context
@@ -690,10 +693,14 @@
                                     (when msg
                                       (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
                       :vars '(
-                              (mu4e-drafts-folder . "/personal/drafts")
-                              (mu4e-sent-folder . "/personal/sent")
-                              (mu4e-trash-folder . "/personal/trash")
-                              (mu4e-refile-folder . "/personal/archive")
+                              (mu4e-drafts-folder . "/personal/Drafts")
+                              (mu4e-sent-folder . "/personal/Sent")
+                              (mu4e-trash-folder . "/personal/Trash")
+                              (mu4e-refile-folder . "/personal/Archive")
+                              (smtpmail-local-domain . "gmail.com")
+                              (smtpmail-default-smtp-server . "smtp.gmail.com")
+                              (smtpmail-smtp-server . "smtp.gmail.com")
+                              (smtpmail-smtp-service . 587)
                               (smtpmail-smtp-user . "mathew.robinson@10gen.com")
                               (user-mail-address . "mathew.robinson@mongodb.com")
                               )
@@ -703,7 +710,7 @@
                   `(
                     ,(make-mu4e-bookmark
                       :name  "Inbox"
-                      :query "(maildir:/personal/INBOX OR maildir:/work/INBOX) AND (flag:unread OR flag:flagged) AND NOT flag:trashed"
+                      :query "(maildir:/personal/Inbox OR maildir:/work/INBOX) AND (flag:unread OR flag:flagged) AND NOT flag:trashed"
                       :key ?i)
                     ,(make-mu4e-bookmark
                       :name  "Unread messages"
@@ -728,9 +735,9 @@
     (setq-default chasinglogic-mu4e-account-alist
                   '(
                     ("personal"
-                     (mu4e-sent-folder "/personal/sent")
-                     (user-mail-address "chasinglogic@gmail.com")
-                     (smtpmail-smtp-user "chasinglogic"))
+                     (mu4e-sent-folder "/personal/Sent")
+                     (user-mail-address "mathew@chasinglogic.io")
+                     (smtpmail-smtp-user "mathew@chasinglogic.io"))
                     ("work"
                      (mu4e-sent-folder "/work/sent")
                      (user-mail-address "mathew.robinson@mongodb.com")
@@ -780,7 +787,7 @@
     :after mu4e
     :init
     (setq mu4e-alert-interesting-mail-query
-          "(flag:unread maildir:/personal/INBOX) OR (flag:unread maildir:/work/INBOX)")
+          "(flag:unread maildir:/personal/Inbox) OR (flag:unread maildir:/work/INBOX)")
     (when (eq system-type 'gnu/linux)
       (mu4e-alert-set-default-style 'libnotify))
     (mu4e-alert-enable-mode-line-display)
