@@ -2031,7 +2031,7 @@
     | XF86AudioRaiseVolume  | exec pactl set-sink-volume @DEFAULT_SINK@ +5%    | Increase volume with volume up key                  |
     | XF86MonBrightnessDown | exec light -b -U 2                               | Decrease brightness with the function keys          |
     | XF86MonBrightnessUp   | exec light -b -A 2                               | Increase brightness with the function keys          |
-
+   
     #+name: generate-keybindings
     #+BEGIN_SRC python :results output raw code replace :eval yes :tangle no :wrap "src conf :tangle .config/sway/config" :var keybindings=keybindings
       for binding in keybindings:
@@ -2090,6 +2090,14 @@
       bindsym XF86MonBrightnessUp exec light -b -A 2
     #+end_src
 
+    Now we set up the =$mod= + mouse button for handling floating
+    windows. The right mouse button is for resizing and left mouse
+    button for moving.
+
+    #+BEGIN_SRC conf :tangle .config/sway/config
+      floating_modifier $mod normal
+    #+END_SRC
+
 *** Swaybar Configuration
 
     This configures the swaybar to display information that I find relevant in a readable font.
@@ -2115,6 +2123,7 @@
 
     #+BEGIN_SRC conf :tangle .config/sway/config
       exec mako --default-timeout 5000 --font "Source Code Pro 13"
+      exec xrdb ~/.Xresources
     #+END_SRC
 
 *** Script for Compiling sway and related projects
@@ -2175,6 +2184,63 @@
       done
     #+END_SRC
     
+** Termite configuration
+
+   I use =termite= for my terminal which takes a pretty minimal TOML
+   configuration file. The only settings I really set are font (to
+   match Emacs font settings) and browser which makes links
+   clickable. I would like to switch to [[https://github.com/jwilm/alacritty][Alacritty]] one day because it's
+   super nice, written in Rust, and has more / better configuration
+   options. However it doesn't line wrap long commands so here I am on
+   Termite which is a great terminal emulator too but isn't packaged
+   for Fedora unfortunately.
+
+   #+BEGIN_SRC conf :tangle .config/termite/config
+     [options]
+     font  = Source Code Pro 16
+     browser = firefox
+
+     [colors]
+
+     # special
+     foreground      = #f8f8f2
+     foreground_bold = #f8f8f2
+     cursor          = #f8f8f2
+     background      = #282a36
+
+     # black
+     color0  = #000000
+     color8  = #4d4d4d
+
+     # red
+     color1  = #ff5555
+     color9  = #ff6e67
+
+     # green
+     color2  = #50fa7b
+     color10 = #5af78e
+
+     # yellow
+     color3  = #f1fa8c
+     color11 = #f4f99d
+
+     # blue
+     color4  = #bd93f9
+     color12 = #caa9fa
+
+     # magenta
+     color5  = #ff79c6
+     color13 = #ff92d0
+
+     # cyan
+     color6  = #8be9fd
+     color14 = #9aedfe
+
+     # white
+     color7  = #bfbfbf
+     color15 = #e6e6e6
+   #+END_SRC
+
 * License
 
   MIT License so do what you want:
@@ -2201,3 +2267,4 @@
     OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   #+END_SRC
+
