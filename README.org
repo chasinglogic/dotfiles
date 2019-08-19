@@ -2123,7 +2123,6 @@
 
     #+BEGIN_SRC conf :tangle .config/sway/config
       exec mako --default-timeout 5000 --font "Source Code Pro 13"
-      exec xrdb ~/.Xresources
     #+END_SRC
 
 *** Script for Compiling sway and related projects
