@@ -231,6 +231,7 @@
 (use-package hydra
   :demand
   :config
+  
   (defhydra chasinglogic-movement-hydra (global-map "C-x m")
     ("q" nil "quit")
     ("n" next-line "next line")
@@ -244,8 +245,11 @@
     ("v" scroll-up-command "scroll down")
     ("V" scroll-down-command "scroll up")
     ("l" recenter-top-bottom "recenter")
+    ("h" org-next-visible-heading "next heading")
+    ("H" org-previous-visible-heading "previous heading")
     ("[" backward-paragraph "backward paragraph")
     ("]" forward-paragraph "forward paragraph"))
+  
   (defhydra chasinglogic-window-hydra (global-map "C-c j w")
     ("q" nil "quit")
     ("j" ace-window "switch windows")
@@ -256,7 +260,7 @@
     ("s" split-window-below "split window below")))
 
 ;; auto pair things in lisp
-(use-package paredit)
+(use-package paredit :hook '(emacs-lisp-mode . paredit-mode))
 ;; Auto do stuff that I like.
 (electric-layout-mode 1)
 (electric-indent-mode 1)
