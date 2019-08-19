@@ -183,7 +183,7 @@
 (scroll-bar-mode -1)
 
 ;; Font
-(setq-default chasinglogic-font-size "11")
+(setq-default chasinglogic-font-size "13")
 (when (and (display-graphic-p) (eq system-type 'darwin))
   ;; Retina display requires bigger font IMO.
   (setq chasinglogic-font-size "18"))
