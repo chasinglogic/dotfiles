@@ -163,6 +163,8 @@
   ;; bound to nighting anyway
   (general-define-key "M-[" 'backward-paragraph)
   (general-define-key "M-]" 'forward-paragraph)
+
+  (general-define-key :prefix "C-c" "s" '(:which-key "searching"))
   
   (general-define-key "C-x C-b" 'ibuffer)
   (general-define-key "M-<up>" 'chasinglogic-move-line-down)
@@ -181,6 +183,15 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
+
+;; Enable more powerful dired interaction
+(use-package dired
+  :ensure nil
+  :commands 'dired
+  :config
+  ;; Automatically suggest copy and moves to other dired buffers by default
+  (setq dired-dwim-target t)
+  (require 'dired-x))
 
 ;; Font
 (setq-default chasinglogic-font-size "13")
@@ -212,6 +223,46 @@
 
 ;;;; Editting Improvements
 
+;; Automatically correct spelling errors.
+
+;; Key Binding	Description
+;; C-x a l	Adds mode-specific abbrev
+;; C-x a g	Adds global abbrev
+;; C-x a i g	Adds mode-specific inverse abbrev
+;; C-x a i l	Adds global inverse abbrev
+(use-package abbrev
+  :ensure nil
+  :diminish ""
+  :init (abbrev-mode 1))
+
+(defun chasinglogic-enable-flyspell ()
+  "Enable spell checking."
+  (flyspell-mode 1))
+
+(defun chasinglogic-enable-flyspell-prog ()
+  "Enable spell checking."
+  (flyspell-mode -1)
+  (flyspell-prog-mode))
+
+(add-hook 'text-mode-hook 'chasinglogic-enable-flyspell)
+(add-hook 'prog-mode-hook 'chasinglogic-enable-flyspell-prog)
+
+(defun comment-actually-dwim (arg)
+  "A simpler and more functional version of `comment-dwim'. It
+simply calls `comment-or-uncomment-region' with the current line
+or the active region.
+
+The complexity in the original `comment-dwim' comes from trying
+to manage comments at the end of lines. I rarely do on line
+comments so this function better suits my needs."
+  (interactive "*P")
+  (comment-normalize-vars)
+  (if (use-region-p)
+      (comment-or-uncomment-region (region-beginning) (region-end) arg)
+    (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
+
+(general-define-key "M-;" 'comment-actually-dwim)
+
 ;; Ediff
 
 (setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -239,7 +290,7 @@
     ("b" backward-char "backward char")
     ("f" forward-char "forward char")
     ("s" swiper "swiper search")
-    ("r" counsel-ripgrep "ripgrep search")
+    ("r" helm-rg "ripgrep search")
     ("w" forward-word "forward word")
     ("W" backward-word "backward word")
     ("v" scroll-up-command "scroll down")
@@ -260,7 +311,15 @@
     ("s" split-window-below "split window below")))
 
 ;; auto pair things in lisp
-(use-package paredit :hook '(emacs-lisp-mode . paredit-mode))
+(use-package paredit
+  :general (paredit-mode-map
+            ;; I do not like any version of the original
+            ;; `comment-dwim' and paredit has it's own special version
+            ;; that I find more confusing. So overwrite it's mapping
+            ;; with my `comment-actually-dwim' function.
+            "M-;" 'comment-actually-dwim)
+  :hook '(emacs-lisp-mode . paredit-mode))
+
 ;; Auto do stuff that I like.
 (electric-layout-mode 1)
 (electric-indent-mode 1)
@@ -287,60 +346,91 @@
 (add-hook 'prog-mode-hook 'chasinglogic-enable-line-numbers-hook)
 (add-hook 'text-mode-hook 'chasinglogic-enable-line-numbers-hook)
 
-;;;; Ivy
+;;;; Helm
 
-(use-package ivy
-  :diminish ""
+(use-package helm
   :general
-  ("M-y" 'counsel-yank-pop)
-  ("C-M-s" 'swiper)
-  :init
-  (setq
-   enable-recursive-minibuffers t
-   ivy-use-virtual-buffers t)
-  (ivy-mode 1))
+  ("M-x" 'helm-M-x)
+  ("C-x b" 'helm-mini)
+  ("M-y" 'helm-show-kill-ring)
+  ("M-i" 'helm-imenu)
+  ("M-I" 'helm-imenu-in-all-buffers)
+  ("C-x r b" 'helm-bookmarks)
+  :config
+  ;; No idea why this works but it makes helm always show up at the
+  ;; bottom of frame full width. Stolen from this comment:
+  ;; https://github.com/emacs-helm/helm/issues/2039#issuecomment-390103697
+  (setq helm-always-two-windows nil)
+  (setq helm-default-display-buffer-functions '(display-buffer-in-side-window)))
 
-(use-package smex :after 'counsel)
-(use-package counsel
-  :commands (
-             ;; Auto loaded by projectile on use.
-             counsel-ag
-             counsel-rg)
+(use-package helm-swoop
+  :after 'helm
   :general
-  ("C-x r b" 'counsel-bookmark)
-  ("M-x" 'counsel-M-x)
-  ("M-y" 'counsel-yank-pop))
+  ("C-M-s" 'helm-swoop))
+
+(use-package helm-mu
+  :after (helm mu4e)
+  :general
+  ("C-c s m" 'helm-mu)
+  ("C-c s c" 'helm-mu-contacts)
+  (mu4e-main-mode-map "s" 'helm-mu)
+  (mu4e-headers-mode-map "s" 'helm-mu)
+  (mu4e-view-mode-map "s" 'helm-mu))
+
+(use-package helm-projectile
+  :after (helm projectile)
+  :general
+  (projectile-command-map
+   "h" 'helm-projectile-find-other-file
+   "f" 'helm-projectile-find-file-dwim
+   "p" 'helm-projectile-switch-project
+   "s" 'helm-projectile-rg))
+
+(use-package helm-rg :after 'helm-projectile)
+
+(use-package helm-org
+  :after (helm org)
+  :general
+  (:prefix "C-c" "s o" '(:which-key "org"))
+  ("C-c s o c" 'helm-org-capture-templates)
+  ("C-c s o h" 'helm-org-in-buffer-headings)
+  ("C-c o o" 'helm-org-in-buffer-headings))
+
+(use-package helm-org-rifle
+  :after (helm org)
+  :general
+  ("C-c s o r" 'helm-org-rifle))
+
+
+
+;; TODO: helm-pass if I switch to password-store again
 
 ;;;; Org / Notes
-
-(defun chasinglogic-enable-flyspell ()
-  "Enable spell checking."
-  (flyspell-mode 1))
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :general
   (cc!
     "o" '(:which-key "org")
-    "oTAB" 'org-global-cycle
-    "oa"   'org-agenda
-    "oc"   'org-capture
-    "or"   'org-archive-subtree
-    "ons"  'org-toggle-narrow-to-subtree
-    "oon"  (chasinglogic-find-org-file notes)
-    "ooi"  (chasinglogic-find-org-file ideas)
-    "oot"  (chasinglogic-find-org-file todo)
-    "oor"  'chasinglogic-add-to-reading-list
-    "ot"   'org-todo
-    "os"   'org-schedule
-    "og"   'org-set-tags-command
-    "oP"   'org-set-property-and-value
-    "oil"  'org-insert-link
-    "oih"  'org-insert-heading
-    "op"   '(:which-key "priority")
-    "opp"  'org-priority
-    "opk"  'org-priority-up
-    "opj"  'org-priority-down)
+    "oo"    'helm-org-in-buffer-headings
+    "oTAB"  'org-global-cycle
+    "oa"    'org-agenda
+    "oc"    'org-capture
+    "or"    'org-archive-subtree
+    "omn"   (chasinglogic-find-org-file notes)
+    "omi"   (chasinglogic-find-org-file ideas)
+    "omt"   (chasinglogic-find-org-file todo)
+    "omr"   'chasinglogic-add-to-reading-list
+    "ot"    'org-todo
+    "os"    'org-schedule
+    "og"    'org-set-tags-command
+    "oP"    'org-set-property-and-value
+    "oil"   'org-insert-link
+    "oih"   'org-insert-heading
+    "op"    '(:which-key "priority")
+    "opp"   'org-priority
+    "opk"   'org-priority-up
+    "opj"   'org-priority-down)
   :commands (org-capture org-insert-link)
   :ensure org-plus-contrib
   :init
@@ -370,7 +460,7 @@
         ;; Query (filter out the reading_list)
         "-reading_list"
         ;; Settings
-        ((org-agenda-sorting-strategy '(tag-up priority-down))))))
+        ((org-agenda-sorting-strategy '(priority-down tag-up))))))
 
      ("d" "Daily Agenda and all TODOs"
       (
@@ -381,8 +471,8 @@
         (
          ;; Span 1 day (daily agenda)
          (org-agenda-span 1)
-         ;; Sort by tag then priority highest to lowest
-         (org-agenda-sorting-strategy '(tag-up priority-down))
+         ;; Sort by priority highest to lowest then tag
+         (org-agenda-sorting-strategy '(priority-down tag-up))
          ;; 7 day advanced warning for deadlines
          (org-deadline-warning-days 7)))
 
@@ -417,7 +507,7 @@
 
    ;; Define my commonly used files
    org-default-todo-file  (expand-file-name "todo.org"  org-directory)
-   org-default-notes-file (expand-file-name "notes.org" org-directory)
+   org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
    org-default-ideas-file (expand-file-name "ideas.org" org-directory)
    org-agenda-files (list org-default-todo-file)
 
@@ -509,6 +599,9 @@
   (setq-default
    org-export-headline-levels 6)
 
+  ;; Enable markdown export
+  (require 'ox-md)
+
   ;; Setup org task management
   (setq-default
    org-highest-priority ?A
@@ -567,8 +660,6 @@
     ;; enable syntax checking
     (flycheck-mode 1))
   (add-hook 'text-mode-hook 'chasinglogic-enable-flycheck)
-  
-  (add-hook 'markdown-mode-hook 'chasinglogic-enable-flyspell)
   :config
   ;; this trys to run the dash shell which I don't use but instead
   ;; opens the Dash.app program which I do use.
@@ -598,13 +689,15 @@
 
 ;; Enable magit the git client for Emacs
 (use-package magit
-  :general (cc! 
-             "g" '(:which-key "git")
-             "gb" 'magit-blame
-             "gl" 'magit-log-current
-             "ga" 'magit-stage-file
-             "gc" 'magit-commit
-             "gs" 'magit-status)
+  :general (general-define-key
+            :prefix "C-x"
+            "v" '(:which-key "git")
+            "vd" 'magit-diff
+            "vb" 'magit-blame
+            "vl" 'magit-log-current
+            "va" 'magit-stage-file
+            "vc" 'magit-commit
+            "vs" 'magit-status)
   :commands (magit-status)
   :init
   (setq magit-display-buffer-function #'magit-display-buffer-traditional))
@@ -782,9 +875,7 @@
     (defun chasinglogic-sign-emails ()
       "Sign emails with GPG on send"
       (mml-secure-message-sign))
-    (add-hook 'mu4e-compose-mode-hook 'chasinglogic-sign-emails)
-    )
-
+    (add-hook 'mu4e-compose-mode-hook 'chasinglogic-sign-emails))
 
   (use-package mu4e-alert
     :ensure t
@@ -825,8 +916,6 @@
   (projectile-command-map
    "p" 'projectile-switch-project
    "f" 'projectile-find-file
-   "g" 'counsel-rg
-   "s" 'counsel-rg
    "F" 'projectile-find-file-in-known-projects
    "d" 'projectile-find-dir
    "b" 'projectile-switch-to-buffer)
@@ -839,7 +928,7 @@
   
   (setq-default
    projectile-require-project-root t
-   projectile-completion-system 'ivy
+   projectile-completion-system 'helm
    projectile-enable-caching nil
    ;; I prefer a git status when switching to a project
    projectile-switch-project-action 'chasinglogic-switch-project-action
@@ -895,13 +984,14 @@
 
 ;; This allows selecting a frame by name
 (require 'chasinglogic-frames)
-(defun chasinglogic-ivy-get-a-frame ()
+(defun chasinglogic-helm-get-a-frame ()
   "Search and select frames by name."
   (interactive)
   (select-frame-by-name
-   (ivy-completing-read
-    "Frame: "
-    (mapcar 'get-frame-name (frame-list)))))
+   (helm :sources (helm-build-sync-source "frames"
+                    :candidates (mapcar 'get-frame-name (frame-list))
+                    :fuzzy-match t)
+         :buffer "*helm frames*")))
 
 ;;;; Writing
 
