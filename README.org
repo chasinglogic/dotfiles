@@ -864,6 +864,11 @@
        if [[ "$(pwd)" == *"kernel-tools"* ]]; then
            exit 0
        fi
+
+       # Neither does SCons
+       if [[ "$(pwd)" == *"scons" ]]; then
+           exit 0
+       fi
      #+END_SRC
 
      Next create a function called check_pattern that takes two

@@ -276,6 +276,14 @@ If COPY is provided copy the value to kill ring instead of returning."
    (format "dfm sync --message='%s' &" msg)
    "*dfm output*"))
 
+(defun sudo ()
+  "Use TRAMP to `sudo' the current buffer"
+  (interactive)
+  (when buffer-file-name
+    (find-alternate-file
+     (concat "/sudo:root@localhost:"
+             buffer-file-name))))
+
 (provide 'chasinglogic-utils)
 
 ;;; chasinglogic-utils.el ends here
