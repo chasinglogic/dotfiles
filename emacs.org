@@ -1,0 +1,743 @@
+#+PROPERTY: header-args :mkdirp yes
+
+* ChasingLogic's Emacs Configuration
+
+** Global Variables
+
+   These settings are all global variables the either inform or change
+   Emacs behavior.
+   
+*** Auto saves and backups
+
+    Emacs has amazing auto save and backup functionality that has
+    saved me many times after such events as an X11 crash or power
+    loss. However, it stores all of these files in very inconvenient
+    locations when working with version control. These configuration
+    options inform Emacs to store these files somewhere "out of the
+    way" (=~/.emacs.d/autosaves= and =~/.emacs.d/backups=
+    respectively).
+
+    First we ensure that these directories actually exist:
+
+    #+BEGIN_SRC emacs-lisp
+      (when (not (file-directory-p "~/.emacs.d/backups"))
+        (make-directory "~/.emacs.d/backups")
+        (make-directory "~/.emacs.d/autosaves"))
+    #+END_SRC
+
+    Next we set =backup-directory-alist=. According it the
+    documentation for this variable: "Alist of filename patterns and
+    backup directory names.  Each element looks like (REGEXP
+    . DIRECTORY).  Backups of files with names matching REGEXP will be
+    made in DIRECTORY.". So we set it such that the =REGEXP= is =.*=
+    (matches anything) and =DIRECTORY= is our new backup directory.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq-default backup-directory-alist `((".*" . "~/.emacs.d/backups")))
+    #+END_SRC
+
+    Now we do effectively the same for auto saves. Weirdly the
+    configuration is slightly different however. The documentation for
+    this variable I found a bit opaque but it essentially does an
+    Emacs =replace-regexp= on the filename with the first two
+    elements. So that the list is =REGEXP= followed by
+    =REPLACEMENT=. See [[Emacs Regular Expressions]] in my Notes section
+    for an explanation of the syntax for this. The third element
+    specifies that the transformed name should be made unique in
+    relation to the other auto saves in this directory.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq-default auto-save-file-name-transforms `((".*" "~/.emacs.d/autosaves/\\2" t)))
+    #+END_SRC
+
+*** Email and user information
+
+    I use Emacs for my email and other functionality that makes use of
+    basic information about me. These variables just define personal
+    info that would normally be set on a =$USER= on a Unix system.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq-default user-full-name "Mathew Robinson"
+                    user-mail-address "mathew@chasinglogic.io"
+                    message-signature "- Mathew Robinson @chasinglogic")
+    #+END_SRC
+
+*** On MacOS make the command key meta
+
+    Self-explanatory, all of my muscle memory puts meta at the same
+    location as the MacOS command key so we make Emacs treat it as
+    such instead of as super.
+
+    #+BEGIN_SRC emacs-lisp
+      (when (eq system-type 'darwin)
+        (setq mac-option-modifier 'alt
+              mac-command-modifier 'meta))
+    #+END_SRC
+
+*** Basic editor settings
+
+    These settings effect the editing experience of Emacs. Things
+    like tabs/spaces etc. are controlled here.
+
+    First we set spaces instead of tabs and set the default
+    =tab-width= to 4 spaces.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq-default indent-tabs-mode nil
+                    tab-width 4)
+    #+END_SRC
+
+    By default when Emacs tries to open a symlink that points to a git
+    repository it prompts you like "do you really wanna open this
+    file". I use symlinks like this a lot so I disable this prompt.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq-default vc-follow-symlinks t)
+    #+END_SRC
+
+    One of the best features of Emacs is it's ability to integrate
+    with programming languages at a syntactic level. It enables you to
+    really edit these languages at that level in some
+    cases. One of the common tasks that it can automate is commenting
+    and uncommenting text in a source file. Unfortunately the default
+    function for this =comment-dwim= assumes that if you have no
+    region you want to insert a line comment. I rarely if ever use
+    line comments and would prefer it to instead comment out the
+    current line if no region is selected so I wrote
+    =comment-actually-dwim= that does this and overwrite the default
+    =comment-dwim= keybinding with my version.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun comment-actually-dwim (arg)
+        "A simpler and more functional version of `comment-dwim'. It
+      simply calls `comment-or-uncomment-region' with the current line
+      or the active region.
+
+      The complexity in the original `comment-dwim' comes from trying
+      to manage comments at the end of lines. I rarely do on line
+      comments so this function better suits my needs."
+        (interactive "*P")
+        (comment-normalize-vars)
+        (if (use-region-p)
+            (comment-or-uncomment-region (region-beginning) (region-end) arg)
+          (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
+
+      (bind-key "M-;" 'comment-actually-dwim)
+    #+END_SRC
+
+** Global Keybindings
+
+   These are my global keybindings that rebind or simply bind default
+   Emacs behavior and commands. I also document what the default
+   binding was if I overwrite one so I can remember if I ever want or
+   need to go back during a live session.
+
+** UI / UX settings
+
+   These settings define how I want my Emacs to look from window
+   chrome to font and color scheme.
+
+*** Font
+
+   First set the font. I've tried many fonts in my time and I find
+   Source Code Pro to be a Pretty Good Font™. Other fonts I like are
+   Inconsolata and DejaVu Sans Mono, and one day I may switch back to
+   them but getting them on all platforms can be a hassle.
+
+   The only thing fancy about the way this font is getting set is that
+   I use two font sizes: one for my Mac because of the retina display
+   and one for everything else where I use regular monitors.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq-default chasinglogic-font-size "13")
+     (when (and (display-graphic-p) (eq system-type 'darwin))
+       ;; Retina display requires bigger font IMO.
+       (setq chasinglogic-font-size "15"))
+     (set-frame-font (format "Source Code Pro %s" chasinglogic-font-size) nil t)
+   #+END_SRC
+
+*** Window Chrome
+
+    Emacs by default has lots of window chrome to make it more mouse
+    accessible. While I actually use my mouse quite a bit and love
+    Emacs mouse integration I really hate big UI elements and I never
+    use the mouse for the operations available in this chrome. These
+    mode disable lines remove all of this chrome so it's just Me, My
+    Buffer, and I.
+
+    #+BEGIN_SRC emacs-lisp
+      (tool-bar-mode -1)
+      (menu-bar-mode -1)
+      (scroll-bar-mode -1)
+    #+END_SRC
+
+    On MacOS there's a new feature to have title bars match the window
+    they belong to. This makes Emacs do that so the title bar looks
+    like it's part of the buffer.
+
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+      (add-to-list 'default-frame-alist '(ns-appearance . dark))
+    #+END_SRC
+
+*** Color Theme
+
+    I actually use a default Emacs color theme. Most third party
+    schemes I find have weird contrast that I don't like, don't work
+    well in a terminal, or interact strangely with other packages. I'm
+    always open to try something new color-wise but Wombat has been
+    pretty great, stable and readable for me for a while now.
+
+    #+BEGIN_SRC emacs-lisp
+      (load-theme 'wombat t)
+    #+END_SRC
+
+    There are only two things that I don't like about Wombat out of
+    the box. The cursor is a different color than the text (and a hard
+    to see color at that) and variable names are some crazy bright
+    color. These few lines make the cursor and variable names white,
+    the same color as basic text.
+
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'default-frame-alist '(cursor-color . "#fff"))
+      (set-cursor-color "#fff")
+      ;; Make variables names same color as other text
+      (set-face-attribute 'font-lock-variable-name-face nil :foreground "#fff")
+    #+END_SRC
+
+** Built-in Emacs Modes
+
+   These modes are shipped by default with Emacs but either not
+   enabled by default or require some setup to use. I find them all
+   useful and I put them in =use-package= definitions for consistency.
+   
+*** Dired
+
+    I use dired as my primary file manager for anything that isn't
+    multimedia content (videos, photos, music). I really love it and
+    some kinds of file operations are simply not possible without it.
+
+    First we require =dired-x=. Dired-X provides many extra features
+    to Dired that take it from nice to unparalleled. See [[info:dired-x#Features][Dired-X
+    Features]] for a full list with more info.
+
+    #+BEGIN_SRC emacs-lisp
+      (require 'dired-x)
+    #+END_SRC
+
+    Now we set the variable =dired-dwim-target= to =t=. This makes it
+    such that when operating on files in Dired the target of the
+    operation will automatically suggest other Dired buffers as the
+    target preferring buffers that are visible. It's super handy.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dired-dwim-target t)
+    #+END_SRC
+
+*** Abbrev Mode
+
+    Abbrev mode is a simple but magical minor mode. I make some
+    spelling mistakes all the time. At this point some of them have
+    become muscle memory and so while I know the spelling is wrong I
+    don't know if I'll ever be able to change them. This is where
+    Abbrev mode comes in. I register abbreviations on a major mode or
+    global basis and =abbrev-mode= will automatically expand them to
+    the correction whenever I type them.
+
+    #+BEGIN_SRC emacs-lisp
+      (abbrev-mode 1)
+    #+END_SRC
+
+    The common key bindings I always forget for this are:
+
+    | Key chord | Description                             |
+    |-----------+-----------------------------------------|
+    | C-x a l   | Adds mode-specific abbreviation         |
+    | C-x a g   | Adds global abbreviation                |
+    | C-x a i g | Adds global inverse abbreviation        |
+    | C-x a i l | Adds mode-specific inverse abbreviation |
+
+    For the first two bindings you type the expanded abbreviation then
+    position the point after the text. You then press the key chord
+    and enter what the abbreviated form is. For the latter two
+    bindings inverse means the abbreviation is before the point and
+    you enter the text to expand to.
+    
+*** Spell Checking (Flyspell)
+
+    While Abbrev mode will solve my habitual spelling errors for me
+    it's still nice to have spell check on so I can catch new spelling
+    errors. This is baked into Emacs and requires the =aspell= (or
+    =ispell=) program to be installed. I enable =flyspell-mode= for
+    all text buffers and use a subsequent hook for programming modes
+    to disable it and instead enable the programming variant that
+    spell checks comments instead of code.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun chasinglogic-enable-flyspell ()
+        "Enable spell checking."
+        (flyspell-mode 1))
+
+      (defun chasinglogic-enable-flyspell-prog ()
+        "Enable spell checking."
+        (flyspell-mode -1)
+        (flyspell-prog-mode))
+
+      (add-hook 'text-mode-hook 'chasinglogic-enable-flyspell)
+      (add-hook 'prog-mode-hook 'chasinglogic-enable-flyspell-prog)
+    #+END_SRC
+
+*** Ediff
+
+    Ediff is a handy tool I don't use often enough. However I really
+    hate the default layout. This makes Ediff less eggregious about
+    upsetting my window manager when I load it.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
+    #+END_SRC
+
+** Package initialization
+
+   Before we can set up our configuration for third party packages we
+   have to initialize the built-in Emacs package for fetching and
+   updating them.
+
+   This snippet loads =package.el= and adds the following repositories
+   to Emacs:
+
+   - =elpa=: The GNU default package repository. I actually install very
+     little from here since it tends towards being out of date.
+   - =org=: This is =org-mode='s custom elpa repository. I install a
+     single package =org-plus-contrib= from here so I can get latest
+     =org-mode= and plugins.
+   - =melpa=: This is where I get almost everything else. It's a
+     rolling up to date Emacs package repository. Maybe someday if I
+     experience breakage I'll switch to =melpa-stable= but for years
+     now I've never had to roll back a package (except when I was on
+     Spacemacs because an update broke Spacemacs code).
+
+   #+BEGIN_SRC emacs-lisp
+     (require 'package)
+
+     (setq-default package-archives
+                   (list
+                    '("elpa" . "http://elpa.gnu.org/packages/")
+                    '("org" . "http://orgmode.org/elpa/")
+                    '("melpa" . "http://melpa.org/packages/")))
+     (package-initialize)
+   #+END_SRC
+
+   Next we setup the amazing =use-package= package. Every package,
+   other than =use-package= itself, is installed with
+   =use-package=. It's a macro that makes configuration clear,
+   concise, and most importantly fast. It makes every single package
+   lazy load as you need it (when configured properly), greatly
+   improving Emacs startup time.
+
+   First we set a few global configuration options for =use-package=:
+
+   - =use-package-enable-imenu-support=: Allow searching through the
+     =init.el= for packages using =imenu=.
+   - =use-package-always-ensure=: Almost all of the packages that I
+     configure with =use-package= are third party
+     packages. =use-package= has a feature called =:ensure= that tells
+     =use-package= to install the package on startup if it's not
+     installed. Since =use-package= declarations where I don't want
+     this behavior are the exception this setting tells =use-package=
+     to set =:ensure t= by default.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq-default use-package-enable-imenu-support t
+                   use-package-always-ensure t)
+   #+END_SRC
+
+   Next we actually install =use-package=. We wrap this in a
+   =eval-when-compile= call since I byte compile my =init.el= it means
+   I don't pay for this installation at startup time.
+
+   #+BEGIN_SRC emacs-lisp
+     (eval-when-compile
+       (when (not (package-installed-p 'use-package))
+         (package-refresh-contents)
+         (package-install 'use-package))
+       (require 'use-package))
+   #+END_SRC
+
+** My personal utility functions and commands
+
+   I have an ever growing list of personal utility functions. Some of
+   these add features that should be in Emacs by default, some of them
+   are personal workflow improvements. The first thing we do is start
+   an =eval-when-compile= block so that all of these utilities are
+   heavily cached.
+
+   #+BEGIN_SRC emacs-lisp
+     (eval-when-compile
+   #+END_SRC
+
+*** Delete current buffer and file
+
+    I will never understand why this isn't baked into Emacs. I've
+    stolen this from Spacemacs who stole it from Magnars. Now you can
+    steal it from me. In short it will delete the buffer and the file
+    it's visiting.
+
+    #+BEGIN_SRC emacs-lisp
+      ;; from spacemacs-core
+      ;; from magnars
+      (defun chasinglogic-delete-current-buffer-file ()
+        "Remove file connected to current buffer and kill the related buffer."
+        (interactive)
+        (let ((filename (buffer-file-name))
+              (buffer (current-buffer))
+              (name (buffer-name)))
+          (if (not (and filename (file-exists-p filename)))
+              (ido-kill-buffer)
+            (when (yes-or-no-p "Are you sure you want to delete this file? ")
+              (delete-file filename t)
+              (kill-buffer buffer)
+              (when (projectile-project-p)
+                (call-interactively #'projectile-invalidate-cache))
+              (message "File '%s' successfully removed" filename)))))
+    #+END_SRC
+
+*** Indent the buffer
+
+    This function uses Emacs built in indent facilities to indent the
+    entire buffer. It doesn't work so great on languages where
+    whitespace has semantic meaning, like Python, but it is a godsend
+    for structured languages that are commonly poorly formatted, like
+    HTML.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun chasinglogic-indent-buffer ()
+        "Indent the entire buffer."
+        (interactive)
+        (indent-region-line-by-line (point-min) (point-max)))
+    #+END_SRC
+
+*** Finding org files
+
+    I keep all of my org files in =org-directory= and some of them are
+    encrypted. This macro lets me easily define functions for quickly
+    finding them. It's a macro because [[https://www.jamesporter.me/2013/06/14/emacs-lisp-closures-exposed.html][Emacs has crazy scoping rules]]
+    that make returning lambdas from functions difficult.
+
+    #+BEGIN_SRC emacs-lisp
+      (defmacro chasinglogic-find-org-file (name)
+        "Create a function to find the org file NAME."
+        `(defun ,(intern (format "chasinglogic-find-org-file-%s" name)) ()
+           (interactive)
+           (let ((file-name (expand-file-name ,(format "%s.org" name) org-directory)))
+             (find-file (if (file-exists-p (concat file-name ".gpg"))
+                            (concat file-name ".gpg")
+                          file-name)))))
+    #+END_SRC
+
+*** Rename file and buffer
+
+    Similar to [[Delete file and buffer]] I'm not sure why this isn't
+    built into Emacs. This does a rename using =default-directory= and
+    relative paths to the file do work. I took this from
+    [[http://steve.yegge.googlepages.com/my-dot-emacs-file][Steve Yegge's dot Emacs]].
+
+    #+BEGIN_SRC emacs-lisp
+      (defun chasinglogic-rename-file-and-buffer (new-name)
+        "Renames both current buffer and file it's visiting to NEW-NAME."
+        (interactive "sNew name: ")
+        (let ((name (buffer-name))
+              (filename (buffer-file-name)))
+          (if (not filename)
+              (message "Buffer '%s' is not visiting a file!" name)
+            (if (get-buffer new-name)
+                (message "A buffer named '%s' already exists!" new-name)
+              (progn
+                (rename-file filename new-name 1)
+                (rename-buffer new-name)
+                (set-visited-file-name new-name)
+                (set-buffer-modified-p nil))))))
+    #+END_SRC
+
+*** Projector => Projectile integration
+
+    I maintain (what I think) is a pretty cool tool called [[https://github.com/chasinglogic/projector][Projector]]
+    and this "integrates" it with projectile. Simply put it seeds
+    Projectile's known project list with the list of projects that
+    Projector knows about. It's really nice when on a new machine that
+    has all my repositories but since I haven't visited them I can't
+    quickly switch to them.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun chasinglogic-add-projector-projects-to-projectile ()
+        "Add projector projects to projectile."
+        (interactive)
+        (setq
+         projectile-known-projects
+         (delete ""
+                 (split-string
+                  (shell-command-to-string "projector list") "\n"))))
+    #+END_SRC
+
+*** Open the shell with a good default buffer name
+
+    This function opens a shell with a buffer name that indicates what
+    project it was opened in. If you run it again in that project it
+    will instead just switch to the buffer.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun chasinglogic-shell ()
+        "Open my shell in 'ansi-term'."
+        (interactive)
+        (let* ((project-name (if (projectile-project-name)
+                                 (projectile-project-name)
+                               "main"))
+               (shell-buf-name (concat project-name "-shell"))
+               (shell-buf-asterisks (concat "*" shell-buf-name "*")))
+          (if (get-buffer shell-buf-asterisks)
+              (switch-to-buffer shell-buf-asterisks)
+            (ansi-term (executable-find "bash") shell-buf-name))))
+    #+END_SRC
+
+*** GDB/LLDB Debugging
+
+    I maintain a developer toolchain that means I have to frequently
+    interact with GDB *and* LLDB. Since LLDB does not have Emacs
+    integration this function allow me to easily get breakpoints for
+    wherever I am.
+
+    It checks for the =projectile-project-root= and if found will make
+    the filename relative to this directory. Otherwise the full path
+    of the =buffer-file-name= will be used. It grabs the line number
+    the point is currently at then simply concatenates the generated
+    filename, a colon, and the line number. When called interactively
+    it will add it to the kill ring effectively "copying" the
+    breakpoint for easy pasting.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun chasinglogic-copy-breakpoint-for-here (&optional copy)
+        "Return a filename:linenumber pair for point for use with LLDB/GDB.
+
+      If COPY is provided copy the value to kill ring instead of returning."
+        (interactive (list t))
+        (let* ((line-number (format "%d" (line-number-at-pos)))
+               (file-name (if (projectile-project-root)
+                              (file-relative-name (buffer-file-name) (projectile-project-root))
+                            (file-name-nondirectory (buffer-file-name))))
+               (breakpoint (concat file-name ":" line-number)))
+          (if copy
+              (progn
+                (kill-new breakpoint)
+                (message "%s" breakpoint))
+            breakpoint)))
+    #+END_SRC
+
+*** Edit current buffer with sudo
+
+    The title here is self explanatory. It uses Emacs [[https://www.emacswiki.org/emacs/TrampMode][TRAMP Mode]] to
+    open the file as root on localhost. It does not require SSH and
+    instead uses a special TRAMP protocol that just calls =sudo= to
+    make the user change.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun sudo ()
+        "Use TRAMP to `sudo' the current buffer"
+        (interactive)
+        (when buffer-file-name
+          (find-alternate-file
+           (concat "/sudo:root@localhost:" buffer-file-name))))
+    #+END_SRC
+
+*** End Utility Functions
+
+    As we earlier started an =eval-when-compile= block this src block
+    simply closes it.
+
+    #+BEGIN_SRC emacs-lisp
+      )
+    #+END_SRC
+
+** Third Party Packages
+
+   These are all of the third party packages I install and use with
+   Emacs. I simply group them under this heading for a more logical
+   outline.
+
+*** Quelpa (install packages from git)
+
+    I maintain a few Emacs packages and it's very helpful to be able to
+    automatically install and update them. This is what the [[https://framagit.org/steckerhalter/quelpa][Quelpa]]
+    package does. It lets you treat git remotes as if they were regular
+    package repositories. Additionally we install [[https://framagit.org/steckerhalter/quelpa-use-package][quelpa-use-package]]
+    which adds a =:quelpa= keyword argument to =use-package=.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package quelpa
+        :init
+        (quelpa
+         '(quelpa-use-package
+           :fetcher git
+           :url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
+        (require 'quelpa-use-package))
+    #+END_SRC
+   
+*** Evergreen CI integration
+
+    This is one of my personal packages. At MongoDB we run our in house
+    CI system and this package integrates it into Emacs. We don't
+    maintain an in-house ELPA repository so I recommend, and myself do,
+    installing it with Quelpa.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package evergreen
+        :quelpa (evergreen :repo "evergreen-ci/evergreen.el" :fetcher github)
+        :commands (evergreen-patch evergreen-list-spawn-hosts)
+        :config
+        (setq-default evergreen-generate-description t
+                      evergreen-finalize-when-patching t
+                      evergreen-browse-when-patching t
+                      evergreen-default-project "mongodb-mongo-master"
+                      evergreen-assume-yes t))
+    #+END_SRC
+
+*** Emacs environment variables (exec-path-from-shell)
+
+    I use the =exec-path-from-shell= package to keep my shell and Emacs
+    environment variables in sync. I pay a little in startup time for
+    this but maintaining two copies of environment variables is way
+    worth it.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package exec-path-from-shell
+        :config
+        (exec-path-from-shell-initialize))
+    #+END_SRC
+
+*** Diminish
+
+    Diminish is a neat package that lets me easily hide minor modes
+    from the mode line. It also has a =use-package= keyword that lets
+    me do this for third party packages easily. Here we ensure that
+    it's available and diminish some common minor modes:
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package diminish
+        :init
+        (diminish 'abbrev-mode)
+        (diminish 'eldoc-mode)
+        (diminish 'undo-tree-mode))
+    #+END_SRC
+
+*** Which Key
+
+    Which key is possibly the best package ever invented, except for
+    maybe helm. When pressing a key chord it will show you all possible
+    bindings and prefixes so you can interactively explore key bindings
+    as you type them. It's nothing short of amazing and a great
+    discovery tool. No real configuration is needed except that I do
+    diminish it since I always have it on globally.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package which-key
+        :diminish ""
+        :init
+        (which-key-mode))
+    #+END_SRC
+
+*** Expand Region
+
+    Expand region takes the idea of, what I consider, one of the best
+    key bindings in Emacs =M-h= (=mark-paragraph=) and makes it work
+    incrementally with semantic units. It's beautiful and useful. For
+    consistency I bind it to =C-M-h=.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package expand-region
+        :bind ("C-M-h" . 'expand-region))
+    #+END_SRC
+
+*** Avy
+
+    The legendary =abo-abo= wrote a great package called Avy. I can
+    only compare it to EasyMotion for Vim but it's actually much
+    better IMO. It has many "jumping" commands for going to words,
+    subwords, characters, lines etc. Here I only bind a few of the
+    most useful ones to me.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package avy
+        :bind
+        (("M-j"     . 'avy-goto-word-1)
+         ("C-c j c" . 'avy-goto-char)
+         ("C-c j j" . 'avy-goto-word-1)
+         ("C-c j l" . 'avy-goto-line)
+         ("C-c j h" . 'avy-goto-heading)))
+    #+END_SRC
+
+*** Ace Window
+
+    One of the hardest parts coming to Emacs from Vim was learning
+    window management. The default keybinding =C-x o= felt cumbersome
+    to press not to mention use. Luckily there is a package (again
+    from =abo-abo=) that solves this problem. Ace Window will
+    highlight windows with a number and let you jump to them by
+    pressing the corresponding number. It's also smart and when there
+    are only two windows will simply cycle between them without
+    prompting. I bind it to =M-o= as the original command bound to
+    that key I never use and I prefer meta bindings for commonly
+    pressed commands.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package ace-window
+        :bind ("M-o" . 'ace-window))
+    #+END_SRC
+
+*** TODO Hydra
+
+*** Paredit
+
+    When talking about editing languages at a syntactic level one
+    can't help but think of paredit. It's simply the best way to write
+    lisp code. 
+
+* Notes
+
+  These are some notes that I keep to reference for certain parts of
+  my dotfiles. Emacs is a large and sometimes strange beast so I need
+  these notes to remember syntax or reasons for some changes that
+  didn't make sense to document next to the setting since these notes
+  are referenced in multiple places or are generally useful outside of
+  just configuring Emacs.
+
+** Emacs Regular Expressions
+
+   For some reason Emacs doesn't use PCRE or even GNU regular
+   expressions (like those in =grep= or =sed=). It uses it's own
+   special remix of GNU regular expressions. The following is a list
+   of gotchas or things that I always fail to remember when dealing
+   with Emacs Regular Expressions.
+
+   - Capture groups are not the default. =(= and =)= are treated as
+     characters first and have to be escaped to be treated as a
+     capture group.
+   - Similar to capture groups ={= and =}= for repetition must be escaped.
+   - There is no negation or =?= prefix operator
+   - There is however a =?= postfix operator that works as expected on
+     characters but on other postfix operators it makes it a
+     non-greedy variant. For example: The normal operators ‘*’, ‘+’,
+     ‘?’ match as much as they can, as long as the overall regexp can
+     still match. With a following ‘?’, they will match as little as
+     possible.
+   - Character sets support character class specifiers. See
+     [[info:elisp#Character Classes][Character Classes]] for a list.
+   - Backslash supports Emacs specific semantic classes such as
+     =\sCODE=. See [[info:elisp#Regexp Backslash][Regexp Backslash]] for a list.
+   - Similar to Vim substitutions Emacs replace regexp can replace
+     with subsets of the matched text. The syntax supports these
+     forms:
+     - =\&=: entire text that matched
+     - =\N=: where N is a digit, replace with the Nth subexpression in
+       the regular expression.
+     - There are others but these are the only two I ever use. See
+       [[info:elisp#Replacing Match][Replacing Match]] for the full documentation.
+

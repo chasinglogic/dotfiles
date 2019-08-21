@@ -3,5 +3,6 @@
 /*/
 !/.emacs.d/
 !README.org
+!emacs.org
 !.dfm.yml
 !.gitignore

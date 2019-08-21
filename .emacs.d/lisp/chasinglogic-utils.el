@@ -65,13 +65,6 @@
      (interactive)
      (find-file (expand-file-name ,(format "%s.org" name) org-directory))))
 
-(defun chasinglogic-dired-current-file ()
-  "Dired the directory of the current file."
-  (interactive)
-  (if (eq major-mode 'dired-mode)
-      (dired-up-directory)
-    (dired (file-name-directory (buffer-file-name)))))
-
 ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun chasinglogic-rename-file-and-buffer (new-name)
   "Renames both current buffer and file it's visiting to NEW-NAME."
@@ -97,16 +90,6 @@
            (split-string
             (shell-command-to-string "projector list") "\n"))))
 
-(defun chasinglogic-switch-to-scratch-buffer ()
-  "Switch to scratch buffer quickly."
-  (interactive)
-  (switch-to-buffer "*scratch*"))
-
-(defun chasinglogic-reload-config ()
-  "Reload my configuration file."
-  (interactive)
-  (load-file (chasinglogic-dotfile-location)))
-
 (defun chasinglogic-projectile-command (cmd &optional sync)
   "Run CMD at the projectile project root.
 
@@ -117,164 +100,33 @@ If SYNC provided will run make command synchronously"
     (shell-command cmd
      (format "*%s %s output*" (projectile-project-name) cmd))))
 
-(defun chasinglogic-scons (&optional args)
-  "Run scons at root of project, only useful for MongoDB, passes ARGS to scons."
-  (interactive "s")
-  (chasinglogic-projectile-command
-   (concat "python3 ./buildscripts/scons.py " args)))
+  (defun chasinglogic-shell ()
+        "Open my shell in 'ansi-term'."
+        (interactive)
+        (let* ((project-name (if (projectile-project-name)
+                                 (projectile-project-name)
+                               "main"))
+               (shell-buf-name (concat project-name "-shell"))
+               (shell-buf-asterisks (concat "*" shell-buf-name "*")))
+          (if (get-buffer shell-buf-asterisks)
+              (switch-to-buffer shell-buf-asterisks)
+            (ansi-term (executable-find "bash") shell-buf-name))))
 
-(defun chasinglogic-prq ()
-  "Open a pull request on github."
-  (interactive)
-  (shell-command "hub pull-request -m \"$(git log -n 1 --format='%s')\" --browse"))
+  (defun chasinglogic-copy-breakpoint-for-here (&optional copy)
+        "Return a filename:linenumber pair for point for use with LLDB/GDB.
 
-(defun chasinglogic-shell ()
-  "Open my shell in 'ansi-term'."
-  (interactive)
-  (let* (
-        (shell-buf-name
-         (concat
-          (if (projectile-project-name)
-              (projectile-project-name)
-            "main")
-          "-shell"))
-        (shell-buf-asterisks
-         (concat "*" shell-buf-name "*"))
-        )
-    (if (get-buffer shell-buf-asterisks)
-        (switch-to-buffer shell-buf-asterisks)
-      (ansi-term
-       (executable-find "zsh")
-       shell-buf-name))))
-
-(defun chasinglogic-raza ()
-  "Tramp into my MongoDB repo on my work dev machine."
-  (interactive)
-  (set-frame-name "raza")
-  (dired "/ssh:dev:/home/chasinglogic/Code/mongodb/mongo"))
-
-(defun chasinglogic-make-and-select-frame (&optional name)
-  "Create and select a new frame.
-
-Optionally set frame NAME on creation."
-  (interactive)
-  (let ((frame (make-frame)))
-    (select-frame frame)
-    (when name
-      (set-frame-name name))
-    frame))
-
-(defun chasinglogic-email ()
-  "Open my email frame or create it."
-  (interactive)
-  (if (get-a-frame "email")
-      (select-frame-by-name "email")
-    (progn
-      (chasinglogic-make-and-select-frame "email")
-      (mu4e))))
-
-(defun chasinglogic-evergreen-patch-toolchain (variants)
-  "Patch the toolchain-builder project"
-  (interactive "sVariants: ")
-  (evergreen-patch
-   ;; project
-   "toolchain-builder"
-   ;; finalize
-   t
-   ;; browse
-   t
-   ;; alias
-   nil
-   ;; variants
-   (split-string variants ",")
-   ;; tasks
-   (list "all")
-   ;; description
-   (evergreen--generate-description)
-   ;; large
-   nil))
-
-(defun chasinglogic-evergreen-patch-required ()
-  "Run the MongoDB required patch build alias."
-  (interactive)
-  (evergreen-patch
-   ;; project
-   (cond
-    ((string-equal
-      (regexp-quote (projectile-project-name)) "mongo")
-     "mongodb-mongo-master")
-    (t (projectile-project-name)))
-   ;; finalize
-   t
-   ;; browse
-   t
-   ;; alias
-   "required"
-   ;; variants
-   nil 
-   ;; tasks
-   nil 
-   ;; description
-   (evergreen--generate-description)
-   ;; large
-   nil))
-
-(defun chasinglogic-copy-current-file-name (&optional copy)
-  "Return a filename:linenumber pair for point for use with LLDB/GDB.
-
-If COPY is provided copy the value to kill ring instead of returning."
-  (interactive (list t))
-  (let ((st
-         (concat
-          (if (projectile-project-root)
-              (file-relative-name (buffer-file-name) (projectile-project-root))
-            (file-name-nondirectory (buffer-file-name))))))
-    (if copy
-        (progn
-          (kill-new st)
-          (message "%s" st))
-      st)))
-
-(defun chasinglogic-copy-breakpoint-for-here (&optional copy)
-  "Return a filename:linenumber pair for point for use with LLDB/GDB.
-
-If COPY is provided copy the value to kill ring instead of returning."
-  (interactive (list t))
-  (let ((st
-         (concat
-          (chasinglogic-copy-current-file-name)
-          ":"
-          (format "%d" (line-number-at-pos)))))
-    (if copy
-        (progn
-          (kill-new st)
-          (message "%s" st))
-      st)))
-
-(defun chasinglogic-move-line-up ()
-  "Move up the current line."
-  (interactive)
-  (transpose-lines 1)
-  (forward-line -2)
-  (indent-according-to-mode))
-
-(defun chasinglogic-move-line-down ()
-  "Move down the current line."
-  (interactive)
-  (forward-line 1)
-  (transpose-lines 1)
-  (forward-line -1)
-  (indent-according-to-mode))
-
-;; Don't show the DFM sync window
-(add-to-list 'display-buffer-alist
-             (cons "\\*dfm output\\*.*" (cons #'display-buffer-no-window nil)))
-(defun chasinglogic-sync-dotfiles (msg)
-  "Run dfm sync"
-  (interactive "sCommit message: ")
-  (shell-command
-   (format "dfm sync --message='%s' &" msg)
-   "*dfm output*"))
+      If COPY is provided copy the value to kill ring instead of returning."
+        (interactive (list t))
+        (let* ((line-number (format "%d" (line-number-at-pos)))
+               (file-name (if (projectile-project-root)
+                              (file-relative-name (buffer-file-name) (projectile-project-root))
+                            (file-name-nondirectory (buffer-file-name))))
+               (breakpoint (concat file-name ":" line-number)))
+          (if copy
+              (progn
+                (kill-new breakpoint)
+                (message "%s" breakpoint))
+            breakpoint)))
 
 (defun sudo ()
   "Use TRAMP to `sudo' the current buffer"

@@ -58,9 +58,6 @@
 ;;;; Install and setup use-package
 
 (eval-when-compile
-  (when (file-exists-p "~/.secrets.el")
-    (load-file "~/.secrets.el"))
-
   (add-to-list 'load-path (concat user-emacs-directory "lisp"))
   (require 'chasinglogic-utils)
   (require 'use-package))
@@ -1186,3 +1183,4 @@ comments so this function better suits my needs."
   (server-start))
 
 ;;; init.el ends here
+(put 'downcase-region 'disabled nil)
