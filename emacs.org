@@ -1,7 +1,7 @@
 #+PROPERTY: header-args :mkdirp yes
+#+PROPERTY: header-args :tangle .emacs.d/init.el
 
 * ChasingLogic's Emacs Configuration
-
 ** Global Variables
 
    These settings are all global variables the either inform or change
@@ -121,17 +121,112 @@
         (if (use-region-p)
             (comment-or-uncomment-region (region-beginning) (region-end) arg)
           (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
-
-      (bind-key "M-;" 'comment-actually-dwim)
     #+END_SRC
 
-** Global Keybindings
+    I use =M-x compile= for running all kinds of commands. This
+    setting makes it so that the buffer auto scrolls to keep up with
+    the output. More like a regular terminal would.
 
-   These are my global keybindings that rebind or simply bind default
-   Emacs behavior and commands. I also document what the default
-   binding was if I overwrite one so I can remember if I ever want or
-   need to go back during a live session.
+    #+BEGIN_SRC emacs-lisp
+      (setq compilation-scroll-output t)
+    #+END_SRC
 
+*** Disable new user warnings for commands
+
+    As I discover commands that have the "new user warnings" when I
+    use them I disable them here.
+
+    #+BEGIN_SRC emacs-lisp
+      (put 'downcase-region 'disabled nil)
+    #+END_SRC
+
+** Package initialization
+
+   Before we can set up our configuration for third party packages we
+   have to initialize the built-in Emacs package for fetching and
+   updating them.
+
+   This snippet loads =package.el= and adds the following repositories
+   to Emacs:
+
+   - =elpa=: The GNU default package repository. I actually install very
+     little from here since it tends towards being out of date.
+   - =melpa=: This is where I get almost everything else. It's a
+     rolling up to date Emacs package repository. Maybe someday if I
+     experience breakage I'll switch to =melpa-stable= but for years
+     now I've never had to roll back a package (except when I was on
+     Spacemacs because an update broke Spacemacs code).
+
+   #+BEGIN_SRC emacs-lisp
+     (require 'package)
+
+     (setq-default package-archives
+                   (list
+                    '("elpa" . "http://elpa.gnu.org/packages/")
+                    '("melpa" . "http://melpa.org/packages/")))
+     (package-initialize)
+   #+END_SRC
+
+   Next we setup the amazing =use-package= package. Every package,
+   other than =use-package= itself, is installed with
+   =use-package=. It's a macro that makes configuration clear,
+   concise, and most importantly fast. It makes every single package
+   lazy load as you need it (when configured properly), greatly
+   improving Emacs startup time.
+
+   First we set a few global configuration options for =use-package=:
+
+   - =use-package-enable-imenu-support=: Allow searching through the
+     =init.el= for packages using =imenu=.
+   - =use-package-always-ensure=: Almost all of the packages that I
+     configure with =use-package= are third party
+     packages. =use-package= has a feature called =:ensure= that tells
+     =use-package= to install the package on startup if it's not
+     installed. Since =use-package= declarations where I don't want
+     this behavior are the exception this setting tells =use-package=
+     to set =:ensure t= by default.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq-default use-package-enable-imenu-support t
+                   use-package-always-ensure t)
+   #+END_SRC
+
+   Next we actually install =use-package=. We wrap this in a
+   =eval-when-compile= call since I byte compile my =init.el= it means
+   I don't pay for this installation at startup time. We then use
+   =use-package= to install bind-key.
+
+   #+BEGIN_SRC emacs-lisp
+     (eval-when-compile
+       (package-initialize)
+       (when (not (package-installed-p 'use-package))
+         (package-refresh-contents)
+         (package-install 'use-package))
+       (require 'use-package))
+   #+END_SRC
+*** Quelpa (install packages from git)
+
+    I maintain a few Emacs packages and it's very helpful to be able to
+    automatically install and update them. This is what the [[https://framagit.org/steckerhalter/quelpa][Quelpa]]
+    package does. It lets you treat git remotes as if they were regular
+    package repositories. Additionally we install [[https://framagit.org/steckerhalter/quelpa-use-package][quelpa-use-package]]
+    which adds a =:quelpa= keyword argument to =use-package=.
+
+    We also only call quelpa on use-package quelpa if it's not
+    installed because I don't nee to update it very often and it slows
+    down startup time significantly.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package quelpa
+        :init
+        (when (not (package-installed-p 'quelpa-use-package))
+          (quelpa
+           '(quelpa-use-package
+             :fetcher git
+             :url "https://framagit.org/steckerhalter/quelpa-use-package.git")))
+        (require 'quelpa-use-package))
+    #+END_SRC
+    
 ** UI / UX settings
 
    These settings define how I want my Emacs to look from window
@@ -139,22 +234,22 @@
 
 *** Font
 
-   First set the font. I've tried many fonts in my time and I find
-   Source Code Pro to be a Pretty Good Font™. Other fonts I like are
-   Inconsolata and DejaVu Sans Mono, and one day I may switch back to
-   them but getting them on all platforms can be a hassle.
+    First set the font. I've tried many fonts in my time and I find
+    Source Code Pro to be a Pretty Good Font™. Other fonts I like are
+    Inconsolata and DejaVu Sans Mono, and one day I may switch back to
+    them but getting them on all platforms can be a hassle.
 
-   The only thing fancy about the way this font is getting set is that
-   I use two font sizes: one for my Mac because of the retina display
-   and one for everything else where I use regular monitors.
+    The only thing fancy about the way this font is getting set is that
+    I use two font sizes: one for my Mac because of the retina display
+    and one for everything else where I use regular monitors.
 
-   #+BEGIN_SRC emacs-lisp
-     (setq-default chasinglogic-font-size "13")
-     (when (and (display-graphic-p) (eq system-type 'darwin))
-       ;; Retina display requires bigger font IMO.
-       (setq chasinglogic-font-size "15"))
-     (set-frame-font (format "Source Code Pro %s" chasinglogic-font-size) nil t)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (setq-default chasinglogic-font-size "13")
+      (when (and (display-graphic-p) (eq system-type 'darwin))
+        ;; Retina display requires bigger font IMO.
+        (setq chasinglogic-font-size "15"))
+      (set-frame-font (format "Source Code Pro %s" chasinglogic-font-size) nil t)
+    #+END_SRC
 
 *** Window Chrome
 
@@ -182,27 +277,49 @@
 
 *** Color Theme
 
-    I actually use a default Emacs color theme. Most third party
-    schemes I find have weird contrast that I don't like, don't work
-    well in a terminal, or interact strangely with other packages. I'm
-    always open to try something new color-wise but Wombat has been
-    pretty great, stable and readable for me for a while now.
+    I do a lot of bright area coding. My home office is very bright
+    and my work office is pretty bright. I've found solarized light to
+    be legible and not cause me eye strain. Occasionally I'll do some
+    late night Emacs'ing so I keep zenburn around for those times.
+
+    It is kind of annoying that =solarized.el= doesn't work great in
+    a terminal but what can you do. I rarely use Emacs there anyway.
 
     #+BEGIN_SRC emacs-lisp
-      (load-theme 'wombat t)
+      (use-package zenburn-theme)
+      (use-package solarized-theme
+        :config
+        (setq-default solarized-high-contrast-mode-line t
+                      solarized-distinct-doc-face t
+                      solarized-distinct-fringe-background t)
+        (load-theme 'solarized-light t))
     #+END_SRC
 
-    There are only two things that I don't like about Wombat out of
-    the box. The cursor is a different color than the text (and a hard
-    to see color at that) and variable names are some crazy bright
-    color. These few lines make the cursor and variable names white,
-    the same color as basic text.
+*** Line numbers in programming modes.
+
+    I enable line numbers using the new Emacs 26
+    =display-line-numbers-mode= for all programming major modes.
 
     #+BEGIN_SRC emacs-lisp
-      (add-to-list 'default-frame-alist '(cursor-color . "#fff"))
-      (set-cursor-color "#fff")
-      ;; Make variables names same color as other text
-      (set-face-attribute 'font-lock-variable-name-face nil :foreground "#fff")
+      (defun enable-display-line-numbers-mode ()
+        "Enable display-line-numbers-mode"
+        (display-line-numbers-mode 1))
+      (add-hook 'prog-mode-hook 'enable-display-line-numbers-mode)
+    #+END_SRC
+
+*** Automatically maximize Emacs frames when they are created
+
+    This is a custom function I wrote that maximizes the frame it's
+    passed. I then hook it into the =after-make-frame-functions= hook
+    so any time a frame is created it is maximized.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun maximize-gui-frames (frame)
+        "Maxmize a the GUI frame FRAME."
+        (with-selected-frame frame
+          (when (display-graphic-p)
+            (set-frame-parameter nil 'fullscreen 'maximized))))
+      (add-hook 'after-make-frame-functions 'maximize-gui-frames)
     #+END_SRC
 
 ** Built-in Emacs Modes
@@ -297,85 +414,57 @@
       (setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
     #+END_SRC
 
-** Package initialization
+*** Automatically Do important programming stuff
 
-   Before we can set up our configuration for third party packages we
-   have to initialize the built-in Emacs package for fetching and
-   updating them.
+    Emacs has a series of modes that I call the "electric modes", as
+    they all start with =electric-=. All of these modes perform
+    important editing functions automatically.
 
-   This snippet loads =package.el= and adds the following repositories
-   to Emacs:
+    Electric indent mode on-the-fly reindents your code as you
+    type. It checks for newlines and other common chars that are
+    configured via the variable =electric-indent-chars=. This mode is
+    invaluable and saves me a lot of formatting time.
 
-   - =elpa=: The GNU default package repository. I actually install very
-     little from here since it tends towards being out of date.
-   - =org=: This is =org-mode='s custom elpa repository. I install a
-     single package =org-plus-contrib= from here so I can get latest
-     =org-mode= and plugins.
-   - =melpa=: This is where I get almost everything else. It's a
-     rolling up to date Emacs package repository. Maybe someday if I
-     experience breakage I'll switch to =melpa-stable= but for years
-     now I've never had to roll back a package (except when I was on
-     Spacemacs because an update broke Spacemacs code).
+    #+BEGIN_SRC emacs-lisp
+      (electric-indent-mode 1)
+    #+END_SRC
 
-   #+BEGIN_SRC emacs-lisp
-     (require 'package)
+    Electric layout mode automatically inserts newlines around some
+    characters. The variable =electric-layout-rules= defines when and
+    how to insert newlines. The short of it is for many modes this
+    auto formats code.
 
-     (setq-default package-archives
-                   (list
-                    '("elpa" . "http://elpa.gnu.org/packages/")
-                    '("org" . "http://orgmode.org/elpa/")
-                    '("melpa" . "http://melpa.org/packages/")))
-     (package-initialize)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (electric-layout-mode 1)
+    #+END_SRC
 
-   Next we setup the amazing =use-package= package. Every package,
-   other than =use-package= itself, is installed with
-   =use-package=. It's a macro that makes configuration clear,
-   concise, and most importantly fast. It makes every single package
-   lazy load as you need it (when configured properly), greatly
-   improving Emacs startup time.
+    Electric pair mode automatically pairs common programming
+    operators: =(=, ={=, ="=, ='=, etc. I find this behavior annoying
+    in prose modes so I use a custom hook to only enable it for
+    programming modes.
 
-   First we set a few global configuration options for =use-package=:
+    #+BEGIN_SRC emacs-lisp
+      (defun enable-electric-pair-local-mode ()
+        "Enable eletric pair mode locally."
+        (electric-pair-local-mode 1))
+      (add-hook 'prog-mode-hook 'enable-electric-pair-local-mode)
+    #+END_SRC
 
-   - =use-package-enable-imenu-support=: Allow searching through the
-     =init.el= for packages using =imenu=.
-   - =use-package-always-ensure=: Almost all of the packages that I
-     configure with =use-package= are third party
-     packages. =use-package= has a feature called =:ensure= that tells
-     =use-package= to install the package on startup if it's not
-     installed. Since =use-package= declarations where I don't want
-     this behavior are the exception this setting tells =use-package=
-     to set =:ensure t= by default.
+*** Show Paren Mode
 
-   #+BEGIN_SRC emacs-lisp
-     (setq-default use-package-enable-imenu-support t
-                   use-package-always-ensure t)
-   #+END_SRC
+    I'm just going to steal the description of this straight from the
+    documentation: Toggle visualization of matching parens (Show Paren
+    mode).
 
-   Next we actually install =use-package=. We wrap this in a
-   =eval-when-compile= call since I byte compile my =init.el= it means
-   I don't pay for this installation at startup time.
-
-   #+BEGIN_SRC emacs-lisp
-     (eval-when-compile
-       (when (not (package-installed-p 'use-package))
-         (package-refresh-contents)
-         (package-install 'use-package))
-       (require 'use-package))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (show-paren-mode 1)
+    #+END_SRC
 
 ** My personal utility functions and commands
 
    I have an ever growing list of personal utility functions. Some of
    these add features that should be in Emacs by default, some of them
-   are personal workflow improvements. The first thing we do is start
-   an =eval-when-compile= block so that all of these utilities are
-   heavily cached.
-
-   #+BEGIN_SRC emacs-lisp
-     (eval-when-compile
-   #+END_SRC
-
+   are personal workflow improvements.
 *** Delete current buffer and file
 
     I will never understand why this isn't baked into Emacs. I've
@@ -401,7 +490,7 @@
                 (call-interactively #'projectile-invalidate-cache))
               (message "File '%s' successfully removed" filename)))))
     #+END_SRC
-
+    
 *** Indent the buffer
 
     This function uses Emacs built in indent facilities to indent the
@@ -433,6 +522,9 @@
              (find-file (if (file-exists-p (concat file-name ".gpg"))
                             (concat file-name ".gpg")
                           file-name)))))
+      (chasinglogic-find-org-file notes)
+      (chasinglogic-find-org-file ideas)
+      (chasinglogic-find-org-file todo)
     #+END_SRC
 
 *** Rename file and buffer
@@ -548,14 +640,38 @@
            (concat "/sudo:root@localhost:" buffer-file-name))))
     #+END_SRC
 
-*** End Utility Functions
+** Global Keybindings
 
-    As we earlier started an =eval-when-compile= block this src block
-    simply closes it.
+   These are my global keybindings that bind my custom commands or
+   rebind Emacs defaults. I also document what the default binding was
+   if I overwrite one so I can remember if I ever want or need to go
+   back during a live session.
 
-    #+BEGIN_SRC emacs-lisp
-      )
-    #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (bind-key "C-x '"   'chasinglogic-shell)
+     (bind-key "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
+     (bind-key "C-c j =" 'chasinglogic-indent-buffer)
+     (bind-key "C-c f r" 'chasinglogic-rename-file-and-buffer)
+     (bind-key "C-c f D" 'chasinglogic-delete-current-buffer-file)
+
+     ;; Reverse the M-<> keybinds with M-,. because I move to the
+     ;; beginning and end of buffers far more often than I
+     ;; xref-pop-marker-stack
+     (bind-key "M-<" 'xref-pop-marker-stack)
+     (bind-key "M->" 'xref-find-definitions)
+     (bind-key "M-," 'beginning-of-buffer)
+     (bind-key "M-." 'end-of-buffer)
+
+     ;; Bind M-[] to paragraph movement. Normally this is M-{} which
+     ;; still is bound. This is more convenient and the M-[] keys were
+     ;; bound to nighting anyway
+     (bind-key "M-[" 'backward-paragraph)
+     (bind-key "M-]" 'forward-paragraph)
+
+     (bind-key "C-x C-b" 'ibuffer)
+
+     (bind-key "M-;" 'comment-actually-dwim)
+   #+END_SRC
 
 ** Third Party Packages
 
@@ -563,24 +679,6 @@
    Emacs. I simply group them under this heading for a more logical
    outline.
 
-*** Quelpa (install packages from git)
-
-    I maintain a few Emacs packages and it's very helpful to be able to
-    automatically install and update them. This is what the [[https://framagit.org/steckerhalter/quelpa][Quelpa]]
-    package does. It lets you treat git remotes as if they were regular
-    package repositories. Additionally we install [[https://framagit.org/steckerhalter/quelpa-use-package][quelpa-use-package]]
-    which adds a =:quelpa= keyword argument to =use-package=.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package quelpa
-        :init
-        (quelpa
-         '(quelpa-use-package
-           :fetcher git
-           :url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
-        (require 'quelpa-use-package))
-    #+END_SRC
-   
 *** Evergreen CI integration
 
     This is one of my personal packages. At MongoDB we run our in house
@@ -653,7 +751,7 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package expand-region
-        :bind ("C-M-h" . 'expand-region))
+        :bind ("C-M-h" . expand-region))
     #+END_SRC
 
 *** Avy
@@ -689,16 +787,1646 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package ace-window
-        :bind ("M-o" . 'ace-window))
+        :bind ("M-o" . ace-window))
     #+END_SRC
 
-*** TODO Hydra
+*** Hydra
+
+    Hydra is a weird package. You define a hydra and when it's
+    activated you can press any keys in the hydra to use the command
+    bound to that "hydra head". When you press any key that doesn't
+    correspond to a head the hydra ends and you go back to a regular
+    "Emacs state". I use this for when I need to string commands
+    together frequently such as when searching / moving through a code
+    base or doing complex window management. It saves having hold
+    control or meta forever.
+
+    First install the package.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package hydra
+        :config
+    #+END_SRC
+
+    Now we define our hydras.
+    
+**** Movement Hydra
+
+     I use this hydra for when I'm reading a code base. It lets me
+     string together Emacs movement and search commands.
+
+     #+BEGIN_SRC emacs-lisp
+       (defhydra chasinglogic-movement-hydra (global-map "C-x m")
+         ("q" nil "quit")
+         ("n" next-line "next line")
+         ("p" previous-line "previous line")
+         ("b" backward-char "backward char")
+         ("f" forward-char "forward char")
+         ("i" isearch-forward "isearch forward")
+         ("s" helm-swoop "swoop search")
+         ("r" helm-rg "ripgrep search")
+         ("R" helm-projectile-rg "project level ripgrep search")
+         ("w" forward-word "forward word")
+         ("W" backward-word "backward word")
+         ("v" scroll-up-command "scroll down")
+         ("V" scroll-down-command "scroll up")
+         ("l" recenter-top-bottom "recenter")
+         ("h" org-next-visible-heading "next heading")
+         ("H" org-previous-visible-heading "previous heading")
+         ("[" backward-paragraph "backward paragraph")
+         ("]" forward-paragraph "forward paragraph"))
+     #+END_SRC
+
+
+**** Window Management Hydra
+
+     I use this when I'm setting up a specific window configuration or
+     flipping between window configurations with registers.
+
+     #+BEGIN_SRC emacs-lisp
+       (defhydra chasinglogic-window-hydra (global-map "C-c j w")
+         ("q" nil "quit")
+         ("j" ace-window "switch windows")
+         ("r" window-configuration-to-register "save window configuration to register")
+         ("l" jump-to-register "load window configuration from register")
+         ("=" balance-windows "balance windows")
+         ("d" delete-window "delete this window")
+         ("o" delete-other-windows "delete other windows")
+         ("v" split-window-right "split window to right")
+         ("s" split-window-below "split window below"))
+     #+END_SRC
+
+**** End package declaration
+
+     This just closes the Hydra =use-package= config section.
+
+     #+BEGIN_SRC emacs-lisp
+       )
+     #+END_SRC
 
 *** Paredit
 
     When talking about editing languages at a syntactic level one
     can't help but think of paredit. It's simply the best way to write
-    lisp code. 
+    lisp code. It adds two important to remember key bindings:
+
+    | Key Bindings      | Descrpition              |
+    |-------------------+--------------------------|
+    | C-M-<Right Arrow> | Barf current expression  |
+    | C-M-<Left Arrow>  | Slurp current expression |
+
+    Additionally I overwrite one mapping so that Paredit uses my
+    preferred =comment-actually-dwim= function instead of it's own
+    that mostly mimics the Emacs default.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package paredit
+        :bind (:map paredit-mode-map
+                    ;; I do not like any version of the original
+                    ;; `comment-dwim' and paredit has it's own special
+                    ;; version that I find more confusing. So overwrite it's
+                    ;; mapping with my `comment-actually-dwim' function.
+                    ("M-;" . comment-actually-dwim))
+        :hook '(emacs-lisp-mode . paredit-mode))
+    #+END_SRC
+*** Helm
+
+    Helm is my current fuzzy searching framework. I've switched
+    between Helm and Ivy often enough that it's almost worth having
+    both. At this point and time however I think I'll stick with
+    helm. It mostly behaves how I want, it's fast enough, and most
+    importantly it has more third party packages that I use. I think
+    when something like =helm-org-rifle= and =helm-mu= are available
+    for Ivy I might switch back but for now I can't live without these
+    and I'd rather have one way of doing fuzzy completion.
+
+    This =use-package= declaration for Helm does a few interesting
+    things. First it binds common key chords to their improved helm
+    equivalents. Next it defines two variables that when combined make
+    helm display at the bottom of the frame full width. Kind of like
+    the minibuffer but not. I prefer this positioning but I have no
+    idea how these variables accomplish it I [[https://github.com/emacs-helm/helm/issues/2039#issuecomment-390103697][stole this configuration
+    from this random comment on the Helm issue tracker]]. Finally
+    enables the helm minor mode that just makes helm kind of work with
+    everything even if it doesn't have an explicit helm integration.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package helm
+        :bind (("M-x"      . helm-M-x)
+               ("C-x b"    . helm-mini)
+               ("M-y"      . helm-show-kill-ring)
+               ("M-i"      . helm-imenu)
+               ("M-I"      . helm-imenu-in-all-buffers)
+               ("C-x r b"  . helm-bookmarks)
+               ("C-x C-f"  . helm-find-files))
+        :config
+        (setq helm-always-two-windows nil)
+        (setq helm-default-display-buffer-functions '(display-buffer-in-side-window))
+        (helm-mode 1))
+    #+END_SRC
+
+**** Helm Swoop
+
+     There were two main killer features, to me, of Ivy. One of them
+     was Swiper, the enhanced incremental search. This package
+     =helm-swoop= kind of fills that gap. It's less nice than swiper
+     (it breaks my helm window configuration rules) but it gets the job
+     done. I bind it to =C-M-s= globally.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package helm-swoop
+         :after helm
+         :bind ("C-M-s" . helm-swoop))
+     #+END_SRC
+     
+**** Helm select frames
+
+**** Helm mu
+
+     This is my favorite thing about Helm. I use the excellent mu4e
+     package and mu tool to manage my Email locally. This lets me
+     incrementally search my email using the mu query language and
+     interact with the results.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package helm-mu
+         :after (helm mu4e)
+         :hook (mu4e-main-mode-hook .
+                                    (lambda ()
+                                      (bind-key "s" helm-mu mu4e-main-mode-map)
+                                      (bind-key "s" helm-mu mu4e-headers-mode-map)
+                                      (bind-key "s" helm-mu mu4e-view-mode-map)))
+         :bind (("C-c s m" . helm-mu)
+                ("C-c s c" . helm-mu-contacts)))
+     #+END_SRC
+
+**** Helm Projectile
+
+     Projectile will use helm for completion as I've set
+     =projectile-completion-system= to ='helm=. However this package
+     provides some more feature rich actions in those Helm buffers and
+     so we rebind the =projectile-command-map= keys to these enhanced
+     versions. Additionally I use =helm-rg= with =helm-projectile-rg=
+     to search my projects. I use ripgrep both in and out of Emacs so
+     I can keep the experience consistent and fast.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package helm-projectile
+         :after (helm projectile)
+         :bind (:map projectile-command-map
+                     ("h" . helm-projectile-find-other-file)
+                     ("f" . helm-projectile-find-file)
+                     ("p" . helm-projectile-switch-project)
+                     ("s" . helm-projectile-rg)))
+       (use-package helm-rg :after 'helm-projectile)
+     #+END_SRC
+
+**** Helm Org
+
+     This package adds helm sources for org mode buffers. You can
+     search through in buffer headers, capture templates, and more. I
+     only bind the most commonly used commands however.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package helm-org
+         :after (helm org)
+         :bind (("C-c s o c" . helm-org-capture-templates)
+                ("C-c s o h" . helm-org-in-buffer-headings)
+                ("C-c o o"   . helm-org-in-buffer-headings)))
+     #+END_SRC
+
+**** Helm Org Rifle
+
+     While =helm-org= integrates Helm with org mode buffer
+     editing. =helm-org-rifle= is something all together more
+     powerful. It does entry based searching for terms across all open
+     Org mode buffers. It can do the same for files, directories, and
+     the agenda. It's exteremely powerful and I don't use it
+     enough. But when I do need it, for instance trying to find a
+     note, it's irreplaceable.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package helm-org-rifle
+         :after (helm org)
+         :bind  ("C-c s o r" . helm-org-rifle))
+     #+END_SRC
+
+**** TODO Helm pass
+
+     I've been considering a switch back to Password store. If I do
+     =helm-pass= would give me a great way to find and copy passwords.
+
+*** Company Mode
+
+    Company stands for COMPlete ANYthing and it does. I enable it
+    globally and diminish it since it is always on. I only set
+    =company-dabbrev-downcase= to nil. This ignores casing when
+    providing suggestions taken from inside the current buffer.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package company
+        :diminish ""
+        :config
+        (setq-default company-dabbrev-downcase nil)
+        (global-company-mode))
+    #+END_SRC
+
+*** LSP Mode
+
+    LSP mode attempts to make Emacs as featureful as VSCode when it
+    comes to "IDE-esque" features. I would say it gets almost all the
+    way there. However I disable a lot of these features for
+    performance or visual disruption reasons. Even with most of these
+    UI elements disabled it provies the best completion and linting of
+    any package in the Emacs ecosystem. The best part is that it's a
+    single package so I don't have to maintain a milling =company-*=
+    and =flycheck-*= packages. It consists of two packages =lsp-mode=
+    itself that provides the Language Server interaction and =lsp-ui=
+    that provides the bulk of interactive features for the Language
+    Server. I only install =lsp-ui= for the Flycheck integration.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package lsp-mode
+        :init (setq-default lsp-auto-guess-root t
+                            lsp-prefer-flymake nil)
+        :commands 'lsp)
+
+      (use-package lsp-ui
+        :hook 'lsp-mode
+        :init
+        (setq-default
+         lsp-ui-doc-enable nil
+         lsp-ui-peek-enable nil
+         lsp-ui-sideline-enable nil
+         lsp-ui-imenu-enable nil
+         lsp-ui-flycheck-enable t))
+    #+END_SRC
+    
+**** LSP powered auto completion
+
+     We need one more package to integrate LSP mode with my completion
+     framework Company, the cleverly named, =company-lsp=. All that we
+     need to do is add it to company backends.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package company-lsp
+         :config (push 'company-lsp company-backends)
+         :after (lsp-mode company))
+     #+END_SRC
+
+     
+**** CCLS support
+
+     I've found CCLS to be the best and most available language server
+     for C / C++. For LSP to use it however it requires the additional
+     third party package =ccls=. So here we install it and hook in
+     enabling =lsp= for all C / C++ modes.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package ccls
+         :hook ((c-mode c++-mode objc-mode) .
+                (lambda () (require 'ccls) (lsp))))
+     #+END_SRC
+
+*** Org
+
+    Ah Org mode. I use Org mode to save my brain from the stress of
+    being a brain. I store everything I know and need to do in Org
+    mode one way or another. I write all of my talks and blog posts in
+    Org mode. For that reason my configuration for Org mode is
+    huge. Because it's so big I've split it into sections.
+
+    First let's configure Org =use-package= and start the Org
+    configuration block. Additionally we'll setup autoloading commands
+    =org-capture= and =org-agenda=. I usually call these before I've
+    opened an org file.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package org
+        :ensure nil
+        :commands (org-capture org-agenda)
+        :mode ("\\.org\\'" . org-mode)
+    #+END_SRC
+
+**** Key Bindings
+
+     I have some pretty extensive org related key bindings. Some of
+     them have org mode defaults that I learned after I developed
+     muscle memory for these bindings. There isn't anything special
+     about these bindings they are self explanatory based on command
+     names. The last thing we do here is start the =:config= section
+     of the =use-package= definition.
+
+     #+BEGIN_SRC emacs-lisp
+       :bind (("C-c o o"   . helm-org-in-buffer-headings)
+              ("C-c o TAB" . org-global-cycle)
+              ("C-c o a"   . org-agenda)
+              ("C-c o c"   . org-capture)
+              ("C-c o r"   . org-archive-subtree)
+              ("C-c o m n" . chasinglogic-find-org-file-notes)
+              ("C-c o m i" . chasinglogic-find-org-file-ideas)
+              ("C-c o m t" . chasinglogic-find-org-file-todo)
+              ("C-c o m r" . chasinglogic-add-to-reading-list)
+              ("C-c o t"   . org-todo)
+              ("C-c o s"   . org-schedule)
+              ("C-c o g"   . org-set-tags-command)
+              ("C-c o P"   . org-set-property-and-value)
+              ("C-c o i l" . org-insert-link)
+              ("C-c o i h" . org-insert-heading)
+              ("C-c o p p" . org-priority)
+              ("C-c o p k" . org-priority-up)
+              ("C-c o p j" . org-priority-down))
+       :config
+     #+END_SRC
+
+**** Org Refile
+     I use org refile to organize tasks from my =inbox.org= file to my
+     agenda files or notes. I also use it to refile my notes between
+     headings in =notes.org.gpg=. These settings do the following things:
+
+     - Add org agenda files to the refile targets.
+     - Include the filename in the refile target path, this allows
+       creating new top level headings in files via refile.
+     - Enable creating new nodes via refile.
+     - Disable complete-in-steps and let helm do the filtering.
+
+     #+BEGIN_SRC emacs-lisp
+       (setq-default org-refile-targets '((nil :maxlevel . 1)
+                                          (org-agenda-files :maxlevel . 2))
+                     org-refile-use-outline-path 'file
+                     org-outline-path-complete-in-steps nil
+                     org-refile-allow-creating-parent-nodes 'confirm)
+
+     #+END_SRC
+
+**** Org Capture
+
+     Org capture is a way to quickly jot or "capture" an idea, todo,
+     note etc. 
+
+**** Org Mode Hooks
+
+     This sets my org mode hook that disables
+     =display-line-numbers-mode= and =electric-pair-local-mode=.
+
+     #+BEGIN_SRC emacs-lisp
+       (defun chasinglogic-org-mode-hook ()
+         "Enable some org mode specific settings"
+         ;; Electric pair mode makes org links super annoying to write
+         (display-line-numbers-mode -1)
+         (electric-pair-local-mode -1))
+       (add-hook 'org-mode-hook 'chasinglogic-org-mode-hook)
+     #+END_SRC
+
+**** Org Mode Settings
+
+     These settings are global variables that inform Org mode
+     functions or behavior.
+
+     First we define global variables that describe where common Org
+     mode files can be found. I keep all of my Org files in
+     =~/Nextcloud/Org= so they are automatically synced to my
+     Nextcloud server by my clients.
+
+     #+BEGIN_SRC emacs-lisp
+       (setq-default org-directory (file-name-as-directory "~/Nextcloud/Org")
+                     org-default-todo-file  (expand-file-name "inbox.org"  org-directory)
+                     org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
+                     org-default-ideas-file (expand-file-name "inbox.org" org-directory))
+     #+END_SRC
+
+**** Org Agenda
+
+     I use the Org agenda to track what tasks I have to do at any
+     given time. I sync this up my Nextcloud instance where it works
+     on my phone and iPad via the Beorg app. It's actually a really
+     nice system but my primary consumption of this information is via
+     agenda views.
+
+     First define what files can contain TODO's for the Agenda:
+
+     #+BEGIN_SRC emacs-lisp
+       (setq-default org-agenda-files (list org-default-todo-file
+                                            (expand-file-name "todo.org" org-directory)))
+     #+END_SRC
+
+     Next define the priorities that are available to tasks. I use
+     priorities A - D with A being the highest priority.
+
+     #+BEGIN_SRC emacs-lisp
+       (setq-default org-highest-priority ?A
+                     org-lowest-priority ?D
+                     org-default-priority ?D)
+     #+END_SRC
+
+     This variable makes it so when completing a task Org logs the
+     time it was completed.
+
+     #+BEGIN_SRC emacs-lisp
+       (setq-default org-log-done 'time)
+     #+END_SRC
+
+     Make the agenda the only window when a view is selected. I rarely
+     want to look at my agenda and something else. I want to focus
+     entirely on planning.
+
+     #+BEGIN_SRC emacs-lisp
+       (setq-default org-agenda-window-setup 'only-window)
+     #+END_SRC
+
+     Now we define the valid TODO states a heading can be in. I use
+     three states: TODO, NEXT, and DONE. NEXT means either the next
+     task to do for a project or the task I'm currently working on for
+     that project.
+
+     #+BEGIN_SRC emacs-lisp
+       (setq-default org-todo-keywords '((sequence "TODO(t)" "NEXT(n!)" "STARTED(s!)" "|" "DONE(d!)" "CANCELLED(c!)"))
+                     org-todo-keyword-faces '(("TODO" . (:foreground "#cc9393" :weight bold))
+                                              ("NEXT" . (:foreground "#b58900" :weight bold))
+                                              ("STARTED". (:foreground "#6c71c4" :weight bold))
+                                              ("DONE" . (:foreground "green" :weight bold))
+                                              ("CANCELLED" . (:foreground "#dc322f"))))
+     #+END_SRC
+
+
+***** TODO Org Mode Task Management Workflow
+
+      This section describes in prose my task management workflow with
+      Org mode. The following sections in [[Org Agenda]] will describe the
+      configuration that consumes this information. I periodically
+      update this and keep it so I can reference and remember why I
+      made a decision that I made.
+
+***** Agenda Views
+
+      I configure multiple agenda views for slicing up my tasks so I
+      can see what's relevant to me at any given time. See my Notes
+      section on [[Org Mode Task Management Workflow]] for information on
+      the complete workflow. The important thing to note is that I
+      have a small predefined set of tags for use in easily defining
+      filters in Agenda views.
+
+      You define views using the variable
+      =org-agenda-custom-commands=. I found it very difficult to
+      understand the configuration of =org-agenda-custom-commands= at
+      first because it's got it's own weird meta programming language
+      involved.
+
+      The variable itself is a list of lists. The sub-lists or "views"
+      as I will now refer to them have the form =(KEY_TO_ACTIVATE
+      DESCRPITION SECTIONS)=. =KEY_TO_ACTIVATE= is the key that must be
+      pressed to load the view after =org-agenda= is
+      called. =DESCRIPTION= (or "title") is shown next to the key in
+      the Org agenda dispatch buffer to describe what the view is. The
+      final argument =SECTIONS= is where I got the most hung up
+      originally. It is itself a list of lists where these sub lists
+      define a "section" of the view. Org agenda views can display
+      multiple sections that have different information.
+
+      Sections take the form of =(COMMAND FILTER SETTINGS)=. =COMMAND=
+      can be any one of:
+
+      - =agenda=: Returns the daily or weekly agenda. The span
+        returned depends on the =SETTINGS= =org-agenda-span=. 
+      - =alltodo=: Returns the global todo list.
+      - =todo=: Returns todo items.
+      - =tags-todo=: Return todo items that match the tag filter.
+
+      There are more commands than I've listed here. These are the
+      ones I use and understand for a full listing [[info:org#StoringSearchs][see Storing
+      Searches in the Org manual]].
+
+      =FILTER= is applied to all of the commands and is a search as
+      defined in the help for =org-search-view= (=C-h f
+      org-search-view=). The short version is that it's a regular
+      expression or a semi-boolean text search that is applied to the
+      headers. There is one exception to this filter behavior:
+      =tags-todo=. It takes a special kind of =FILTER= called a "tags
+      search". It can match properties and tags in interesting
+      full-blown query language ways. See [[info:org#Matching tags andproperties][Matching tags and properties]]
+      in the org manual for a complete explanation of the available
+      operators.
+
+      See [[info:org#Block Agenda][the Org manual entry for Block Agenda]] for a more
+      comprehensive in depth explanation of all available options. The
+      following describes my Agenda custom commands.
+
+****** Reading List
+
+       I store my reading list in org mode. I even have a special
+       capture template and function for quickly adding links from my
+       Emails into the reading list. This view simply finds all
+       entries tagged as being on the reading list.
+
+****** Daily Agenda
+
+       This is my most referenced Agenda view. It shows me all
+       scheduled items for the day, my "next actions", as well as all
+       of stuck projects. My =todo.org= file has top level headings
+       that represent projects. Projects range in scope but it's
+       usually something that will require more than one step to
+       complete. Stuck projects are any level 1 headings in =todo.org=
+       that have no NEXT or STARTED subheading.
+
+       We define how to find them via the variable =org-stuck-projects= here:
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default org-stuck-projects '("+LEVEL=1/-DONE" ("STARTED" "NEXT") nil ""))
+       #+END_SRC
+
+****** Definition of Agenda Custom Commands
+
+       The code that implements the above views.
+
+      #+BEGIN_SRC emacs-lisp
+        (setq-default org-agenda-custom-commands
+                      '(
+
+                        ("r" "Reading List"
+                         ((tags "+reading_list" ((org-agenda-overriding-header "Reading List")))))
+
+                        ("d" "Daily Agenda"
+                         (
+                          (agenda
+                           ;; Query ("" matches everything)
+                           ""
+                           ;; Settings 
+                           ((org-agenda-overriding-header "Today:")
+                            ;; Span 1 day (daily agenda)
+                            (org-agenda-span 1)
+                            ;; Sort by priority highest to lowest then tag
+                            (org-agenda-sorting-strategy '(priority-down tag-up))
+                            ;; 7 day advanced warning for deadlines
+                            (org-deadline-warning-days 7)))
+                          (todo "" ((org-agenda-overriding-header "Next Actions:")
+                                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo '("NEXT" "STARTED")))))
+                          (stuck "" ((org-agenda-overriding-header "Stuck Projects:")))))))
+      #+END_SRC
+
+***** Capture Templates
+
+      Capture templates are related to Agenda views in that they are
+      what feed my TODO list. I keep different templates for the
+      different kinds of things I add to the TODO list. It automates
+      my tagging system described in [[Org Mode Task Management
+      Workflow]].
+
+      First start the declaration of the variable:
+
+      #+BEGIN_SRC emacs-lisp
+        (setq-default org-capture-templates '(        
+      #+END_SRC
+
+      Each capture template takes the form =(KEY DESCRIPTION TYPE
+      TARGET TEMPLATE)=. =KEY= as before is the key to press to
+      activate the template when =org-capture= is
+      called. =DESCRIPTION= is identical to it's use in [[Agenda Views]].
+      
+      =TYPE= has the following five possible values. Note that all
+      values are symbols not strings.
+      
+      - =entry=: An Org node with a headline. Will be filed as the
+        child of the target entry or as a top-level entry.
+      - =item=: A plain list item. Will be placed in the first plain
+        list at the target location.
+      - =checkitem=: A checkbox item, otherwise behaves the same as
+        =item= above.
+      - =table-line=: A new line in the first table at target location.
+      - =plain=: Text to be inserted as-is.
+
+      I only use entries for now. Perhaps when capturing things that
+      are not TODO's I will make use of the other types.
+
+      =TARGET= is a specification of where to put the item. You
+      specify using a pseudo-function type query language. The
+      available pseudo-functions are:
+
+      - =(file "/path/to/file")=: simply a file target
+      - =(file+headline "path/to/file" "node headline")=: Fast
+        configuration if the target heading is unique in the file.
+      - =(file+regexp "path/to/file" "regexp to find location")=: File
+        to the entry matching regexp. Note this is [[Emacs Regular
+        Expressions]]
+
+      There are more variants, these are just the ones I use often.
+      Not all require the use of =file=. For a full listing view the
+      documentation for the variable =org-capture-templates= (=C-h v
+      org-capture-templates=).
+      
+****** Capture: TODO
+
+       This is the simplest, and probably most used, capture template I
+       have. It just records a TODO item with the default priority of
+       =M=.
+
+       #+BEGIN_SRC emacs-lisp
+         ("t" "Task todo" entry (file org-default-todo-file) "* TODO %?")
+       #+END_SRC
+       
+****** Capture: Reading List
+
+       This captures a TODO item that should be on my reading list. I
+       most frequently interact with this template via my utility
+       function =chasinglogic-add-to-reading-list= which is defined
+       later on in this document. It will capture whatever text is in
+       the active region.
+
+       #+BEGIN_SRC emacs-lisp
+         ("r" "Reading list" entry (file org-default-todo-file)
+          "* TODO %i %? :reading_list:
+:PROPERTIES:
+:CREATED: %t
+:END:")
+       #+END_SRC
+
+****** Capture: Notes
+
+       A generic Note capture this should always be a top level
+       heading. More often then not I manage the =notes.org= buffer
+       directly instead of via capture but occasionally I'll want to
+       just jot or start something and the buffer won't be immediately
+       available. This entry will be prepended, added to the top of the
+       notes buffer, since I list my notes in the buffer in reverse
+       chronological order of their creation.
+
+       #+BEGIN_SRC emacs-lisp
+         ("n" "A new note" entry (file org-default-notes-file) "* %?" :prepend t)
+       #+END_SRC
+
+****** Capture: Interview
+
+       When conducting an interview I file this into my Notes under the
+       Interviews heading. I also tag these entries with the dates they
+       were conducted on.
+
+       #+BEGIN_SRC emacs-lisp
+         ("I" "Interview"
+          entry (file+headline org-default-notes-file "Interviews")
+          "** Interviewee: %? :interview:
+         :PROPERTIES:
+         :DATE: %t
+         :END:
+
+         ")
+       #+END_SRC
+****** Capture: Idea
+
+       Ideas are captured with the date they were conceived. This
+       template automatically adds this property to the
+       entry. Additionally it tags the item as an idea for use in my
+       Agenda view filtering.
+
+       #+BEGIN_SRC emacs-lisp
+         ("i" "Idea" entry (file org-default-todo-file)
+          "* TODO %? :idea:
+:PROPERTIES
+:DATE: %t
+:END:
+         ")
+       #+END_SRC
+
+****** End capture template definition
+
+       Close the =setq= expression for capture templates.
+
+       #+BEGIN_SRC emacs-lisp
+         ))
+       #+END_SRC
+
+**** Org Utility Functions and Automation
+
+     As my Org workflow becomes more complete I occasionally write new
+     commands or functions that automate some piece of it. These
+     commands are created here.
+     
+***** Add to reading list 
+
+      I get a lot of weekly newsletter emails. Since I read my email
+      in Emacs I can quickly add the link under the point to my
+      reading list with this command. It will grab the link, make an
+      HTTP request to try and find the title of the webpage then
+      insert a reading list entry whose heading is a link with the
+      display text of the title of the page. I find the extra step to
+      determine the page title can be slow but is worth it for two
+      reasons:
+
+      - Reading links to determine their target is hard on Mobile
+        where I consume the reading list the most.
+      - A lot of newsletters use affialiate or click tracking links so
+        the links often have no indication of where they actually go.
+
+      #+BEGIN_SRC emacs-lisp
+        (defun chasinglogic-add-to-reading-list ()
+          (interactive)
+          (let ((url (thing-at-point 'url)))
+            (org-capture-string
+             (concat "[[" url "]["
+                     ;; Get the link title if possible
+                     (condition-case nil
+                         ;; Get title of web page, with the help of functions in url.el
+                         (with-current-buffer (url-retrieve-synchronously url)
+                           ;; find title by grep the html code
+                           (goto-char 0)
+                           (re-search-forward "<title>\\([^<]*\\)</title>" nil t 1)
+                           (setq web_title_str (match-string 1))
+                           ;; find charset by grep the html code
+                           (goto-char 0)
+                           (re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
+                           ;; downcase the charaset. e.g, UTF-8 is not acceptible for emacs, while utf-8 is ok.
+                           (setq coding_charset (downcase (match-string 1)))
+                           ;; Sometimes titles have newlines but that breaks our org link so strip them.
+                           (replace-regexp-in-string
+                            "\n" ""
+                            ;; decode the string of title.
+                            (decode-coding-string web_title_str (intern coding_charset))))
+                       ;; Work even in the case of transient network failure. If
+                       ;; so just use the url as the title.
+                       (error url))
+                     "]]")
+             "r")
+            (org-capture-finalize)))
+      #+END_SRC
+
+**** Org Export
+
+     Org export (ox) is one of the best features of Org. It lets me
+     write in the format I've most used and then distribute in
+     whatever format is required. It supports a wide array of output
+     formats and requires very little configuration.
+
+     One of the settings I like to set is =org-export-headline-levels=
+     The default value is 3 which I find a little too small. So I
+     double it to 6.
+
+     #+BEGIN_SRC emacs-lisp
+       (setq-default org-export-headline-levels 6)
+     #+END_SRC
+
+     Next we enable some additional export formats. Markdown, which
+     ships with Emacs and Org mode by default is not enabled by
+     defualt and is probably my most common target so we always load
+     it here.
+
+     #+BEGIN_SRC emacs-lisp
+       (require 'ox-md)
+     #+END_SRC
+
+     Next we install and require the =ox-reveal= package. This lets me
+     export Org files as full blown slideshow presentations for use in
+     my browser.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package ox-reveal :config (require 'ox-reveal))
+     #+END_SRC
+
+**** Org Babel
+
+     I obviously use babel pretty extensively as I generate all of my
+     dotfiles and Emacs configuration using it. Luckily the defaults
+     are pretty great so it needs very little configuration. One issue
+     I've run into is that I prefer to use Python for generation in a
+     Babel file but it's now loaded by default. This setting makes it
+     so elisp and Python code blocks are executable in any Org buffer.
+
+     #+BEGIN_SRC emacs-lisp
+       (setq-default org-babel-load-languages '((emacs-lisp . t)
+                                                (python . t)))
+     #+END_SRC
+     
+**** End Org Configuration
+
+     Close the Org configuration block.
+
+     #+BEGIN_SRC emacs-lisp
+       )
+     #+END_SRC
+
+**** Org Bullets
+
+     Org bullets replaces the basic =*= characters with prettier UTF-8
+     bullet points in the outline. It's just more aesthetically
+     pleasing I think and makes it clearer what level I'm working at
+     when the subtree isn't narrowed.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package org-bullets
+         :after org
+         :hook '(org-mode . org-bullets-mode))
+     #+END_SRC
+
+**** TODO Org2blog
+
+     Having recently switch to Wordpress this might be the best way to
+     post my blogs from Org mode.
+
+*** Flycheck
+
+    Every good editor has syntax checking and Emacs is no different. I
+    use Flycheck for this since it's the most consistent, best
+    defaults, and functional package I've found for it. Flymake
+    recently got a rewrite in Emacs core but I still prefer
+    Flycheck. I do not install many =flycheck-*= packages as I use
+    =lsp-mode= which integrates with Flycheck and for everything else
+    the Flycheck defaults work great.
+
+    I diminish Flycheck because it's almost always enabled so no
+    reason to pollute the mode-line. Additionally I set the variable
+    =flycheck-sh-posix-dash-executable= to an empty string. Most
+    people, I certainly didn't, don't know that there is a
+    minimalistic bash alternative called =dash= that is on a lot of
+    Debian systems. It's an awful shell IMO but Flycheck supports
+    linting for it. I use Dash.app on my Macbook and so Flycheck
+    constanstly opens Dash.app and freaks out whenever I'm in a
+    =sh-mode= buffer. Setting this to an empty string prevents
+    Flycheck from trying to test Dash shell syntax.
+
+    I enable Flycheck for all text modes.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package flycheck
+        :diminish ""
+        :bind (("C-c e l" . flycheck-list-errors)
+               ("C-c e v" . flycheck-verify-setup)
+               ("C-c e n" . flycheck-next-error)
+               ("C-c e p" . flycheck-previous-error))
+        :hook 'text-mode-hook
+        :config
+        ;; this trys to run the dash shell which I don't use but instead
+        ;; opens the Dash.app program which I do use.
+        (setq flycheck-sh-posix-dash-executable ""))
+    #+END_SRC
+
+**** Flycheck Vale
+
+     The only additional Flycheck linter package I install is Flycheck
+     Vale. This integrates the awesome [[https://github.com/errata-ai/vale][Vale prose linter]] with
+     Flycheck. I use this for all my prose.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package flycheck-vale
+         :after 'flycheck
+         :config
+         (flycheck-vale-setup))
+     #+END_SRC
+
+*** magit
+
+    Magit is another of those top 5 packages. It's almost a reason to
+    use Emacs in and of itself. Here we only rebind some keys from
+    =vc-mode= based defaults to =magit= commands.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package magit
+        :bind (("C-x v d" . magit-diff)
+               ("C-x v b" . magit-blame)
+               ("C-x v l" . magit-log-current)
+               ("C-x v a" . magit-stage-file)
+               ("C-x v c" . magit-commit)
+               ("C-x v s" . magit-status))
+        :commands 'magit-status)
+    #+END_SRC
+
+*** xgen-cru (MongoDB Code Reviews)
+
+    =xgen-cru= is an internal tool for posting code reviews to
+    Rietveld. It's an Emacs wrapper around our Python script that most
+    people use. I keep it in a directory called =kernel-tools= and I
+    use =use-package= to load it from this local directory. I only set
+    a few options so it will pass my work email to the script.
+
+    #+BEGIN_SRC emacs-lisp
+      (eval-and-compile
+        (setq-default kernel-tools (concat (getenv "HOME") "/Work/kernel-tools/codereview")))
+
+      (use-package xgen-cru
+        :load-path kernel-tools
+        :commands (xgen-cru-update-review xgen-cru-post-review)
+        :config
+        (setq-default
+         xgen-cru-upload-email "mathew.robinson@mongodb.com"
+         xgen-cru-jira-username "mathew.robinson"
+         xgen-cru-upload-py-path (concat kernel-tools "/upload.py")))
+    #+END_SRC
+
+*** mu4e (Email)
+
+    I read my Email in Emacs using the excellent mu tool and it's
+    companion Emacs client mu4e (mu 4 Emacs). It is not packaged on
+    any ELPA repository and has to be installed with the companion
+    tool via the system package manager. I have ansible playbooks that
+    do this for me but it's not always there the first time I run
+    Emacs. We dynamically find the load path so it uses the correct
+    location on MacOS and Linux.
+
+    Next if the directory exists we load mu4e from this
+    directory. Additionally we bind =C-c m= to launch mu4e and begin
+    our configuration section.
+
+    #+BEGIN_SRC emacs-lisp
+      (eval-and-compile
+        (setq-default mu4e-load-path (if (eq system-type 'darwin)
+                                         "/usr/local/share/emacs/site-lisp/mu/mu4e"
+                                       "/usr/share/emacs/site-lisp/mu4e")))
+      (when (file-exists-p mu4e-load-path)
+        (use-package mu4e
+          :load-path mu4e-load-path
+          :bind ("C-c m" . mu4e)
+          :config
+    #+END_SRC
+
+****** mu4e: General settings
+
+       These settings change mu4e global behavior or how emails are displayed.
+
+       I use mbsync to sync my Emails into the Maildir =~/Mail=. We have
+       to configure mu4e to look at this directory for Emails.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default mu4e-maildir "~/Mail")
+       #+END_SRC
+
+       I use a SystemD timer to run mbsync every five minutes. Fetching
+       mail from mu4e causes Emacs to lock up since the fetch command can
+       take a long time. So set the fetch mail command to =true= so it
+       always exits 0 quickly.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default mu4e-get-mail-command "true")
+       #+END_SRC
+
+       Don't ask me if I really want to quit when quitting mu4e, it's not
+       a big deal to re-launch it if I do quit on accident. Additionally
+       make it so message cleans up it's compose buffers when I leave
+       them.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default mu4e-confirm-quit nil
+                       message-kill-buffer-on-exit t)
+       #+END_SRC
+
+       I do not like any Emails to show in the headers view unless it's
+       actually an email that matched by query. These setting prevent mu4e
+       from pulling all threaded / related emails into the view.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default mu4e-headers-show-threads nil
+                       mu4e-headers-include-related nil
+                       mu4e-context-policy 'pick-first)
+       #+END_SRC
+
+       Show headers on the top and messages on the bottom. I prefer this
+       view because otherwise the headers wrap or important information
+       is obscured.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default mu4e-split-view 'horizontal)
+       #+END_SRC
+
+       Delete sent messages after they're sent, both my Email providers
+       keep these for me and I have the threads anyway so I don't care
+       about saving these locally.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default mu4e-sent-messages-behavior 'delete)
+       #+END_SRC
+
+       Set display options for mu4e. First we show Email addresses in
+       view mode. We additionally render images by default. Finally we
+       use UTF-8 characters for indicating the flags set on a message in
+       the headers view.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default mu4e-view-show-images t
+                       mu4e-view-show-addresses t
+                       mu4e-use-fancy-chars t)
+       #+END_SRC
+
+       Send emails as format=flowed to play nicer with everyone elses
+       text based email clients.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default mu4e-compose-format-flowed t)
+       #+END_SRC
+
+       Update the index every 300 seconds (every 5 minutes). Index
+       updates are usually very fast, this timer is meant to try and keep
+       up with the rate at which SystemD runs mbsync.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default mu4e-update-interval 300)
+       #+END_SRC
+
+       This is actually a basic Emacs setting as mu4e does not send
+       email. However I never use Emacs for email outside of a mu4e
+       context. These variables make Emacs always use smtp to send emails
+       instead of prompting me for how I want to send it.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default message-send-mail-function 'message-smtpmail-send-it
+                       send-mail-function 'smtpmail-send-it)
+       #+END_SRC
+
+       Emacs is technically a text based email client and mu4e will
+       prefer that format if available. However the web has moved on in a
+       bad way to crazy HTML emails. Luckily Emacs has a built in web
+       browser EWW. This tells mu4e to render HTML emails using the EWW
+       engine. Additionally I add a hook so I can use <tab> and <backtab>
+       to traverse forward and backward to hyper links.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default shr-use-colors nil
+                       shr-color-visible-luminance-min 100
+                       mu4e-html2text-command 'mu4e-shr2text)
+
+         (add-hook 'mu4e-view-mode-hook
+                   (lambda()
+                     ;; try to emulate some of the eww key-bindings
+                     (local-set-key (kbd "<tab>") 'shr-next-link)
+                     (local-set-key (kbd "<backtab>") 'shr-previous-link)))
+       #+END_SRC
+
+       Set the email user agent to mu4e.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default mail-user-agent 'mu4e-user-agent)
+       #+END_SRC
+
+       Integrate mu4e with my frame naming system.
+
+       #+BEGIN_SRC emacs-lisp
+         (add-hook 'mu4e-main-mode-hook '(lambda () (set-frame-name "Email")))
+       #+END_SRC
+
+****** mu4e: Email Contexts
+
+       The killer feature of mu4e is that it supports multiple
+       accounts seamlessly. It can automatically set the context on a
+       per messsage basis by checking metadata about that message.
+
+       =mu4e-contexts= is a list of context objects as created by
+       =make-mu4e-context=. =make-mu4e-context= takes many keyword
+       arguments but I only use a few:
+
+       - =:name=: The name of this context, will be prompted using
+         this mu4e isn't sure which to use.
+       - =:match-func=: A function which takes a message object as
+         input and returns =nil= or =t= indicating this is the context
+         to use.
+       - =:vars=: A list of cons cells that set variables on "context
+         local" level.
+
+       I use the following folders for the different kinds of local
+       mail operations: =/context_name/drafts=, =/context_name/sent=,
+       =/context_name/trash=, =/context_name/archive=. The only other
+       context specific vars relate to sending email.
+
+       First create the contexts variable.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default mu4e-contexts `(
+       #+END_SRC
+
+
+******* Work Email context
+
+        I define my Work Email context here. This is my most used
+        email interface.
+
+        #+BEGIN_SRC emacs-lisp
+          ,(make-mu4e-context
+            :name "Work"
+            :match-func (lambda (msg)
+                          (when msg
+                            (string-prefix-p "/work" (mu4e-message-field msg :maildir))))
+            :vars '(
+                    (mu4e-drafts-folder . "/work/drafts")
+                    (mu4e-sent-folder . "/work/sent")
+                    (mu4e-trash-folder . "/work/trash")
+                    (mu4e-refile-folder . "/work/archive")
+                    (smtpmail-stream-type . nil)
+                    (smtpmail-local-domain . "gmail.com")
+                    (smtpmail-default-smtp-server . "smtp.gmail.com")
+                    (smtpmail-smtp-server . "smtp.gmail.com")
+                    (smtpmail-smtp-service . 587)
+                    (smtpmail-smtp-user . "mathew.robinson@10gen.com")
+                    (user-mail-address . "mathew.robinson@mongodb.com")
+                    )
+            )
+        #+END_SRC
+
+******* Personal Email context
+
+        This is determines if I'm viewing an email from my personal
+        account.
+
+        #+BEGIN_SRC emacs-lisp
+          ,(make-mu4e-context
+            :name "Personal"
+            :match-func (lambda (msg)
+                          (when msg
+                            (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
+            :vars '(
+                    (mu4e-drafts-folder . "/personal/Drafts")
+                    (mu4e-sent-folder . "/personal/Sent")
+                    (mu4e-trash-folder . "/personal/Trash")
+                    (mu4e-refile-folder . "/personal/Archive")
+                    (smtpmail-stream-type . ssl)
+                    (smtpmail-smtp-server . "smtp.fastmail.com")
+                    (smtpmail-smtp-service . 465)
+                    (smtpmail-local-domain . "chasinglogic.io")
+                    (smtpmail-smtp-user . "mathew@chasinglogic.io")
+                    (user-mail-address . "mathew@chasinglogic.io")
+                    )
+            )
+          )) ;; End the context setq
+        #+END_SRC
+
+****** mu4e: Bookmarks
+
+       mu4e doesn't have folders. It's all about searching and
+       filtering email. So you shift the paradigm from how can I
+       organize my email to how can I view exactly what I need. The
+       easy way to quickly repeat or access filters is with
+       bookmarks. You get prompted for this whenever you start
+       mu4e. They are created via =make-mu4e-bookmark= which takes
+       three keyword arguments: =:name=, =:query=, and =:key=. These
+       are self explanatory. See the [[man:mu-find][mu-find man page]] for an
+       explanation of the query language but it's quite flexible.
+
+       I define four bookmarks:
+
+       - Inbox: This is my primary email interface it shows me any
+         unread or flagged email in my Inbox.
+       - Unread Messages: Occasionally I want to see what I never read
+         but archived. This filter shows me all unread messages.
+       - Flagged: mu4e flagging is similar to starring in other email
+         clients. I flag things if I need to take some follow up
+         action and didn't add it to my todo list.
+       - Today's Messages: When I come back from vacation my Inbox
+         will be overflowing. Since messages that came in today are
+         more relevant I like to work through all of them first before
+         getting to the rest of my email.
+
+       #+BEGIN_SRC emacs-lisp
+         (setq-default mu4e-bookmarks
+                       `(
+                         ,(make-mu4e-bookmark
+                           :name  "Inbox"
+                           :query "(maildir:/personal/INBOX OR maildir:/work/INBOX) AND (flag:unread OR flag:flagged) AND NOT flag:trashed"
+                           :key ?i)
+                         ,(make-mu4e-bookmark
+                           :name  "Unread messages"
+                           :query "flag:unread AND NOT flag:trashed"
+                           :key ?u)
+                         ,(make-mu4e-bookmark
+                           :name "Flagged (Starred)"
+                           :query "flag:flagged"
+                           :key ?f)
+                         ,(make-mu4e-bookmark
+                           :name "Today's messages"
+                           :query "(date:today..now)"
+                           :key ?t)
+                         ))
+       #+END_SRC
+
+****** mu4e: Composing Email
+
+       Composing and sending email in Emacs is a mix of mu4e and default Emacs
+       packages. We set a few hooks for composing emails. We make it
+       so emails are automatically wrapped at 80 characters and set it
+       so emails are signed when being sent.
+
+       #+BEGIN_SRC emacs-lisp
+         (add-hook 'mu4e-compose-mode-hook 'auto-fill-mode)
+         (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign)
+       #+END_SRC
+
+****** mu4e: End Configuration
+
+       Close the =use-package= definition for mu4e.
+
+       #+BEGIN_SRC emacs-lisp 
+         )
+       #+END_SRC
+
+**** mu4e alert
+
+     mu4e alert is a must have package if using mu4e. It periodically
+     updates the mu index and if new messages are found by the
+     interesting mail query then it sends a dbus
+     notification. Additionally it adds an unread email count to the
+     mode line.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package mu4e-alert
+         :after mu4e
+         :hook (mu4e-main-mode-hook . (lambda ()
+                                        (setq mu4e-alert-interesting-mail-query
+                                              "(flag:unread maildir:/personal/Inbox) OR (flag:unread maildir:/work/INBOX)")
+                                        (when (eq system-type 'gnu/linux)
+                                          (mu4e-alert-set-default-style 'libnotify))
+                                        (mu4e-alert-enable-mode-line-display)
+                                        (mu4e-alert-enable-notifications))))
+     #+END_SRC
+
+**** End mu4e when condition
+
+     This ends the when condition that determines if mu4e should be
+     loaded at all.
+
+     #+BEGIN_SRC emacs-lisp
+       )
+     #+END_SRC
+
+*** Git Link
+
+    This packages opens and creates github links from within
+    Emacs. It's super handy for linking someone to a line in the code
+    base from Emacs. The few settings here make it link to the master
+    branch, otherwise it would try to use my local checked out branch,
+    and to open the link in my browser so I can verify the link before
+    sending to someone.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package git-link
+        :commands (git-link git-link-commit git-link-homepage)
+        :config
+        (setq-default
+         git-link-default-branch "master"
+         git-link-open-in-browser t))
+    #+END_SRC
+
+*** Yasnippet
+
+    Yasnippet is definitely in my top 5 packages. It's the most
+    powerful and simple snippet system I've ever used. You can program
+    snippets with elisp to generate code or you can write simple
+    TextMate style snippets that just define tab stops. No
+    configuration required on this one just type a snippet identifier
+    and press tab.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package yasnippet
+        :diminish 'yas-minor-mode
+        :config (yas-global-mode 1))
+    #+END_SRC
+
+*** Projectile
+
+    Projectile is one of my most used packages. It provides searching for
+    and searching in projects (git repositories). It's a much more
+    powerful "Ctrl-P" equivalent. I do some customization to
+    projectile. First I rebind some of the default keys in the
+    =projectile-command-map= to mnemonics that I remember better. Then
+    I bind =C-c p= to the =projectile-command-map=.
+
+    For actual behavioral changes I create a custom switch project
+    action that opens =magit-status= in a single window view. I
+    disable projectile when the =default-directory= is not a source
+    code repository. I disable caching since I don't run on Windows
+    and native methods are pretty fast. I also set the
+    =projectile-tags-command= to none. I don't like how it tried to
+    run without being asked causing Emacs to prompt me. Finally I
+    integrate it with my "frame naming system" so that when I switch
+    to a project the frame name will the project name.
+
+    I also on startup load all projector projects into projectile so
+    switch project will at startup show me all of my projects even if
+    I haven't visited them in Emacs yet.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package projectile
+        :bind-keymap ("C-c p" . projectile-command-map)
+        :bind ((:map projectile-command-map
+                     ("p" . projectile-switch-project)
+                     ("f" . projectile-find-file)
+                     ("F" . projectile-find-file-in-known-projects)
+                     ("d" . projectile-find-dir)
+                     ("b" . projectile-switch-to-buffer)))
+        :init
+        (chasinglogic-add-projector-projects-to-projectile)
+        :config
+        (defun chasinglogic-switch-project-action ()
+          "Single view magit status page when switching projects."
+          (interactive)
+          (magit-status)
+          (delete-other-windows))
+
+        (setq-default projectile-require-project-root t
+                      projectile-completion-system 'helm
+                      projectile-enable-caching nil
+                      ;; I prefer a git status when switching to a project
+                      projectile-switch-project-action 'chasinglogic-switch-project-action
+                      ;; I really don't need tags
+                      projectile-tags-command "")
+        ;; When switching projects set frame name to project name
+        (defun set-frame-name-to-project ()
+          (set-frame-parameter (selected-frame) 'name (projectile-project-name)))
+        (add-hook 'projectile-after-switch-project-hook 'set-frame-name-to-project))
+    #+END_SRC
+
+*** Writeroom Mode
+
+    Writeroom Mode is a simple but great package that provides a
+    focused editing experience. It removes all chrome and centers the
+    buffer on the window so you can focus only on the prose.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package writeroom-mode :commands (writeroom-mode))
+    #+END_SRC
+
+*** Highlight TODO mode
+
+    By default Emacs doesn't highlight TODO comments. This makes them
+    stand out by fontifying them the same as Org mode TODO header
+    keywords.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package hl-todo
+        :demand
+        :config
+        (global-hl-todo-mode))
+    #+END_SRC
+
+** Programming Languages
+*** Ruby
+
+    I don't do much writing of Ruby so I find the built in =ruby-mode=
+    pretty much adequate with one exception: automatically adding
+    =end= where needed.
+
+    This package extends =electric-pair-mode= to handle languages like
+    Ruby where the closing pair can sometimes be a word or other
+    stranger set of symbols. In short it automatically adds =end= for
+    =if='s, =functions='s, and loops in Ruby.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package ruby-electric
+        :diminish ""
+        :hook 'ruby-mode)
+    #+END_SRC
+
+*** Python
+
+    I write a lot of Python code. Luckily I only write Python 3 code
+    nowadays so the first thing to do is set the
+    =python-shell-interpreter= variable to Python 3. Additionally tell
+    Flycheck to always use this variable for the various Python
+    linters it runs.
+
+    #+BEGIN_SRC emacs-lisp
+      ;; Use correct Python3
+      (setq-default python-shell-interpreter (if (eq system-type 'darwin)
+                                                 "/usr/local/bin/python3"
+                                               "python3"))
+      (setq-default flycheck-python-flake8-executable python-shell-interpreter
+                    flycheck-python-pylint-executable python-shell-interpreter
+                    flycheck-python-pycompile-executable python-shell-interpreter)
+    #+END_SRC
+
+    Next I use the Black Python formatter for my code. This package
+    integrates it into Emacs and lets me run it as an after save
+    hook. My hook has to be a little smarter however because my work
+    projects do not use this formatter so define a "black list" for
+    Black and only add the hook if we aren't in one of those projects.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package blacken
+        :commands 'blacken-buffer
+        :init
+        (setq-default chasinglogic-blacken-black-list
+                      '("scons"
+                        "mongo"
+                        "enterprise"
+                        "mongo_modules_enterprise"
+                        "toolchain-builder"
+                        "kernel-tools"))
+
+        (defun chasinglogic-python-format-hook ()
+          "Set up blacken-buffer on save if appropriate."
+          (unless (member (projectile-project-name) chasinglogic-blacken-black-list) 
+            (message "Not in a blacklisted project, enabling format on save.")
+            (add-hook 'before-save-hook 'blacken-buffer nil t)))
+        (add-hook 'python-mode-hook 'chasinglogic-python-format-hook))
+    #+END_SRC
+
+    Making Emacs and virtualenvs work together has been one of the
+    most frustrating things about my time with Emacs. After literal
+    years of tweaking and testing I finally have a solution that I
+    like. I use =virtualenvwrapper= to create my virtualenvs with
+    names that match the names returned by
+    =(projectile-project-name)=, essentially this is just the basename
+    of the project directory. Then whenever I run
+    =projectile-switch-project= check for a matching virtualenv if so
+    activate it with the =pyvenv= package.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package pyvenv
+        :commands 'pyvenv-workon
+        :after 'projectile
+        :init
+        (defun chasinglogic-auto-venv ()
+          "Automatically setup the venv when entering a project"
+          (when (file-exists-p (concat "~/.virtualenvs/" (projectile-project-name)))
+            (pyvenv-workon (projectile-project-name))))
+        (add-hook 'projectile-after-switch-project-hook 'chasinglogic-auto-venv))
+    #+END_SRC
+
+    Finally enable LSP mode in Python buffers and make Emacs treat
+    SCons build configuration files as python.
+
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'python-mode-hook #'lsp)
+      ;; Load SCons files as Python
+      (add-to-list 'auto-mode-alist '("SConscript" . python-mode))
+      (add-to-list 'auto-mode-alist '("SConstruct" . python-mode))
+      (add-to-list 'auto-mode-alist '("\\.vars\\'" . python-mode))
+    #+END_SRC
+
+*** TypeScript
+
+    Nothing much to be done for TypeScript except install the major
+    mode as I don't work on it all that much.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package typescript-mode
+        :mode "\\.ts\\'"
+        :config
+        (add-hook typescript-mode-hook 'lsp))
+    #+END_SRC
+    
+*** Markdown Mode
+
+    I really like Markdown. I obviously use Org mode whenever possible
+    but for those times when i need to write markdown this major mode
+    makes it the best editing experience I've had for markdown.
+
+    Not much configuration is required here except to bind it to the
+    correct file extensions, make it fontify source blocks according
+    to the correct major mode, disable line numbers, and enable spell
+    checking.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package markdown-mode
+        :mode ("\\.markdown\\'" "\\.md\\'")
+        :config
+        ;; Use ndoc for exporting to HTML
+        (setq-default markdown-command "pandoc")
+
+        (defun chasinglogic-markdown-mode-hook ()
+          "Disable line numbers and auto-wrap at 80 in Markdown"
+          (markdown-toggle-fontify-code-block-natively)
+          (display-line-numbers-mode -1)
+          (flyspell-mode 1)
+          (auto-fill-mode 1))
+
+        (add-hook 'markdown-mode-hook 'chasinglogic-markdown-mode-hook))
+    #+END_SRC
+
+*** Web Mode
+
+    Web mode is great. It does everything other text editors can't and
+    treats tags as native source blocks of the appropriate type
+    (i.e. =script= tags get fontified and treated as if they're in a
+    Javacript mode "sub buffer", same for CSS). I don't do much web
+    programming or templating nowadays but this is configured so I can
+    effectively when required.
+
+    The only settings here are configuring a local tab width of 2 (the
+    Javascript default) and setting up case statements to indent
+    according to eslint's desired configuration.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package web-mode
+        :commands (web-mode)
+        :mode ("\\.html?\\'" "\\.tmpl\\'" "\\.css\\'"
+               "\\.scss\\'" "\\.erb\\'" "\\.djhtml\\'"
+               "\\.tsx\\'")
+        :config
+        (setq-default js-ident-level 2
+                      javascript-ident-level 2
+                      js2-basic-offset 2)
+        (defun chasinglogic-web-mode-hook ()
+          ;; indent case statements
+          (c-set-offset 'case-label '+))
+        (add-hook 'web-mode-hook 'chasinglogic-web-mode-hook)
+        (add-hook 'web-mode-hook 'lsp)
+        (flycheck-add-mode 'javascript-eslint 'web-mode)
+        (flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)
+
+        (setq-default web-mode-markup-indent-offset 2
+                      web-mode-style-indent-offset 2
+                      web-mode-code-indent-offset 2))
+
+    #+END_SRC
+
+*** C / C++
+
+    I have to read more C++ than I have to write but for those times
+    when I do this configuration ensures that my code is formatted,
+    correct, and ready to commit.
+
+    First we install the =clang-format= package and point it at the
+    MongoDB toolchain binary since it's always the right version.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package clang-format
+        :commands (clang-format-buffer)
+        :config
+        (setq clang-format-binary "/opt/mongodbtoolchain/v3/bin/clang-format"))
+    #+END_SRC
+
+    Next create a C++ mode hook that makes Emacs format / indent
+    things correctly according to MongoDB's style guide. Additionally
+    make it so Flycheck will pass ~-std=c++17~ when doing syntax
+    checking and to allow =src= directory relative
+    =#includes=. Finally make it such that header files are treated as
+    C++ and not C.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun chasinglogic-cpp-mode-hook ()
+        "Set up various C++ tools and options."
+        ;; Don't indent namespaces
+        (c-set-offset 'innamespace [0])
+        (setq-local c-basic-offset 4)
+        ;; Tell Flycheck I write modern C++ and use src-relative includes
+        (setq flycheck-clang-language-standard "c++17"
+              flycheck-clang-include-path (list (concat (projectile-project-root) "src")))
+
+        ;; Auto format C/C++ buffers
+        (add-hook 'before-save-hook 'clang-format-buffer nil t))
+
+      (add-hook 'c++-mode-hook 'chasinglogic-cpp-mode-hook)
+      (add-hook 'c-mode-hook 'chasinglogic-cpp-mode-hook)
+      (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+    #+END_SRC
+
+*** Rust
+
+    Rust is my go to programming language outside of work. It has
+    excellent Emacs support but most of the features I need are
+    actually provided by LSP mode. This simply installs and attaches
+    the Rust major mode to =.rs= files, enables format on save, and
+    sets a better default compile command. Finally it loads =lsp= on
+    =rust-mode= startup.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package rust-mode
+        :mode ("\\.rs\\'")
+        :config
+        (setq rust-format-on-save t)
+        (defun chasinglogic-rust-mode-hook ()
+          (setq-local compile-command "cargo clippy && cargo test"))
+        (add-hook 'rust-mode-hook 'chasinglogic-rust-mode-hook)
+        (add-hook 'rust-mode-hook #'lsp))
+    #+END_SRC
+
+*** Miscellaneous Major Modes
+
+    This is a list of major modes that I occasionally need and so are
+    useful to have installed but I do not configure them as I do not
+    write in these languages often or extensively.
+
+    - Powershell
+    - Groovy
+    - YAML
+    - TOML
+    - CMake
+
+    The following snippet just installs and attaches these modes to
+    file extensions.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package vala-mode :mode ("\\.vala\\'"))
+      (use-package meson-mode :mode ("meson\\.build"))
+      (use-package powershell :mode ("\\.ps1\\'"))
+      (use-package groovy-mode :mode ("\\.groovy$" "\\.gradle$"))
+      (use-package yaml-mode :mode ("\\.yaml\\'" "\\.yml\\'" "\\.idl\\'"))
+      (use-package toml-mode :mode ("\\gitconfig\\'" "\\.toml\\'"))
+      (use-package cmake-mode :mode ("\\CMake.*txt\\'"))
+    #+END_SRC
+
+** Post initialization
+
+   These are the few final steps we should take when bringing up
+   Emacs.
+
+   First Maximize this frame, the initial frame won't see our hooks in
+   =make-frame-init-functions=.
+
+   #+BEGIN_SRC emacs-lisp
+     (maximize-gui-frames (selected-frame))
+   #+END_SRC
+
+   Finally start the Emacs server, this allows connecting terminal and
+   other Emacs clients to this GUI editing session for easy sharing of
+   information.
+
+   #+BEGIN_SRC emacs-lisp
+     (require 'server)
+     (unless (server-running-p)
+       (server-start))
+   #+END_SRC
 
 * Notes
 

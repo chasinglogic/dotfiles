@@ -121,12 +121,14 @@
 
 (define-abbrev-table 'global-abbrev-table
   '(
+    ("becuase" "because" nil 1)
     ("concat" "concatenate" nil 1)
     ("concats" "concatenates" nil 0)
-    ("editting" "editing" nil 1)
+    ("editting" "editing" nil 5)
+    ("irreplacable" "irreplaceable" nil 1)
     ("repo" "repository" nil 1)
-    ("repos" "repositories" nil 0)
-    ("similiar" "similar" nil 5)
+    ("repos" "repositories" nil 1)
+    ("similiar" "similar" nil 7)
    ))
 
 (define-abbrev-table 'gnus-article-edit-mode-abbrev-table '())

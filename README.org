@@ -1780,45 +1780,33 @@
     #+BEGIN_SRC text :tangle .mbsyncrc
       IMAPAccount personal
       Host imap.fastmail.com
-      Port 993
+      SSLType IMAPS
+      SSLVersions TLSv1.2
       User mathew@chasinglogic.io
       PassCmd "gpg -q --for-your-eyes-only --no-tty --exit-on-status-write-error --batch -d ~/.personal.email.password.gpg"
-      AuthMechs LOGIN
-      SSLType IMAPS
 
       IMAPStore personal-remote
       Account personal
 
       MaildirStore personal-local
+      # The trailing "/" is important
       Path ~/Mail/personal/
       Inbox ~/Mail/personal/INBOX
+      Flatten .
 
-      Channel personal-inbox
+      Channel personal
+      Master :personal-remote:
+      Slave :personal-local:
+      Patterns Archive Sent Spam Trash
+      Expunge Both
+      SyncState *
+      Sync All
+      Create Both
+
+      Channel personl-inbox
       Master :personal-remote:
       Slave :personal-local:
       Patterns "INBOX"
-      Create Both
-      Expunge Both
-      SyncState *
-
-      Channel personal-trash
-      Master :personal-remote:"/Trash"
-      Slave :personal-local:"trash"
-      Create Both
-      Expunge Both
-      SyncState *
-
-      Channel personal-all
-      Master :personal-remote:"/Archive"
-      Slave :personal-local:"archive"
-      Create Both
-      Expunge Both
-      SyncState *
-
-      Group personal
-      Channel personal-inbox
-      Channel personal-trash
-      Channel personal-all
     #+END_SRC
 
 ** Sway Configuration
