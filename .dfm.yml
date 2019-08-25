@@ -15,7 +15,6 @@ hooks:
     - emacs --batch -l org README.org -f org-babel-tangle
   after_link:
     - "[ ! -f $HOME/.gnupg/pubring.kbx ] && $HOME/.local/bin/export_keybase"
-    - emacs -batch -f batch-byte-compile ~/.emacs.d/**/*.el
 
 modules:
   # My encrypted secret files

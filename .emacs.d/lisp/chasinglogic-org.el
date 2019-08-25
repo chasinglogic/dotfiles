@@ -183,8 +183,9 @@
                       ;; 7 day advanced warning for deadlines
                       (org-deadline-warning-days 7)))
                     (todo "" ((org-agenda-overriding-header "Next Actions:")
-                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo '("NEXT" "STARTED")))))
-                    (stuck "" ((org-agenda-files "todo.org")
+                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo '("NEXT" "STARTED")))
+                              (org-agenda-sorting-strategy '(todo-state-down))))
+                    (stuck "" ((org-agenda-files (list (expand-file-name "todo.org" org-directory)))
                                (org-agenda-overriding-header "Stuck Projects:")))))))
 
   ;; Capture Templates
