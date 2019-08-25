@@ -26,8 +26,11 @@
 
 ;;; Code:
 
-(require 'dired)
-
+;; Delete current buffer and file
+;;     I will never understand why this isn't baked into Emacs. I've
+;;     stolen this from Spacemacs who stole it from Magnars. Now you can
+;;     steal it from me. In short it will delete the buffer and the file
+;;     it's visiting.
 ;; from spacemacs-core
 ;; from magnars
 (defun chasinglogic-delete-current-buffer-file ()
@@ -45,27 +48,42 @@
           (call-interactively #'projectile-invalidate-cache))
         (message "File '%s' successfully removed" filename)))))
 
+;; Indent the buffer
+;;
+;;     This function uses Emacs built in indent facilities to indent the
+;;     entire buffer. It doesn't work so great on languages where
+;;     whitespace has semantic meaning, like Python, but it is a godsend
+;;     for structured languages that are commonly poorly formatted, like
+;;     HTML.
 (defun chasinglogic-indent-buffer ()
   "Indent the entire buffer."
   (interactive)
   (indent-region-line-by-line (point-min) (point-max)))
 
-(defun chasinglogic-dotfile-location ()
-  "Return the init file path."
-  (concat (getenv "HOME") "/.emacs.d/init.el"))
-
-(defun chasinglogic-find-dotfile ()
-  "Find my init file."
-  (interactive)
-  (find-file (chasinglogic-dotfile-location)))
-
+;; Finding org files
+;;
+;;     I keep all of my org files in `org-directory' and some of them are
+;;     encrypted. This macro lets me easily define functions for quickly
+;;     finding them. It's a macro because [[https://www.jamesporter.me/2013/06/14/emacs-lisp-closures-exposed.html][Emacs has crazy scoping rules]]
+;;     that make returning lambdas from functions difficult.
 (defmacro chasinglogic-find-org-file (name)
-  "Return a function to find the org file NAME."
+  "Create a function to find the org file NAME."
   `(defun ,(intern (format "chasinglogic-find-org-file-%s" name)) ()
      (interactive)
-     (find-file (expand-file-name ,(format "%s.org" name) org-directory))))
+     (let ((file-name (expand-file-name ,(format "%s.org" name) org-directory)))
+       (find-file (if (file-exists-p (concat file-name ".gpg"))
+                      (concat file-name ".gpg")
+                    file-name)))))
+(chasinglogic-find-org-file notes)
+(chasinglogic-find-org-file ideas)
+(chasinglogic-find-org-file todo)
 
-;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
+;; Rename file and buffer
+;;
+;;     Similar to [[Delete file and buffer]] I'm not sure why this isn't
+;;     built into Emacs. This does a rename using `default-directory' and
+;;     relative paths to the file do work. I took this from
+;;     [[http://steve.yegge.googlepages.com/my-dot-emacs-file][Steve Yegge's dot Emacs]].
 (defun chasinglogic-rename-file-and-buffer (new-name)
   "Renames both current buffer and file it's visiting to NEW-NAME."
   (interactive "sNew name: ")
@@ -81,60 +99,67 @@
           (set-visited-file-name new-name)
           (set-buffer-modified-p nil))))))
 
-(defun chasinglogic-add-projector-projects-to-projectile ()
-  "Add projector projects to projectile."
+;; Open the shell with a good default buffer name
+;;
+;;     This function opens a shell with a buffer name that indicates what
+;;     project it was opened in. If you run it again in that project it
+;;     will instead just switch to the buffer.
+(defun chasinglogic-shell ()
+  "Open my shell in 'ansi-term'."
   (interactive)
-  (setq
-   projectile-known-projects
-   (delete ""
-           (split-string
-            (shell-command-to-string "projector list") "\n"))))
+  (let* ((project-name (if (projectile-project-name)
+                           (projectile-project-name)
+                         "main"))
+         (shell-buf-name (concat project-name "-shell"))
+         (shell-buf-asterisks (concat "*" shell-buf-name "*")))
+    (if (get-buffer shell-buf-asterisks)
+        (switch-to-buffer shell-buf-asterisks)
+      (ansi-term (executable-find "bash") shell-buf-name))))
 
-(defun chasinglogic-projectile-command (cmd &optional sync)
-  "Run CMD at the projectile project root.
+;; GDB/LLDB Debugging
+;;     I maintain a developer toolchain that means I have to frequently
+;;     interact with GDB *and* LLDB. Since LLDB does not have Emacs
+;;     integration this function allow me to easily get breakpoints for
+;;     wherever I am.
+;;
+;;     It checks for the `projectile-project-root' and if found will make
+;;     the filename relative to this directory. Otherwise the full path
+;;     of the `buffer-file-name' will be used. It grabs the line number
+;;     the point is currently at then simply concatenates the generated
+;;     filename, a colon, and the line number. When called interactively
+;;     it will add it to the kill ring effectively "copying" the
+;;     breakpoint for easy pasting.
 
-If SYNC provided will run make command synchronously"
-  (interactive "s")
-  (let (
-        (default-directory (projectile-project-root)))
-    (shell-command cmd
-     (format "*%s %s output*" (projectile-project-name) cmd))))
 
-  (defun chasinglogic-shell ()
-        "Open my shell in 'ansi-term'."
-        (interactive)
-        (let* ((project-name (if (projectile-project-name)
-                                 (projectile-project-name)
-                               "main"))
-               (shell-buf-name (concat project-name "-shell"))
-               (shell-buf-asterisks (concat "*" shell-buf-name "*")))
-          (if (get-buffer shell-buf-asterisks)
-              (switch-to-buffer shell-buf-asterisks)
-            (ansi-term (executable-find "bash") shell-buf-name))))
+(defun chasinglogic-copy-breakpoint-for-here (&optional copy)
+  "Return a filename:linenumber pair for point for use with LLDB/GDB.
 
-  (defun chasinglogic-copy-breakpoint-for-here (&optional copy)
-        "Return a filename:linenumber pair for point for use with LLDB/GDB.
+If COPY is provided copy the value to kill ring instead of returning."
+  (interactive (list t))
+  (let* ((line-number (format "%d" (line-number-at-pos)))
+         (file-name (if (projectile-project-root)
+                        (file-relative-name (buffer-file-name) (projectile-project-root))
+                      (file-name-nondirectory (buffer-file-name))))
+         (breakpoint (concat file-name ":" line-number)))
+    (if copy
+        (progn
+          (kill-new breakpoint)
+          (message "%s" breakpoint))
+      breakpoint)))
 
-      If COPY is provided copy the value to kill ring instead of returning."
-        (interactive (list t))
-        (let* ((line-number (format "%d" (line-number-at-pos)))
-               (file-name (if (projectile-project-root)
-                              (file-relative-name (buffer-file-name) (projectile-project-root))
-                            (file-name-nondirectory (buffer-file-name))))
-               (breakpoint (concat file-name ":" line-number)))
-          (if copy
-              (progn
-                (kill-new breakpoint)
-                (message "%s" breakpoint))
-            breakpoint)))
-
+;; Edit current buffer with sudo
+;;
+;;     The title here is self explanatory. It uses Emacs [[https://www.emacswiki.org/emacs/TrampMode][TRAMP Mode]] to
+;;     open the file as root on localhost. It does not require SSH and
+;;     instead uses a special TRAMP protocol that just calls `sudo' to
+;;     make the user change.
 (defun sudo ()
   "Use TRAMP to `sudo' the current buffer"
   (interactive)
   (when buffer-file-name
     (find-alternate-file
-     (concat "/sudo:root@localhost:"
-             buffer-file-name))))
+     (concat "/sudo:root@localhost:" buffer-file-name))))
+
 
 (provide 'chasinglogic-utils)
 
