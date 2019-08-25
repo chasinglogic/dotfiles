@@ -11,11 +11,12 @@ mappings:
 hooks:
   after_sync:
     - dfm link
-    - emacs -batch -f batch-byte-compile ~/.emacs.d/**/*.el
   before_link:
     - emacs --batch -l org README.org -f org-babel-tangle
+    - emacs --batch -l org emacs.org -f org-babel-tangle
   after_link:
     - "[ ! -f $HOME/.gnupg/pubring.kbx ] && $HOME/.local/bin/export_keybase"
+    - emacs -batch -f batch-byte-compile ~/.emacs.d/**/*.el
 
 modules:
   # My encrypted secret files

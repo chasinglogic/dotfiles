@@ -1,248 +1,23 @@
-;;; init.el --- My init file.
-;;
-;; Copyright (C) 2018 Mathew Robinson
-;;
-;; Author: Mathew Robinson <chasinglogic@gmail.com>
-;; Created: 24 Aug 2018
-;;
-;; This program is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU General Public License as
-;; published by the Free Software Foundation; either version 2, or (at
-;; your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful, but
-;; WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-;; General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-;; Boston, MA 02111-1307, USA.
-;;
-;;; Commentary:
-;;
-;; This is my Emacs config, there are many like it but this one is
-;; mine.
-;;
-;;; Code:
-
-;;;; Inititialization
-
-;; (desktop-save-mode 1)
-
-;;;; Package setup
-
-(require 'package)
-
-(setq-default package-archives
-              (list
-               '("elpa" . "http://elpa.gnu.org/packages/")
-               '("org" . "http://orgmode.org/elpa/")
-               '("melpa" . "http://melpa.org/packages/")))
-(package-initialize)
-
-(setq-default use-package-enable-imenu-support t)
-(when (not (package-installed-p 'use-package))
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(use-package diminish
-  :ensure t
-  :commands 'diminish
-  :init
-  (diminish 'eldoc-mode)
-  (diminish 'undo-tree-mode))
-
-;;;; Add my Utilities to the load-path
-;;;; Install and setup use-package
-
-(eval-when-compile
-  (add-to-list 'load-path (concat user-emacs-directory "lisp"))
-  (require 'chasinglogic-utils)
-  (require 'use-package))
-
-(setq use-package-always-ensure t) ; Always install packages given to use-package
-
-;;;; Install and setup quelpa
-
-(use-package quelpa :commands 'quelpa)
-(setq-default evergreen-generate-description t
-              evergreen-finalize-when-patching t
-              evergreen-browse-when-patching t
-              evergreen-default-project "mongodb-mongo-master"
-              evergreen-assume-yes t)
-(unless (package-installed-p 'evergreen)
-  (quelpa
-   '(evergreen :repo "evergreen-ci/evergreen.el" :fetcher github)))
-
-;;;; Initialize Environment
-
-(use-package exec-path-from-shell
-  :config (exec-path-from-shell-initialize))
-
-(add-to-list 'exec-path (concat (getenv "HOME") "/.cargo/bin"))
-(setenv "PATH" (concat (getenv "PATH") ":" (concat (getenv "HOME") "/.cargo/bin")))
-
-;;;; Global variables
-
-;; Create auto saves dir if not exist
 (when (not (file-directory-p "~/.emacs.d/backups"))
   (make-directory "~/.emacs.d/backups")
   (make-directory "~/.emacs.d/autosaves"))
 
-(setq-default
- ;; Tell Emacs a bit about me
- user-full-name "Mathew Robinson"
- user-mail-address "chasinglogic@gmail.com"
- message-signature "- Mathew Robinson @chasinglogic"
- ;; Don't prompt for "git symlinks" and always follow them
- vc-follow-symlinks t
- ;; Change where Emacs saves automatic custom settings
- custom-file "~/.custom.el"
- ;; Store automatic backup files in "~/.saves" instead of `pwd`
- backup-directory-alist `((".*" . "~/.emacs.d/backups"))
- ;; Store auto save files in "~/.emacs.d/autosaves"
- auto-save-file-name-transforms `((".*" "~/.emacs.d/autosaves/\\2" t))
- ;; show scratch buffer by default
- inhibit-splash-screen t
- ;; spaces not tabs
- indent-tabs-mode nil
- ;; tab default to 4 spaces
- tab-width 4)
+(setq-default backup-directory-alist `((".*" . "~/.emacs.d/backups")))
 
-;; Change CMD to META on Mac OS
+(setq-default auto-save-file-name-transforms `((".*" "~/.emacs.d/autosaves/\\2" t)))
+
+(setq-default user-full-name "Mathew Robinson"
+              user-mail-address "mathew@chasinglogic.io"
+              message-signature "- Mathew Robinson @chasinglogic")
+
 (when (eq system-type 'darwin)
   (setq mac-option-modifier 'alt
         mac-command-modifier 'meta))
 
-;;;; Keybindings
+(setq-default indent-tabs-mode nil
+              tab-width 4)
 
-(use-package which-key
-  :demand
-  :diminish ""
-  :config
-  (which-key-mode))
-
-(use-package general
-  :demand
-  :config
-  (general-create-definer cc! :prefix "C-c")
-
-  (general-define-key "C-x '" 'chasinglogic-shell)
-  
-  (cc!
-    "j" '(:which-key jumps)
-    "jb" 'chasinglogic-copy-breakpoint-for-here
-    "j="   'chasinglogic-indent-buffer
-    "ji"   'imenu)
-
-  (unbind-key "C-x f")
-  (general-define-key :prefix "C-x"
-                      ;; File Management
-                      "f"    '(:which-key "files")
-                      "ff" 'find-file
-                      "fr"   'chasinglogic-rename-file-and-buffer
-                      "fR"   'chasinglogic-reload-config
-                      "fs"   'save-buffer
-                      "fD"   'chasinglogic-delete-current-buffer-file)
-
-  ;; Reverse the M-<> keybinds with M-,. because I move to the
-  ;; beginning and end of buffers far more often than I
-  ;; xref-pop-marker-stack
-  (general-define-key "M-<" 'xref-pop-marker-stack)
-  (general-define-key "M->" 'xref-find-definitions)
-  (general-define-key "M-," 'beginning-of-buffer)
-  (general-define-key "M-." 'end-of-buffer)
-
-  ;; Bind M-[] to paragraph movement. Normally this is M-{} which
-  ;; still is bound. This is more convenient and the M-[] keys were
-  ;; bound to nighting anyway
-  (general-define-key "M-[" 'backward-paragraph)
-  (general-define-key "M-]" 'forward-paragraph)
-
-  (general-define-key :prefix "C-c" "s" '(:which-key "searching"))
-  
-  (general-define-key "C-x C-b" 'ibuffer)
-  (general-define-key "M-<up>" 'chasinglogic-move-line-down)
-  (general-define-key "M-<down>" 'chasinglogic-move-line-up))
-
-;;;; UI/UX
-
-;; Expand region is like one of my favorite keydings M-h
-;; `mark-paragraph'. Except that it keeps expanding a region based on
-;; the smallest semtantic meaning near the cursor.
-(use-package expand-region :general ("C-M-h" 'er/expand-region))
-
-;; TODO: magnar's multiple cursors
-
-;; Disable some unused chrome
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-
-;; Enable more powerful dired interaction
-(use-package dired
-  :ensure nil
-  :commands 'dired
-  :config
-  ;; Automatically suggest copy and moves to other dired buffers by default
-  (setq dired-dwim-target t)
-  (require 'dired-x))
-
-;; Font
-(setq-default chasinglogic-font-size "13")
-(when (and (display-graphic-p) (eq system-type 'darwin))
-  ;; Retina display requires bigger font IMO.
-  (setq chasinglogic-font-size "18"))
-(set-frame-font (format "Source Code Pro %s" chasinglogic-font-size) nil t)
-
-;; Make title bar match color theme on MacOS
-(add-to-list 'default-frame-alist
-             '(ns-transparent-titlebar . t))
-(add-to-list 'default-frame-alist
-             '(ns-appearance . dark))
-
-;; Color theme
-
-;; I actually like a default Emacs theme.
-(load-theme 'wombat)
-(add-to-list 'default-frame-alist '(cursor-color . "#fff"))
-(set-cursor-color "#fff")
-;; Make variables names same color as other text
-(set-face-attribute 'font-lock-variable-name-face nil :foreground "#fff")
-
-;; pretty modeline
-;; (use-package all-the-icons)
-;; (use-package doom-modeline
-;;   :ensure t
-;;   :hook (after-init . doom-modeline-mode))
-
-;;;; Editting Improvements
-
-;; Automatically correct spelling errors.
-
-;; Key Binding	Description
-;; C-x a l	Adds mode-specific abbrev
-;; C-x a g	Adds global abbrev
-;; C-x a i g	Adds mode-specific inverse abbrev
-;; C-x a i l	Adds global inverse abbrev
-(use-package abbrev
-  :ensure nil
-  :diminish ""
-  :init (abbrev-mode 1))
-
-(defun chasinglogic-enable-flyspell ()
-  "Enable spell checking."
-  (flyspell-mode 1))
-
-(defun chasinglogic-enable-flyspell-prog ()
-  "Enable spell checking."
-  (flyspell-mode -1)
-  (flyspell-prog-mode))
-
-(add-hook 'text-mode-hook 'chasinglogic-enable-flyspell)
-(add-hook 'prog-mode-hook 'chasinglogic-enable-flyspell-prog)
+(setq-default vc-follow-symlinks t)
 
 (defun comment-actually-dwim (arg)
   "A simpler and more functional version of `comment-dwim'. It
@@ -258,75 +33,62 @@ comments so this function better suits my needs."
       (comment-or-uncomment-region (region-beginning) (region-end) arg)
     (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
 
-(general-define-key "M-;" 'comment-actually-dwim)
+(setq compilation-scroll-output t)
 
-;; Ediff
+(put 'downcase-region 'disabled nil)
 
-(setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
+(require 'package)
 
-(use-package avy
-  :general
-  ("M-j" 'avy-goto-word-1)
-  (cc!
-    "jc" 'avy-goto-char
-    "jj" 'avy-goto-word-1
-    "jl" 'avy-goto-line
-    "jh" 'avy-goto-heading))
+(setq-default package-archives
+              (list
+               '("elpa" . "http://elpa.gnu.org/packages/")
+               '("melpa" . "http://melpa.org/packages/")))
+(package-initialize)
 
-(use-package ace-window
-  :general ("M-o" 'ace-window))
+(setq-default use-package-enable-imenu-support t
+              use-package-always-ensure t)
 
-(use-package hydra
-  :demand
+(eval-when-compile
+  (package-initialize)
+  (when (not (package-installed-p 'use-package))
+    (package-refresh-contents)
+    (package-install 'use-package))
+  (require 'use-package))
+
+(use-package quelpa
+  :init
+  (when (not (package-installed-p 'quelpa-use-package))
+    (quelpa
+     '(quelpa-use-package
+       :fetcher git
+       :url "https://framagit.org/steckerhalter/quelpa-use-package.git")))
+  (require 'quelpa-use-package))
+
+(setq-default chasinglogic-font-size "13")
+(when (and (display-graphic-p) (eq system-type 'darwin))
+  ;; Retina display requires bigger font IMO.
+  (setq chasinglogic-font-size "15"))
+(set-frame-font (format "Source Code Pro %s" chasinglogic-font-size) nil t)
+
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . dark))
+
+(use-package zenburn-theme)
+(use-package solarized-theme
   :config
-  
-  (defhydra chasinglogic-movement-hydra (global-map "C-x m")
-    ("q" nil "quit")
-    ("n" next-line "next line")
-    ("p" previous-line "previous line")
-    ("b" backward-char "backward char")
-    ("f" forward-char "forward char")
-    ("s" swiper "swiper search")
-    ("r" helm-rg "ripgrep search")
-    ("w" forward-word "forward word")
-    ("W" backward-word "backward word")
-    ("v" scroll-up-command "scroll down")
-    ("V" scroll-down-command "scroll up")
-    ("l" recenter-top-bottom "recenter")
-    ("h" org-next-visible-heading "next heading")
-    ("H" org-previous-visible-heading "previous heading")
-    ("[" backward-paragraph "backward paragraph")
-    ("]" forward-paragraph "forward paragraph"))
-  
-  (defhydra chasinglogic-window-hydra (global-map "C-c j w")
-    ("q" nil "quit")
-    ("j" ace-window "switch windows")
-    ("=" balance-windows "balance windows")
-    ("d" delete-window "delete this window")
-    ("o" delete-other-windows "delete other windows")
-    ("v" split-window-right "split window to right")
-    ("s" split-window-below "split window below")))
+  (setq-default solarized-high-contrast-mode-line t
+                solarized-distinct-doc-face t
+                solarized-distinct-fringe-background t)
+  (load-theme 'solarized-light t))
 
-;; auto pair things in lisp
-(use-package paredit
-  :general (paredit-mode-map
-            ;; I do not like any version of the original
-            ;; `comment-dwim' and paredit has it's own special version
-            ;; that I find more confusing. So overwrite it's mapping
-            ;; with my `comment-actually-dwim' function.
-            "M-;" 'comment-actually-dwim)
-  :hook '(emacs-lisp-mode . paredit-mode))
-
-;; Auto do stuff that I like.
-(electric-layout-mode 1)
-(electric-indent-mode 1)
-
-(use-package ruby-electric
-  :diminish ""
-  :config
-  (ruby-electric-mode 1))
-;; highlight matching parens
-(show-paren-mode 1)
+(defun enable-display-line-numbers-mode ()
+  "Enable display-line-numbers-mode"
+  (display-line-numbers-mode 1))
+(add-hook 'prog-mode-hook 'enable-display-line-numbers-mode)
 
 (defun maximize-gui-frames (frame)
   "Maxmize a the GUI frame FRAME."
@@ -335,378 +97,505 @@ comments so this function better suits my needs."
       (set-frame-parameter nil 'fullscreen 'maximized))))
 (add-hook 'after-make-frame-functions 'maximize-gui-frames)
 
-;; Enable line numbers in programming modes
-(defun chasinglogic-enable-line-numbers-hook ()
-  "Enable line numbers."
-  (electric-pair-local-mode 1)
-  (display-line-numbers-mode 1))
-(add-hook 'prog-mode-hook 'chasinglogic-enable-line-numbers-hook)
-(add-hook 'text-mode-hook 'chasinglogic-enable-line-numbers-hook)
+(require 'dired-x)
 
-;;;; Helm
+(setq-default dired-dwim-target t)
+
+(abbrev-mode 1)
+
+(defun chasinglogic-enable-flyspell ()
+  "Enable spell checking."
+  (flyspell-mode 1))
+
+(defun chasinglogic-enable-flyspell-prog ()
+  "Enable spell checking."
+  (flyspell-mode -1)
+  (flyspell-prog-mode))
+
+(add-hook 'text-mode-hook 'chasinglogic-enable-flyspell)
+(add-hook 'prog-mode-hook 'chasinglogic-enable-flyspell-prog)
+
+(setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
+
+(electric-indent-mode 1)
+
+(electric-layout-mode 1)
+
+(defun enable-electric-pair-local-mode ()
+  "Enable eletric pair mode locally."
+  (electric-pair-local-mode 1))
+(add-hook 'prog-mode-hook 'enable-electric-pair-local-mode)
+
+(show-paren-mode 1)
+
+;; from spacemacs-core
+;; from magnars
+(defun chasinglogic-delete-current-buffer-file ()
+  "Remove file connected to current buffer and kill the related buffer."
+  (interactive)
+  (let ((filename (buffer-file-name))
+        (buffer (current-buffer))
+        (name (buffer-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (ido-kill-buffer)
+      (when (yes-or-no-p "Are you sure you want to delete this file? ")
+        (delete-file filename t)
+        (kill-buffer buffer)
+        (when (projectile-project-p)
+          (call-interactively #'projectile-invalidate-cache))
+        (message "File '%s' successfully removed" filename)))))
+
+(defun chasinglogic-indent-buffer ()
+  "Indent the entire buffer."
+  (interactive)
+  (indent-region-line-by-line (point-min) (point-max)))
+
+(defmacro chasinglogic-find-org-file (name)
+  "Create a function to find the org file NAME."
+  `(defun ,(intern (format "chasinglogic-find-org-file-%s" name)) ()
+     (interactive)
+     (let ((file-name (expand-file-name ,(format "%s.org" name) org-directory)))
+       (find-file (if (file-exists-p (concat file-name ".gpg"))
+                      (concat file-name ".gpg")
+                    file-name)))))
+(chasinglogic-find-org-file notes)
+(chasinglogic-find-org-file ideas)
+(chasinglogic-find-org-file todo)
+
+(defun chasinglogic-rename-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sNew name: ")
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (if (get-buffer new-name)
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn
+          (rename-file filename new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil))))))
+
+(defun chasinglogic-add-projector-projects-to-projectile ()
+  "Add projector projects to projectile."
+  (interactive)
+  (setq
+   projectile-known-projects
+   (delete ""
+           (split-string
+            (shell-command-to-string "projector list") "\n"))))
+
+(defun chasinglogic-shell ()
+  "Open my shell in 'ansi-term'."
+  (interactive)
+  (let* ((project-name (if (projectile-project-name)
+                           (projectile-project-name)
+                         "main"))
+         (shell-buf-name (concat project-name "-shell"))
+         (shell-buf-asterisks (concat "*" shell-buf-name "*")))
+    (if (get-buffer shell-buf-asterisks)
+        (switch-to-buffer shell-buf-asterisks)
+      (ansi-term (executable-find "bash") shell-buf-name))))
+
+(defun chasinglogic-copy-breakpoint-for-here (&optional copy)
+  "Return a filename:linenumber pair for point for use with LLDB/GDB.
+
+If COPY is provided copy the value to kill ring instead of returning."
+  (interactive (list t))
+  (let* ((line-number (format "%d" (line-number-at-pos)))
+         (file-name (if (projectile-project-root)
+                        (file-relative-name (buffer-file-name) (projectile-project-root))
+                      (file-name-nondirectory (buffer-file-name))))
+         (breakpoint (concat file-name ":" line-number)))
+    (if copy
+        (progn
+          (kill-new breakpoint)
+          (message "%s" breakpoint))
+      breakpoint)))
+
+(defun sudo ()
+  "Use TRAMP to `sudo' the current buffer"
+  (interactive)
+  (when buffer-file-name
+    (find-alternate-file
+     (concat "/sudo:root@localhost:" buffer-file-name))))
+
+(bind-key "C-x '"   'chasinglogic-shell)
+(bind-key "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
+(bind-key "C-c j =" 'chasinglogic-indent-buffer)
+(bind-key "C-c f r" 'chasinglogic-rename-file-and-buffer)
+(bind-key "C-c f D" 'chasinglogic-delete-current-buffer-file)
+
+;; Reverse the M-<> keybinds with M-,. because I move to the
+;; beginning and end of buffers far more often than I
+;; xref-pop-marker-stack
+(bind-key "M-<" 'xref-pop-marker-stack)
+(bind-key "M->" 'xref-find-definitions)
+(bind-key "M-," 'beginning-of-buffer)
+(bind-key "M-." 'end-of-buffer)
+
+;; Bind M-[] to paragraph movement. Normally this is M-{} which
+;; still is bound. This is more convenient and the M-[] keys were
+;; bound to nighting anyway
+(bind-key "M-[" 'backward-paragraph)
+(bind-key "M-]" 'forward-paragraph)
+
+(bind-key "C-x C-b" 'ibuffer)
+
+(bind-key "M-;" 'comment-actually-dwim)
+
+(use-package evergreen
+  :quelpa (evergreen :repo "evergreen-ci/evergreen.el" :fetcher github)
+  :commands (evergreen-patch evergreen-list-spawn-hosts)
+  :config
+  (setq-default evergreen-generate-description t
+                evergreen-finalize-when-patching t
+                evergreen-browse-when-patching t
+                evergreen-default-project "mongodb-mongo-master"
+                evergreen-assume-yes t))
+
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
+
+(use-package diminish
+  :init
+  (diminish 'abbrev-mode)
+  (diminish 'eldoc-mode)
+  (diminish 'undo-tree-mode))
+
+(use-package which-key
+  :diminish ""
+  :init
+  (which-key-mode))
+
+(use-package expand-region
+  :bind ("C-M-h" . expand-region))
+
+(use-package avy
+  :bind
+  (("M-j"     . 'avy-goto-word-1)
+   ("C-c j c" . 'avy-goto-char)
+   ("C-c j j" . 'avy-goto-word-1)
+   ("C-c j l" . 'avy-goto-line)
+   ("C-c j h" . 'avy-goto-heading)))
+
+(use-package ace-window
+  :bind ("M-o" . ace-window))
+
+(use-package hydra
+  :config
+
+(defhydra chasinglogic-movement-hydra (global-map "C-x m")
+  ("q" nil "quit")
+  ("n" next-line "next line")
+  ("p" previous-line "previous line")
+  ("b" backward-char "backward char")
+  ("f" forward-char "forward char")
+  ("i" isearch-forward "isearch forward")
+  ("s" helm-swoop "swoop search")
+  ("r" helm-rg "ripgrep search")
+  ("R" helm-projectile-rg "project level ripgrep search")
+  ("w" forward-word "forward word")
+  ("W" backward-word "backward word")
+  ("v" scroll-up-command "scroll down")
+  ("V" scroll-down-command "scroll up")
+  ("l" recenter-top-bottom "recenter")
+  ("h" org-next-visible-heading "next heading")
+  ("H" org-previous-visible-heading "previous heading")
+  ("[" backward-paragraph "backward paragraph")
+  ("]" forward-paragraph "forward paragraph"))
+
+(defhydra chasinglogic-window-hydra (global-map "C-c j w")
+  ("q" nil "quit")
+  ("j" ace-window "switch windows")
+  ("r" window-configuration-to-register "save window configuration to register")
+  ("l" jump-to-register "load window configuration from register")
+  ("=" balance-windows "balance windows")
+  ("d" delete-window "delete this window")
+  ("o" delete-other-windows "delete other windows")
+  ("v" split-window-right "split window to right")
+  ("s" split-window-below "split window below"))
+
+)
+
+(use-package paredit
+  :bind (:map paredit-mode-map
+              ;; I do not like any version of the original
+              ;; `comment-dwim' and paredit has it's own special
+              ;; version that I find more confusing. So overwrite it's
+              ;; mapping with my `comment-actually-dwim' function.
+              ("M-;" . comment-actually-dwim))
+  :hook '(emacs-lisp-mode . paredit-mode))
 
 (use-package helm
-  :general
-  ("M-x" 'helm-M-x)
-  ("C-x b" 'helm-mini)
-  ("M-y" 'helm-show-kill-ring)
-  ("M-i" 'helm-imenu)
-  ("M-I" 'helm-imenu-in-all-buffers)
-  ("C-x r b" 'helm-bookmarks)
+  :bind (("M-x"      . helm-M-x)
+         ("C-x b"    . helm-mini)
+         ("M-y"      . helm-show-kill-ring)
+         ("M-i"      . helm-imenu)
+         ("M-I"      . helm-imenu-in-all-buffers)
+         ("C-x r b"  . helm-bookmarks)
+         ("C-x C-f"  . helm-find-files))
   :config
-  ;; No idea why this works but it makes helm always show up at the
-  ;; bottom of frame full width. Stolen from this comment:
-  ;; https://github.com/emacs-helm/helm/issues/2039#issuecomment-390103697
   (setq helm-always-two-windows nil)
-  (setq helm-default-display-buffer-functions '(display-buffer-in-side-window)))
+  (setq helm-default-display-buffer-functions '(display-buffer-in-side-window))
+  (helm-mode 1))
 
 (use-package helm-swoop
-  :after 'helm
-  :general
-  ("C-M-s" 'helm-swoop))
+  :after helm
+  :bind ("C-M-s" . helm-swoop))
 
 (use-package helm-mu
   :after (helm mu4e)
-  :general
-  ("C-c s m" 'helm-mu)
-  ("C-c s c" 'helm-mu-contacts)
-  (mu4e-main-mode-map "s" 'helm-mu)
-  (mu4e-headers-mode-map "s" 'helm-mu)
-  (mu4e-view-mode-map "s" 'helm-mu))
+  :hook (mu4e-main-mode-hook .
+                             (lambda ()
+                               (bind-key "s" helm-mu mu4e-main-mode-map)
+                               (bind-key "s" helm-mu mu4e-headers-mode-map)
+                               (bind-key "s" helm-mu mu4e-view-mode-map)))
+  :bind (("C-c s m" . helm-mu)
+         ("C-c s c" . helm-mu-contacts)))
 
 (use-package helm-projectile
   :after (helm projectile)
-  :general
-  (projectile-command-map
-   "h" 'helm-projectile-find-other-file
-   "f" 'helm-projectile-find-file-dwim
-   "p" 'helm-projectile-switch-project
-   "s" 'helm-projectile-rg))
-
+  :bind (:map projectile-command-map
+              ("h" . helm-projectile-find-other-file)
+              ("f" . helm-projectile-find-file)
+              ("p" . helm-projectile-switch-project)
+              ("s" . helm-projectile-rg)))
 (use-package helm-rg :after 'helm-projectile)
 
 (use-package helm-org
   :after (helm org)
-  :general
-  (:prefix "C-c" "s o" '(:which-key "org"))
-  ("C-c s o c" 'helm-org-capture-templates)
-  ("C-c s o h" 'helm-org-in-buffer-headings)
-  ("C-c o o" 'helm-org-in-buffer-headings))
+  :bind (("C-c s o c" . helm-org-capture-templates)
+         ("C-c s o h" . helm-org-in-buffer-headings)
+         ("C-c o o"   . helm-org-in-buffer-headings)))
 
 (use-package helm-org-rifle
   :after (helm org)
-  :general
-  ("C-c s o r" 'helm-org-rifle))
+  :bind  ("C-c s o r" . helm-org-rifle))
 
+(use-package company
+  :diminish ""
+  :config
+  (setq-default company-dabbrev-downcase nil)
+  (global-company-mode))
 
+(use-package lsp-mode
+  :init (setq-default lsp-auto-guess-root t
+                      lsp-prefer-flymake nil)
+  :commands 'lsp)
 
-;; TODO: helm-pass if I switch to password-store again
+(use-package lsp-ui
+  :hook 'lsp-mode
+  :init
+  (setq-default
+   lsp-ui-doc-enable nil
+   lsp-ui-peek-enable nil
+   lsp-ui-sideline-enable nil
+   lsp-ui-imenu-enable nil
+   lsp-ui-flycheck-enable t))
 
-;;;; Org / Notes
+(use-package company-lsp
+  :config (push 'company-lsp company-backends)
+  :after (lsp-mode company))
+
+(use-package ccls
+  :hook ((c-mode c++-mode objc-mode) .
+         (lambda () (require 'ccls) (lsp))))
 
 (use-package org
+  :ensure nil
+  :commands (org-capture org-agenda)
   :mode ("\\.org\\'" . org-mode)
-  :general
-  (cc!
-    "o" '(:which-key "org")
-    "oo"    'helm-org-in-buffer-headings
-    "oTAB"  'org-global-cycle
-    "oa"    'org-agenda
-    "oc"    'org-capture
-    "or"    'org-archive-subtree
-    "omn"   (chasinglogic-find-org-file notes)
-    "omi"   (chasinglogic-find-org-file ideas)
-    "omt"   (chasinglogic-find-org-file todo)
-    "omr"   'chasinglogic-add-to-reading-list
-    "ot"    'org-todo
-    "os"    'org-schedule
-    "og"    'org-set-tags-command
-    "oP"    'org-set-property-and-value
-    "oil"   'org-insert-link
-    "oih"   'org-insert-heading
-    "op"    '(:which-key "priority")
-    "opp"   'org-priority
-    "opk"   'org-priority-up
-    "opj"   'org-priority-down)
-  :commands (org-capture org-insert-link)
-  :ensure org-plus-contrib
-  :init
-  (require 'subr-x)
-  (add-hook 'org-mode-hook 'chasinglogic-enable-flyspell)
-  (defun chasinglogic-org-mode-hook ()
-    "Enable some org mode specific settings"
-    ;; Electric pair mode makes org links super annoying to write
-    (display-line-numbers-mode -1)
-    (electric-pair-local-mode -1)
-    (local-set-key (kbd "RET") 'newline-and-indent))
-  (add-hook 'org-mode-hook 'chasinglogic-org-mode-hook)
 
-  (defun chasinglogic-org-capture-mode-hook ()
-    "Do some capture stuff"
-    (delete-other-windows))
-  (add-hook 'org-capture-mode-hook 'chasinglogic-org-capture-mode-hook)
+:bind (("C-c o o"   . helm-org-in-buffer-headings)
+       ("C-c o TAB" . org-global-cycle)
+       ("C-c o a"   . org-agenda)
+       ("C-c o c"   . org-capture)
+       ("C-c o r"   . org-archive-subtree)
+       ("C-c o m n" . chasinglogic-find-org-file-notes)
+       ("C-c o m i" . chasinglogic-find-org-file-ideas)
+       ("C-c o m t" . chasinglogic-find-org-file-todo)
+       ("C-c o m r" . chasinglogic-add-to-reading-list)
+       ("C-c o t"   . org-todo)
+       ("C-c o s"   . org-schedule)
+       ("C-c o g"   . org-set-tags-command)
+       ("C-c o P"   . org-set-property-and-value)
+       ("C-c o i l" . org-insert-link)
+       ("C-c o i h" . org-insert-heading)
+       ("C-c o p p" . org-priority)
+       ("C-c o p k" . org-priority-up)
+       ("C-c o p j" . org-priority-down))
+:config
 
-  (setq-default
-   org-agenda-custom-commands
-   '(
-     ("r" "Reading List"
-      ((tags-todo "+reading_list")))
+(setq-default org-refile-targets '((nil :maxlevel . 1)
+                                   (org-agenda-files :maxlevel . 2))
+              org-refile-use-outline-path 'file
+              org-outline-path-complete-in-steps nil
+              org-refile-allow-creating-parent-nodes 'confirm)
 
-     ("t" "TODO List"
-      ((tags-todo
-        ;; Query (filter out the reading_list)
-        "-reading_list"
-        ;; Settings
-        ((org-agenda-sorting-strategy '(priority-down tag-up))))))
+(defun chasinglogic-org-mode-hook ()
+  "Enable some org mode specific settings"
+  ;; Electric pair mode makes org links super annoying to write
+  (display-line-numbers-mode -1)
+  (electric-pair-local-mode -1))
+(add-hook 'org-mode-hook 'chasinglogic-org-mode-hook)
 
-     ("d" "Daily Agenda and all TODOs"
-      (
-       (agenda
-        ;; Query ("" matches everything)
-        ""
-        ;; Settings 
-        (
-         ;; Span 1 day (daily agenda)
-         (org-agenda-span 1)
-         ;; Sort by priority highest to lowest then tag
-         (org-agenda-sorting-strategy '(priority-down tag-up))
-         ;; 7 day advanced warning for deadlines
-         (org-deadline-warning-days 7)))
+(setq-default org-directory (file-name-as-directory "~/Nextcloud/Org")
+              org-default-todo-file  (expand-file-name "inbox.org"  org-directory)
+              org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
+              org-default-ideas-file (expand-file-name "inbox.org" org-directory))
 
-       (tags-todo
-        ;; Query (filter out the reading_list)
-        "-reading_list-idea"
-        ;; Settings
-        (
-         ;; Same
-         (org-agenda-sorting-strategy '(tag-up priority-down))
-         ;; Skip if the todo is scheduled
-         (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))))
+(setq-default org-agenda-files (list org-default-todo-file
+                                     (expand-file-name "todo.org" org-directory)))
 
-     ("is" "Ideas for software that need fleshed out"
-      ((tags-todo
-        ;; Query ideas
-        "+idea+software")))
+(setq-default org-highest-priority ?A
+              org-lowest-priority ?D
+              org-default-priority ?D)
 
-     ("ib" "Ideas for the blog that need fleshed out"
-      ((tags-todo
-        ;; Query ideas
-        "+idea+blog")))
+(setq-default org-log-done 'time)
 
-     ("ii" "Ideas that need fleshed out"
-      ((tags-todo
-        ;; Query ideas
-        "+idea")))))
+(setq-default org-agenda-window-setup 'only-window)
 
-  (setq-default
-   ;; Set the default org-directory
-   org-directory (file-name-as-directory "~/Nextcloud/Org")
+(setq-default org-todo-keywords '((sequence "TODO(t)" "NEXT(n!)" "STARTED(s!)" "|" "DONE(d!)" "CANCELLED(c!)"))
+              org-todo-keyword-faces '(("TODO" . (:foreground "#cc9393" :weight bold))
+                                       ("NEXT" . (:foreground "#b58900" :weight bold))
+                                       ("STARTED". (:foreground "#6c71c4" :weight bold))
+                                       ("DONE" . (:foreground "green" :weight bold))
+                                       ("CANCELLED" . (:foreground "#dc322f"))))
 
-   ;; Define my commonly used files
-   org-default-todo-file  (expand-file-name "todo.org"  org-directory)
-   org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
-   org-default-ideas-file (expand-file-name "ideas.org" org-directory)
-   org-agenda-files (list org-default-todo-file)
+(setq-default org-stuck-projects '("+LEVEL=1/-DONE" ("STARTED" "NEXT") nil ""))
 
-   ;; Define the custom capture templates
-   org-capture-templates '(
-                           ("t" "Task todo"
-                            entry (file org-default-todo-file)
-                            "* TODO [#M] %?")
-                           ("r" "Reading list"
-                            entry (file org-default-todo-file)
-                            "* TODO [#M] %i %? :reading_list:")
-                           ("n" "A new note"
-                            entry (file org-default-notes-file)
-                            "* %? :note:
+(setq-default org-agenda-custom-commands
+              '(
+
+                ("r" "Reading List"
+                 ((tags "+reading_list" ((org-agenda-overriding-header "Reading List")))))
+
+                ("d" "Daily Agenda"
+                 (
+                  (agenda
+                   ;; Query ("" matches everything)
+                   ""
+                   ;; Settings 
+                   ((org-agenda-overriding-header "Today:")
+                    ;; Span 1 day (daily agenda)
+                    (org-agenda-span 1)
+                    ;; Sort by priority highest to lowest then tag
+                    (org-agenda-sorting-strategy '(priority-down tag-up))
+                    ;; 7 day advanced warning for deadlines
+                    (org-deadline-warning-days 7)))
+                  (todo "" ((org-agenda-overriding-header "Next Actions:")
+                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo '("NEXT" "STARTED")))))
+                  (stuck "" ((org-agenda-overriding-header "Stuck Projects:")))))))
+
+(setq-default org-capture-templates '(
+
+("t" "Task todo" entry (file org-default-todo-file) "* TODO %?")
+
+("r" "Reading list" entry (file org-default-todo-file)
+          "* TODO %i %? :reading_list:
+:PROPERTIES:
+:CREATED: %t
+:END:")
+
+("n" "A new note" entry (file org-default-notes-file) "* %?" :prepend t)
+
+("I" "Interview"
+ entry (file+headline org-default-notes-file "Interviews")
+ "** Interviewee: %? :interview:
 :PROPERTIES:
 :DATE: %t
 :END:
-
-"
-                            :prepend t
-                            :unnarrowed t)
-                           
-                           
-                           ("I" "Interview"
-                            entry (file+headline org-default-notes-file "Interviews")
-                            "** Interviewee: %? :interview:
-:PROPERTIES:
-:DATE: %t
-:END:
-
-** Phone Interview
-
-** Onsite Interview
 
 ")
 
-                           ("i" "Idea" entry (file org-default-ideas-file)
-                            "* %? :idea:
+("i" "Idea" entry (file org-default-todo-file)
+          "* TODO %? :idea:
 :PROPERTIES
 :DATE: %t
 :END:
+         ")
 
-"
-                            :unnarrowed t)
-                           )
+))
 
-   )
+(defun chasinglogic-add-to-reading-list ()
+  (interactive)
+  (let ((url (thing-at-point 'url)))
+    (org-capture-string
+     (concat "[[" url "]["
+             ;; Get the link title if possible
+             (condition-case nil
+                 ;; Get title of web page, with the help of functions in url.el
+                 (with-current-buffer (url-retrieve-synchronously url)
+                   ;; find title by grep the html code
+                   (goto-char 0)
+                   (re-search-forward "<title>\\([^<]*\\)</title>" nil t 1)
+                   (setq web_title_str (match-string 1))
+                   ;; find charset by grep the html code
+                   (goto-char 0)
+                   (re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
+                   ;; downcase the charaset. e.g, UTF-8 is not acceptible for emacs, while utf-8 is ok.
+                   (setq coding_charset (downcase (match-string 1)))
+                   ;; Sometimes titles have newlines but that breaks our org link so strip them.
+                   (replace-regexp-in-string
+                    "\n" ""
+                    ;; decode the string of title.
+                    (decode-coding-string web_title_str (intern coding_charset))))
+               ;; Work even in the case of transient network failure. If
+               ;; so just use the url as the title.
+               (error url))
+             "]]")
+     "r")
+    (org-capture-finalize)))
 
-  ;; Refiling
-  (setq-default
-   org-refile-targets '((org-default-todo-file :maxlevel . 1)
-                        (org-default-notes-file :maxlevel . 1)))
+(setq-default org-export-headline-levels 6)
 
-  (defun chasinglogic-add-to-reading-list ()
-    (interactive)
-    (let ((url (thing-at-point 'url)))
-      (org-capture-string
-       (concat "[[" url "]["
-               ;; Get the link title if possible
-               (condition-case nil
-                   ;; Get title of web page, with the help of functions in url.el
-                   (with-current-buffer (url-retrieve-synchronously url)
-                     ;; find title by grep the html code
-                     (goto-char 0)
-                     (re-search-forward "<title>\\([^<]*\\)</title>" nil t 1)
-                     (setq web_title_str (match-string 1))
-                     ;; find charset by grep the html code
-                     (goto-char 0)
-                     (re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
-                     ;; downcase the charaset. e.g, UTF-8 is not acceptible for emacs, while utf-8 is ok.
-                     (setq coding_charset (downcase (match-string 1)))
-                     ;; Sometimes titles have newlines but that breaks our org link so strip them.
-                     (replace-regexp-in-string
-                      "\n" ""
-                      ;; decode the string of title.
-                      (decode-coding-string web_title_str (intern coding_charset))))
-                 ;; Work even in the case of transient network failure. If
-                 ;; so just use the url as the title.
-                 (error url))
-               "]]")
-       "r")
-      (org-capture-finalize)))
+(require 'ox-md)
 
-  (setq-default org-babel-load-languages
-                '((emacs-lisp . t)
-                  (python . t)))
+(use-package ox-reveal :config (require 'ox-reveal))
 
-  ;; Exporting
-  (setq-default
-   org-export-headline-levels 6)
+(setq-default org-babel-load-languages '((emacs-lisp . t)
+                                         (python . t)))
 
-  ;; Enable markdown export
-  (require 'ox-md)
-
-  ;; Setup org task management
-  (setq-default
-   org-highest-priority ?A
-   org-lowest-priority ?Z
-   org-default-priority ?M
-   org-log-done 'time
-   org-agenda-window-setup 'only-window
-   org-agenda-sorting-strategy '((agenda todo-state-up priority-down timestamp-down)
-                                 (todo todo-state-up priority-down timestamp-down)
-                                 (tags priority-down timestamp-down)
-                                 (search priority-down timestamp-down))))
+)
 
 (use-package org-bullets
   :after org
-  :commands 'org-bullets-mode
-  :init (add-hook 'org-mode-hook 'org-bullets-mode))
-
-(use-package ox-reveal
-  :after org
-  :config (require 'ox-reveal))
-
-(use-package org2blog
-  :after org
-  :commands (
-             org2blog/wp-login
-             org2blog/wp-new-entry
-             org2blog/wp-post-buffer
-             org2blog/wp-post-subtree
-             org2blog/wp-preview-buffer-post
-             )
-  :config
-  (require 'auth-source)
-  (let* ((credentials (auth-source-user-and-password "chasinglogic.wordpress.com"))
-         (username (nth 0 credentials))
-         (password (nth 1 credentials))
-         (config `("wordpress"
-                   :url "https://chasinglogic.wordpress.com/xmlrpc.php"
-                   :username ,username
-                   :password ,password)))
-    (setq org2blog/wp-blog-alist (list config))))
-
-;;;; Linting
+  :hook '(org-mode . org-bullets-mode))
 
 (use-package flycheck
   :diminish ""
-  :commands 'flycheck-mode
-  :general (cc!
-             "e"  '(:which-key "errors")
-             "el" 'flycheck-list-errors
-             "ev" 'flycheck-verify-setup
-             "en" 'flycheck-next-error
-             "ep" 'flycheck-previous-error)
-  :init
-  (defun chasinglogic-enable-flycheck ()
-    "Enable flycheck mode"
-    ;; enable syntax checking
-    (flycheck-mode 1))
-  (add-hook 'text-mode-hook 'chasinglogic-enable-flycheck)
+  :bind (("C-c e l" . flycheck-list-errors)
+         ("C-c e v" . flycheck-verify-setup)
+         ("C-c e n" . flycheck-next-error)
+         ("C-c e p" . flycheck-previous-error))
+  :hook 'text-mode-hook
   :config
   ;; this trys to run the dash shell which I don't use but instead
   ;; opens the Dash.app program which I do use.
   (setq flycheck-sh-posix-dash-executable ""))
 
-;; Use vale linter when appropriate
 (use-package flycheck-vale
-  :after flycheck
-  :init
+  :after 'flycheck
+  :config
   (flycheck-vale-setup))
 
-;;;; Auto completion
-
-;; COMPlete ANYthing
-(use-package company
-  :diminish ""
-  :config
-  (setq-default
-   ;; Shorten the default delay to show completions
-   company-idle-delay 0.1
-   ;; Keep capitalization when completing
-   company-dabbrev-downcase nil)
-  ;; Enable completion everywhere
-  (global-company-mode))
-
-;;;; Git tools
-
-;; Enable magit the git client for Emacs
 (use-package magit
-  :general (general-define-key
-            :prefix "C-x"
-            "v" '(:which-key "git")
-            "vd" 'magit-diff
-            "vb" 'magit-blame
-            "vl" 'magit-log-current
-            "va" 'magit-stage-file
-            "vc" 'magit-commit
-            "vs" 'magit-status)
-  :commands (magit-status)
-  :init
-  (setq magit-display-buffer-function #'magit-display-buffer-traditional))
+  :bind (("C-x v d" . magit-diff)
+         ("C-x v b" . magit-blame)
+         ("C-x v l" . magit-log-current)
+         ("C-x v a" . magit-stage-file)
+         ("C-x v c" . magit-commit)
+         ("C-x v s" . magit-status))
+  :commands 'magit-status)
 
-(defvar kernel-tools (concat
-                      (getenv "HOME")
-                      "/Work/kernel-tools/codereview"))
+(eval-and-compile
+  (setq-default kernel-tools (concat (getenv "HOME") "/Work/kernel-tools/codereview")))
+
 (use-package xgen-cru
   :load-path kernel-tools
-  :general (cc!
-             "xp" 'xgen-cru-post-review
-             "xu" 'xgen-cru-update-review)
   :commands (xgen-cru-update-review xgen-cru-post-review)
   :config
   (setq-default
@@ -714,180 +603,135 @@ comments so this function better suits my needs."
    xgen-cru-jira-username "mathew.robinson"
    xgen-cru-upload-py-path (concat kernel-tools "/upload.py")))
 
-;; Email / Set up mu4e
-
-(defvar mu4e-load-path
-  (if (eq system-type 'darwin)
-      "/usr/local/share/emacs/site-lisp/mu/mu4e"
-    "/usr/share/emacs/site-lisp/mu4e"))
+(eval-and-compile
+  (setq-default mu4e-load-path (if (eq system-type 'darwin)
+                                   "/usr/local/share/emacs/site-lisp/mu/mu4e"
+                                 "/usr/share/emacs/site-lisp/mu4e")))
 (when (file-exists-p mu4e-load-path)
   (use-package mu4e
     :load-path mu4e-load-path
-    :general (cc!
-               "m" 'mu4e)
+    :bind ("C-c m" . mu4e)
     :config
-    ;; Customization variables
-    (setq-default mu4e-maildir "~/Mail"
-                  mu4e-get-mail-command "true"
-                  mu4e-confirm-quit nil
-                  mu4e-headers-show-threads nil
-                  mu4e-context-policy 'pick-first
-                  mu4e-split-view 'horizontal
-                  mu4e-view-show-images t
-                  mu4e-view-show-addresses t
-                  mu4e-use-fancy-chars t
-                  mu4e-change-filenames-when-moving t
-                  mu4e-headers-include-related nil
-                  mu4e-sent-messages-behavior 'delete
-                  mu4e-compose-format-flowed t
-                  mu4e-update-interval 300
-                  message-send-mail-function 'message-smtpmail-send-it
-                  send-mail-function 'smtpmail-send-it
 
-                  ;; HTML email settings
-                  shr-use-colors nil
-                  shr-color-visible-luminance-min 100
-                  mu4e-html2text-command 'mu4e-shr2text
+(setq-default mu4e-maildir "~/Mail")
 
-                  mail-user-agent 'mu4e-user-agent
-                  message-kill-buffer-on-exit t)
+(setq-default mu4e-get-mail-command "true")
 
-    (add-hook 'mu4e-view-mode-hook
-              (lambda()
-                ;; try to emulate some of the eww key-bindings
-                (local-set-key (kbd "<tab>") 'shr-next-link)
-                (local-set-key (kbd "<backtab>") 'shr-previous-link)))
+(setq-default mu4e-confirm-quit nil
+              message-kill-buffer-on-exit t)
 
-    (defvaralias 'mu4e-compose-signature 'message-signature)
+(setq-default mu4e-headers-show-threads nil
+              mu4e-headers-include-related nil
+              mu4e-context-policy 'pick-first)
 
-    ;; Multi-account automation
-    (setq-default chasinglogic-mail-inbox-q "(maildir:/personal/Inbox or maildir:/work/INBOX) AND "
-                  mu4e-contexts
-                  `(
-                    ,(make-mu4e-context
-                      :name "Work"
-                      :match-func (lambda (msg)
-                                    (when msg
-                                      (string-prefix-p "/work" (mu4e-message-field msg :maildir))))
-                      :vars '(
-                              (mu4e-drafts-folder . "/work/drafts")
-                              (mu4e-sent-folder . "/work/sent")
-                              (mu4e-trash-folder . "/work/trash")
-                              (mu4e-refile-folder . "/work/archive")
-                              (smtpmail-smtp-server . "smtp.fastmail.com")
-                              (smtpmail-smtp-service . 465)
-                              (smtpmail-local-domain . "chasinlogic.io")
-                              (smtpmail-smtp-user . "mathew@chasinglogic.io")
-                              (user-mail-address . "mathew@chasinglogic.io")
-                              )
-                      )
-                    ,(make-mu4e-context
-                      :name "Personal"
-                      :match-func (lambda (msg)
-                                    (when msg
-                                      (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
-                      :vars '(
-                              (mu4e-drafts-folder . "/personal/Drafts")
-                              (mu4e-sent-folder . "/personal/Sent")
-                              (mu4e-trash-folder . "/personal/Trash")
-                              (mu4e-refile-folder . "/personal/Archive")
-                              (smtpmail-local-domain . "gmail.com")
-                              (smtpmail-default-smtp-server . "smtp.gmail.com")
-                              (smtpmail-smtp-server . "smtp.gmail.com")
-                              (smtpmail-smtp-service . 587)
-                              (smtpmail-smtp-user . "mathew.robinson@10gen.com")
-                              (user-mail-address . "mathew.robinson@mongodb.com")
-                              )
-                      )
-                    )
-                  mu4e-bookmarks
-                  `(
-                    ,(make-mu4e-bookmark
-                      :name  "Inbox"
-                      :query "(maildir:/personal/Inbox OR maildir:/work/INBOX) AND (flag:unread OR flag:flagged) AND NOT flag:trashed"
-                      :key ?i)
-                    ,(make-mu4e-bookmark
-                      :name  "Unread messages"
-                      :query (concat chasinglogic-mail-inbox-q "(flag:unread AND NOT flag:trashed)")
-                      :key ?u)
-                    ,(make-mu4e-bookmark
-                      :name "Flagged (Starred)"
-                      :query "flag:flagged"
-                      :key ?f)
-                    ,(make-mu4e-bookmark
-                      :name "Today's messages"
-                      :query "(date:today..now)"
-                      :key ?t)
-                    )
-                  ;; I have my "default" parameters from Gmail
-                  smtpmail-local-domain "gmail.com"
-                  smtpmail-default-smtp-server "smtp.gmail.com"
-                  smtpmail-smtp-server "smtp.gmail.com"
-                  smtpmail-smtp-service 587)
+(setq-default mu4e-split-view 'horizontal)
 
-    ;; Accounts used for composing messages
-    (setq-default chasinglogic-mu4e-account-alist
-                  '(
-                    ("personal"
-                     (mu4e-sent-folder "/personal/Sent")
-                     (user-mail-address "mathew@chasinglogic.io")
-                     (smtpmail-smtp-user "mathew@chasinglogic.io"))
-                    ("work"
-                     (mu4e-sent-folder "/work/sent")
-                     (user-mail-address "mathew.robinson@mongodb.com")
-                     (smtpmail-smtp-user "mathew.robinson@10gen.com"))
-                    ))
+(setq-default mu4e-sent-messages-behavior 'delete)
 
-    (defun chasinglogic-determine-compose-account ()
-      "Determines the account name if possible or prompts for selection"
-      (if mu4e-compose-parent-message
-          (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
-            (string-match "/\\(.*?\\)/" maildir)
-            (match-string 1 maildir))
-        (completing-read
-         "Compose with account: "
-         (mapcar #'(lambda (var) (car var)) chasinglogic-mu4e-account-alist)
-         nil t nil nil (caar chasinglogic-mu4e-account-alist))))
+(setq-default mu4e-view-show-images t
+              mu4e-view-show-addresses t
+              mu4e-use-fancy-chars t)
 
-    (defun chasinglogic-mu4e-set-account ()
-      "Set the account for composing a message.
-   This function is taken from: 
-     https://www.djcbsoftware.nl/code/mu/mu4e/Multiple-accounts.html"
-      (let* ((account (chasinglogic-determine-compose-account))
-             (account-vars (cdr (assoc account chasinglogic-mu4e-account-alist))))
-        (if account-vars
-            (mapc #'(lambda (var)
-                      (set (car var) (cadr var)))
-                  account-vars)
-          (error "No email account found"))))
-    (add-hook 'mu4e-compose-pre-hook 'chasinglogic-mu4e-set-account)
+(setq-default mu4e-compose-format-flowed t)
 
-    (add-hook 'mu4e-compose-mode-hook 'auto-fill-mode)
+(setq-default mu4e-update-interval 300)
 
-    (defun chasinglogic-mu4e-hook ()
-      "Set up some mu4e stuff on load"
-      (set-frame-name "Email"))
-    (add-hook 'mu4e-main-mode-hook 'chasinglogic-mu4e-hook)
+(setq-default message-send-mail-function 'message-smtpmail-send-it
+              send-mail-function 'smtpmail-send-it)
 
-    (defun chasinglogic-sign-emails ()
-      "Sign emails with GPG on send"
-      (mml-secure-message-sign))
-    (add-hook 'mu4e-compose-mode-hook 'chasinglogic-sign-emails))
+(setq-default shr-use-colors nil
+              shr-color-visible-luminance-min 100
+              mu4e-html2text-command 'mu4e-shr2text)
 
-  (use-package mu4e-alert
-    :ensure t
-    :after mu4e
-    :init
-    (setq mu4e-alert-interesting-mail-query
-          "(flag:unread maildir:/personal/Inbox) OR (flag:unread maildir:/work/INBOX)")
-    (when (eq system-type 'gnu/linux)
-      (mu4e-alert-set-default-style 'libnotify))
-    (mu4e-alert-enable-mode-line-display)
-    (mu4e-alert-enable-notifications))
+(add-hook 'mu4e-view-mode-hook
+          (lambda()
+            ;; try to emulate some of the eww key-bindings
+            (local-set-key (kbd "<tab>") 'shr-next-link)
+            (local-set-key (kbd "<backtab>") 'shr-previous-link)))
+
+(setq-default mail-user-agent 'mu4e-user-agent)
+
+(add-hook 'mu4e-main-mode-hook '(lambda () (set-frame-name "Email")))
+
+(setq-default mu4e-contexts `(
+
+,(make-mu4e-context
+  :name "Work"
+  :match-func (lambda (msg)
+                (when msg
+                  (string-prefix-p "/work" (mu4e-message-field msg :maildir))))
+  :vars '(
+          (mu4e-drafts-folder . "/work/drafts")
+          (mu4e-sent-folder . "/work/sent")
+          (mu4e-trash-folder . "/work/trash")
+          (mu4e-refile-folder . "/work/archive")
+          (smtpmail-stream-type . nil)
+          (smtpmail-local-domain . "gmail.com")
+          (smtpmail-default-smtp-server . "smtp.gmail.com")
+          (smtpmail-smtp-server . "smtp.gmail.com")
+          (smtpmail-smtp-service . 587)
+          (smtpmail-smtp-user . "mathew.robinson@10gen.com")
+          (user-mail-address . "mathew.robinson@mongodb.com")
+          )
   )
 
-;; Open links to Github from Emacs
-;; Open Github links from Emacs
+,(make-mu4e-context
+  :name "Personal"
+  :match-func (lambda (msg)
+                (when msg
+                  (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
+  :vars '(
+          (mu4e-drafts-folder . "/personal/Drafts")
+          (mu4e-sent-folder . "/personal/Sent")
+          (mu4e-trash-folder . "/personal/Trash")
+          (mu4e-refile-folder . "/personal/Archive")
+          (smtpmail-stream-type . ssl)
+          (smtpmail-smtp-server . "smtp.fastmail.com")
+          (smtpmail-smtp-service . 465)
+          (smtpmail-local-domain . "chasinglogic.io")
+          (smtpmail-smtp-user . "mathew@chasinglogic.io")
+          (user-mail-address . "mathew@chasinglogic.io")
+          )
+  )
+)) ;; End the context setq
+
+(setq-default mu4e-bookmarks
+              `(
+                ,(make-mu4e-bookmark
+                  :name  "Inbox"
+                  :query "(maildir:/personal/INBOX OR maildir:/work/INBOX) AND (flag:unread OR flag:flagged) AND NOT flag:trashed"
+                  :key ?i)
+                ,(make-mu4e-bookmark
+                  :name  "Unread messages"
+                  :query "flag:unread AND NOT flag:trashed"
+                  :key ?u)
+                ,(make-mu4e-bookmark
+                  :name "Flagged (Starred)"
+                  :query "flag:flagged"
+                  :key ?f)
+                ,(make-mu4e-bookmark
+                  :name "Today's messages"
+                  :query "(date:today..now)"
+                  :key ?t)
+                ))
+
+(add-hook 'mu4e-compose-mode-hook 'auto-fill-mode)
+(add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign)
+
+)
+
+(use-package mu4e-alert
+  :after mu4e
+  :hook (mu4e-main-mode-hook . (lambda ()
+                                 (setq mu4e-alert-interesting-mail-query
+                                       "(flag:unread maildir:/personal/Inbox) OR (flag:unread maildir:/work/INBOX)")
+                                 (when (eq system-type 'gnu/linux)
+                                   (mu4e-alert-set-default-style 'libnotify))
+                                 (mu4e-alert-enable-mode-line-display)
+                                 (mu4e-alert-enable-notifications))))
+
+)
+
 (use-package git-link
   :commands (git-link git-link-commit git-link-homepage)
   :config
@@ -895,138 +739,68 @@ comments so this function better suits my needs."
    git-link-default-branch "master"
    git-link-open-in-browser t))
 
-;;;; Snippets
-
 (use-package yasnippet
   :diminish 'yas-minor-mode
-  :config
-  (require 'yasnippet)
-  (yas-global-mode 1))
-
-;;;; Project Interaction / Projectile
+  :config (yas-global-mode 1))
 
 (use-package projectile
-  :general
-  ("C-c p" '(:keymap projectile-command-map
-                     :which-key "projects"
-                     :package projectile))
-  (projectile-command-map
-   "p" 'projectile-switch-project
-   "f" 'projectile-find-file
-   "F" 'projectile-find-file-in-known-projects
-   "d" 'projectile-find-dir
-   "b" 'projectile-switch-to-buffer)
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :bind ((:map projectile-command-map
+               ("p" . projectile-switch-project)
+               ("f" . projectile-find-file)
+               ("F" . projectile-find-file-in-known-projects)
+               ("d" . projectile-find-dir)
+               ("b" . projectile-switch-to-buffer)))
+  :init
+  (chasinglogic-add-projector-projects-to-projectile)
   :config
   (defun chasinglogic-switch-project-action ()
     "Single view magit status page when switching projects."
     (interactive)
     (magit-status)
     (delete-other-windows))
-  
-  (setq-default
-   projectile-require-project-root t
-   projectile-completion-system 'helm
-   projectile-enable-caching nil
-   ;; I prefer a git status when switching to a project
-   projectile-switch-project-action 'chasinglogic-switch-project-action
-   ;; I really don't need tags
-   projectile-tags-command "")
+
+  (setq-default projectile-require-project-root t
+                projectile-completion-system 'helm
+                projectile-enable-caching nil
+                ;; I prefer a git status when switching to a project
+                projectile-switch-project-action 'chasinglogic-switch-project-action
+                ;; I really don't need tags
+                projectile-tags-command "")
   ;; When switching projects set frame name to project name
   (defun set-frame-name-to-project ()
     (set-frame-parameter (selected-frame) 'name (projectile-project-name)))
   (add-hook 'projectile-after-switch-project-hook 'set-frame-name-to-project))
 
-;;;; Language Server Protocol
-
-(setq-default
- lsp-ui-doc-enable nil
- lsp-ui-peek-enable nil
- lsp-ui-sideline-enable nil
- lsp-ui-imenu-enable nil
- lsp-ui-flycheck-enable t)
-
-(use-package lsp-mode
-  :commands 'lsp
-  :config
-  (setq-default
-   lsp-ui-doc-enable nil
-   lsp-ui-peek-enable nil
-   lsp-ui-sideline-enable nil
-   lsp-ui-imenu-enable nil
-   lsp-ui-flycheck-enable t
-   lsp-prefer-flymake nil
-   lsp-auto-guess-root t))
-
-(setq-default
- lsp-ui-doc-enable nil
- lsp-ui-peek-enable nil
- lsp-ui-sideline-enable nil
- lsp-ui-imenu-enable nil
- lsp-ui-flycheck-enable t
- lsp-prefer-flymake nil)
-
-(use-package lsp-ui
-  :after 'lsp-mode
-  :commands 'lsp-ui-mode)
-
-(use-package ccls
-  :hook ((c-mode c++-mode objc-mode) .
-         (lambda () (require 'ccls) (lsp))))
-
-(use-package company-lsp
-  :commands 'company-lsp
-  :after (lsp-mode company))
-
-;;;; Frame Management
-
-;; This allows selecting a frame by name
-(require 'chasinglogic-frames)
-(defun chasinglogic-helm-get-a-frame ()
-  "Search and select frames by name."
-  (interactive)
-  (select-frame-by-name
-   (helm :sources (helm-build-sync-source "frames"
-                    :candidates (mapcar 'get-frame-name (frame-list))
-                    :fuzzy-match t)
-         :buffer "*helm frames*")))
-
-;;;; Writing
-
-(use-package writeroom-mode
-  :general (cc!
-             "w" 'writeroom-mode)
-  :commands (writeroom-mode))
+(use-package writeroom-mode :commands (writeroom-mode))
 
 (use-package hl-todo
   :demand
   :config
   (global-hl-todo-mode))
 
-;;;; Python
+(use-package ruby-electric
+  :diminish ""
+  :hook 'ruby-mode)
 
 ;; Use correct Python3
-(setq-default
- python-shell-interpreter
- (if (eq system-type 'darwin)
-     "/usr/local/bin/python3"
-   "python3"))
-;; Make flycheck use the previously set python3
-(setq-default
- flycheck-python-flake8-executable python-shell-interpreter
- flycheck-python-pylint-executable python-shell-interpreter
- flycheck-python-pycompile-executable python-shell-interpreter)
+(setq-default python-shell-interpreter (if (eq system-type 'darwin)
+                                           "/usr/local/bin/python3"
+                                         "python3"))
+(setq-default flycheck-python-flake8-executable python-shell-interpreter
+              flycheck-python-pylint-executable python-shell-interpreter
+              flycheck-python-pycompile-executable python-shell-interpreter)
 
 (use-package blacken
   :commands 'blacken-buffer
   :init
-  (defvar chasinglogic-blacken-black-list
-    '("scons"
-      "mongo"
-      "enterprise"
-      "mongo_modules_enterprise"
-      "toolchain-builder"
-      "kernel-tools")
-    "Projects who don't use black so don't auto format them.")
+  (setq-default chasinglogic-blacken-black-list
+                '("scons"
+                  "mongo"
+                  "enterprise"
+                  "mongo_modules_enterprise"
+                  "toolchain-builder"
+                  "kernel-tools"))
 
   (defun chasinglogic-python-format-hook ()
     "Set up blacken-buffer on save if appropriate."
@@ -1037,6 +811,7 @@ comments so this function better suits my needs."
 
 (use-package pyvenv
   :commands 'pyvenv-workon
+  :after 'projectile
   :init
   (defun chasinglogic-auto-venv ()
     "Automatically setup the venv when entering a project"
@@ -1045,53 +820,20 @@ comments so this function better suits my needs."
   (add-hook 'projectile-after-switch-project-hook 'chasinglogic-auto-venv))
 
 (add-hook 'python-mode-hook #'lsp)
-
 ;; Load SCons files as Python
 (add-to-list 'auto-mode-alist '("SConscript" . python-mode))
 (add-to-list 'auto-mode-alist '("SConstruct" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.vars\\'" . python-mode))
-
-;;;; TypeScript
 
 (use-package typescript-mode
   :mode "\\.ts\\'"
   :config
   (add-hook typescript-mode-hook 'lsp))
 
-;; (use-package tide
-;;   :ensure t
-;;   :after (typescript-mode company flycheck)
-;;   :hook ((typescript-mode . tide-setup)
-;;          (typescript-mode . tide-hl-identifier-mode)
-;;          (typescript-mode . eldoc-mode)
-;;          (before-save . tide-format-before-save)))
-
-;;;; Powershell
-
-(use-package powershell :mode ("\\.ps1\\'"))
-
-;;;; Groovy
-
-(use-package groovy-mode :mode ("\\.groovy$" "\\.gradle$"))
-
-;;;; YAML
-
-(use-package yaml-mode :mode ("\\.yaml\\'" "\\.yml\\'" "\\.idl\\'"))
-
-;;;; TOML
-
-(use-package toml-mode :mode ("\\gitconfig\\'" "\\.toml\\'"))
-
-;;;; CMake files
-
-(use-package cmake-mode :mode ("\\CMake.*txt\\'"))
-
-;;;; Markdown
-
 (use-package markdown-mode
   :mode ("\\.markdown\\'" "\\.md\\'")
   :config
-  ;; Use pandoc for exporting to HTML
+  ;; Use ndoc for exporting to HTML
   (setq-default markdown-command "pandoc")
 
   (defun chasinglogic-markdown-mode-hook ()
@@ -1102,8 +844,6 @@ comments so this function better suits my needs."
     (auto-fill-mode 1))
 
   (add-hook 'markdown-mode-hook 'chasinglogic-markdown-mode-hook))
-
-;;;; Web (HTML/JS/CSS)
 
 (use-package web-mode
   :commands (web-mode)
@@ -1119,19 +859,12 @@ comments so this function better suits my needs."
     (c-set-offset 'case-label '+))
   (add-hook 'web-mode-hook 'chasinglogic-web-mode-hook)
   (add-hook 'web-mode-hook 'lsp)
-  ;; (add-hook 'web-mode-hook
-  ;;           (lambda ()
-  ;;             (when (string-equal "tsx" (file-name-extension buffer-file-name))
-  ;;               (tide-setup))))
-  ;; configure jsx-tide checker to run after your default jsx checker
   (flycheck-add-mode 'javascript-eslint 'web-mode)
   (flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)
 
   (setq-default web-mode-markup-indent-offset 2
                 web-mode-style-indent-offset 2
                 web-mode-code-indent-offset 2))
-
-;;;; C++ / CPP
 
 (use-package clang-format
   :commands (clang-format-buffer)
@@ -1142,24 +875,17 @@ comments so this function better suits my needs."
   "Set up various C++ tools and options."
   ;; Don't indent namespaces
   (c-set-offset 'innamespace [0])
-  (setq c-basic-offset 4)
-
+  (setq-local c-basic-offset 4)
   ;; Tell Flycheck I write modern C++ and use src-relative includes
-  (setq
-   flycheck-clang-language-standard "c++17"
-   flycheck-clang-include-path (list (concat (projectile-project-root) "src")))
+  (setq flycheck-clang-language-standard "c++17"
+        flycheck-clang-include-path (list (concat (projectile-project-root) "src")))
 
   ;; Auto format C/C++ buffers
   (add-hook 'before-save-hook 'clang-format-buffer nil t))
 
-(setq compilation-scroll-output t)
 (add-hook 'c++-mode-hook 'chasinglogic-cpp-mode-hook)
 (add-hook 'c-mode-hook 'chasinglogic-cpp-mode-hook)
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-
-;;;; Emacs Lisp
-
-;;;; Rust
 
 (use-package rust-mode
   :mode ("\\.rs\\'")
@@ -1170,17 +896,16 @@ comments so this function better suits my needs."
   (add-hook 'rust-mode-hook 'chasinglogic-rust-mode-hook)
   (add-hook 'rust-mode-hook #'lsp))
 
-;;;; Post-init
+(use-package vala-mode :mode ("\\.vala\\'"))
+(use-package meson-mode :mode ("meson\\.build"))
+(use-package powershell :mode ("\\.ps1\\'"))
+(use-package groovy-mode :mode ("\\.groovy$" "\\.gradle$"))
+(use-package yaml-mode :mode ("\\.yaml\\'" "\\.yml\\'" "\\.idl\\'"))
+(use-package toml-mode :mode ("\\gitconfig\\'" "\\.toml\\'"))
+(use-package cmake-mode :mode ("\\CMake.*txt\\'"))
 
-;; Maximize this frame
 (maximize-gui-frames (selected-frame))
-
-;; Always load keybinds last
-(chasinglogic-add-projector-projects-to-projectile)
 
 (require 'server)
 (unless (server-running-p)
   (server-start))
-
-;;; init.el ends here
-(put 'downcase-region 'disabled nil)
