@@ -13,7 +13,6 @@ hooks:
     - dfm link
   before_link:
     - emacs --batch -l org README.org -f org-babel-tangle
-    - emacs --batch -l org emacs.org -f org-babel-tangle
   after_link:
     - "[ ! -f $HOME/.gnupg/pubring.kbx ] && $HOME/.local/bin/export_keybase"
     - emacs -batch -f batch-byte-compile ~/.emacs.d/**/*.el
