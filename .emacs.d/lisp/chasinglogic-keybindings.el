@@ -34,6 +34,7 @@
 (bind-key "C-c j =" 'chasinglogic-indent-buffer)
 (bind-key "C-c f r" 'chasinglogic-rename-file-and-buffer)
 (bind-key "C-c f D" 'chasinglogic-delete-current-buffer-file)
+(bind-key "C-x 5 o" 'chasinglogic-select-frame-by-name)
 
 ;; Reverse the M-<> keybinds with M-,. because I move to the
 ;; beginning and end of buffers far more often than I
@@ -52,6 +53,8 @@
 (bind-key "C-x C-b" 'ibuffer)
 
 (bind-key "M-;" 'comment-actually-dwim)
+
+(bind-key "M-/" 'hippie-expand)
 
 (provide 'chasinglogic-keybindings)
 
