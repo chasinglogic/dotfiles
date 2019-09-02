@@ -165,7 +165,6 @@
     (require 'chasinglogic-helm)
     (require 'auto-sync-mode)
     (require 'chasinglogic-minor-modes)
-    (require 'chasinglogic-lsp)
     (require 'chasinglogic-org)
     (require 'chasinglogic-major-modes)
     (require 'chasinglogic-hydras)
