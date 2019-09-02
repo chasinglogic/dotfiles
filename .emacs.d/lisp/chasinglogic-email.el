@@ -273,13 +273,12 @@ move backwards."
 ;; mode line.
 (use-package mu4e-alert
   :after mu4e
-  :hook (mu4e-main-mode-hook . (lambda ()
-                                 (setq mu4e-alert-interesting-mail-query
-                                       "(flag:unread maildir:/personal/Inbox) OR (flag:unread maildir:/work/INBOX)")
-                                 (when (eq system-type 'gnu/linux)
-                                   (mu4e-alert-set-default-style 'libnotify))
-                                 (mu4e-alert-enable-mode-line-display)
-                                 (mu4e-alert-enable-notifications))))
+  :config
+  (setq mu4e-alert-interesting-mail-query "(flag:unread maildir:/personal/Inbox) OR (flag:unread maildir:/work/INBOX)")
+  (when (eq system-type 'gnu/linux)
+    (mu4e-alert-set-default-style 'libnotify))
+  (mu4e-alert-enable-mode-line-display)
+  (mu4e-alert-enable-notifications))
 
 (provide 'chasinglogic-email)
 
