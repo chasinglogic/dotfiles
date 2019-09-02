@@ -26,27 +26,6 @@
 
 ;;; Code:
 
-;; Delete current buffer and file
-;;     I will never understand why this isn't baked into Emacs. I've
-;;     stolen this from Spacemacs who stole it from Magnars. Now you can
-;;     steal it from me. In short it will delete the buffer and the file
-;;     it's visiting.
-;; from spacemacs-core
-;; from magnars
-(defun chasinglogic-delete-current-buffer-file ()
-  "Remove file connected to current buffer and kill the related buffer."
-  (interactive)
-  (let ((filename (buffer-file-name))
-        (buffer (current-buffer))
-        (name (buffer-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (ido-kill-buffer)
-      (when (yes-or-no-p "Are you sure you want to delete this file? ")
-        (delete-file filename t)
-        (kill-buffer buffer)
-        (when (projectile-project-p)
-          (call-interactively #'projectile-invalidate-cache))
-        (message "File '%s' successfully removed" filename)))))
 
 ;; Indent the buffer
 ;;
@@ -78,26 +57,13 @@
 (chasinglogic-find-org-file ideas)
 (chasinglogic-find-org-file todo)
 
-;; Rename file and buffer
-;;
-;;     Similar to [[Delete file and buffer]] I'm not sure why this isn't
-;;     built into Emacs. This does a rename using `default-directory' and
-;;     relative paths to the file do work. I took this from
-;;     [[http://steve.yegge.googlepages.com/my-dot-emacs-file][Steve Yegge's dot Emacs]].
-(defun chasinglogic-rename-file-and-buffer (new-name)
-  "Renames both current buffer and file it's visiting to NEW-NAME."
-  (interactive "sNew name: ")
-  (let ((name (buffer-name))
-        (filename (buffer-file-name)))
-    (if (not filename)
-        (message "Buffer '%s' is not visiting a file!" name)
-      (if (get-buffer new-name)
-          (message "A buffer named '%s' already exists!" new-name)
-        (progn
-          (rename-file filename new-name 1)
-          (rename-buffer new-name)
-          (set-visited-file-name new-name)
-          (set-buffer-modified-p nil))))))
+(defun chasinglogic-select-frame-by-name ()
+  "Search and select frames by name."
+  (interactive)
+  (select-frame-by-name
+   (completing-read
+    "Frame: "
+    (mapcar 'get-frame-name (frame-list)))))
 
 ;; Open the shell with a good default buffer name
 ;;
