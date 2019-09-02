@@ -48,7 +48,11 @@
    ("C-c j c" . 'avy-goto-char)
    ("C-c j j" . 'avy-goto-word-1)
    ("C-c j l" . 'avy-goto-line)
-   ("C-c j h" . 'avy-goto-heading)))
+   ("C-c j h" . 'avy-goto-heading))
+  :config
+  ;; When non-nil, a gray background will be added during the selection.
+  (setq avy-background t)
+  )
 
 ;; Ace Window
 ;;
@@ -63,7 +67,17 @@
 ;;     that key I never use and I prefer meta bindings for commonly
 ;;     pressed commands.
 (use-package ace-window
-  :bind ("M-o" . ace-window))
+  :commands 'ace-window
+  :init (defun chasinglogic-ace-window (arg)
+          "Create a window if only one window and/or call ace-window"
+          (interactive "p")
+          (when (eq (length (window-list)) 1)
+            (split-window-horizontally))
+          (ace-window arg))
+  :config (setq aw-scope 'frame)
+  :bind (("M-o" . chasinglogic-ace-window)
+         (:map term-raw-map
+               ("M-o" . ace-window))))
 
 ;; magit
 ;;
@@ -193,6 +207,14 @@
   (defun set-frame-name-to-project ()
     (set-frame-parameter (selected-frame) 'name (projectile-project-name)))
   (add-hook 'projectile-after-switch-project-hook 'set-frame-name-to-project))
+
+
+(use-package crux
+  :bind (("C-a" . crux-move-beginning-of-line)
+         ("C-k" . crux-smart-kill-line)
+         ("C-c f D" . crux-delete-buffer-and-file)
+         ("C-c f r" . crux-rename-buffer-and-file)
+         ("C-x '" . crux-visit-term-buffer)))
 
 (provide 'chasinglogic-util-packages)
 
