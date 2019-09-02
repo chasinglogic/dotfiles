@@ -33,7 +33,7 @@
 ;; Abbrev mode comes in. I register abbreviations on a major mode or
 ;; global basis and `abbrev-mode' will automatically expand them to
 ;; the correction whenever I type them.
-(abbrev-mode 1)
+(add-hook 'text-mode-hook 'abbrev-mode)
 
 ;; Spell Checking (Flyspell)
 
@@ -171,7 +171,7 @@
   :commands 'lsp)
 
 (use-package lsp-ui
-  :hook 'lsp-mode
+  :hook (lsp-mode . lsp-ui-mode)
   :init
   (setq-default
    lsp-ui-doc-enable nil
@@ -260,6 +260,15 @@
 ;; focused editing experience. It removes all chrome and centers the
 ;; buffer on the window so you can focus only on the prose.
 (use-package writeroom-mode :commands (writeroom-mode))
+
+
+;; anzu-mode enhances isearch & query-replace by showing total matches
+;; and current match position
+(use-package anzu
+  :diminish ""
+  :bind (("C-M-%" . anzu-query-replace-regexp)
+         ("M-%" . anzu-query-replace))
+  :config (global-anzu-mode))
 
 (provide 'chasinglogic-minor-modes)
 
