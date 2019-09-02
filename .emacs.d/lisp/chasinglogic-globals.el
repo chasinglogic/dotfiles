@@ -78,6 +78,27 @@ comments so this function better suits my needs."
 ;; Don't pollute ~/.emacs.d/init.el with customize settings.
 (setq custom-file "~/.emacs-custom.el")
 
+;; hippie expand is dabbrev expand on steroids
+(setq hippie-expand-try-functions-list '(try-expand-dabbrev
+                                         try-expand-dabbrev-all-buffers
+                                         try-expand-dabbrev-from-kill
+                                         try-complete-file-name-partially
+                                         try-complete-file-name
+                                         try-expand-all-abbrevs
+                                         try-expand-list
+                                         try-expand-line
+                                         try-complete-lisp-symbol-partially
+                                         try-complete-lisp-symbol))
+
+;; Just save buffers before compiling
+(setq-default compilation-ask-about-save nil
+              ;; Always kill old compilation without prompting
+              compilation-always-kill t
+              ;; Automatically scroll to first error
+              compilation-scroll-output 'first-error)
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 (provide 'chasinglogic-globals)
 
 ;;; chasinglogic-globals.el ends here
