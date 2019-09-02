@@ -39,7 +39,7 @@
 (when (and (display-graphic-p) (eq system-type 'darwin))
   ;; Retina display requires bigger font IMO.
   (setq chasinglogic-font-size "15"))
-(set-frame-font (format "Source Code Pro %s" chasinglogic-font-size) nil t)
+(set-frame-font (format "Hack %s" chasinglogic-font-size) nil t)
 
 ;; Window Chrome
 ;;     Emacs by default has lots of window chrome to make it more mouse
@@ -59,19 +59,12 @@
 (add-to-list 'default-frame-alist '(ns-appearance . dark))
 
 ;; Color Theme
-;;     I do a lot of bright area coding. My home office is very bright
-;;     and my work office is pretty bright. I've found solarized light to
-;;     be legible and not cause me eye strain. Occasionally I'll do some
-;;     late night Emacs'ing so I keep zenburn around for those times.
-;;     It is kind of annoying that =solarized.el= doesn't work great in
-;;     a terminal but what can you do. I rarely use Emacs there anyway.
-;; (use-package zenburn-theme)
-(use-package solarized-theme
+;;
+;;   I change this too often to really document why whatever
+;;   theme I'm in the mood for is the one I'm in the mood for.
+(use-package doom-themes
   :config
-  (setq-default solarized-high-contrast-mode-line t
-                solarized-distinct-doc-face t
-                solarized-distinct-fringe-background t)
-  (load-theme 'solarized-light t))
+  (load-theme 'doom-solarized-light t))
 
 ;; Line numbers in programming modes.
 ;;     I enable line numbers using the new Emacs 26
@@ -92,6 +85,10 @@
     (when (display-graphic-p)
       (set-frame-parameter nil 'fullscreen 'maximized))))
 (add-hook 'after-make-frame-functions 'maximize-gui-frames)
+
+(use-package all-the-icons)
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode))
 
 
 (provide 'chasinglogic-ui)
