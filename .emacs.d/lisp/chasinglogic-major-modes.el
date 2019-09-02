@@ -34,12 +34,14 @@
 ;;     to Dired that take it from nice to unparalleled. See [[info:dired-x#Features][Dired-X
 ;;     Features]] for a full list with more info.
 (require 'dired-x)
-
 ;; Now we set the variable `dired-dwim-target' to `t'. This makes it
 ;; such that when operating on files in Dired the target of the
 ;; operation will automatically suggest other Dired buffers as the
 ;; target preferring buffers that are visible. It's super handy.
 (setq-default dired-dwim-target t)
+;; always delete and copy recursively
+(setq dired-recursive-deletes 'always)
+(setq dired-recursive-copies 'always)
 
 ;; Ediff
 ;;     Ediff is a handy tool I don't use often enough. However I really
