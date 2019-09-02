@@ -869,6 +869,11 @@
        if [[ "$(pwd)" == *"scons" ]]; then
            exit 0
        fi
+
+       # Or homebrew
+       if [[ "$(pwd)" == *"homebrew"* ]]; then
+           exit 0
+       fi
      #+END_SRC
 
      Next create a function called check_pattern that takes two
@@ -1331,6 +1336,22 @@
           print(name)
     #+END_SRC
     
+*** EVG: q
+
+    We use a commit queue on the server project now to ensure every
+    commit is "golden". This script types the crazy long command for
+    me and sets some options.
+
+    #+BEGIN_SRC bash :tangle .local/bin/q :shebang "#!/bin/bash"
+      MESSAGE="$(echo $(git log -n 1 --format='%s'))"
+
+      evergreen commit-queue merge \
+                --project mongodb-mongo-master \
+                --message "$MESSAGE" \
+                $@
+    #+END_SRC
+
+
 *** EVG: pch
 
     Automatically populate =evergreen patch= flags with values derived
