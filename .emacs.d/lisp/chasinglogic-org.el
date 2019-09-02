@@ -97,6 +97,11 @@
     (electric-pair-local-mode -1))
   (add-hook 'org-mode-hook 'chasinglogic-org-mode-hook)
 
+  (defun chasinglogic-org-agenda-hook ()
+    "Set frame name to Agenda"
+    (set-frame-name "Agenda"))
+  (add-hook 'org-agenda-mode-hook 'chasinglogic-org-agenda-hook)
+
   ;; Org Mode Settings
   ;;
   ;; These settings are global variables that inform Org mode
@@ -179,14 +184,16 @@
                       ;; Span 1 day (daily agenda)
                       (org-agenda-span 1)
                       ;; Sort by priority highest to lowest then tag
-                      (org-agenda-sorting-strategy '(priority-down tag-up))
+                      (org-agenda-sorting-strategy '(todo-state-down priority-down tag-up))
                       ;; 7 day advanced warning for deadlines
                       (org-deadline-warning-days 7)))
                     (todo "" ((org-agenda-overriding-header "Next Actions:")
-                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo '("NEXT" "STARTED")))
+                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'nottodo '("NEXT" "STARTED")))
                               (org-agenda-sorting-strategy '(todo-state-down))))
                     (stuck "" ((org-agenda-files (list (expand-file-name "todo.org" org-directory)))
-                               (org-agenda-overriding-header "Stuck Projects:")))))))
+                               (org-agenda-overriding-header "Stuck Projects:")))
+                    (todo "" ((org-agenda-overriding-header "Inbox:")
+                              (org-agenda-files (list (expand-file-name "inbox.org"org-directory)))))))))
 
   ;; Capture Templates
   ;;
@@ -320,7 +327,7 @@
   ;; The default value is 3 which I find a little too small. So I
   ;; double it to 6.
   (setq-default org-export-headline-levels 6)
-  
+  (require 'ox)
   ;; Next we enable some additional export formats. Markdown, which
   ;; ships with Emacs and Org mode by default is not enabled by
   ;; defualt and is probably my most common target so we always load
