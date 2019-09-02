@@ -26,9 +26,6 @@
 
 ;;; Code:
 
-(provide 'chasinglogic-helm)
-
-;;; chasinglogic-helm.el ends here
 ;; Helm
 ;;
 ;;     Helm is my current fuzzy searching framework. I've switched
@@ -130,3 +127,7 @@
 (use-package helm-org-rifle
   :after (helm org)
   :bind  ("C-c s o r" . helm-org-rifle))
+
+(provide 'chasinglogic-helm)
+
+;;; chasinglogic-helm.el ends here
