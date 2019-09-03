@@ -29,7 +29,6 @@
 
 ;;; Code:
 
-(bind-key "C-x '"   'chasinglogic-shell)
 (bind-key "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
 (bind-key "C-c j =" 'chasinglogic-indent-buffer)
 (bind-key "C-c f r" 'chasinglogic-rename-file-and-buffer)
