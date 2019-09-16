@@ -9,10 +9,6 @@ mappings:
     skip: true
 
 hooks:
-  after_sync:
-    - dfm link
-  before_link:
-    - emacs --batch -l org README.org -f org-babel-tangle
   after_link:
     - "[ ! -f $HOME/.gnupg/pubring.kbx ] && $HOME/.local/bin/export_keybase"
 
