@@ -140,9 +140,12 @@
 
 ;; Finally enable LSP mode in Python buffers and make Emacs treat
 ;; SCons build configuration files as python.
+(defun chasinglogic-enable-lsp ()
+  "Enable LSP for all non SCons* files"
+  (when (not (string-match "SCons.*" (buffer-file-name)))
+    (lsp)))
 
-
-(add-hook 'python-mode-hook #'lsp)
+(add-hook 'python-mode-hook 'chasinglogic-enable-lsp)
 ;; Load SCons files as Python
 (add-to-list 'auto-mode-alist '("SConscript" . python-mode))
 (add-to-list 'auto-mode-alist '("SConstruct" . python-mode))
@@ -228,6 +231,14 @@
   :config
   (setq clang-format-binary "/opt/mongodbtoolchain/v3/bin/clang-format"))
 
+;; Use clang-tidy for flycheck on top of the compilation checking
+;; provided by LSP. I use clangd as my language server which does
+;; support clang-tidy but unfortunately it ignores the configuration
+;; files
+(use-package flycheck-clang-format)
+
+(use-package ccls)
+
 ;; Next create a C++ mode hook that makes Emacs format / indent things
 ;; correctly according to MongoDB's style guide. Additionally make it
 ;; so Flycheck will pass ~-std=c++17~ when doing syntax checking and
@@ -235,6 +246,7 @@
 ;; that header files are treated as C++ and not C.
 (defun chasinglogic-cpp-mode-hook ()
   "Set up various C++ tools and options."
+  (require 'ccls)
   ;; Don't indent namespaces
   (c-set-offset 'innamespace [0])
   (setq-local c-basic-offset 4)
@@ -243,7 +255,8 @@
         flycheck-clang-include-path (list (concat (projectile-project-root) "src")))
 
   ;; Auto format C/C++ buffers
-  (add-hook 'before-save-hook 'clang-format-buffer nil t))
+  (add-hook 'before-save-hook 'clang-format-buffer nil t)
+  (lsp))
 
 (add-hook 'c++-mode-hook 'chasinglogic-cpp-mode-hook)
 (add-hook 'c-mode-hook 'chasinglogic-cpp-mode-hook)

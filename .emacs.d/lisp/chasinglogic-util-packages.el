@@ -197,7 +197,7 @@
     (delete-other-windows))
 
   (setq-default projectile-require-project-root t
-                projectile-completion-system 'helm
+                projectile-completion-system 'ivy
                 projectile-enable-caching nil
                 ;; I prefer a git status when switching to a project
                 projectile-switch-project-action 'chasinglogic-switch-project-action

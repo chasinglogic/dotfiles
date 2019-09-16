@@ -48,13 +48,12 @@
   "Enable spell checking."
   (flyspell-mode 1))
 
-(defun chasinglogic-enable-flyspell-prog ()
+(defun chasinglogic-disable-flyspell ()
   "Enable spell checking."
-  (flyspell-mode -1)
-  (flyspell-prog-mode))
+  (flyspell-mode -1))
 
 (add-hook 'text-mode-hook 'chasinglogic-enable-flyspell)
-(add-hook 'prog-mode-hook 'chasinglogic-enable-flyspell-prog)
+(add-hook 'prog-mode-hook 'chasinglogic-disable-flyspell)
 
 ;; Automatically Do important programming stuff Emacs has a series of
 ;; modes that I call the "electric modes", as they all start with
@@ -188,16 +187,6 @@
 (use-package company-lsp
   :config (push 'company-lsp company-backends)
   :after (lsp-mode company))
-
-;; CCLS support
-;;
-;; I've found CCLS to be the best and most available language server
-;; for C / C++. For LSP to use it however it requires the additional
-;; third party package `ccls'. So here we install it and hook in
-;; enabling `lsp' for all C / C++ modes.
-(use-package ccls
-  :hook ((c-mode c++-mode objc-mode) .
-         (lambda () (require 'ccls) (lsp))))
 
 ;; Flycheck
 ;;

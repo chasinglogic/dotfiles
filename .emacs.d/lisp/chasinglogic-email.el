@@ -239,7 +239,7 @@ move backwards."
                 `(
                   ,(make-mu4e-bookmark
                     :name  "Inbox"
-                    :query "(maildir:/personal/INBOX OR maildir:/work/INBOX) AND (flag:unread OR flag:flagged) AND NOT flag:trashed"
+                    :query "(maildir:/personal/INBOX OR maildir:/work/INBOX)"
                     :key ?i)
                   ,(make-mu4e-bookmark
                     :name  "Unread messages"

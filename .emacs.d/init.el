@@ -162,7 +162,7 @@
     (require 'chasinglogic-utils)
     (require 'chasinglogic-util-packages)
     (require 'chasinglogic-keybindings)
-    (require 'chasinglogic-helm)
+    (require 'chasinglogic-ivy)
     (require 'auto-sync-mode)
     (require 'chasinglogic-minor-modes)
     (require 'chasinglogic-org)

@@ -126,7 +126,6 @@ If COPY is provided copy the value to kill ring instead of returning."
     (find-alternate-file
      (concat "/sudo:root@localhost:" buffer-file-name))))
 
-
 (provide 'chasinglogic-utils)
 
 ;;; chasinglogic-utils.el ends here

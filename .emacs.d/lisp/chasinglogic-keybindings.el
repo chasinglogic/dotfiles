@@ -55,6 +55,9 @@
 
 (bind-key "M-/" 'hippie-expand)
 
+(bind-key "M-t" 'switch-to-buffer)
+(bind-key "C-t" 'projectile-find-file)
+
 (provide 'chasinglogic-keybindings)
 
 ;;; chasinglogic-keybindings.el ends here

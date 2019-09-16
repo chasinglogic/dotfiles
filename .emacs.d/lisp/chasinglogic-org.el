@@ -172,7 +172,8 @@
                 '(
 
                   ("r" "Reading List"
-                   ((tags "+reading_list" ((org-agenda-overriding-header "Reading List")))))
+                   ((tags "+reading_list" ((org-agenda-overriding-header "Reading List")
+                                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "Reading List"))))))
 
                   ("d" "Daily Agenda"
                    (
