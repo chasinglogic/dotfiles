@@ -1,0 +1,8 @@
+#!/bin/bash
+ref="$(git symbolic-ref HEAD 2> /dev/null)"
+DESCRIPTION="$(echo ${ref#refs/heads/}): $(git log -n 1 --format='%s')"
+evergreen patch \
+          --description "$DESCRIPTION" \
+          --yes \
+          --browse \
+          $@

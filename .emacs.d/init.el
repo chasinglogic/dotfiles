@@ -167,9 +167,7 @@
     (require 'chasinglogic-minor-modes)
     (require 'chasinglogic-org)
     (require 'chasinglogic-major-modes)
-    (require 'chasinglogic-hydras)
-    (when (file-exists-p mu4e-load-path)
-      (require 'chasinglogic-email)))
+    (require 'chasinglogic-hydras))
 
   ;; Post initialization
   ;;

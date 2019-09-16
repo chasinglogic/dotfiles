@@ -1,0 +1,7 @@
+excludes:
+  - go/src
+
+includes:
+  - go/src/github\.com/chasinglogic
+  - go/src/github\.com/mongodb
+  - go/src/github\.com/evergreen-ci

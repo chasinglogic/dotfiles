@@ -1,0 +1,46 @@
+[user]
+email = chasinglogic@gmail.com
+name = Mathew Robinson
+
+[include]
+path = ~/.gitconfig_local
+
+[push]
+default = nothing
+
+[pull]
+default = current
+
+[magit]
+hideCampaign = true
+
+[core]
+excludesfile = ~/.gitignore_global
+hooksPath = ~/.githooks
+
+[add]
+verbose = true
+[commit]
+verbose = true
+
+[pretty]
+olcolor = %Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>
+
+[alias]
+unstage = reset HEAD --
+amend = commit --amend --no-edit
+vader = push --force-with-lease
+contains = branch -a --contains
+where = branch -a --contains
+whereis = branch -a --contains
+cp = cherry-pick
+l = log --graph --date-order  --pretty=olcolor
+upd = remote update
+ru = remote update
+ck = checkout
+
+[pager]
+branch = false
+
+[diff]
+renameLimit = 4487

@@ -1,0 +1,38 @@
+#!/bin/bash
+
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+push_command=$(ps -ocommand= -p $PPID)
+
+origin_remote=$(git remote -v | grep origin | grep push)
+
+if [[ $origin_remote != *"mongo"* && $origin_remote != *"10gen"* ]]; then
+    echo "Not pushing a mongodb repo. Safe to push to origin."
+    exit 0
+fi
+
+if [[ "$push_command" != *"origin"* ]]; then
+    echo "Not pushing to origin, safe to push."
+    exit 0
+fi
+
+function confirm() {
+    exec < /dev/tty
+
+    read -p "Are you sure you want to push to $current_branch? " -n 1 -r
+    echo    # (optional) move to a new line
+
+    exec <&- 
+
+    if [[ $REPLY =~ ^[Nn]$ ]]
+    then
+        exit 1
+    fi
+}
+
+case $current_branch in
+    "master") confirm ;;
+    "v4."*) confirm ;;
+    "v3."*) confirm ;;
+    *) echo "Trying to push a topic branch: $current_branch to origin, preventing." && exit 1 ;;
+esac
