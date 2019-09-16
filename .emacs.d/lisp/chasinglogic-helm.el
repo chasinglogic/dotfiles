@@ -101,7 +101,8 @@
               ("h" . helm-projectile-find-other-file)
               ("f" . helm-projectile-find-file)
               ("p" . helm-projectile-switch-project)
-              ("s" . helm-projectile-rg)))
+              ("s" . helm-projectile-ag)))
+(use-package helm-ag :after 'helm-projectile)
 (use-package helm-rg :after 'helm-projectile)
 
 ;; Helm Org

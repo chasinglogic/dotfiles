@@ -36,14 +36,17 @@
   (ivy-mode 1))
 
 (use-package counsel
-    :bind (("M-x"      . counsel-M-x)
-           ("C-x b"    . counsel-switch-buffer)
-           ("M-y"      . counsel-yank-pop)
-           ("M-i"      . counsel-imenu)
-           ("C-h f"    . counsel-describe-function)
-           ("C-h v"    . counsel-describe-variable)
-           ("C-x r b"  . counsel-bookmark)
-           ("C-x C-f"  . counsel-find-file)
+    :bind (("M-x"       . counsel-M-x)
+           ("C-x b"     . counsel-switch-buffer)
+           ("M-y"       . counsel-yank-pop)
+           ("M-i"       . counsel-imenu)
+           ("C-h f"     . counsel-describe-function)
+           ("C-h v"     . counsel-describe-variable)
+           ("C-x r b"   . counsel-bookmark)
+           ("C-x C-f"   . counsel-find-file)
+           ("C-c s o c" . counsel-org-capture)
+           ("C-c s o h" . counsel-org-goto)
+           ("C-c o o"   . counsel-org-goto)
            (:map minibuffer-local-map
                  ("M-r" . 'counsel-minibuffer-history))))
 
