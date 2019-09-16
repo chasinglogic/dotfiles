@@ -1,0 +1,14 @@
+--recurse=yes
+
+-f .tags
+
+--tag-relative=yes
+
+--exclude='.git'
+--exclude='venv'
+--exclude='.venv'
+--exclude='build'
+--exclude='dist'
+
+--langmap=python:+(SConstruct)
+--langmap=python:+(SConscript)

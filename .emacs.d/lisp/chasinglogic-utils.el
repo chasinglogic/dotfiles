@@ -126,6 +126,20 @@ If COPY is provided copy the value to kill ring instead of returning."
     (find-alternate-file
      (concat "/sudo:root@localhost:" buffer-file-name))))
 
+(defun chasinglogic-find-thing ()
+  "Find the thing I want."
+  (interactive)
+  (let* ((buffers (buffer-list))
+         (buffer-names (mapc 'buffer-name buffers))
+         (project-files (when (projectile-project-root)
+                          (projectile-files-in-project-directory (projectile-project-root))))
+         (collection (apply 'append (remove nil (list buffer-names project-files))))
+         (selection (ivy-read
+                     "Thing: "
+                     collection)))
+
+    (message "%s" selection)))
+
 (provide 'chasinglogic-utils)
 
 ;;; chasinglogic-utils.el ends here

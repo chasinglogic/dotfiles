@@ -1,0 +1,70 @@
+IMAPAccount work
+Host imap.gmail.com
+User mathew.robinson@10gen.com
+PassCmd "gpg -q --for-your-eyes-only --no-tty --exit-on-status-write-error --batch -d ~/.work.gmail.password.gpg"
+AuthMechs LOGIN
+SSLType IMAPS
+
+IMAPStore work-remote
+Account work
+
+MaildirStore work-local
+Path ~/Mail/work/
+Inbox ~/Mail/work/INBOX
+
+Channel work-inbox
+Master :work-remote:
+Slave :work-local:
+Patterns "INBOX"
+Create Both
+Expunge Both
+SyncState *
+
+Channel work-trash
+Master :work-remote:"[Gmail]/Trash"
+Slave :work-local:"trash"
+Create Both
+Expunge Both
+SyncState *
+
+Channel work-all
+Master :work-remote:"[Gmail]/All Mail"
+Slave :work-local:"archive"
+Create Both
+Expunge Both
+SyncState *
+
+Group work
+Channel work-inbox
+Channel work-trash
+Channel work-all
+
+IMAPAccount personal
+Host imap.fastmail.com
+SSLType IMAPS
+SSLVersions TLSv1.2
+User mathew@chasinglogic.io
+PassCmd "gpg -q --for-your-eyes-only --no-tty --exit-on-status-write-error --batch -d ~/.personal.email.password.gpg"
+
+IMAPStore personal-remote
+Account personal
+
+MaildirStore personal-local
+# The trailing "/" is important
+Path ~/Mail/personal/
+Inbox ~/Mail/personal/INBOX
+Flatten .
+
+Channel personal
+Master :personal-remote:
+Slave :personal-local:
+Patterns Archive Sent Spam Trash
+Expunge Both
+SyncState *
+Sync All
+Create Both
+
+Channel personl-inbox
+Master :personal-remote:
+Slave :personal-local:
+Patterns "INBOX"

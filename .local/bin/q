@@ -1,0 +1,7 @@
+#!/bin/bash
+MESSAGE="$(echo $(git log -n 1 --format='%s'))"
+
+evergreen commit-queue merge \
+          --project mongodb-mongo-master \
+          --message "$MESSAGE" \
+          $@

@@ -1,0 +1,27 @@
+#!/bin/bash
+# vi: ft=sh
+
+if [[ $NOTE_DIR == "" ]]; then
+    NOTE_DIR="$HOME/Notes"
+fi
+
+search=$1
+if [[ $search == "" ]]; then
+    search="."
+fi
+
+files=( $(fd $search $NOTE_DIR | grep -v "^$NOTE_DIR$") )
+
+if [ "${#files[@]}" -eq "1" ]; then
+    file="${files[0]}"
+elif [[ "${#files[@]}" -eq "0" && $search != "." ]]; then
+    file="$NOTE_DIR/${search}.md"
+else
+    file="$(printf '\n%s' ${files[@]} | sed '/^\s*$/d' | fzf)"
+fi
+
+if [ -t 1 ]; then
+    $EDITOR $file
+else
+    cat $file
+fi
