@@ -11,14 +11,6 @@ fi
 
 source ~/.profile
 
-function et() {
-    emacsclient --tty -a 'vi' $@
-}
-
-function ec() {
-    emacsclient --no-wait $@
-}
-
 function dotfiles() {
     cd $(dfm where)
 }
@@ -69,10 +61,21 @@ function v() {
     fi
 }
 
+### Virtualenvwrapper
+
+export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
+
 if [[ -f /usr/local/bin/virtualenvwrapper.sh ]]; then
-    export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
     source /usr/local/bin/virtualenvwrapper.sh
 fi
+
+
+if [[ -f ~/.local/bin/virtualenvwrapper.sh ]]; then
+    source ~/.local/bin/virtualenvwrapper.sh
+fi
+
+
+### My custom functions
 
 function sp() {
     PROJ_NAME=""
@@ -106,7 +109,7 @@ function new_sess {
 }
 
 function t {
-    new_sess $(sed s/\\./_/g $(sed s%/%_%g $(basename $(pwd))))
+    new_sess $(echo $(basename $(pwd)) | sed s/\\./_/g | sed s%/%_%g)
 }
 
 function syncpanes() {
