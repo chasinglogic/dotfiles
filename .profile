@@ -37,13 +37,7 @@ export TERM="xterm-256color"
 
 # FZF default find command
 export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
-
-if [[ -x $(which emacsclient) ]]; then
-    export EDITOR="emacsclient --create-frame --tty --alternate-editor=vi"
-    export VISUAL="$EDITOR"
-else
-    export EDITOR="vi"
-fi
+export EDITOR="nvim"
 
 # Mac specific fixes
 if [[ "$(uname)" == "Darwin" ]]; then
