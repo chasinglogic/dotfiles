@@ -2,10 +2,10 @@
 prompt_for_commit_message: true
 always_sync_modules: true
 mappings:
-  - match: ".*gpg-agent.conf"
+  - match: ".*gpg-agent.conf.darwin"
     target_os:
       - "Darwin"
-  - match: "README.org"
+  - match: "README.md"
     skip: true
 
 hooks:

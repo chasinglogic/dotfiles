@@ -1,9 +1,5 @@
 """ General Vim Editor configuration
 
-""" netrw
-" Remove directories even if they aren't empty
-let g:netrw_rmf_cmd='ssh HOSTNAME rm -r'
-
 """ Tab size
 set tabstop=4     " A tab is 4 spaces
 set expandtab     " Always uses spaces instead of tabs
@@ -104,3 +100,6 @@ command! -nargs=* Grep :execute ':silent grep <args>'
 
 """ Ask to save when trying to close unsaved buffers
 set confirm
+
+""" Automatically strip trailing whitespace on save
+autocmd BufWritePre * %s/\s\+$//e
