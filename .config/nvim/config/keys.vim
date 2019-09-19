@@ -15,18 +15,18 @@ nmap <Leader>noh :noh<CR>
 """ Files
 nmap <Leader>fs :w<CR>
 nmap <Leader>ff :FZF<CR>
-nmap <Leader>fe :find 
+nmap <Leader>fe :find
 nmap <Leader>fd :find ~/.config/nvim/init.vim<CR>
 nmap <Leader>fD :Delete<CR>
 nmap <Leader>fr :source %<CR>
 
 """ Project level ops
 nmap <Leader>pf :FZF<CR>
-nmap <Leader>ps :Grep 
+nmap <Leader>ps :Grep
 nmap <Leader>pt :Tags<CR>
-nmap <Leader>pg :Grep  
-nmap <Leader>pq :FZFQuickFix<CR> 
-nmap <Leader>pa :args `git ls-files`<CR>:argdo 
+nmap <Leader>pg :Grep
+nmap <Leader>pq :FZFQuickFix<CR>
+nmap <Leader>pa :args `git ls-files`<CR>:argdo
 nmap <Leader>pr :args `git ls-files`<CR>:argdo %s/
 
 """ Lists
@@ -37,6 +37,8 @@ nmap <Leader>qn :cprev<CR>
 
 nmap ]q :cnext<CR>
 nmap [q :cprev<CR>
+nmap ]wq :cwindow<CR>
+nmap ]wl :lwindow<CR>
 nmap ]l :lnext<CR>
 nmap [l :lprev<CR>
 
@@ -85,9 +87,9 @@ nmap <Leader>gs :Gstatus<CR>
 nmap YY ggyG<C-o><C-o> " Copy whole buffer without losing my place
 
 """ System / Vim management
-nmap <Leader>spi :PlugInstall<CR> 
-nmap <Leader>spu :PlugUpdate<CR> 
-nmap <Leader>spg :PlugUpgrade<CR> 
+nmap <Leader>spi :PlugInstall<CR>
+nmap <Leader>spu :PlugUpdate<CR>
+nmap <Leader>spg :PlugUpgrade<CR>
 nmap <Leader>sps :PlugStatus<CR>
 nmap <Leader>spc :PlugClean<CR>
 nmap <Leader>sq  :q<CR>
@@ -95,7 +97,7 @@ nmap <Leader>q  :q<CR>
 
 """ Writing
 nmap <Leader>rm :Goyo<CR>
-nmap <Leader>rww :Wordy 
+nmap <Leader>rww :Wordy
 nmap <Leader>rwn :NextWordy<CR>
 nmap <Leader>rwp :PrevWordy<CR>
 nmap <Leader>rwo :NoWordy<CR>
@@ -105,4 +107,4 @@ nmap [a <Plug>(ale_previous_wrap)
 nmap ]a <Plug>(ale_next_wrap)
 
 """ Building
-nmap <Leader>m :make 
+nmap <Leader>m :make
