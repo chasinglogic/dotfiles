@@ -62,9 +62,11 @@
 ;;
 ;;   I change this too often to really document why whatever
 ;;   theme I'm in the mood for is the one I'm in the mood for.
-(use-package doom-themes)
-(use-package zenburn-theme
-  :config (load-theme 'zenburn t))
+;; (use-package zenburn-theme :config (load-theme 'zenburn t))
+(use-package solarized-theme
+  :config
+  (setq-default solarized-distinct-fringe-background t)
+  (load-theme 'solarized-light t))
 
 ;; Line numbers in programming modes.
 ;;     I enable line numbers using the new Emacs 26

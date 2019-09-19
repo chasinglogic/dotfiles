@@ -235,7 +235,7 @@
 ;; provided by LSP. I use clangd as my language server which does
 ;; support clang-tidy but unfortunately it ignores the configuration
 ;; files
-(use-package flycheck-clang-format)
+(use-package flycheck-clang-tidy)
 
 (use-package ccls)
 
