@@ -1,4 +1,4 @@
-export HISTCONTROL=ignoredups:erasedups  
+export HISTCONTROL=ignoredups:erasedups
 shopt -s histappend
 
 shopt -s checkwinsize
@@ -51,7 +51,10 @@ alias ve="python3 -m venv"
 alias venv="python3 -m venv"
 
 function v() {
-    if [ -d .venv ]; then
+    if [ -d .git ]; then
+        NAME=$(basename $(git rev-parse --show-toplevel))
+        workon $NAME
+    elif [ -d .venv ]; then
         source .venv/bin/activate
     elif [ -d venv ]; then
         source venv/bin/activate
@@ -87,12 +90,6 @@ function sp() {
     fi
 
     cd $(projector find $PROJ_NAME)
-    if [[ -d $(pwd)/.git ]]; then
-        NAME=$(basename $(git rev-parse --show-toplevel))
-        if [[ -d ~/.virtualenvs/$NAME ]]; then
-            workon $NAME
-        fi
-    fi
 }
 
 function new_sess {
