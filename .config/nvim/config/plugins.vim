@@ -19,7 +19,7 @@ Plug 'tpope/vim-eunuch'     " Useful commands like Rename, Delete, Move, SudoWri
 Plug 'tpope/vim-abolish'    " Better abbreviations and Subvert is like fancy %s
 Plug 'tpope/vim-fugitive'   " Git integration
 
-""" Language Support 
+""" Language Support
 Plug 'PProvost/vim-ps1'              " I write powershell scripts
 Plug 'leafgarland/typescript-vim'    " Add typescript syntax files
 Plug 'Vimjas/vim-python-pep8-indent' " better python indentation
@@ -33,6 +33,7 @@ Plug 'easymotion/vim-easymotion' " Easily jump around files
 " Plug 'dense-analysis/ale' " Code linting and LSP client
 
 """ Auto completion
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'autozimu/LanguageClient-neovim', {
       \ 'branch': 'next',
       \ 'do': 'bash install.sh',
@@ -54,6 +55,7 @@ Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
 call plug#end()
 
 """ Language client configuration
+let g:deoplete#enable_at_startup = 1
 let g:LanguageClient_useVirtualText = 0
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'stable', 'rls'],
@@ -71,13 +73,6 @@ nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 """ Vim-go settings
 let g:go_fmt_autosave = 1
 let g:go_fmt_command = "goimports"
-
-" Force ALE to use language servers when necessary
-" let g:ale_linters = {}
-" let g:ale_linters.rust = ['rls']
-" let g:ale_linters.cpp = ['ccls']
-" let g:ale_linters.python = ['pyls']
-" let g:ale_rust_rls_toolchain = 'stable' " this is needed, otherwise rls uses nightly toolchain
 
 " [Tags] Command to generate tags file
 let g:fzf_tags_command = '/usr/local/bin/ctags -R'
