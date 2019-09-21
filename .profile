@@ -64,6 +64,7 @@ add_to_path /usr/local/sbin
 add_to_path /usr/bin
 add_to_path /bin
 add_to_path /usr/lib/icecream/bin
+add_to_path $HOME/Library/Python/3.7/bin
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
