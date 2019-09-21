@@ -15,3 +15,7 @@ hooks:
 modules:
   # My encrypted secret files
   - repo: keybase://private/chasinglogic/secrets
+  # Community configurations
+  - repo: git@github.com:robbyrussell/oh-my-zsh.git
+    pull_only: true
+    location: ~/.oh-my-zsh

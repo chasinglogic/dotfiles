@@ -1,21 +1,3 @@
-# This makes TRAMP from Emacs work when ZSH is the default shell.
-#
-# Otherwise TRAMP hangs forever waiting for a prompt that never shows
-# because of the regex.
-if [[ $TERM == "dumb" ]]; then
-    unsetopt zle
-    unsetopt prompt_cr
-    unsetopt prompt_subst
-    if whence -w precmd >/dev/null; then
-        unfunction precmd
-    fi
-    if whence -w preexec >/dev/null; then
-        unfunction preexec
-    fi
-    export PS1="$ "
-    return
-fi
-
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -47,12 +29,62 @@ if [ -f /usr/bin/virtualenvwrapper.sh ]; then
     source /usr/bin/virtualenvwrapper.sh
 fi
 
+# Switch projects quickly
+function sp() {
+    if [[ $1 == "" ]]; then
+        cd $(projector list | fzf)
+    else
+        cd $(projector find $1)
+    fi
+}
 
-# Source my "sub bashrc" scripts they work for ZSH as well.
-if [[ -d ~/.bash ]]; then
-    for f in ~/.bash/*; do
-        source $f
-    done
+# Activate virtualenvs
+function v() {
+    if [ -d .git ]; then
+        NAME=$(basename $(git rev-parse --show-toplevel))
+        workon $NAME
+    elif [ -d .venv ]; then
+        source .venv/bin/activate
+    elif [ -d venv ]; then
+        source venv/bin/activate
+    else
+        ve .venv
+        v
+    fi
+}
+
+function new_sess {
+    tmux has-session -t $1
+    if [ $? != 0 ]; then
+        tmux new-session -d -s $1
+    fi
+
+    if [[ $TMUX != "" ]]; then
+        tmux switch-client -t $1
+    else
+        tmux attach -t $1
+    fi
+}
+
+function t {
+    new_sess $(echo $(basename $(pwd)) | sed s/\\./_/g | sed s%/%_%g)
+}
+
+function syncpanes() {
+    tmux setw synchronize-panes $1
+}
+
+### Virtualenvwrapper
+
+export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
+
+if [[ -f /usr/local/bin/virtualenvwrapper.sh ]]; then
+    source /usr/local/bin/virtualenvwrapper.sh
+fi
+
+
+if [[ -f ~/.local/bin/virtualenvwrapper.sh ]]; then
+    source ~/.local/bin/virtualenvwrapper.sh
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

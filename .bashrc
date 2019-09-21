@@ -172,3 +172,5 @@ function pretty_pwd {
 
 PS1="\[$RED\]\$(last_command_status)\[$VIOLET\]@$HOSTNAME\[$BLUE\] \$(pretty_pwd) \[$CYAN\]\$(parse_git_branch)\[$ORANGE\]\$(lambda_or_delta) \[$NO_COLOR\]"
 fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
