@@ -140,6 +140,11 @@ If COPY is provided copy the value to kill ring instead of returning."
 
     (message "%s" selection)))
 
+(defun chasinglogic-raza ()
+  "TRAMP into my remote Mongo repository on my desktop."
+  (interactive)
+  (find-file "/ssh:chasinglogic@raza:/home/chasinglogic/Work/mongo"))
+
 (provide 'chasinglogic-utils)
 
 ;;; chasinglogic-utils.el ends here
