@@ -86,8 +86,7 @@
                 (list
                  '("elpa" . "http://elpa.gnu.org/packages/")
                  '("melpa" . "http://melpa.org/packages/")))
-  (package-initialize)
-
+  
   ;; Next we setup the amazing `use-package' package. Every package,
   ;; other than `use-package' itself, is installed with
   ;; `use-package'. It's a macro that makes configuration clear,
@@ -112,11 +111,73 @@
   ;; `eval-when-compile' call since I byte compile my =init.el= it means
   ;; I don't pay for this installation at startup time.
   (eval-when-compile
-    (package-initialize)
     (when (not (package-installed-p 'use-package))
       (package-refresh-contents)
       (package-install 'use-package)))
   (require 'use-package)
+
+  ;;;; Evil
+
+  (use-package evil-leader
+    :config
+    (global-evil-leader-mode)
+    (evil-leader/set-leader "<SPC>")
+
+    (setq use-package-keywords
+          ;; should go in the same location as :bind
+          ;; adding to end may not cause problems, but see issue #22
+          (cl-loop for item in use-package-keywords
+                   if (eq item :bind-keymap*)
+                   collect :bind-keymap* and collect :evil-leader
+                   else
+                   ;; don't add duplicates
+                   unless (eq item :evil-leader)
+                   collect item))
+
+    (evil-leader/set-key
+      "ff" 'find-file
+      "fs" 'save-buffer
+      "fD" 'crux-delete-buffer-and-file
+
+      "wh" 'evil-window-left
+      "wj" 'evil-window-down
+      "wk" 'evil-window-up
+      "wl" 'evil-window-right
+      "wd" 'evil-window-delete
+      "wc" 'evil-window-delete
+      "wv" 'evil-window-vsplit
+      "ws" 'evil-window-split
+      "wm" 'delete-other-windows
+
+      "jj" 'avy-goto-word-1
+      "j=" 'chasinglogic-indent-buffer
+      "jl" 'avy-goto-line
+      "<SPC>" 'avy-goto-word-1))
+
+  (use-package evil
+    :ensure t
+    :init
+    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+    (setq evil-want-keybinding nil)
+    :config
+    (evil-define-key 'normal 'global (kbd "<tab>") 'indent-according-to-mode)
+    (evil-define-key 'normal 'global (kbd "gcc") 'comment-actually-dwim)
+    (evil-define-key 'visual 'global (kbd "gc") 'comment-or-uncomment-region)
+    (evil-mode 1))
+
+  (use-package evil-escape
+    :after evil
+    :init (evil-escape-mode 1))
+
+  (use-package evil-surround
+    :after evil
+    :init (evil-surround-mode 1))
+
+  (use-package evil-collection
+    :after evil
+    :ensure t
+    :config
+    (evil-collection-init))
 
   ;; Quelpa (install packages from git)
   ;;     I maintain a few Emacs packages and it's very helpful to be able to
@@ -335,6 +396,7 @@ comments so this function better suits my needs."
   ;;     prompting. I bind it to `M-o' as the original command bound to
   ;;     that key I never use and I prefer meta bindings for commonly
   ;;     pressed commands.
+  (require 'term)
   (use-package ace-window
     :commands 'ace-window
     :init (defun chasinglogic-ace-window (arg)
@@ -347,7 +409,7 @@ comments so this function better suits my needs."
     :bind (("M-o" . chasinglogic-ace-window)
            (:map term-raw-map
                  ("M-o" . ace-window))))
-
+  
   ;; magit
   ;;
   ;; Magit is another of those top 5 packages. It's almost a reason to
@@ -494,20 +556,6 @@ comments so this function better suits my needs."
   (bind-key "C-c f D" 'chasinglogic-delete-current-buffer-file)
   (bind-key "C-x 5 o" 'chasinglogic-select-frame-by-name)
 
-  ;; Reverse the M-<> keybinds with M-,. because I move to the
-  ;; beginning and end of buffers far more often than I
-  ;; xref-pop-marker-stack
-  (bind-key "M-<" 'xref-pop-marker-stack)
-  (bind-key "M->" 'xref-find-definitions)
-  (bind-key "M-," 'beginning-of-buffer)
-  (bind-key "M-." 'end-of-buffer)
-
-  ;; Bind M-[] to paragraph movement. Normally this is M-{} which
-  ;; still is bound. This is more convenient and the M-[] keys were
-  ;; bound to nighting anyway
-  (bind-key "M-[" 'backward-paragraph)
-  (bind-key "M-]" 'forward-paragraph)
-
   (bind-key "C-x C-b" 'ibuffer)
 
   (bind-key "M-;" 'comment-actually-dwim)
@@ -515,8 +563,6 @@ comments so this function better suits my needs."
   (bind-key "M-/" 'hippie-expand)
 
   (bind-key "M-t" 'switch-to-buffer)
-
-
 
   ;; Ivy
   (use-package ivy
@@ -1162,15 +1208,15 @@ comments so this function better suits my needs."
   ;;     CI system and this package integrates it into Emacs. We don't
   ;;     maintain an in-house ELPA repository so I recommend, and myself do,
   ;;     installing it with Quelpa.
-  (use-package evergreen
-    :quelpa (evergreen :repo "evergreen-ci/evergreen.el" :fetcher github)
-    :commands (evergreen-patch evergreen-list-spawn-hosts)
-    :config
-    (setq-default evergreen-generate-description t
-                  evergreen-finalize-when-patching t
-                  evergreen-browse-when-patching t
-                  evergreen-default-project "mongodb-mongo-master"
-                  evergreen-assume-yes t))
+  ;; (use-package evergreen
+  ;;   :quelpa (evergreen :repo "evergreen-ci/evergreen.el" :fetcher github)
+  ;;   :commands (evergreen-patch evergreen-list-spawn-hosts)
+  ;;   :config
+  ;;   (setq-default evergreen-generate-description t
+  ;;                 evergreen-finalize-when-patching t
+  ;;                 evergreen-browse-when-patching t
+  ;;                 evergreen-default-project "mongodb-mongo-master"
+  ;;                 evergreen-assume-yes t))
 
   ;; Ruby
   ;;
@@ -1461,11 +1507,4 @@ comments so this function better suits my needs."
   ;;
   ;; First Maximize this frame, the initial frame won't see our hooks in
   ;; `make-frame-init-functions'.
-  (toggle-frame-fullscreen)
-
-  ;; Finally start the Emacs server, this allows connecting terminal and
-  ;; other Emacs clients to this GUI editing session for easy sharing of
-  ;; information.
-  (require 'server)
-  (unless (server-running-p)
-    (server-start)))
+  (toggle-frame-fullscreen))

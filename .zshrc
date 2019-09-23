@@ -92,6 +92,10 @@ function syncpanes() {
     tmux setw synchronize-panes $1
 }
 
+function dotfiles() {
+    cd $(dfm where)
+}
+
 ### Virtualenvwrapper
 
 export VIRTUALENVWRAPPER_PYTHON="$(which python3)"

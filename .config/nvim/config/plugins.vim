@@ -6,6 +6,12 @@ call plug#begin('~/.vim-plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+""" Automatically editting encrypted files.
+Plug 'jamessan/vim-gnupg'
+
+""" Org replacement
+Plug 'vimwiki/vimwiki'
+
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 

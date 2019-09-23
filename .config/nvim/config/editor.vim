@@ -20,7 +20,7 @@ set nostartofline     " Don't go to the start of line after certain commands
 
 """ Tab completion settings for command line
 set wildignore+=*.o,*.git,*.svn,*.pyc "ignore these files
- 
+
 """ Line numbers
 set number
 
@@ -31,8 +31,8 @@ set mouse=a
 set hidden
 
 """ Ripgrep with vimgrep
-if executable("rg")
-    set grepprg=rg\ --vimgrep\ --hidden
+if executable("ag")
+    set grepprg=ag\ --nogroup\ --nocolor\ --hidden
 else
     set grepprg=grep\ -R
 endif
@@ -73,8 +73,8 @@ endif
 set completeopt-=preview " Don't show completion preview
 
 """ Auto read files from disk when changed
-set autoread                                                                                                                                                                                    
-au CursorHold * checktime  
+set autoread
+au CursorHold * checktime
 
 """ Open big split for file with V in netrw
 let g:netrw_altv=1
@@ -84,19 +84,16 @@ set tags=.tags,tags
 
 set encoding=utf-8
 
-""" Case insensitive search by default, unless Capital letter included 
+""" Case insensitive search by default, unless Capital letter included
 set ignorecase
 set smartcase
 
-""" Open location and quickfix list when running one of those commands 
+""" Open location and quickfix list when running one of those commands
 augroup AutoOpenListWindow
     autocmd!
     autocmd QuickFixCmdPost [^l]* cwindow
     autocmd QuickFixCmdPost l*    lwindow
 augroup END
-
-""" Hide grep output when running grep
-command! -nargs=* Grep :execute ':silent grep <args>'
 
 """ Ask to save when trying to close unsaved buffers
 set confirm

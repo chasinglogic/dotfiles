@@ -8,3 +8,6 @@ function! s:findNote(notename)
 
   echo note_dir
 endfunction
+
+""" Hide grep output when running grep
+command! -nargs=* Grep :execute ':silent grep "<args>"'
