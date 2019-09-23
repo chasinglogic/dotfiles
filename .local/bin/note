@@ -2,20 +2,32 @@
 # vi: ft=sh
 
 if [[ $NOTE_DIR == "" ]]; then
-    NOTE_DIR="$HOME/Notes"
+    NOTE_DIR="$HOME/Nextcloud/Notes"
 fi
+
+
+ENCRYPT_NOTE=0
+while getopts ":e" opt; do
+    case ${opt} in
+        e) ENCRYPT_NOTE=1 ;;
+    esac
+done
 
 search=$1
 if [[ $search == "" ]]; then
     search="."
 fi
 
-files=( $(fd $search $NOTE_DIR | grep -v "^$NOTE_DIR$") )
+files=( $(find $NOTE_DIR -name "*$search*" -type f) )
 
 if [ "${#files[@]}" -eq "1" ]; then
     file="${files[0]}"
 elif [[ "${#files[@]}" -eq "0" && $search != "." ]]; then
-    file="$NOTE_DIR/${search}.md"
+    if [ "${ENCRYPT_NOTE}" -eq "1" ]; then
+        file="$NOTE_DIR/${search}.md.gpg"
+    else
+        file="$NOTE_DIR/${search}.md"
+    fi
 else
     file="$(printf '\n%s' ${files[@]} | sed '/^\s*$/d' | fzf)"
 fi

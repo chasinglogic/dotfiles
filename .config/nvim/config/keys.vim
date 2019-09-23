@@ -22,9 +22,9 @@ nmap <Leader>fr :source %<CR>
 
 """ Project level ops
 nmap <Leader>pf :FZF<CR>
-nmap <Leader>ps :Grep
+nmap <Leader>ps :Grep<Space>
 nmap <Leader>pt :Tags<CR>
-nmap <Leader>pg :Grep
+nmap <Leader>pg :Grep<Space>
 nmap <Leader>pq :FZFQuickFix<CR>
 nmap <Leader>pa :args `git ls-files`<CR>:argdo
 nmap <Leader>pr :args `git ls-files`<CR>:argdo %s/
