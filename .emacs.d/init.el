@@ -242,7 +242,7 @@ comments so this function better suits my needs."
   (when (and (display-graphic-p) (eq system-type 'darwin))
     ;; Retina display requires bigger font IMO.
     (setq chasinglogic-font-size "15"))
-  (set-frame-font (format "Hack %s" chasinglogic-font-size) nil t)
+  (set-frame-font (format "Source Code Pro %s" chasinglogic-font-size) nil t)
 
   ;; Window Chrome
   ;;     Emacs by default has lots of window chrome to make it more mouse
@@ -266,10 +266,9 @@ comments so this function better suits my needs."
   ;;   I change this too often to really document why whatever
   ;;   theme I'm in the mood for is the one I'm in the mood for.
   ;; (use-package zenburn-theme :config (load-theme 'zenburn t))
-  (use-package solarized-theme
+  (use-package doom-themes
     :config
-    (setq-default solarized-distinct-fringe-background t)
-    (load-theme 'solarized-light t))
+    (load-theme 'doom-solarized-light t))
 
   ;; Line numbers in programming modes.
   ;;     I enable line numbers using the new Emacs 26
