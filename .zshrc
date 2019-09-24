@@ -111,3 +111,8 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source $HOME/.profile
+
+
+### Aliases
+
+alias nv="nvim"

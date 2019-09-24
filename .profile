@@ -33,7 +33,19 @@ export HISTSIZE=1000
 # number of lines to save in history file
 export HISTFILESIZE=2000
 
-export TERM="xterm-256color"
+### Set TERM
+
+# Linux
+if [ -n "$VTE_VERSION" ]; then
+    export TERM="vte-256color"
+fi
+
+# For Mac I set TERM to iterm2 via it's preferences.
+
+# Fallback
+if [ -z "$TERM" ]; then
+    export TERM="xterm-256color"
+fi
 
 # FZF default find command
 export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
