@@ -18,4 +18,5 @@ modules:
   # Community configurations
   - repo: git@github.com:robbyrussell/oh-my-zsh.git
     pull_only: true
+    link: none
     location: ~/.oh-my-zsh

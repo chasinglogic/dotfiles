@@ -6,11 +6,12 @@ call plug#begin('~/.vim-plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-""" Automatically editting encrypted files.
+Plug 'gabrielelana/vim-markdown'
 Plug 'jamessan/vim-gnupg'
 
-""" Org replacement
-Plug 'vimwiki/vimwiki'
+""" Better folding for text formats like Markdown
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -24,6 +25,7 @@ Plug 'tpope/vim-sleuth'     " Set tabwidth etc based on filetype
 Plug 'tpope/vim-eunuch'     " Useful commands like Rename, Delete, Move, SudoWrite
 Plug 'tpope/vim-abolish'    " Better abbreviations and Subvert is like fancy %s
 Plug 'tpope/vim-fugitive'   " Git integration
+Plug 'tpope/vim-markdown'   " Better markdown
 
 """ Language Support
 Plug 'PProvost/vim-ps1'              " I write powershell scripts

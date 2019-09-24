@@ -118,41 +118,39 @@
 
   ;;;; Evil
 
-  (use-package evil-leader
-    :config
-    (global-evil-leader-mode)
-    (evil-leader/set-leader "<SPC>")
+  ;; Which Key
+  ;;
+  ;; Which key is possibly the best package ever invented, except for
+  ;; maybe helm. When pressing a key chord it will show you all possible
+  ;; bindings and prefixes so you can interactively explore key bindings
+  ;; as you type them. It's nothing short of amazing and a great
+  ;; discovery tool. No real configuration is needed except that I do
+  ;; diminish it since I always have it on globally.
+  (use-package which-key
+    :diminish ""
+    :init
+    (which-key-mode))
 
-    (setq use-package-keywords
-          ;; should go in the same location as :bind
-          ;; adding to end may not cause problems, but see issue #22
-          (cl-loop for item in use-package-keywords
-                   if (eq item :bind-keymap*)
-                   collect :bind-keymap* and collect :evil-leader
-                   else
-                   ;; don't add duplicates
-                   unless (eq item :evil-leader)
-                   collect item))
 
-    (evil-leader/set-key
-      "ff" 'find-file
-      "fs" 'save-buffer
-      "fD" 'crux-delete-buffer-and-file
+    ;; (evil-leader/set-key
+    ;;   "ff" 'find-file
+    ;;   "fs" 'save-buffer
+    ;;   "fD" 'crux-delete-buffer-and-file
 
-      "wh" 'evil-window-left
-      "wj" 'evil-window-down
-      "wk" 'evil-window-up
-      "wl" 'evil-window-right
-      "wd" 'evil-window-delete
-      "wc" 'evil-window-delete
-      "wv" 'evil-window-vsplit
-      "ws" 'evil-window-split
-      "wm" 'delete-other-windows
+    ;;   "wh" 'evil-window-left
+    ;;   "wj" 'evil-window-down
+    ;;   "wk" 'evil-window-up
+    ;;   "wl" 'evil-window-right
+    ;;   "wd" 'evil-window-delete
+    ;;   "wc" 'evil-window-delete
+    ;;   "wv" 'evil-window-vsplit
+    ;;   "ws" 'evil-window-split
+    ;;   "wm" 'delete-other-windows
 
-      "jj" 'avy-goto-word-1
-      "j=" 'chasinglogic-indent-buffer
-      "jl" 'avy-goto-line
-      "<SPC>" 'avy-goto-word-1))
+    ;;   "jj" 'avy-goto-word-1
+    ;;   "j=" 'chasinglogic-indent-buffer
+    ;;   "jl" 'avy-goto-line
+    ;;   "<SPC>" 'avy-goto-word-1))
 
   (use-package evil
     :ensure t
@@ -366,13 +364,16 @@ comments so this function better suits my needs."
     :bind ("C-M-h" . expand-region))
 
   ;; Avy
-  ;;
-  ;;     The legendary `abo-abo' wrote a great package called Avy. I can
   ;;     only compare it to EasyMotion for Vim but it's actually much
   ;;     better IMO. It has many "jumping" commands for going to words,
   ;;     subwords, characters, lines etc. Here I only bind a few of the
   ;;     most useful ones to me.
   (use-package avy
+    :evil-leader
+    ("jj" 'avy-goto-word-1)
+    ("jw" 'avy-goto-word-1)
+    ("jl" 'avy-goto-line)
+    ("jh" 'avy-goto-heading)
     :bind
     (("M-j"     . 'avy-goto-word-1)
      ("C-c j c" . 'avy-goto-char)
@@ -381,8 +382,7 @@ comments so this function better suits my needs."
      ("C-c j h" . 'avy-goto-heading))
     :config
     ;; When non-nil, a gray background will be added during the selection.
-    (setq avy-background t)
-    )
+    (setq avy-background t))
 
   ;; Ace Window
   ;;
@@ -683,20 +683,6 @@ comments so this function better suits my needs."
     (diminish 'abbrev-mode)
     (diminish 'eldoc-mode)
     (diminish 'undo-tree-mode))
-
-
-  ;; Which Key
-  ;;
-  ;; Which key is possibly the best package ever invented, except for
-  ;; maybe helm. When pressing a key chord it will show you all possible
-  ;; bindings and prefixes so you can interactively explore key bindings
-  ;; as you type them. It's nothing short of amazing and a great
-  ;; discovery tool. No real configuration is needed except that I do
-  ;; diminish it since I always have it on globally.
-  (use-package which-key
-    :diminish ""
-    :init
-    (which-key-mode))
 
   ;; Paredit
   ;;
