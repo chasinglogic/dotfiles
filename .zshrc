@@ -116,3 +116,4 @@ source $HOME/.profile
 ### Aliases
 
 alias nv="nvim"
+alias cdc="cd $HOME/Code"
