@@ -131,21 +131,79 @@
     :init
     (which-key-mode))
 
+  (use-package general
+    :config
+    (bind-key "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
+    (bind-key "C-c j =" 'chasinglogic-indent-buffer)
+    (bind-key "C-c f r" 'chasinglogic-rename-file-and-buffer)
+    (bind-key "C-c f D" 'chasinglogic-delete-current-buffer-file)
+    (bind-key "C-x 5 o" 'chasinglogic-select-frame-by-name)
+    (bind-key "C-x C-b" 'ibuffer)
+    (bind-key "M-;" 'comment-actually-dwim)
+    (bind-key "M-/" 'hippie-expand)
+    (bind-key "M-t" 'switch-to-buffer)
+
+    (setq general-override-states '(insert
+                                    emacs
+                                    hybrid
+                                    normal
+                                    visual
+                                    motion
+                                    operator
+                                    replace))
+
+    (general-evil-setup)
+    (general-create-definer leader!
+      :states '(normal visual)
+      :keymaps 'override
+      :prefix "<SPC>")
+
+    (leader!
+      "<SPC>" 'execute-extended-command
+      "h" `(,(general-simulate-key "C-h") :wk "help")
+      "qq" 'save-buffers-kill-emacs)
+
+    (leader!
+      "j" '(:which-key "jumps")
+      "j=" 'chasinglogic-indent-buffer
+      "jb" 'chasinglogic-copy-breakpoint-for-here)
+
+    (leader!
+      "b" '(:which-key "buffers")
+      "bm" 'ibuffer)
+
+    (leader!
+      "w"  '(:which-key "windows")
+      "wo" 'chasinglogic-select-frame-by-name
+      "wh" 'evil-window-left         
+      "wj" 'evil-window-down         
+      "wk" 'evil-window-up           
+      "wl" 'evil-window-right        
+      "wd" 'evil-window-delete       
+      "wc" 'evil-window-delete       
+      "wv" 'evil-window-vsplit       
+      "ws" 'evil-window-split        
+      "wm" 'delete-other-windows)
+
+    (leader!
+      "f" '(:which-key "files")
+      "ff" 'find-file
+      "fs" 'save-buffer))
 
     ;; (evil-leader/set-key
     ;;   "ff" 'find-file
     ;;   "fs" 'save-buffer
     ;;   "fD" 'crux-delete-buffer-and-file
 
-    ;;   "wh" 'evil-window-left
-    ;;   "wj" 'evil-window-down
-    ;;   "wk" 'evil-window-up
-    ;;   "wl" 'evil-window-right
-    ;;   "wd" 'evil-window-delete
-    ;;   "wc" 'evil-window-delete
-    ;;   "wv" 'evil-window-vsplit
-    ;;   "ws" 'evil-window-split
-    ;;   "wm" 'delete-other-windows
+    ;;   
+    ;;   
+    ;;   
+    ;;   
+    ;;   
+    ;;   
+    ;;   
+    ;;   
+    ;;   
 
     ;;   "jj" 'avy-goto-word-1
     ;;   "j=" 'chasinglogic-indent-buffer
@@ -176,6 +234,13 @@
     :ensure t
     :config
     (evil-collection-init))
+
+  (use-package evil-magit
+    :after evil
+    :ensure t
+    :config
+    (require 'evil-magit))
+
 
   ;; Quelpa (install packages from git)
   ;;     I maintain a few Emacs packages and it's very helpful to be able to
@@ -327,7 +392,8 @@ comments so this function better suits my needs."
   ;; (use-package zenburn-theme :config (load-theme 'zenburn t))
   (use-package doom-themes
     :config
-    (load-theme 'doom-solarized-light t))
+    (when (display-graphic-p)
+      (load-theme 'doom-solarized-light t)))
 
   ;; Line numbers in programming modes.
   ;;     I enable line numbers using the new Emacs 26
@@ -346,7 +412,9 @@ comments so this function better suits my needs."
     "Maxmize a the GUI frame FRAME."
     (with-selected-frame frame
       (when (display-graphic-p)
-        (set-frame-parameter nil 'fullscreen 'maximized))))
+        (set-frame-parameter nil 'fullscreen 'maximized))
+      (when (not display-graphic-p)
+        (disable-theme 'doom-solarized-light))))
   (add-hook 'after-make-frame-functions 'maximize-gui-frames)
 
   (use-package all-the-icons)
@@ -369,11 +437,12 @@ comments so this function better suits my needs."
   ;;     subwords, characters, lines etc. Here I only bind a few of the
   ;;     most useful ones to me.
   (use-package avy
-    :evil-leader
-    ("jj" 'avy-goto-word-1)
-    ("jw" 'avy-goto-word-1)
-    ("jl" 'avy-goto-line)
-    ("jh" 'avy-goto-heading)
+    :general
+    (leader!
+      "jj" 'avy-goto-word-1
+      "jw" 'avy-goto-word-1
+      "jl" 'avy-goto-line
+      "jh" 'avy-goto-heading)
     :bind
     (("M-j"     . 'avy-goto-word-1)
      ("C-c j c" . 'avy-goto-char)
@@ -416,6 +485,12 @@ comments so this function better suits my needs."
   ;; use Emacs in and of itself. Here we only rebind some keys from
   ;; `vc-mode' based defaults to `magit' commands.
   (use-package magit
+    :general (leader!
+               "g" '(:which-key "git")
+               "gs" 'magit-status
+               "gb" 'magit-blame
+               "ga" 'magit-stage-file
+               "gc" 'magit-commit)
     :bind (("C-x v d" . magit-diff)
            ("C-x v b" . magit-blame)
            ("C-x v l" . magit-log-current)
@@ -493,6 +568,7 @@ comments so this function better suits my needs."
   ;; switch project will at startup show me all of my projects even if I
   ;; haven't visited them in Emacs yet.
   (use-package projectile
+    :general (leader! "p" '(:which-key "projects" :keymap projectile-command-map))
     :bind-keymap ("C-c p" . projectile-command-map)
     :bind ((:map projectile-command-map
                  ("p" . projectile-switch-project)
@@ -541,6 +617,10 @@ comments so this function better suits my needs."
 
 
   (use-package crux
+    :general (leader!
+               "fD" 'crux-delete-buffer-and-file
+               "fr" 'crux-rename-buffer-and-file
+               "'" 'crux-visit-term-buffer)
     :bind (("C-a" . crux-move-beginning-of-line)
            ("C-k" . crux-smart-kill-line)
            ("C-c f D" . crux-delete-buffer-and-file)
@@ -549,20 +629,6 @@ comments so this function better suits my needs."
 
 
 ;;;; Global Keybindings
-
-  (bind-key "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
-  (bind-key "C-c j =" 'chasinglogic-indent-buffer)
-  (bind-key "C-c f r" 'chasinglogic-rename-file-and-buffer)
-  (bind-key "C-c f D" 'chasinglogic-delete-current-buffer-file)
-  (bind-key "C-x 5 o" 'chasinglogic-select-frame-by-name)
-
-  (bind-key "C-x C-b" 'ibuffer)
-
-  (bind-key "M-;" 'comment-actually-dwim)
-
-  (bind-key "M-/" 'hippie-expand)
-
-  (bind-key "M-t" 'switch-to-buffer)
 
   ;; Ivy
   (use-package ivy
@@ -574,6 +640,12 @@ comments so this function better suits my needs."
     (ivy-mode 1))
 
   (use-package counsel
+    :general (leader!
+               "<SPC>" 'counsel-M-x
+               "ff" 'counsel-find-file
+               "bb" 'counsel-switch-buffer
+               "ji" 'counsel-imenu
+               "jb" 'counsel-bookmark)
     :bind (("M-x"       . counsel-M-x)
            ("C-x b"     . counsel-switch-buffer)
            ("M-y"       . counsel-yank-pop)
@@ -704,8 +776,7 @@ comments so this function better suits my needs."
                 ;; `comment-dwim' and paredit has it's own special
                 ;; version that I find more confusing. So overwrite it's
                 ;; mapping with my `comment-actually-dwim' function.
-                ("M-;" . comment-actually-dwim))
-    :hook '(emacs-lisp-mode . paredit-mode))
+                ("M-;" . comment-actually-dwim)))
 
   ;; Company Mode
   ;;
@@ -780,6 +851,11 @@ comments so this function better suits my needs."
   ;; I enable Flycheck for all text modes.
   (use-package flycheck
     :diminish ""
+    :general (leader!
+               "el" 'flycheck-list-errors
+               "ev" 'flycheck-verify-setup
+               "ep" 'flycheck-previous-error
+               "en" 'flycheck-next-error)
     :bind (("C-c e l" . flycheck-list-errors)
            ("C-c e v" . flycheck-verify-setup)
            ("C-c e n" . flycheck-next-error)
@@ -849,7 +925,25 @@ comments so this function better suits my needs."
     ;; anything special about these bindings they are self explanatory
     ;; based on command names. The last thing we do here is start the
     ;; =:config= section of the `use-package' definition.
-    :bind (("C-c o o"   . helm-org-in-buffer-headings)
+    :general (leader!
+               "oa" 'org-agenda
+               "oc" 'org-capture
+               "or" 'org-archive-subtree
+               "om" '(:wk "misc")
+               "omn" 'chasingloginc-find-org-file-notes
+               "omi" 'chasingloginc-find-org-file-ideas
+               "omt" 'chasingloginc-find-org-file-todo
+               "omr" 'chasinglogic-add-to-reading-list
+               "ot" 'org-todo
+               "os" 'org-schedule
+               "og" 'org-set-tags-command
+               "op" 'org-set-property-and-value
+               "oi" '(:wk "insert")
+               "oil" 'org-insert-link
+               "oih" 'org-insert-heading
+               "op" '(:wk "priority")
+               "opp" 'org-priority)
+    :bind (
            ("C-c o TAB" . org-global-cycle)
            ("C-c o a"   . org-agenda)
            ("C-c o c"   . org-capture)
