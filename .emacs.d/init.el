@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -86,7 +86,7 @@
                 (list
                  '("elpa" . "http://elpa.gnu.org/packages/")
                  '("melpa" . "http://melpa.org/packages/")))
-  
+
   ;; Next we setup the amazing `use-package' package. Every package,
   ;; other than `use-package' itself, is installed with
   ;; `use-package'. It's a macro that makes configuration clear,
@@ -111,6 +111,7 @@
   ;; `eval-when-compile' call since I byte compile my =init.el= it means
   ;; I don't pay for this installation at startup time.
   (eval-when-compile
+    (package-initialize)
     (when (not (package-installed-p 'use-package))
       (package-refresh-contents)
       (package-install 'use-package)))
@@ -282,7 +283,7 @@
 
   ;; Global customization variables
 
-  
+
   ;;     First we set spaces instead of tabs and set the default
   ;;     `tab-width' to 4 spaces.
   (setq-default indent-tabs-mode nil
@@ -478,7 +479,7 @@ comments so this function better suits my needs."
     :bind (("M-o" . chasinglogic-ace-window)
            (:map term-raw-map
                  ("M-o" . ace-window))))
-  
+
   ;; magit
   ;;
   ;; Magit is another of those top 5 packages. It's almost a reason to
@@ -577,7 +578,7 @@ comments so this function better suits my needs."
                  ("d" . projectile-find-dir)
                  ("b" . projectile-switch-to-buffer)))
     :init
-    
+
     ;; Projector => Projectile integration
     ;;
     ;;     I maintain (what I think) is a pretty cool tool called [[https://github.com/chasinglogic/projector][Projector]]
@@ -595,7 +596,7 @@ comments so this function better suits my needs."
                (split-string
                 (shell-command-to-string "projector list") "\n"))))
     (chasinglogic-add-projector-projects-to-projectile)
-    
+
     :config
     (defun chasinglogic-switch-project-action ()
       "Single view magit status page when switching projects."
@@ -1022,13 +1023,13 @@ comments so this function better suits my needs."
     ;; First define what files can contain TODO's for the Agenda:
     (setq-default org-agenda-files (list org-default-todo-file
                                          (expand-file-name "todo.org" org-directory)))
-    
+
     ;; Next define the priorities that are available to tasks. I use
     ;; priorities A - D with A being the highest priority.
     (setq-default org-highest-priority ?A
                   org-lowest-priority ?D
                   org-default-priority ?D)
-    
+
     ;; This variable makes it so when completing a task Org logs the
     ;; time it was completed.
     (setq-default org-log-done 'time)
@@ -1229,7 +1230,7 @@ comments so this function better suits my needs."
     ;; defualt and is probably my most common target so we always load
     ;; it here.
     (require 'ox-md)
-    
+
     ;; Next we install and require the `ox-reveal' package. This lets me
     ;; export Org files as full blown slideshow presentations for use in
     ;; my browser.
@@ -1346,7 +1347,7 @@ comments so this function better suits my needs."
 
     (defun chasinglogic-python-format-hook ()
       "Set up blacken-buffer on save if appropriate."
-      (unless (member (projectile-project-name) chasinglogic-blacken-black-list) 
+      (unless (member (projectile-project-name) chasinglogic-blacken-black-list)
         (message "Not in a blacklisted project, enabling format on save.")
         (add-hook 'before-save-hook 'blacken-buffer nil t)))
     (add-hook 'python-mode-hook 'chasinglogic-python-format-hook))
@@ -1579,7 +1580,7 @@ comments so this function better suits my needs."
   (eval-and-compile (require 'chasinglogic-frames)
                     (require 'chasinglogic-utils)
                     (require 'auto-sync-mode))
-  
+
   ;; Post initialization
   ;;
   ;; These are the few final steps we should take when bringing up
