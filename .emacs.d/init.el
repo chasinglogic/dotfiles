@@ -176,14 +176,14 @@
     (leader!
       "w"  '(:which-key "windows")
       "wo" 'chasinglogic-select-frame-by-name
-      "wh" 'evil-window-left         
-      "wj" 'evil-window-down         
-      "wk" 'evil-window-up           
-      "wl" 'evil-window-right        
-      "wd" 'evil-window-delete       
-      "wc" 'evil-window-delete       
-      "wv" 'evil-window-vsplit       
-      "ws" 'evil-window-split        
+      "wh" 'evil-window-left
+      "wj" 'evil-window-down
+      "wk" 'evil-window-up
+      "wl" 'evil-window-right
+      "wd" 'evil-window-delete
+      "wc" 'evil-window-delete
+      "wv" 'evil-window-vsplit
+      "ws" 'evil-window-split
       "wm" 'delete-other-windows)
 
     (leader!
@@ -196,15 +196,15 @@
     ;;   "fs" 'save-buffer
     ;;   "fD" 'crux-delete-buffer-and-file
 
-    ;;   
-    ;;   
-    ;;   
-    ;;   
-    ;;   
-    ;;   
-    ;;   
-    ;;   
-    ;;   
+    ;;
+    ;;
+    ;;
+    ;;
+    ;;
+    ;;
+    ;;
+    ;;
+    ;;
 
     ;;   "jj" 'avy-goto-word-1
     ;;   "j=" 'chasinglogic-indent-buffer
@@ -378,7 +378,8 @@ comments so this function better suits my needs."
   ;;     Buffer, and I.
   (tool-bar-mode -1)
   (menu-bar-mode -1)
-  (scroll-bar-mode -1)
+  (when (display-graphic-p)
+    (scroll-bar-mode -1))
 
   ;; On MacOS there's a new feature to have title bars match the window
   ;; they belong to. This makes Emacs do that so the title bar looks
