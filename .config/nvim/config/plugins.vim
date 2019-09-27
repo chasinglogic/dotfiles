@@ -3,8 +3,11 @@ let g:airline_powerline_fonts = 1 " Pretty symbols from airline
 
 call plug#begin('~/.vim-plugged')
 """ Fuzzy finding
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+Plug 'wincent/command-t', {
+    \   'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'
+    \ }
+
+" Plug 'Shougo/denite.nvim'
 
 Plug 'gabrielelana/vim-markdown'
 Plug 'jamessan/vim-gnupg'
