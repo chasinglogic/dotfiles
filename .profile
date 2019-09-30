@@ -36,7 +36,7 @@ export HISTFILESIZE=2000
 ### Set TERM
 
 # Linux
-if [ -n "$VTE_VERSION" ]; then
+if [ -n "$VTE_VERSION" ] && ([ -z "$TERM" ] || [ "$TERM" != "tmux-256color" ]); then
     export TERM="vte-256color"
 fi
 
