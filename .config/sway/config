@@ -5,13 +5,13 @@ set $down j
 set $up k
 set $right l
 
-set $term termite
+set $term kitty
 
 set $menu rofi -show drun
 
 set $lock swaylock -d -c 000000 --image /home/chasinglogic/Pictures/DSCF0308-4.blurred.jpg
 
-output "*" bg "/home/chasinglogic/Pictures/DSCF0308-4.jpg" fill
+output "*" bg "/home/chasinglogic/Pictures/wallpaper.jpg" fill
 
 set $laptop eDP-1
 bindswitch lid:on output $laptop disable
@@ -53,11 +53,11 @@ bindsym $mod+$left focus left
 bindsym $mod+$right focus right
 bindsym $mod+$up focus up
 bindsym $mod+0 workspace 10
-bindsym $mod+1 workspace code
-bindsym $mod+2 workspace web
-bindsym $mod+3 workspace chat
-bindsym $mod+4 workspace email
-bindsym $mod+5 workspace misc
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
 bindsym $mod+6 workspace 6
 bindsym $mod+7 workspace 7
 bindsym $mod+8 workspace 8
