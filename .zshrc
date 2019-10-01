@@ -88,6 +88,21 @@ function t {
     new_sess $(echo $(basename $(pwd)) | sed s/\\./_/g | sed s%/%_%g)
 }
 
+function ts {
+    SESS=$(tmux list-sessions | grep $1 | awk '{ print $1 }' | sed 's/:$//')
+    if [[ -z $SESS ]]; then
+        echo "Session not found. Available sessions are:"
+        tmux list-sessions
+        return
+    fi
+
+    if [[ -n $TMUX ]]; then
+        tmux switch-client -t $SESS
+    else
+        tmux attach -t $SESS
+    fi
+}
+
 function syncpanes() {
     tmux setw synchronize-panes $1
 }
