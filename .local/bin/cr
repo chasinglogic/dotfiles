@@ -2,7 +2,9 @@
 
 MONGODB_JIRA_USERNAME="mathew.robinson"
 
-flags=(--jira_user=\"$MONGODB_JIRA_USERNAME\" $@ --git_similarity 99)
+MERGE_BASE=$(git merge-base --fork-point origin/master $(git rev-parse --abbrev-ref HEAD))
+
+flags=(--jira_user=\"$MONGODB_JIRA_USERNAME\" --git_similarity 99 --rev $MERGE_BASE...HEAD $@)
 
 if [[ $flags == *--help* || $flags == *-h* ]]; then
     python ~/Work/kernel-tools/codereview/upload.py --help
