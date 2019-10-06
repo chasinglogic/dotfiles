@@ -1,26 +1,25 @@
 [Desktop Entry]
-DefaultProfile=Profile 5.profile
+DefaultProfile=
 
 [DownloadDialog Settings]
 Height 1080=494
 Width 1920=700
 
 [Favorite Profiles]
-Favorites=Profile 5.profile
+Favorites=
 
 [KonsoleWindow]
 ShowMenuBarByDefault=false
 
 [MainWindow]
-Height 1080=766
+Height 1080=1015
 Height 1440=766
 Height 2560=480
 State=AAAA/wAAAAD9AAAAAAAAB4AAAAPaAAAABAAAAAQAAAAIAAAACPwAAAAA
 ToolBarsMovable=Disabled
 Width 1440=640
-Width 1920=1244
+Width 1920=956
 Width 2560=1244
-Window-Maximized 1080x1920=true
 Window-Maximized 1440x2560=true
 
 [TabBar]
