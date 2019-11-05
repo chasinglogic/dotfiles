@@ -1,7 +1,17 @@
 #!/bin/bash
 MESSAGE="$(echo $(git log -n 1 --format='%s'))"
 
+PROJECT="$(basename $(git rev-parse --show-toplevel))"
+if [[ $PROJECT == mongo ]]; then
+          BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          if [[ $BRANCH == v* ]]; then
+                    PROJECT="mongodb-mongo-$BRANCH"
+          else
+                    PROJECT="mongodb-mongo-master"
+          fi
+fi
+
 evergreen commit-queue merge \
-          --project mongodb-mongo-master \
+          --project $PROJECT \
           --message "$MESSAGE" \
           $@
