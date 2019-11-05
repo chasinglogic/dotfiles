@@ -42,6 +42,7 @@
     a = add
     c = commit
     r = rebase
+    b = branch
 
 [pager]
     branch = false

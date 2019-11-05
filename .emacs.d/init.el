@@ -84,8 +84,8 @@
   (require 'package)
   (setq-default package-archives
                 (list
-                 '("elpa" . "http://elpa.gnu.org/packages/")
-                 '("melpa" . "http://melpa.org/packages/")))
+                 '("elpa" . "https://elpa.gnu.org/packages/")
+                 '("melpa" . "https://melpa.org/packages/")))
 
   ;; Next we setup the amazing `use-package' package. Every package,
   ;; other than `use-package' itself, is installed with
@@ -134,15 +134,15 @@
 
   (use-package general
     :config
-    (bind-key "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
-    (bind-key "C-c j =" 'chasinglogic-indent-buffer)
-    (bind-key "C-c f r" 'chasinglogic-rename-file-and-buffer)
-    (bind-key "C-c f D" 'chasinglogic-delete-current-buffer-file)
-    (bind-key "C-x 5 o" 'chasinglogic-select-frame-by-name)
-    (bind-key "C-x C-b" 'ibuffer)
-    (bind-key "M-;" 'comment-actually-dwim)
-    (bind-key "M-/" 'hippie-expand)
-    (bind-key "M-t" 'switch-to-buffer)
+    (general-def "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
+    (general-def "C-c j =" 'chasinglogic-indent-buffer)
+    (general-def "C-c f r" 'chasinglogic-rename-file-and-buffer)
+    (general-def "C-c f D" 'chasinglogic-delete-current-buffer-file)
+    (general-def "C-x 5 o" 'chasinglogic-select-frame-by-name)
+    (general-def "C-x C-b" 'ibuffer)
+    (general-def "M-;" 'comment-actually-dwim)
+    (general-def "M-/" 'hippie-expand)
+    (general-def "M-t" 'switch-to-buffer)
 
     (setq general-override-states '(insert
                                     emacs
@@ -153,7 +153,7 @@
                                     operator
                                     replace))
 
-    (general-evil-setup)
+    (general-evil-setup t)
     (general-create-definer leader!
       :states '(normal visual)
       :keymaps 'override
@@ -171,15 +171,23 @@
 
     (leader!
       "b" '(:which-key "buffers")
+      "bd" '(lambda ()
+              (interactive)
+              (kill-buffer (current-buffer)))
+      "bD" 'kill-buffer
       "bm" 'ibuffer)
 
     (leader!
       "w"  '(:which-key "windows")
       "wo" 'chasinglogic-select-frame-by-name
       "wh" 'evil-window-left
+      "wH" 'evil-window-move-far-left
       "wj" 'evil-window-down
+      "wJ" 'evil-window-move-very-bottom
       "wk" 'evil-window-up
+      "wK" 'evil-window-move-very-top
       "wl" 'evil-window-right
+      "wL" 'evil-window-move-far-right
       "wd" 'evil-window-delete
       "wc" 'evil-window-delete
       "wv" 'evil-window-vsplit
@@ -191,35 +199,17 @@
       "ff" 'find-file
       "fs" 'save-buffer))
 
-    ;; (evil-leader/set-key
-    ;;   "ff" 'find-file
-    ;;   "fs" 'save-buffer
-    ;;   "fD" 'crux-delete-buffer-and-file
-
-    ;;
-    ;;
-    ;;
-    ;;
-    ;;
-    ;;
-    ;;
-    ;;
-    ;;
-
-    ;;   "jj" 'avy-goto-word-1
-    ;;   "j=" 'chasinglogic-indent-buffer
-    ;;   "jl" 'avy-goto-line
-    ;;   "<SPC>" 'avy-goto-word-1))
-
   (use-package evil
     :ensure t
     :init
     (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
     (setq evil-want-keybinding nil)
     :config
-    (evil-define-key 'normal 'global (kbd "<tab>") 'indent-according-to-mode)
-    (evil-define-key 'normal 'global (kbd "gcc") 'comment-actually-dwim)
-    (evil-define-key 'visual 'global (kbd "gc") 'comment-or-uncomment-region)
+    (general-nmap
+      "-" '(lambda () (interactive) (dired "."))
+      "<tab>" 'indent-according-to-mode
+      "gcc" 'comment-actually-dwim)
+    (general-vmap "gc" 'comment-or-uncomment-region)
     (evil-mode 1))
 
   (use-package evil-escape
@@ -367,7 +357,7 @@ comments so this function better suits my needs."
   (when (and (display-graphic-p) (eq system-type 'darwin))
     ;; Retina display requires bigger font IMO.
     (setq chasinglogic-font-size "15"))
-  (set-frame-font (format "Source Code Pro %s" chasinglogic-font-size) nil t)
+  (set-frame-font (format "Hack %s" chasinglogic-font-size) nil t)
 
   ;; Window Chrome
   ;;     Emacs by default has lots of window chrome to make it more mouse
@@ -499,6 +489,10 @@ comments so this function better suits my needs."
            ("C-x v a" . magit-stage-file)
            ("C-x v c" . magit-commit)
            ("C-x v s" . magit-status))
+    :config
+    (general-nmap
+      :keymaps '(magit-mode-map magit-status-mode-map)
+      "<tab>" 'magit-section-toggle)
     :commands 'magit-status)
 
   ;; xgen-cru (MongoDB Code Reviews)
