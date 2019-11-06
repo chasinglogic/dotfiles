@@ -109,6 +109,15 @@ function t {
     new_sess $(echo $(basename $(pwd)) | sed s/\\./_/g | sed s%/%_%g)
 }
 
+function ts {
+    if [[ $TMUX != "" ]]; then
+        tmux switch-client -t $(tmux list-sessions -F "#S" | fzf)
+        return
+    fi
+
+    tmux attach -t $(tmux list-sessions -F "#S" | fzf)
+}
+
 function syncpanes() {
     tmux setw synchronize-panes $1
 }
