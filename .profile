@@ -4,8 +4,9 @@ function source_if_exists() {
     fi
 }
 
+# Idempotently add directories to the path if they exist.
 function add_to_path() {
-    if [[ "$PATH" != "${PATH/$1/}" ]]; then
+    if [[ "$PATH" != "${PATH/$1;/}" ]]; then
         return 0;
     fi
 
@@ -14,17 +15,15 @@ function add_to_path() {
     fi
 }
 
+# Packer's colorized output messes with terminals and other programs I use.
 export PACKER_NO_COLOR="1"
-
+# GPG can weirdly hang without this I've found
 export GPG_TTY=$(tty)
-
-export CARGOBIN="$HOME/.cargo/bin"
-
+# Needed for the go compiler and tooling
 export GOPATH="$HOME/Code/go"
-
+# Set LANG and Locale so it's always what I expect
 export LANG=en_US.UTF-8
 export LC_ALL="en_US.UTF-8"
-
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 export HISTCONTROL=ignoreboth
@@ -53,28 +52,24 @@ export EDITOR="nvim"
 
 # Mac specific fixes
 if [[ "$(uname)" == "Darwin" ]]; then
-
-export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
-
-export CLICOLOR=1
-
+    export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+    export CLICOLOR=1
 fi
 
+# Storage for miscellaneous or system specific environment variables
 source_if_exists $HOME/.env.bash
-
+# Enable nix if I've installed it on this system
 source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
 
-add_to_path $CARGOBIN
 add_to_path $GOPATH/bin
 add_to_path $HOME/.cargo/bin
 add_to_path $HOME/.local/bin
-add_to_path /Users/chasinglogic/.cask/bin
-add_to_path /home/chasinglogic/.cask/bin
+add_to_path $HOME/.cask/bin
+add_to_path $HOME/.cask/bin
 add_to_path /opt/local/bin
 add_to_path /usr/local/bin
 add_to_path /usr/local/sbin
 add_to_path /usr/bin
-add_to_path /bin
 add_to_path /usr/lib/icecream/bin
 add_to_path $HOME/Library/Python/3.7/bin
 

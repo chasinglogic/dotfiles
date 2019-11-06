@@ -91,14 +91,14 @@ function t {
 function ts {
     SESS=$(tmux list-sessions | grep $1 | awk '{ print $1 }' | sed 's/:$//')
     if [[ -z $SESS ]]; then
-        PROJ=$(projector find $1)
-        if [[ -d $PROJ ]]; then
-            cd $PROJ
-            t
+        if [[ -x $(which projector 2>/dev/null) ]]; then
+            PROJ=$(projector find $1)
+            if [[ -n $PROJ ]]; then
+                cd $PROJ
+                t
+            fi
         fi
-    fi
 
-    if [[ -z $SESS ]]; then
         echo "Session not found. Available sessions are:"
         tmux list-sessions
         return
