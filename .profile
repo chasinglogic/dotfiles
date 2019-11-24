@@ -39,6 +39,10 @@ if [ -n "$VTE_VERSION" ] && ([ -z "$TERM" ] || [ "$TERM" != "tmux-256color" ]); 
     export TERM="vte-256color"
 fi
 
+if [ "$COLORTERM" == "truecolor" ] && [ -f "$HOME/.terminfo/x/xterm-24bit" ]; then
+    export TERM="xterm-24bit"
+fi
+
 # For Mac I set TERM to iterm2 via it's preferences.
 
 # Fallback
@@ -48,7 +52,7 @@ fi
 
 # FZF default find command
 export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
-export EDITOR="nvim"
+export EDITOR="emacsclient --tty -a 'nvim'"
 
 # Mac specific fixes
 if [[ "$(uname)" == "Darwin" ]]; then

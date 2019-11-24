@@ -119,6 +119,14 @@ function dotfiles() {
     cd $(dfm where)
 }
 
+function et() {
+    emacsclient --tty -a 'vi' $@
+}
+
+function ec() {
+    emacsclient -a 'vi' $@
+}
+
 ### Virtualenvwrapper
 
 export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
@@ -134,7 +142,6 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source $HOME/.profile
-
 
 ### Aliases
 if [[ $TERM == "xterm-kitty" ]]; then
