@@ -14,14 +14,14 @@ nmap <Leader>noh :noh<CR>
 
 """ Files
 nmap <Leader>fs :w<CR>
-nmap <Leader>ff :CommandT<CR>
+nmap <Leader>ff :FZF<CR>
 nmap <Leader>fe :find
 nmap <Leader>fd :find ~/.config/nvim/init.vim<CR>
 nmap <Leader>fD :Delete<CR>
 nmap <Leader>fr :source %<CR>
 
 """ Project level ops
-nmap <Leader>pf :CommandT<CR>
+nmap <Leader>pf :FZF<CR>
 nmap <Leader>ps :Grep<Space>
 nmap <Leader>pt :Tags<CR>
 nmap <Leader>pg :Grep<Space>
