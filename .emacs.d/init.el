@@ -132,8 +132,16 @@
     :init
     (which-key-mode))
 
+
+  ;; General(.el)
+  ;;
+  ;; General is a convenient way to do evil / leader-esque
+  ;; keybindings. It also provides some macros for easy Emacs style
+  ;; keybindings. I simply use it because it's very convenient and
+  ;; integrates with use-package well.
   (use-package general
     :config
+    
     (general-def "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
     (general-def "C-c j =" 'chasinglogic-indent-buffer)
     (general-def "C-c f r" 'chasinglogic-rename-file-and-buffer)
@@ -162,6 +170,8 @@
     (leader!
       "<SPC>" 'execute-extended-command
       "h" `(,(general-simulate-key "C-h") :wk "help")
+      "q" '(:which-key "quit")
+      "qf" 'delete-frame
       "qq" 'save-buffers-kill-emacs)
 
     (leader!
@@ -174,11 +184,16 @@
       "bd" '(lambda ()
               (interactive)
               (kill-buffer (current-buffer)))
+      "bs" '(lambda ()
+              (interactive)
+              (switch-to-buffer "*scratch*"))
+      "br" 'revert-buffer
       "bD" 'kill-buffer
       "bm" 'ibuffer)
 
     (leader!
       "w"  '(:which-key "windows")
+      "wf" 'make-frame
       "wo" 'chasinglogic-select-frame-by-name
       "wh" 'evil-window-left
       "wH" 'evil-window-move-far-left
@@ -193,6 +208,13 @@
       "wv" 'evil-window-vsplit
       "ws" 'evil-window-split
       "wm" 'delete-other-windows)
+
+    (leader!
+      "m" '(:which-key "misc")
+      "mon" 'chasinglogic-find-org-file-notes
+      "moi" 'chasinglogic-find-org-file-ideas
+      "mot" 'chasinglogic-find-org-file-todo
+      "mor" 'chasinglogic-add-to-reading-list)
 
     (leader!
       "f" '(:which-key "files")
@@ -231,7 +253,6 @@
     :ensure t
     :config
     (require 'evil-magit))
-
 
   ;; Quelpa (install packages from git)
   ;;     I maintain a few Emacs packages and it's very helpful to be able to
@@ -295,8 +316,6 @@
   ;; current line if no region is selected so I wrote
   ;; `comment-actually-dwim' that does this and overwrite the default
   ;; `comment-dwim' keybinding with my version.
-
-
   (defun comment-actually-dwim (arg)
     "A simpler and more functional version of `comment-dwim'. It
 simply calls `comment-or-uncomment-region' with the current line
@@ -357,7 +376,7 @@ comments so this function better suits my needs."
   (when (and (display-graphic-p) (eq system-type 'darwin))
     ;; Retina display requires bigger font IMO.
     (setq chasinglogic-font-size "15"))
-  (set-frame-font (format "Hack %s" chasinglogic-font-size) nil t)
+  (set-frame-font (format "Fira Mono Medium %s" chasinglogic-font-size) nil t)
 
   ;; Window Chrome
   ;;     Emacs by default has lots of window chrome to make it more mouse
@@ -384,8 +403,8 @@ comments so this function better suits my needs."
   ;; (use-package zenburn-theme :config (load-theme 'zenburn t))
   (use-package doom-themes
     :config
-    (when (display-graphic-p)
-      (load-theme 'doom-solarized-light t)))
+    (load-theme 'doom-palenight t)
+    (doom-themes-org-config))
 
   ;; Line numbers in programming modes.
   ;;     I enable line numbers using the new Emacs 26
@@ -409,10 +428,14 @@ comments so this function better suits my needs."
         (disable-theme 'doom-solarized-light))))
   (add-hook 'after-make-frame-functions 'maximize-gui-frames)
 
+  ;; all-the-icons and doom-modeline
+  ;;
+  ;; Alternative to powerline that still looks good, isn't
+  ;; distracting, but also has all the useful information. I waffle on
+  ;; whether I actually like it or not over the basic modeline.
   (use-package all-the-icons)
   (use-package doom-modeline
     :hook (after-init . doom-modeline-mode))
-
 
   ;; Expand Region
   ;;
@@ -564,15 +587,27 @@ comments so this function better suits my needs."
   ;; switch project will at startup show me all of my projects even if I
   ;; haven't visited them in Emacs yet.
   (use-package projectile
+    :demand
     :general (leader! "p" '(:which-key "projects" :keymap projectile-command-map))
     :bind-keymap ("C-c p" . projectile-command-map)
     :bind ((:map projectile-command-map
+                 ("s" . counsel-projectile-rg)
                  ("p" . projectile-switch-project)
                  ("f" . projectile-find-file)
                  ("F" . projectile-find-file-in-known-projects)
                  ("d" . projectile-find-dir)
                  ("b" . projectile-switch-to-buffer)))
     :init
+    ;; Counsel Projectile
+    ;;
+    ;;      Projectile will use counsel for completion as I've set
+    ;;      `projectile-completion-system' to ='ivy=. However this package
+    ;;      provides some more feature rich actions in those Counsel buffers and
+    ;;      so we rebind the `projectile-command-map' keys to these enhanced
+    ;;      versions. Additionally I use `counsel-rg' with `counsel-projectile-rg'
+    ;;      to search my projects. I use ripgrep both in and out of Emacs so
+    ;;      I can keep the experience consistent and fast.
+    (use-package counsel-projectile :commands 'counsel-projectile-rg)
 
     ;; Projector => Projectile integration
     ;;
@@ -660,19 +695,6 @@ comments so this function better suits my needs."
   ;;
   ;; This is an enhanced incremental search provided by Ivy.
   (use-package swiper :bind ("C-M-s" . swiper))
-
-  ;; Counsel Projectile
-  ;;
-  ;;      Projectile will use counsel for completion as I've set
-  ;;      `projectile-completion-system' to ='ivy=. However this package
-  ;;      provides some more feature rich actions in those Counsel buffers and
-  ;;      so we rebind the `projectile-command-map' keys to these enhanced
-  ;;      versions. Additionally I use `counsel-rg' with `counsel-projectile-rg'
-  ;;      to search my projects. I use ripgrep both in and out of Emacs so
-  ;;      I can keep the experience consistent and fast.
-  (use-package counsel-projectile
-    :after (counsel projectile)
-    :bind (:map projectile-command-map ("s" . counsel-projectile-rg)))
 
 ;;;; Minor Modes
 
@@ -922,14 +944,11 @@ comments so this function better suits my needs."
     ;; based on command names. The last thing we do here is start the
     ;; =:config= section of the `use-package' definition.
     :general (leader!
+               "o" '(:which-key "org")
                "oa" 'org-agenda
                "oc" 'org-capture
                "or" 'org-archive-subtree
                "om" '(:wk "misc")
-               "omn" 'chasingloginc-find-org-file-notes
-               "omi" 'chasingloginc-find-org-file-ideas
-               "omt" 'chasingloginc-find-org-file-todo
-               "omr" 'chasinglogic-add-to-reading-list
                "ot" 'org-todo
                "os" 'org-schedule
                "og" 'org-set-tags-command
@@ -944,10 +963,6 @@ comments so this function better suits my needs."
            ("C-c o a"   . org-agenda)
            ("C-c o c"   . org-capture)
            ("C-c o r"   . org-archive-subtree)
-           ("C-c o m n" . chasinglogic-find-org-file-notes)
-           ("C-c o m i" . chasinglogic-find-org-file-ideas)
-           ("C-c o m t" . chasinglogic-find-org-file-todo)
-           ("C-c o m r" . chasinglogic-add-to-reading-list)
            ("C-c o t"   . org-todo)
            ("C-c o s"   . org-schedule)
            ("C-c o g"   . org-set-tags-command)
@@ -957,6 +972,21 @@ comments so this function better suits my needs."
            ("C-c o p p" . org-priority)
            ("C-c o p k" . org-priority-up)
            ("C-c o p j" . org-priority-down))
+    :init
+    ;; Org Mode Settings
+    ;;
+    ;; These settings are global variables that inform Org mode
+    ;; functions or behavior.
+    ;;
+    ;; First we define global variables that describe where common Org
+    ;; mode files can be found. I keep all of my Org files in
+    ;; =~/Nextcloud/Org= so they are automatically synced to my
+    ;; Nextcloud server by my clients.
+    (setq-default org-directory (file-name-as-directory "~/Nextcloud/Org")
+                  org-default-todo-file  (expand-file-name "inbox.org"  org-directory)
+                  org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
+                  org-default-ideas-file (expand-file-name "inbox.org" org-directory))
+
     :config
 
     ;; Org Refile
@@ -992,20 +1022,6 @@ comments so this function better suits my needs."
       "Set frame name to Agenda"
       (set-frame-name "Agenda"))
     (add-hook 'org-agenda-mode-hook 'chasinglogic-org-agenda-hook)
-
-    ;; Org Mode Settings
-    ;;
-    ;; These settings are global variables that inform Org mode
-    ;; functions or behavior.
-    ;;
-    ;; First we define global variables that describe where common Org
-    ;; mode files can be found. I keep all of my Org files in
-    ;; =~/Nextcloud/Org= so they are automatically synced to my
-    ;; Nextcloud server by my clients.
-    (setq-default org-directory (file-name-as-directory "~/Nextcloud/Org")
-                  org-default-todo-file  (expand-file-name "inbox.org"  org-directory)
-                  org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
-                  org-default-ideas-file (expand-file-name "inbox.org" org-directory))
 
     ;; Org Agenda
     ;;
@@ -1356,16 +1372,12 @@ comments so this function better suits my needs."
   ;; `projectile-switch-project' check for a matching virtualenv if so
   ;; activate it with the `pyvenv' package.
   (use-package pyvenv
-    :commands 'pyvenv-workon
-    :after 'projectile
-    :init
+    :config
     (defun chasinglogic-auto-venv ()
       "Automatically setup the venv when entering a project"
       (when (file-exists-p (concat "~/.virtualenvs/" (projectile-project-name)))
         (pyvenv-workon (projectile-project-name))))
     (add-hook 'projectile-after-switch-project-hook 'chasinglogic-auto-venv))
-
-
 
   ;; Finally enable LSP mode in Python buffers and make Emacs treat
   ;; SCons build configuration files as python.
@@ -1583,4 +1595,4 @@ comments so this function better suits my needs."
   ;;
   ;; First Maximize this frame, the initial frame won't see our hooks in
   ;; `make-frame-init-functions'.
-  (toggle-frame-fullscreen))
+  (toggle-frame-maximized))
