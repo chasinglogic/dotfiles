@@ -6,7 +6,7 @@ ref="$(git symbolic-ref HEAD 2> /dev/null)"
 DESCRIPTION="$(echo ${ref#refs/heads/}): $(git log -n 1 --format='%s')"
 
 PROJECT="$(basename $(git rev-parse --show-toplevel))"
-if [[ $PROJECT == mongo.* ]]; then
+if [[ $PROJECT == mongo || $PROJECT == mongo.* ]]; then
           BRANCH=$(git rev-parse --abbrev-ref HEAD)
           if [[ $BRANCH == v* ]]; then
                     PROJECT="mongodb-mongo-$BRANCH"
