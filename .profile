@@ -31,6 +31,8 @@ export HISTCONTROL=ignoreboth
 export HISTSIZE=1000
 # number of lines to save in history file
 export HISTFILESIZE=2000
+# Tell my update script where to find my dotfile repository
+export DOTFILES_REPOSITORY="$HOME/Code/dotfiles"
 
 ### Set TERM
 
