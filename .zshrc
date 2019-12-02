@@ -148,6 +148,10 @@ if [[ $TERM == "xterm-kitty" ]]; then
     alias ssh="kitty +kitten ssh"
 fi
 
+if [[ $TERM == "xterm-24bit" ]]; then
+    alias ssh="TERM=xterm $(which ssh)"
+fi
+
 if [[ -x $(which nvim 2>/dev/null) ]]; then
     alias vim="nvim"
 fi
