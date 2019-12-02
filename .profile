@@ -41,7 +41,7 @@ if [ -n "$VTE_VERSION" ] && ([ -z "$TERM" ] || [ "$TERM" != "tmux-256color" ]); 
     export TERM="vte-256color"
 fi
 
-if [ "$COLORTERM" == "truecolor" ] && [ -f "$HOME/.terminfo/x/xterm-24bit" ]; then
+if [[ "$COLORTERM" == "truecolor" ]] && [ -f "$HOME/.terminfo/x/xterm-24bit" ]; then
     export TERM="xterm-24bit"
 fi
 
