@@ -233,27 +233,23 @@
     "<tab>" 'indent-according-to-mode
     "gcc" 'comment-actually-dwim)
   (general-vmap "gc" 'comment-or-uncomment-region)
-  (evil-mode 1))
+  (evil-mode 1)
 
-(use-package evil-escape
-  :after evil
-  :init (evil-escape-mode 1))
+  (use-package evil-escape
+    :config
+    (evil-escape-mode 1))
 
-(use-package evil-surround
-  :after evil
-  :init (evil-surround-mode 1))
+  (use-package evil-surround
+    :config
+    (global-evil-surround-mode 1))
+  
+  (use-package evil-collection
+    :config
+    (evil-collection-init))
 
-(use-package evil-collection
-  :after evil
-  :ensure t
-  :config
-  (evil-collection-init))
-
-(use-package evil-magit
-  :after evil
-  :ensure t
-  :config
-  (require 'evil-magit))
+  (use-package evil-magit
+    :config
+    (require 'evil-magit)))
 
 ;; Quelpa (install packages from git)
 ;;     I maintain a few Emacs packages and it's very helpful to be able to
@@ -378,7 +374,7 @@ comments so this function better suits my needs."
 (when (and (display-graphic-p) (eq system-type 'darwin))
   ;; Retina display requires bigger font IMO.
   (setq chasinglogic-font-size "15"))
-(set-frame-font (format "Fira Mono Medium %s" chasinglogic-font-size) nil t)
+(set-frame-font (format "Fira Code Medium %s" chasinglogic-font-size) nil t)
 
 ;; Window Chrome
 ;;     Emacs by default has lots of window chrome to make it more mouse
@@ -1535,6 +1531,7 @@ comments so this function better suits my needs."
 (use-package yaml-mode :mode ("\\.yaml\\'" "\\.yml\\'" "\\.idl\\'"))
 (use-package toml-mode :mode ("\\gitconfig\\'" "\\.toml\\'"))
 (use-package cmake-mode :mode ("\\CMake.*txt\\'"))
+(use-package nginx-mode :mode ("\\.conf'"))
 
 ;; Hydra
 ;;
