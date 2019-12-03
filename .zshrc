@@ -39,14 +39,6 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 export PS1="$FG[004]@$(hostname) %{$reset_color%}$PS1"
 
-export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
-    source /usr/local/bin/virtualenvwrapper.sh
-fi
-if [ -f /usr/bin/virtualenvwrapper.sh ]; then
-    source /usr/bin/virtualenvwrapper.sh
-fi
-
 # Switch projects quickly
 function sp() {
     if [[ $1 == "" ]]; then
@@ -136,20 +128,25 @@ if [[ -f /usr/local/bin/virtualenvwrapper.sh ]]; then
 fi
 
 
-if [[ -f ~/.local/bin/virtualenvwrapper.sh ]]; then
-    source ~/.local/bin/virtualenvwrapper.sh
+if [[ -f $HOME/.local/bin/virtualenvwrapper.sh ]]; then
+    source $HOME/.local/bin/virtualenvwrapper.sh
+fi
+
+
+if [[ -f /usr/share/virtualenvwrapper/virtualenvwrapper.sh ]]; then
+    source /usr/share/virtualenvwrapper/virtualenvwrapper.sh 
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source $HOME/.profile
 
 ### Aliases
-if [[ $TERM == "xterm-kitty" ]]; then
-    alias ssh="kitty +kitten ssh"
-fi
-
-if [[ $TERM == "xterm-24bit" ]]; then
-    alias ssh="TERM=xterm $(which ssh)"
+if [[ -x $(which ssh) ]]; then
+    if [[ $TERM == "xterm-24bit" ]]; then
+        alias ssh="TERM=xterm $(which ssh)"
+    elif [[ $TERM == "xterm-kitty" ]]; then
+        alias ssh="kitty +kitten ssh"
+    fi
 fi
 
 if [[ -x $(which nvim 2>/dev/null) ]]; then
