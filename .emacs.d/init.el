@@ -280,6 +280,14 @@
   (when (eq 'system-type 'darwin)
     (exec-path-from-shell-initialize)))
 
+(mapc 
+ (lambda (path)
+   (add-to-list 'exec-path path)
+   (setenv "PATH" (concat (getenv "PATH") ":" path)))
+ (list
+  (concat (getenv "HOME") "/.local/bin")
+  (concat (getenv "HOME") "/.cargo/bin")))
+
 ;; Add the lisp directory where all other files are required from to
 ;; the load path.
 (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lisp"))
@@ -374,7 +382,7 @@ comments so this function better suits my needs."
 (when (and (display-graphic-p) (eq system-type 'darwin))
   ;; Retina display requires bigger font IMO.
   (setq chasinglogic-font-size "15"))
-(set-frame-font (format "Fira Code Medium %s" chasinglogic-font-size) nil t)
+(set-frame-font (format "Fira Mono Medium %s" chasinglogic-font-size) nil t)
 
 ;; Window Chrome
 ;;     Emacs by default has lots of window chrome to make it more mouse
