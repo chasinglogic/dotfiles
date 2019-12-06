@@ -378,11 +378,11 @@ comments so this function better suits my needs."
 ;;     The only thing fancy about the way this font is getting set is that
 ;;     I use two font sizes: one for my Mac because of the retina display
 ;;     and one for everything else where I use regular monitors.
-(setq-default chasinglogic-font-size "13")
+(setq-default chasinglogic-font-size "11")
 (when (and (display-graphic-p) (eq system-type 'darwin))
   ;; Retina display requires bigger font IMO.
   (setq chasinglogic-font-size "15"))
-(set-frame-font (format "Fira Mono Medium %s" chasinglogic-font-size) nil t)
+(set-frame-font (format "Fira Code %s" chasinglogic-font-size) nil t)
 
 ;; Window Chrome
 ;;     Emacs by default has lots of window chrome to make it more mouse
