@@ -1,0 +1,5 @@
+[General]
+history=telegram,konsole,network,kmail,server develoe,jira,mailbox,dolphin,nextcloud,firefox,konvers,system settings,discover,emacs,redshift,display,logout
+
+[PlasmaRunnerManager]
+LaunchCounts=1 desktopsessions_1,1 services_systemsettings.desktop,1 services_org.kde.discover.desktop
