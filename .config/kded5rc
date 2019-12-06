@@ -5,4 +5,4 @@ autoload=false
 autoload=false
 
 [PlasmaBrowserIntegration]
-shownCount=2
+shownCount=1
