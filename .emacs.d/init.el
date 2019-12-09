@@ -631,7 +631,6 @@ comments so this function better suits my needs."
      (delete ""
              (split-string
               (shell-command-to-string "projector list") "\n"))))
-  (chasinglogic-add-projector-projects-to-projectile)
 
   :config
   (defun chasinglogic-switch-project-action ()

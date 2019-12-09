@@ -4,6 +4,7 @@ REPOSITORIES=$(projector list)
 
 for repository in $REPOSITORIES; do
     cd $repository
+
     if [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]]; then
         echo "$repository is dirty prompting for commit message."
         PAGER="" git diff

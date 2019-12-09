@@ -3,9 +3,9 @@ AliasList=tinyurl /exec tinyurl,cmd /exec cmd,bug /exec bug,gauge /exec gauge,sa
 
 [Appearance]
 AllowColorCodes=false
-ChannelSplitterSizes=1618,156
-TopicSplitterSizes=28,930
-TreeSplitterSizes=145,494
+ChannelSplitterSizes=1617,156
+TopicSplitterSizes=28,891
+TreeSplitterSizes=145,1774
 
 [Autoreplace List]
 Direction0=o
@@ -59,7 +59,7 @@ Password=
 [DCC Settings]
 ColumnWidths=49,90,103,173,70,87,157,87,96,165
 IPv4FallbackIface=0
-PanelSplitter=AAAA/wAAAAEAAAAC//////////8B/////wEAAAACAA==
+PanelSplitter=AAAA/wAAAAEAAAACAAAAVAAAAPMB/////wEAAAACAA==
 
 [Identity 0]
 AuthType=nickserv
@@ -88,9 +88,10 @@ SaslAccount=
 ShowAwayMessage=false
 
 [MainWindow]
-State=AAAA/wAAAAD9AAAAAAAAB4AAAAO+AAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAWAG0AYQBpAG4AVABvAG8AbABCAGEAcgAAAAAA/////wAAAAAAAAAA
+Height 1080=1011
+State=AAAA/wAAAAD9AAAAAAAAB4AAAAPkAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAWAG0AYQBpAG4AVABvAG8AbABCAGEAcgAAAAAA/////wAAAAAAAAAA
 ToolBarsMovable=Disabled
-Window-Maximized 1080x1920=true
+Width 1920=1920
 
 [Message Text Colors]
 ChannelMessage=255,255,255
