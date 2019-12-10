@@ -5,8 +5,11 @@ REPOSITORIES=$(projector list)
 for repository in $REPOSITORIES; do
     cd $repository
 
-    if [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]]; then
+    fork=$(git remote -v | grep fork)
+    if [[ $fork != "" && $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]]; then
+        echo ""
         echo "$repository is dirty prompting for commit message."
+        echo ""
         PAGER="" git diff
         read -p "Commit Message: " commit_message
         if [[ $commit_message != "WIP:"* ]]; then
@@ -16,16 +19,14 @@ for repository in $REPOSITORIES; do
         git commit -m "$commit_message"
     fi
 
-    if [[ $repository == *"Work"* ]]; then
-        fork=$(git remote -v | grep fork)
-        if [[ $fork == "" ]]; then
-            echo "No fork repository for $repository."
-            exit 1
-        fi
-
-        git push --force-with-lease --all fork
+    if [[ $repository == *"dotfiles" ]]; then
+        echo "Pushing $repository."
+        git push origin master
+    elif [[ $fork == "" || $fork == "\n" ]]; then
+        echo "No fork repository for $repository. Skipping."
     else
-        git push --all origin
+        echo "Pushing $repository."
+        git push --force-with-lease --all fork
     fi
-       
+
 done
