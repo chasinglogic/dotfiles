@@ -217,6 +217,15 @@
     "mot" 'chasinglogic-find-org-file-todo
     "mor" 'chasinglogic-add-to-reading-list)
 
+  (when (boundp 'tab-bar-mode)
+    (leader!
+      "t" '(:which-key "tabs")
+      "to" 'tab-bar-new-tab
+      "ts" 'tab-bar-select-tab-by-name
+      "tc" 'tab-bar-close-tab
+      "tp" 'tab-bar-switch-to-prev-tab
+      "tn" 'tab-bar-switch-to-next-tab))
+
   (leader!
     "f" '(:which-key "files")
     "ff" 'find-file
@@ -439,9 +448,9 @@ comments so this function better suits my needs."
 ;; Alternative to powerline that still looks good, isn't
 ;; distracting, but also has all the useful information. I waffle on
 ;; whether I actually like it or not over the basic modeline.
-(use-package all-the-icons)
-(use-package doom-modeline
-  :hook (after-init . doom-modeline-mode))
+;; (use-package all-the-icons)
+;; (use-package doom-modeline
+;;   :hook (after-init . doom-modeline-mode))
 
 ;; Expand Region
 ;;
