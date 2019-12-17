@@ -418,7 +418,8 @@ comments so this function better suits my needs."
 ;; (use-package zenburn-theme :config (load-theme 'zenburn t))
 (use-package doom-themes
   :config
-  (load-theme 'doom-palenight t)
+  ;; (load-theme 'doom-palenight t)
+  (load-theme 'doom-solarized-light t)
   (doom-themes-org-config))
 
 ;; Line numbers in programming modes.
