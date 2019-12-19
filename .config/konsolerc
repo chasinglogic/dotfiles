@@ -12,13 +12,14 @@ Favorites=
 ShowMenuBarByDefault=false
 
 [MainWindow]
-Height 1080=521
+Height 1080=916
 Height 1440=766
 Height 2560=480
-State=AAAA/wAAAAD9AAAAAAAAA8AAAAPVAAAABAAAAAQAAAAIAAAACPwAAAAA
+MenuBar=Disabled
+State=AAAA/wAAAAD9AAAAAAAAA1sAAALkAAAABAAAAAQAAAAIAAAACPwAAAAA
 ToolBarsMovable=Disabled
 Width 1440=640
-Width 1920=960
+Width 1920=1577
 Width 2560=1244
 Window-Maximized 1440x2560=true
 

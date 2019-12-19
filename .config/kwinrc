@@ -24,8 +24,10 @@ Rows=2
 [NightColor]
 Active=true
 LatitudeAuto=40.7467
+LatitudeFixed=40.7467
 LongitudeAuto=-74.0574
-NightTemperature=3000
+LongitudeFixed=-74.0574
+NightTemperature=2600
 
 [Plugins]
 desktopchangeosdEnabled=false
@@ -39,5 +41,20 @@ videowallEnabled=false
 PopupHideDelay=1000
 TextOnly=false
 
+[TabBox]
+DesktopLayout=org.kde.breeze.desktop
+DesktopListLayout=org.kde.breeze.desktop
+LayoutName=org.kde.breeze.desktop
+
 [Windows]
 RollOverDesktops=true
+
+[org.kde.kdecoration2]
+BorderSize=Normal
+BorderSizeAuto=true
+ButtonsOnLeft=MS
+ButtonsOnRight=HIAX
+CloseOnDoubleClickOnMenu=false
+ShowToolTips=true
+library=org.kde.breeze
+theme=Breeze

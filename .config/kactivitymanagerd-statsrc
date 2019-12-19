@@ -13,8 +13,11 @@ ordering=preferred://browser,org.kde.discover.desktop,org.kde.kontact.desktop,or
 [Favorites-org.kde.plasma.kickoff.favorites.instance-44-136eeb69-993b-45f9-900b-c2a1449c3684]
 ordering=preferred://browser,kontact.desktop,systemsettings.desktop,org.kde.dolphin.desktop,ktp-contactlist.desktop,org.kde.kate.desktop,org.kde.discover.desktop
 
+[Favorites-org.kde.plasma.kickoff.favorites.instance-44-4b6c6ca0-b8b4-4158-82ce-e3030f2b2001]
+ordering=preferred://browser,applications:systemsettings.desktop,applications:org.kde.kate.desktop,applications:org.kde.discover.desktop,applications:libreoffice-startcenter.desktop,applications:org.kde.konsole.desktop,applications:org.kde.dolphin.desktop,applications:org.kde.kontact.desktop,applications:org.kde.ksysguard.desktop
+
 [Favorites-org.kde.plasma.kickoff.favorites.instance-44-global]
-ordering=preferred://browser,kontact.desktop,systemsettings.desktop,org.kde.dolphin.desktop,ktp-contactlist.desktop,org.kde.kate.desktop,org.kde.discover.desktop
+ordering=preferred://browser,applications:systemsettings.desktop,applications:org.kde.kate.desktop,applications:org.kde.discover.desktop,applications:libreoffice-startcenter.desktop,applications:org.kde.konsole.desktop,applications:org.kde.dolphin.desktop,applications:org.kde.kontact.desktop,applications:org.kde.ksysguard.desktop
 
 [Favorites-org.kde.plasma.kickoff.favorites.instance-65-136eeb69-993b-45f9-900b-c2a1449c3684]
 ordering=preferred://browser,kontact.desktop,systemsettings.desktop,org.kde.dolphin.desktop,ktp-contactlist.desktop,org.kde.kate.desktop,org.kde.discover.desktop

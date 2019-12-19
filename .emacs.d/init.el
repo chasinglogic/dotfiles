@@ -391,7 +391,7 @@ comments so this function better suits my needs."
 (when (and (display-graphic-p) (eq system-type 'darwin))
   ;; Retina display requires bigger font IMO.
   (setq chasinglogic-font-size "15"))
-(set-frame-font (format "Fira Code %s" chasinglogic-font-size) nil t)
+(set-frame-font (format "Fira Code Retina %s" chasinglogic-font-size) nil t)
 
 ;; Window Chrome
 ;;     Emacs by default has lots of window chrome to make it more mouse
@@ -416,17 +416,17 @@ comments so this function better suits my needs."
 ;;   I change this too often to really document why whatever
 ;;   theme I'm in the mood for is the one I'm in the mood for.
 ;; (use-package zenburn-theme :config (load-theme 'zenburn t))
+;; (use-package doom-themes
+;;   :config
+;;   ;; (load-theme 'doom-palenight t)
+;;   (load-theme 'doom-solarized-light t)
+;;   (doom-themes-org-config))
 (use-package solarized-theme
   :config
   (setq solarized-distinct-fringe-background t
         solarized-high-contrast-mode-line t
         solarized-use-variable-pitch nil)
-
-  (load-theme 'solarized-light t))
-;; (use-package doom-themes
-;;   :config
-;;   (load-theme 'doom-palenight t)
-;;   (doom-themes-org-config))
+  (load-theme 'solarized-light-high-contrast t))
 
 ;; Line numbers in programming modes.
 ;;     I enable line numbers using the new Emacs 26
@@ -445,7 +445,9 @@ comments so this function better suits my needs."
   "Maxmize a the GUI frame FRAME."
   (with-selected-frame frame
     (when (display-graphic-p)
-      (set-frame-parameter nil 'fullscreen 'maximized))))
+      (set-frame-parameter nil 'fullscreen 'maximized))
+    (when (not display-graphic-p)
+      (disable-theme 'doom-solarized-light))))
 (add-hook 'after-make-frame-functions 'maximize-gui-frames)
 
 ;; all-the-icons and doom-modeline
