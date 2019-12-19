@@ -3,3 +3,7 @@ KeyboardRepeating=0
 NumLock=2
 RepeatDelay=600
 RepeatRate=25
+
+[Mouse]
+cursorSize=0
+cursorTheme=breeze_cursors
