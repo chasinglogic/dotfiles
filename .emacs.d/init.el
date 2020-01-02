@@ -1373,7 +1373,7 @@ comments so this function better suits my needs."
                 '("scons"
                   "mongo"
                   "enterprise"
-                  "mongo_modules_enterprise"
+                  "mongo-enterprise-modules"
                   "toolchain-builder"
                   "kernel-tools"))
 
