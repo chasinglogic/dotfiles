@@ -83,3 +83,4 @@ add_to_path $HOME/Library/Python/3.7/bin
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
 
 export PATH="$HOME/.cargo/bin:$PATH"
+export PLASMA_USE_QT_SCALING=1
