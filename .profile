@@ -33,6 +33,13 @@ export HISTSIZE=1000
 export HISTFILESIZE=2000
 # Tell my update script where to find my dotfile repository
 export DOTFILES_REPOSITORY="$HOME/Code/dotfiles"
+# Set CCACHE directory
+if [ -d /data/ccache ]; then
+    export CCACHE_DIR=/data/ccache
+    export CCACHE_MAXSIZE=200G
+else
+    export CCACHE_MAXSIZE=20G
+fi
 
 ### Set TERM
 
@@ -78,6 +85,7 @@ add_to_path /usr/local/sbin
 add_to_path /usr/bin
 add_to_path /usr/lib/icecream/bin
 add_to_path $HOME/Library/Python/3.7/bin
+add_to_path /snap/bin
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
