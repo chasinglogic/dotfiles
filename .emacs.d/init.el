@@ -418,15 +418,27 @@ comments so this function better suits my needs."
 ;; (use-package zenburn-theme :config (load-theme 'zenburn t))
 ;; (use-package doom-themes
 ;;   :config
-;;   ;; (load-theme 'doom-palenight t)
-;;   (load-theme 'doom-solarized-light t)
+;;   (load-theme 'doom-palenight t)
 ;;   (doom-themes-org-config))
 (use-package solarized-theme
   :config
   (setq solarized-distinct-fringe-background t
         solarized-high-contrast-mode-line t
-        solarized-use-variable-pitch nil)
-  (load-theme 'solarized-light-high-contrast t))
+        solarized-use-variable-pitch nil
+        chasinglogic-theme-darkness 'light)
+  (load-theme 'solarized-light-high-contrast t)
+
+  (defun chasinglogic-toggle-theme ()
+    (interactive)
+    (if (eq chasinglogic-theme-darkness 'light)
+        (progn
+          (setq chasinglogic-theme-darkness 'dark)
+          (disable-theme 'solarized-light-high-contrast)
+          (load-theme 'solarized-dark-high-contrast t))
+      (progn
+        (setq chasinglogic-theme-darkness 'light)
+        (disable-theme 'solarized-dark-high-contrast)
+        (load-theme 'solarized-light-high-contrast t)))))
 
 ;; Line numbers in programming modes.
 ;;     I enable line numbers using the new Emacs 26
