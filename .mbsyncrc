@@ -40,7 +40,7 @@ Channel work-trash
 Channel work-all
 
 IMAPAccount personal
-Host imap.fastmail.com
+Host imap.mailbox.org
 SSLType IMAPS
 SSLVersions TLSv1.2
 User mathew@chasinglogic.io
