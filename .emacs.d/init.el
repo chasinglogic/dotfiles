@@ -1620,6 +1620,7 @@ comments so this function better suits my needs."
 
 (require 'chasinglogic-frames)
 (require 'chasinglogic-utils)
+(require 'chasinglogic-email)
 (require 'auto-sync-mode)
 
 ;; Post initialization
