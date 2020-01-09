@@ -656,9 +656,13 @@ comments so this function better suits my needs."
     (interactive)
     (setq
      projectile-known-projects
-     (delete ""
-             (split-string
-              (shell-command-to-string "projector list") "\n"))))
+     (sort 
+      (delete ""
+              (split-string
+               (shell-command-to-string "projector list") "\n"))
+      (lambda (a b)
+        (< (length a) (length b))))))
+  (chasinglogic-add-projector-projects-to-projectile)
 
   :config
   (defun chasinglogic-switch-project-action ()
