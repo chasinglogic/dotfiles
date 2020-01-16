@@ -182,12 +182,12 @@
 
   (leader!
     "b" '(:which-key "buffers")
-    "bd" '(lambda ()
-            (interactive)
-            (kill-buffer (current-buffer)))
-    "bs" '(lambda ()
-            (interactive)
-            (switch-to-buffer "*scratch*"))
+    "bd" #'(lambda ()
+             (interactive)
+             (kill-buffer (current-buffer)))
+    "bs" #'(lambda ()
+             (interactive)
+             (switch-to-buffer "*scratch*"))
     "br" 'revert-buffer
     "bD" 'kill-buffer
     "bm" 'ibuffer)
@@ -238,7 +238,7 @@
   (setq evil-want-keybinding nil)
   :config
   (general-nmap
-    "-" '(lambda () (interactive) (dired "."))
+    "-" #'(lambda () (interactive) (dired "."))
     "<tab>" 'indent-according-to-mode
     "gcc" 'comment-actually-dwim)
   (general-vmap "gc" 'comment-or-uncomment-region)
@@ -418,27 +418,15 @@ comments so this function better suits my needs."
 ;; (use-package zenburn-theme :config (load-theme 'zenburn t))
 ;; (use-package doom-themes
 ;;   :config
-;;   (load-theme 'doom-palenight t)
+;;   ;; (load-theme 'doom-palenight t)
+;;   (load-theme 'doom-solarized-light t)
 ;;   (doom-themes-org-config))
 (use-package solarized-theme
   :config
   (setq solarized-distinct-fringe-background t
         solarized-high-contrast-mode-line t
-        solarized-use-variable-pitch nil
-        chasinglogic-theme-darkness 'light)
-  (load-theme 'solarized-light-high-contrast t)
-
-  (defun chasinglogic-toggle-theme ()
-    (interactive)
-    (if (eq chasinglogic-theme-darkness 'light)
-        (progn
-          (setq chasinglogic-theme-darkness 'dark)
-          (disable-theme 'solarized-light-high-contrast)
-          (load-theme 'solarized-dark-high-contrast t))
-      (progn
-        (setq chasinglogic-theme-darkness 'light)
-        (disable-theme 'solarized-dark-high-contrast)
-        (load-theme 'solarized-light-high-contrast t)))))
+        solarized-use-variable-pitch nil)
+  (load-theme 'solarized-light-high-contrast t))
 
 ;; Line numbers in programming modes.
 ;;     I enable line numbers using the new Emacs 26
@@ -660,9 +648,7 @@ comments so this function better suits my needs."
       (delete ""
               (split-string
                (shell-command-to-string "projector list") "\n"))
-      (lambda (a b)
-        (< (length a) (length b))))))
-  (chasinglogic-add-projector-projects-to-projectile)
+      #'(lambda (a b) (< (length a) (length b))))))
 
   :config
   (defun chasinglogic-switch-project-action ()
