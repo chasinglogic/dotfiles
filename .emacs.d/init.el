@@ -665,7 +665,8 @@ comments so this function better suits my needs."
   ;; When switching projects set frame name to project name
   (defun set-frame-name-to-project ()
     (set-frame-parameter (selected-frame) 'name (projectile-project-name)))
-  (add-hook 'projectile-after-switch-project-hook 'set-frame-name-to-project))
+  (add-hook 'projectile-after-switch-project-hook 'set-frame-name-to-project)
+  (chasinglogic-add-projector-projects-to-projectile))
 
 
 (use-package crux
