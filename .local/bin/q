@@ -1,7 +1,5 @@
 #!/bin/bash
 
-MESSAGE="$(echo $(git log -n 1 --format='%s'))"
-
 PROJECT="$(basename $(git rev-parse --show-toplevel))"
 if [[ $PROJECT == mongo.* || $PROJECT == mongo ]]; then
           BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -25,11 +23,10 @@ if [[ $FLAGS == *'--enterprise'* ]]; then
           FLAGS+=(--pause)
 fi
 
-echo "Command: evergreen commit-queue merge --message $MESSAGE --project $PROJECT $FLAGS"
+echo "Command: evergreen commit-queue merge --project $PROJECT $FLAGS"
 
 exec 5>&1
 OUTPUT=$(evergreen commit-queue merge \
-          --message "$MESSAGE" \
           --project "$PROJECT" \
           $FLAGS 2>&1 | tee >(cat - >&5))
 
