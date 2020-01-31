@@ -31,6 +31,7 @@ check_pattern $1 "^[A-Z]\{3,\}-[0-9]\{1,\}"
 check_pattern $1 "^WIP: .*"
 check_pattern $1 "^wip: .*"
 check_pattern $1 "^wip .*"
+check_pattern $1 "^Revert .*"
 
 echo "Must include a JIRA ticket or WIP in your commit message"
 exit 1
