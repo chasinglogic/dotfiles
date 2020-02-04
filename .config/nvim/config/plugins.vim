@@ -28,7 +28,7 @@ Plug 'tpope/vim-fugitive'   " Git integration
 Plug 'tpope/vim-markdown'   " Better markdown
 
 """ Language Support
-Plug 'PProvost/vim-ps1'              " I write powershell scripts
+Plug 'PProvost/vim-ps1'              " I write powershell scripts sometimes
 Plug 'leafgarland/typescript-vim'    " Add typescript syntax files
 Plug 'Vimjas/vim-python-pep8-indent' " better python indentation
 
