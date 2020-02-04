@@ -61,7 +61,11 @@ fi
 
 # FZF default find command
 export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
-export EDITOR="emacsclient --tty -a 'nvim'"
+if [[ -x $(which nvim) ]]; then
+    export EDITOR="nvim"
+else
+    export EDITOR="vi"
+fi
 
 # Mac specific fixes
 if [[ "$(uname)" == "Darwin" ]]; then

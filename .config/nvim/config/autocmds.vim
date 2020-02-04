@@ -1,19 +1,22 @@
-augroup autofmt
-  autocmd!
-  """ Auto format rust on save
-  autocmd BufWritePre *.rs Neoformat
-  """ Auto format swift on save
-  autocmd BufWritePre *.swift Neoformat
+""" Terminal stuff
+augroup terminal_settings
+    autocmd!
+
+    autocmd TermOpen * setlocal nonumber
+    autocmd BufWinEnter,WinEnter term://* startinsert
+    autocmd BufLeave term://* stopinsert
+
+    " Ignore fzf as that will close terminal automatically. Otherwise if the
+    " shell exits then close the terminal window and buffer.
+    autocmd TermClose term://*
+          \ if (expand('<afile>') !~ "fzf") |
+          \   call nvim_input('<CR>')  |
+          \ endif
 augroup END
 
-""" Terminal stuff
-autocmd BufEnter term://* startinsert
-autocmd TermOpen * setlocal nonumber
-autocmd TermOpen * startinsert
-
-""" Rust CTAGS
-autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/,$RUST_SRC_PATH/rusty-tags.vi
-autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand('%:p:h') . "&" | redraw!
-
-" Highlight SCons files
-autocmd BufNewFile,BufRead SCons* set syntax=python
+""" Map non-standard files to filetypes
+augroup file_type_mappings
+  """ Highlight SCons files
+  autocmd BufNewFile,BufRead SConscript set filetype=python
+  autocmd BufNewFile,BufRead SConstruct set filetype=python
+augroup END

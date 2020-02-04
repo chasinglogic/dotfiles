@@ -61,8 +61,9 @@ nmap <C-w>d <C-w>c
 nmap <C-w>m <C-w>o
 
 """ Terminal
-nmap <Leader>xx :term<CR>
-nmap <Leader>xt :tabnew<CR>:term<CR>
+nmap <Leader>'  :split term://zsh<CR>
+nmap <Leader>xx :terminal<CR>
+nmap <Leader>xt :tabnew<CR>:terminal<CR>
 tnoremap fd <C-\><C-n>
 tnoremap jk <C-\><C-n>:tabprev<CR>
 
@@ -82,6 +83,7 @@ nmap <Leader>t5 :tabn 5<CR>
 nmap <Leader>ga :!git add %<CR>
 nmap <Leader>gc :Gcommit<CR>
 nmap <Leader>gs :Gstatus<CR>
+nmap <Leader>gb :Gblame<CR>
 
 """ Utility
 nmap YY ggyG<C-o><C-o> " Copy whole buffer without losing my place
