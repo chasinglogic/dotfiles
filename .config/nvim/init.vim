@@ -1,4 +1,6 @@
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+let g:python3_host_prog='/usr/bin/python3'
+let g:python_host_prog='/usr/bin/python'
 
 source $HOME/.config/nvim/config/editor.vim
 source $HOME/.config/nvim/config/plugins.vim
@@ -11,8 +13,8 @@ source $HOME/.config/nvim/config/utils.vim
 syntax enable
 filetype plugin on
 set termguicolors
-set background=dark
-colorscheme dracula
+set background=light
+colorscheme NeoSolarized
 
 """ Set font for GUI
 if has('gui_running')

@@ -391,7 +391,7 @@ comments so this function better suits my needs."
 (when (and (display-graphic-p) (eq system-type 'darwin))
   ;; Retina display requires bigger font IMO.
   (setq chasinglogic-font-size "15"))
-(set-frame-font (format "Fira Code %s" chasinglogic-font-size) nil t)
+(set-frame-font (format "Fira Mono %s" chasinglogic-font-size) nil t)
 
 ;; Window Chrome
 ;;     Emacs by default has lots of window chrome to make it more mouse
