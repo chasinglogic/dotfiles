@@ -59,8 +59,6 @@ if [ -z "$TERM" ]; then
     export TERM="xterm-256color"
 fi
 
-# FZF default find command
-export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
 if [[ -x $(which nvim) ]]; then
     export EDITOR="nvim"
 else
@@ -90,6 +88,13 @@ add_to_path /usr/bin
 add_to_path /usr/lib/icecream/bin
 add_to_path $HOME/Library/Python/3.7/bin
 add_to_path /snap/bin
+
+# FZF default find command
+if [[ -x $(which fd) ]]; then
+    export FZF_DEFAULT_COMMAND="fd --hidden"
+else
+    export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
+fi
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
