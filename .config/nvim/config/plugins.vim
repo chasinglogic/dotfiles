@@ -42,10 +42,8 @@ Plug 'easymotion/vim-easymotion' " Easily jump around files
 
 """ Auto completion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'autozimu/LanguageClient-neovim', {
-      \ 'branch': 'next',
-      \ 'do': 'bash install.sh',
-      \ }
+Plug 'neovim/nvim-lsp'
+
 
 """ IDE-esque support for various languages
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
@@ -63,17 +61,16 @@ Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
 call plug#end()
 
+""" Neoformat
+let g:neoformat_enabled_python = ['black', 'docformatter']
+
 """ Language client configuration
 let g:deoplete#enable_at_startup = 1
-let g:LanguageClient_useVirtualText = 0
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-    \ 'javascript': ['javascript-typescript-stdio'],
-    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-    \ 'python': ['pyls'],
-    \ 'c': ['ccls'],
-    \ 'cpp': ['ccls'],
-    \ }
+""" You must enable language servers use lua.
+lua << EOF
+local nvim_lsp = require'nvim_lsp'
+nvim_lsp.pyls.setup{}
+EOF
 
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>

@@ -28,6 +28,7 @@ nmap <Leader>pg :Grep<Space>
 nmap <Leader>pq :FZFQuickFix<CR>
 nmap <Leader>pa :args `git ls-files`<CR>:argdo
 nmap <Leader>pr :args `git ls-files`<CR>:argdo %s/
+nmap <Leader>pc :make<CR>
 
 """ Lists
 nmap <Leader>en :lnext<CR>
