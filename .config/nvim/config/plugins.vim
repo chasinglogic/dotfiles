@@ -79,3 +79,55 @@ let g:go_fmt_command = "goimports"
 
 " [Tags] Command to generate tags file
 let g:fzf_tags_command = '/usr/local/bin/ctags -R'
+
+" Interactive searchign with Ripgrep
+" Taken from: https://github.com/junegunn/fzf.vim#example-advanced-ripgrep-integration
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+" Use a nice floating window for display
+
+if has('nvim-0.4.0')
+  let $FZF_DEFAULT_OPTS='--layout=reverse --border'
+  let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+  let g:fzf_colors =
+    \ { 'fg':      ['fg', 'Normal'],
+    \   'bg':      ['bg', 'Normal'],
+    \   'hl':      ['fg', 'Comment'],
+    \   'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+    \   'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+    \   'hl+':     ['fg', 'Statement'],
+    \   'info':    ['fg', 'PreProc'],
+    \   'border':  ['fg', 'Normal'],
+    \   'prompt':  ['fg', 'Conditional'],
+    \   'pointer': ['fg', 'Exception'],
+    \   'marker':  ['fg', 'Keyword'],
+    \   'spinner': ['fg', 'Label'],
+    \   'header':  ['fg', 'Comment'] }
+
+  function! FloatingFZF()
+    let buf = nvim_create_buf(v:false, v:true)
+    let height = float2nr(&lines - (&lines * 2 / 10))
+    let width = float2nr(&columns - (&columns * 2 / 10))
+    let col = float2nr((&columns - width) / 2)
+    let row = float2nr((&lines - height) / 2)
+
+    let opts = {
+          \ 'relative': 'editor',
+          \ 'row': row,
+          \ 'col': col,
+          \ 'width': width,
+          \ 'height': height,
+          \ 'style': 'minimal',
+          \ }
+
+    call nvim_open_win(buf, v:true, opts)
+  endfunction
+endif
