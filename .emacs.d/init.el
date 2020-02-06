@@ -26,10 +26,6 @@
 
 ;;; Code:
 
-;; Temporarily set gc-cons-threshold to 100MB to prevent garbage
-;; collection during init. Speeds up startup time.
-(setq gc-cons-threshold 100000000)
-
 ;; Auto saves and backups
 ;;     Emacs has amazing auto save and backup functionality that has
 ;;     saved me many times after such events as an X11 crash or power
@@ -860,6 +856,8 @@ comments so this function better suits my needs."
   :init
   (setq-default
    lsp-ui-doc nil
+   lsp-ui-imenu-enable nil
+   lsp-ui-peek-enable nil
    lsp-ui-sideline nil))
 
 (use-package lsp-ivy
@@ -1621,6 +1619,3 @@ comments so this function better suits my needs."
 ;; First Maximize this frame, the initial frame won't see our hooks in
 ;; `make-frame-init-functions'.
 (toggle-frame-maximized)
-
-;; Set gc-cons-threshold back to it's default value.
-(setq gc-cons-threshold 800000)

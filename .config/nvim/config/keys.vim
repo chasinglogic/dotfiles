@@ -22,7 +22,7 @@ nmap <Leader>fr :source %<CR>
 
 """ Project level ops
 nmap <Leader>pf :FZF<CR>
-nmap <Leader>ps :Grep<Space>
+nmap <Leader>ps :RG<CR>
 nmap <Leader>pt :Tags<CR>
 nmap <Leader>pg :Grep<Space>
 nmap <Leader>pq :FZFQuickFix<CR>
