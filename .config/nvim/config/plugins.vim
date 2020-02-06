@@ -38,12 +38,10 @@ Plug 'alvan/vim-closetag'        " Close (X)HTML tags
 Plug 'easymotion/vim-easymotion' " Easily jump around files
 
 """ Linting
-" Plug 'dense-analysis/ale' " Code linting and LSP client
 
 """ Auto completion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'neovim/nvim-lsp'
-
+Plug 'dense-analysis/ale' " Code linting and LSP client
 
 """ IDE-esque support for various languages
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
@@ -66,15 +64,14 @@ let g:neoformat_enabled_python = ['black', 'docformatter']
 
 """ Language client configuration
 let g:deoplete#enable_at_startup = 1
-""" You must enable language servers use lua.
-lua << EOF
-local nvim_lsp = require'nvim_lsp'
-nvim_lsp.pyls.setup{}
-EOF
+call deoplete#custom#option('sources', {'_': ['buffer', 'ale']})
 
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
+let g:neoformat_enabled_python = ['black']
+let g:neoformat_enabled_python3 = ['black']
 
 """ Vim-go settings
 let g:go_fmt_autosave = 1

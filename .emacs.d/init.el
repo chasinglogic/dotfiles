@@ -848,15 +848,25 @@ comments so this function better suits my needs."
                       lsp-prefer-flymake nil)
   :commands 'lsp)
 
+;; Enable LSP for all prog modes
+(defun chasinglogic-enable-lsp ()
+  "Enable LSP mode."
+  (lsp))
+
+(add-hook 'prog-mode-hook 'chasinglogic-enable-lsp)
+
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :init
   (setq-default
-   lsp-ui-doc-enable nil
-   lsp-ui-peek-enable nil
-   lsp-ui-sideline-enable nil
-   lsp-ui-imenu-enable nil
-   lsp-ui-flycheck-enable t))
+   lsp-ui-doc nil
+   lsp-ui-sideline nil))
+
+(use-package lsp-ivy
+  :after (lsp-mode ivy)
+  :commands (lsp-ivy-workspace-symbol lsp-ivy-global-workspace-symbol)
+  :general (leader!
+             "jw" 'lsp-ivy-workspace-symbol))
 
 ;; LSP powered auto completion
 ;;
@@ -1401,14 +1411,6 @@ comments so this function better suits my needs."
       (pyvenv-workon (projectile-project-name))))
   (add-hook 'projectile-after-switch-project-hook 'chasinglogic-auto-venv))
 
-;; Finally enable LSP mode in Python buffers and make Emacs treat
-;; SCons build configuration files as python.
-(defun chasinglogic-enable-lsp ()
-  "Enable LSP for all non SCons* files"
-  (when (not (string-match "SCons.*" (buffer-file-name)))
-    (lsp)))
-
-(add-hook 'python-mode-hook 'chasinglogic-enable-lsp)
 ;; Load SCons files as Python
 (add-to-list 'auto-mode-alist '("SConscript" . python-mode))
 (add-to-list 'auto-mode-alist '("SConstruct" . python-mode))
@@ -1518,8 +1520,7 @@ comments so this function better suits my needs."
         flycheck-clang-include-path (list (concat (projectile-project-root) "src")))
 
   ;; Auto format C/C++ buffers
-  (add-hook 'before-save-hook 'clang-format-buffer nil t)
-  (lsp))
+  (add-hook 'before-save-hook 'clang-format-buffer nil t))
 
 (add-hook 'c++-mode-hook 'chasinglogic-cpp-mode-hook)
 (add-hook 'c-mode-hook 'chasinglogic-cpp-mode-hook)
