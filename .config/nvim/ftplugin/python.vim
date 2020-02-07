@@ -7,3 +7,7 @@ if match(file_path, 'mongo') == -1
         autocmd BufWritePre *.py Neoformat
     augroup END
 endif
+
+if match(file_path, 'SConstruct') != -1 || match(file_path, 'SConscript') != -1
+    let b:ale_linters = []
+endif
