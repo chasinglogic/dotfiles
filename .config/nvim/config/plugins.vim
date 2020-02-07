@@ -31,6 +31,8 @@ Plug 'tpope/vim-markdown'   " Better markdown
 Plug 'PProvost/vim-ps1'              " I write powershell scripts sometimes
 Plug 'leafgarland/typescript-vim'    " Add typescript syntax files
 Plug 'Vimjas/vim-python-pep8-indent' " better python indentation
+Plug 'igankevich/mesonic'
+Plug 'arrufat/vala.vim'
 
 """ Editor improvements
 Plug 'jiangmiao/auto-pairs'      " Auto closing of pairs
@@ -61,6 +63,8 @@ call plug#end()
 
 """ Neoformat
 let g:neoformat_enabled_python = ['black', 'docformatter']
+
+let g:vala_syntax_folding_enabled = 0
 
 """ Language client configuration
 let g:deoplete#enable_at_startup = 1
