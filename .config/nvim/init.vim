@@ -14,7 +14,7 @@ syntax enable
 filetype plugin on
 set termguicolors
 set background=light
-colorscheme dracula
+colorscheme NeoSolarized
 
 """ Set font for GUI
 if has('gui_running')

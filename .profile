@@ -91,7 +91,7 @@ add_to_path /snap/bin
 
 # FZF default find command
 if [[ -x $(which fd) ]]; then
-    export FZF_DEFAULT_COMMAND="fd --hidden"
+    export FZF_DEFAULT_COMMAND="fd --hidden --exclude '.git'"
 else
     export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
 fi
