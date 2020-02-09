@@ -1,39 +1,70 @@
 #!/bin/bash
 # vi: ft=sh
 
-if [[ $NOTE_DIR == "" ]]; then
+if [ -z $NOTE_DIR ]; then
     NOTE_DIR="$HOME/Nextcloud/Notes"
 fi
 
-
+FIND_IN_NOTES=0
 ENCRYPT_NOTE=0
-while getopts ":e" opt; do
+while getopts ":es" opt; do
     case ${opt} in
-        e) ENCRYPT_NOTE=1 ;;
+        e) ENCRYPT_NOTE=1 ; shift ;;
+        s) FIND_IN_NOTES=1 ; shift ;;
     esac
 done
 
-search=$1
-if [[ $search == "" ]]; then
-    search="."
+if [[ $FIND_IN_NOTES == 1 ]]; then
+    grep_cmd="grep --context 2 --with-filename --line-number '$@'"
+    find $NOTE_DIR -name "*.md" -type f -exec $grep_cmd {} \;
 fi
 
-files=( $(find $NOTE_DIR -name "*$search*" -type f) )
-
-if [ "${#files[@]}" -eq "1" ]; then
-    file="${files[0]}"
-elif [[ "${#files[@]}" -eq "0" && $search != "." ]]; then
-    if [ "${ENCRYPT_NOTE}" -eq "1" ]; then
-        file="$NOTE_DIR/${search}.md.gpg"
-    else
-        file="$NOTE_DIR/${search}.md"
-    fi
+if [[ -z "$@" ]]; then
+    echo "Finding all"
+    search="*"
 else
-    file="$(printf '\n%s' ${files[@]} | sed '/^\s*$/d' | fzf)"
+    search="*$@*"
+fi
+
+# Have to do this weird loop so files with spaces are treated as one array item.
+files=()
+while IFS=  read -r -d $'\0'; do
+    files+=("$REPLY")
+done < <(find $NOTE_DIR -wholename "$search" -type f -print0)
+
+echo "Len: ${#files[@]}"
+if [[ ${#files[@]} -eq 1 ]]; then
+    file="${files[0]}"
+elif [[ "${#files[@]}" -eq "0" ]]; then
+    filename="$@"
+    echo "FN $filename"
+    # Strip off file extension so we can add back the correct one.
+    filename="${filename/.md*/}"
+    title=$(basename "$filename")
+    echo "title $title"
+    filename="$NOTE_DIR/$filename.md"
+    echo "filenamed $filename"
+    dir=$(dirname "$filename")
+    echo "dir $dir"
+    if [[ ! -d $dir ]]; then
+        mkdir -p $dir
+    fi
+
+    echo "# $title" > "$filename"
+
+    if [ "${ENCRYPT_NOTE}" -eq "1" ]; then
+        gpg --encrypt "$filename"
+        rm "$filename"
+        filename="$filename.gpg"
+    fi
+
+    file="$filename"
+else
+    file=$(printf "\n%s" $files | fzf)
 fi
 
 if [ -t 1 ]; then
-    $EDITOR $file
+    $EDITOR "$file"
 else
-    cat $file
+    cat "$file"
 fi
