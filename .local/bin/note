@@ -20,7 +20,6 @@ if [[ $FIND_IN_NOTES == 1 ]]; then
 fi
 
 if [[ -z "$@" ]]; then
-    echo "Finding all"
     search="*"
 else
     search="*$@*"
@@ -32,20 +31,15 @@ while IFS=  read -r -d $'\0'; do
     files+=("$REPLY")
 done < <(find $NOTE_DIR -wholename "$search" -type f -print0)
 
-echo "Len: ${#files[@]}"
 if [[ ${#files[@]} -eq 1 ]]; then
     file="${files[0]}"
 elif [[ "${#files[@]}" -eq "0" ]]; then
     filename="$@"
-    echo "FN $filename"
     # Strip off file extension so we can add back the correct one.
     filename="${filename/.md*/}"
     title=$(basename "$filename")
-    echo "title $title"
     filename="$NOTE_DIR/$filename.md"
-    echo "filenamed $filename"
     dir=$(dirname "$filename")
-    echo "dir $dir"
     if [[ ! -d $dir ]]; then
         mkdir -p $dir
     fi
