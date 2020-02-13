@@ -90,11 +90,7 @@ add_to_path $HOME/Library/Python/3.7/bin
 add_to_path /snap/bin
 
 # FZF default find command
-if [[ -x $(which fd) ]]; then
-    export FZF_DEFAULT_COMMAND="fd --hidden --exclude '.git'"
-else
-    export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
-fi
+export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"

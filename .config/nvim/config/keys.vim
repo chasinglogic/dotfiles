@@ -18,7 +18,8 @@ nmap <Leader>ff :FZF<CR>
 nmap <Leader>fe :find
 nmap <Leader>fd :find ~/.config/nvim/init.vim<CR>
 nmap <Leader>fD :Delete<CR>
-nmap <Leader>fr :source %<CR>
+nmap <Leader>fr :Rename
+nmap <Leader>fR :source %<CR>
 
 """ Project level ops
 nmap <Leader>pf :FZF<CR>
@@ -54,7 +55,7 @@ nmap <Leader>jtd :ALEGotoDefitinion<CR>
 nmap <Leader>bb :Buffers<CR>
 nmap <Leader>bd :bdelete<CR>
 nmap <Leader>bD :bdelete!<CR>
-nmap <Leader>bs :tabnew __scratch__<CR>
+nmap <Leader>bs :tabnew __scratch__<CR>:setlocal buftype=nofile<CR>:setlocal bufhidden=hide<CR>:setlocal noswapfile<CR>
 
 """ Windows
 nmap <Leader>w <C-w>

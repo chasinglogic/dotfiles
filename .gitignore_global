@@ -5,14 +5,15 @@
 
 *.bak
 *.log
-*.tar*
+*.tar
+*.tgz
+*.tar.gz
 build/*
 target/*
 
 *DS_Store*
 .dropbox*
 .vscode/*
-Icon*
 clang+llvm*/
 node_modules/*
 
