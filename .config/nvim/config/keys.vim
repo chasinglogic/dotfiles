@@ -56,6 +56,7 @@ nmap <Leader>bb :Buffers<CR>
 nmap <Leader>bd :bdelete<CR>
 nmap <Leader>bD :bdelete!<CR>
 nmap <Leader>bs :tabnew __scratch__<CR>:setlocal buftype=nofile<CR>:setlocal bufhidden=hide<CR>:setlocal noswapfile<CR>
+nmap <Leader>br :e %<CR>
 
 """ Windows
 nmap <Leader>w <C-w>
