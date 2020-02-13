@@ -30,9 +30,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(
-    git
-)
+plugins=()
 
 source $ZSH/oh-my-zsh.sh
 
@@ -134,7 +132,7 @@ fi
 
 
 if [[ -f /usr/share/virtualenvwrapper/virtualenvwrapper.sh ]]; then
-    source /usr/share/virtualenvwrapper/virtualenvwrapper.sh 
+    source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
