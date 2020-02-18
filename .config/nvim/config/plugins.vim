@@ -6,13 +6,13 @@ call plug#begin('~/.vim-plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-Plug 'gabrielelana/vim-markdown'
 Plug 'jamessan/vim-gnupg'
 
 """ Better folding for text formats like Markdown
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 
+""" Prettier and more functional statusline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -59,7 +59,13 @@ Plug 'junegunn/vim-easy-align'
 
 """ Writing
 Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
+
+""" Wiki for notes
+Plug 'vimwiki/vimwiki'
 call plug#end()
+
+""" Vimwiki
+let g:vimwiki_map_prefix = '<Leader>k'
 
 """ Neoformat
 let g:neoformat_enabled_python = ['black', 'docformatter']
