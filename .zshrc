@@ -153,3 +153,4 @@ fi
 
 alias nv="nvim"
 alias cdc="cd $HOME/Code"
+alias g="git"
