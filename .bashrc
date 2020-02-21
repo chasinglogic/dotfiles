@@ -95,6 +95,7 @@ function source_if_exists() {
 }
 
 source_if_exists $HOME/.bash/prompt.bash
+source_if_exists $HOME/.bash/python.bash
 source_if_exists $HOME/.bash/tmux.bash
 source_if_exists $HOME/.fzf.bash
 source_if_exists $HOME/.bashrc_extras

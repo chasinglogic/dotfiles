@@ -1,6 +1,6 @@
-COMMAND_STATUS_COLOR="\$(tput setaf 5)"
+COMMAND_STATUS_COLOR="\$(tput bold)\$(tput setaf 5)"
 HOSTNAME_COLOR="\$(tput setaf 2)"
-PWD_COLOR="\$(tput setb)\$(tput setaf 6)"
+PWD_COLOR="\$(tput setaf 6)"
 GIT_BRANCH_COLOR="\$(tput setaf 1)"
 LAMBDA_COLOR="\$(tput setaf 3)"
 NO_COLOR="\e[0m"
