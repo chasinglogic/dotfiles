@@ -76,18 +76,18 @@ source_if_exists $HOME/.env.bash
 # Enable nix if I've installed it on this system
 source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
 
-add_to_path $GOPATH/bin
-add_to_path $HOME/.cargo/bin
-add_to_path $HOME/.local/bin
-add_to_path $HOME/.cask/bin
-add_to_path $HOME/.cask/bin
+add_to_path /snap/bin
 add_to_path /opt/local/bin
 add_to_path /usr/local/bin
 add_to_path /usr/local/sbin
 add_to_path /usr/bin
 add_to_path /usr/lib/icecream/bin
+add_to_path $GOPATH/bin
+add_to_path $HOME/.cargo/bin
+add_to_path $HOME/.local/bin
+add_to_path $HOME/.cask/bin
+add_to_path $HOME/.cask/bin
 add_to_path $HOME/Library/Python/3.7/bin
-add_to_path /snap/bin
 
 # FZF default find command
 export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
@@ -97,3 +97,5 @@ export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
 
 export PATH="$HOME/.cargo/bin:$PATH"
 export PLASMA_USE_QT_SCALING=1
+
+export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
