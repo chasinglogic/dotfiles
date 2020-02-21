@@ -42,7 +42,8 @@
     a = add
     c = commit
     r = rebase
-    rh = rebase -i origin/HEAD
+    rh = rebase origin/HEAD
+    rhi = rebase -i origin/HEAD
     b = branch
 
 [pager]
