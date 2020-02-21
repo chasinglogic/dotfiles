@@ -1,8 +1,8 @@
-ORANGE=$(tput setaf 166)
-RED=$(tput setaf 160)
-VIOLET="\e[35m"
-BLUE=$(tput setaf 33)
-CYAN=$(tput setaf 37)
+COMMAND_STATUS_COLOR="\$(tput setaf 5)"
+HOSTNAME_COLOR="\$(tput setaf 2)"
+PWD_COLOR="\$(tput setb)\$(tput setaf 6)"
+GIT_BRANCH_COLOR="\$(tput setaf 1)"
+LAMBDA_COLOR="\$(tput setaf 3)"
 NO_COLOR="\e[0m"
 
 function parse_git_branch {
@@ -30,11 +30,11 @@ function last_command_status {
     echo "!! "
 }
 
-    # Make the pwd look pretty
-    function pretty_pwd {
-        dir=`pwd | awk -F\/ '{print $(NF-1),$(NF)}' | sed 's/ /\\//'`
-        echo "$dir"
-    }
+# Make the pwd look pretty
+function pretty_pwd {
+    dir=`pwd | awk -F\/ '{print $(NF-1),$(NF)}' | sed 's/ /\\//'`
+    echo "$dir"
+}
 
-PS1="\[$RED\]\$(last_command_status)\[$VIOLET\]@$HOSTNAME\[$CYAN\] \$(pretty_pwd) \[$CYAN\]\$(parse_git_branch)\[$ORANGE\]\$(lambda_or_delta) \[$NO_COLOR\]"
+PS1="\[$COMMAND_STATUS_COLOR\]\$(last_command_status)\[$HOSTNAME_COLOR\]@$HOSTNAME\[$PWD_COLOR\] \$(pretty_pwd) \[$GIT_BRANCH_COLOR\]\$(parse_git_branch)\[$LAMBDA_COLOR\]\$(lambda_or_delta) \[$NO_COLOR\]"
 
