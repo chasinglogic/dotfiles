@@ -42,6 +42,9 @@
     a = add
     c = commit
     r = rebase
+    f = fetch
+    pl = pull
+    ps = push
     rh = rebase origin/HEAD
     rhi = rebase -i origin/HEAD
     b = branch
