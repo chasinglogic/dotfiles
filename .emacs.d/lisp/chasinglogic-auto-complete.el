@@ -1,4 +1,4 @@
-;;; chasinglogic-minor-modes.el --- Minor modes
+;;; chasinglogic-auto-complete.el --- Auto completion setup
 
 ;; Copyright (C) 2020 Mathew Robinson
 
@@ -26,29 +26,27 @@
 
 ;;; Code:
 
-;; Highlight TODO mode
+;; Company Mode
 ;;
-;; By default Emacs doesn't highlight TODO comments. This makes them
-;; stand out by fontifying them the same as Org mode TODO header
-;; keywords.
-(use-package hl-todo
-  :demand
-  :config
-  (global-hl-todo-mode))
-
-;; anzu-mode enhances isearch & query-replace by showing total matches
-;; and current match position
-(use-package anzu
+;; Company stands for COMPlete ANYthing and it does. I enable it
+;; globally and diminish it since it is always on. I only set
+;; `company-dabbrev-downcase' to nil. This ignores casing when
+;; providing suggestions taken from inside the current buffer.
+(use-package company
   :diminish ""
-  :bind (("C-M-%" . anzu-query-replace-regexp)
-         ("M-%" . anzu-query-replace))
-  :config (global-anzu-mode)
+  :config
+  (setq-default company-dabbrev-downcase nil)
+  (global-company-mode))
 
-  (use-package evil-anzu
-    :after 'evil
-    ))
+;; LSP powered auto completion
+;;
+;; We need one more package to integrate LSP mode with my completion
+;; framework Company, the cleverly named, `company-lsp'. All that we
+;; need to do is add it to company backends.
+(use-package company-lsp
+  :config (push 'company-lsp company-backends)
+  :after (lsp-mode company))
 
+(provide 'chasinglogic-auto-complete)
 
-(provide 'chasinglogic-minor-modes)
-
-;;; chasinglogic-minor-modes.el ends here
+;;; chasinglogic-auto-complete.el ends here

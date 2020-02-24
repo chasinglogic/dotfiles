@@ -1,4 +1,4 @@
-;;; chasinglogic-minor-modes.el --- Minor modes
+;;; chasinglogic-rust.el --- Rust language setup
 
 ;; Copyright (C) 2020 Mathew Robinson
 
@@ -26,29 +26,21 @@
 
 ;;; Code:
 
-;; Highlight TODO mode
-;;
-;; By default Emacs doesn't highlight TODO comments. This makes them
-;; stand out by fontifying them the same as Org mode TODO header
-;; keywords.
-(use-package hl-todo
-  :demand
+;; Rust is my go to programming language outside of work. It has
+;; excellent Emacs support but most of the features I need are
+;; actually provided by LSP mode. This simply installs and attaches
+;; the Rust major mode to =.rs= files, enables format on save, and
+;; sets a better default compile command. Finally it loads `lsp' on
+;; `rust-mode' startup.
+(use-package rust-mode
+  :mode ("\\.rs\\'")
   :config
-  (global-hl-todo-mode))
+  (setq rust-format-on-save t)
+  (defun chasinglogic-rust-mode-hook ()
+    (setq-local compile-command "cargo clippy && cargo test"))
+  (add-hook 'rust-mode-hook 'chasinglogic-rust-mode-hook)
+  (add-hook 'rust-mode-hook #'lsp))
 
-;; anzu-mode enhances isearch & query-replace by showing total matches
-;; and current match position
-(use-package anzu
-  :diminish ""
-  :bind (("C-M-%" . anzu-query-replace-regexp)
-         ("M-%" . anzu-query-replace))
-  :config (global-anzu-mode)
+(provide 'chasinglogic-rust)
 
-  (use-package evil-anzu
-    :after 'evil
-    ))
-
-
-(provide 'chasinglogic-minor-modes)
-
-;;; chasinglogic-minor-modes.el ends here
+;;; chasinglogic-rust.el ends here

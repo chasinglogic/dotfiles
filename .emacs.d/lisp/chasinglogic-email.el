@@ -43,6 +43,7 @@
 ;; MacOS and Linux.
 (use-package mu4e
   :load-path mu4e-load-path
+  :general (leader! "me" 'mu4e)
   :bind ("C-c m" . mu4e)
   :config
 

@@ -57,6 +57,7 @@ Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 """ Themes
 Plug 'icymind/NeoSolarized', { 'as': 'solarized' }
 Plug 'dracula/vim', {'as': 'dracula'}
+Plug 'drewtempelmeyer/palenight.vim'
 
 """ Easy alignment
 Plug 'junegunn/vim-easy-align'
