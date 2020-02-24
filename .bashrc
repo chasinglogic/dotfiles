@@ -69,6 +69,7 @@ source $HOME/.profile
 alias ll="ls -alF"
 alias la="ls -a"
 alias l="ls -CF"
+alias em="emacs -nw"
 
 alias cd..="cd .."
 alias cdc="cd $HOME/Code"

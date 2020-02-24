@@ -57,7 +57,9 @@ if [ -z "$TERM" ]; then
     export TERM="xterm-256color"
 fi
 
-if [[ -x $(which nvim) ]]; then
+if [[ -x $(which emacs) ]]; then
+    export EDITOR="emacs -nw"
+elif [[ -x $(which nvim) ]]; then
     export EDITOR="nvim"
 else
     export EDITOR="vi"
