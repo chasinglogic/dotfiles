@@ -16,6 +16,10 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+""" Auto-resize windows when they come into focus.
+Plug 'camspiers/animate.vim'
+Plug 'camspiers/lens.vim'
+
 """ Tpope general improvements
 Plug 'tpope/vim-vinegar'    " Netrw improvements
 Plug 'tpope/vim-commentary' " Commenting code
