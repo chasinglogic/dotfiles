@@ -12,6 +12,8 @@ hooks:
   after_sync:
     # Keep neovim and msgpack up to date.
     - pip3 install --user -U pynvim msgpack
+    - systemctl --user daemon-reload
+    - systemctl --user enable mbsync.timer emacs
 
 modules:
   # My encrypted secret files
