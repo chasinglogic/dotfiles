@@ -9,21 +9,10 @@ mappings:
     skip: true
 
 hooks:
-  after_link:
-    - "[ ! -f $HOME/.gnupg/pubring.kbx ] && $HOME/.local/bin/export_keybase"
-    - |
-      MBSYNC_ACTIVE=$(systemctl --user is-active mbsync.timer)
-      if [ "$MBSYNC_ACTIVE" = "inactive" ]; then
-          systemctl --user daemon-reload
-          systemctl --user enable mbsync.timer
-          systemctl --user start mbsync.timer
-      fi
+  after_sync:
+    # Keep neovim and msgpack up to date.
+    - pip3 install --user -U pynvim msgpack
 
 modules:
   # My encrypted secret files
   - repo: keybase://private/chasinglogic/secrets
-  # Community configurations
-  - repo: git@github.com:robbyrussell/oh-my-zsh.git
-    pull_only: true
-    link: none
-    location: ~/.oh-my-zsh
