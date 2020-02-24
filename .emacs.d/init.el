@@ -99,8 +99,6 @@
 ;; improving Emacs startup time.
 
 ;; First we set a few global configuration options for `use-package':
-;; - `use-package-enable-imenu-support': Allow searching through the
-;;   =init.el= for packages using `imenu'.
 ;; - `use-package-always-ensure': Almost all of the packages that I
 ;;   configure with `use-package' are third party
 ;;   packages. `use-package' has a feature called =:ensure= that tells
@@ -108,8 +106,7 @@
 ;;   installed. Since `use-package' declarations where I don't want
 ;;   this behavior are the exception this setting tells `use-package'
 ;;   to set =:ensure t= by default.
-(setq-default use-package-enable-imenu-support t
-              use-package-always-ensure t)
+(setq-default use-package-always-ensure t)
 
 ;; Next we actually install `use-package'. We wrap this in a
 ;; `eval-when-compile' call since I byte compile my =init.el= it means
