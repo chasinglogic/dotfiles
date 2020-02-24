@@ -669,6 +669,7 @@ comments so this function better suits my needs."
   :general (leader!
              "fD" 'crux-delete-buffer-and-file
              "fr" 'crux-rename-buffer-and-file
+             "x" '(lambda () (interactive) (ansi-term (executable-find "bash")))
              "'" 'crux-visit-term-buffer)
   :bind (("C-a" . crux-move-beginning-of-line)
          ("C-k" . crux-smart-kill-line)
@@ -676,6 +677,11 @@ comments so this function better suits my needs."
          ("C-c f r" . crux-rename-buffer-and-file)
          ("C-x '" . crux-visit-term-buffer)))
 
+(defadvice term-handle-exit
+  (after term-kill-buffer-on-exit activate)
+  (if (> (length (window-list)) 1)
+      (kill-buffer-and-window)
+    (kill-buffer)))
 
 ;;;; Global Keybindings
 
