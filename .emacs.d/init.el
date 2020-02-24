@@ -191,6 +191,8 @@
 (require 'chasinglogic-misc)
 (when (eq 'system-type 'darwin)
   (require 'chasinglogic-macos))
+
+
 ;; Enable system clipboard in terminal emacs
 (when (not (display-graphic-p))
   (use-package xclip :config (xclip-mode 1)))
