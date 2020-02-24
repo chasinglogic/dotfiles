@@ -65,6 +65,10 @@
   (setq mac-option-modifier 'alt
         mac-command-modifier 'meta))
 
+;; Add the lisp directory where all other files are required from to
+;; the load path.
+(add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lisp"))
+
 ;; Package initialization
 ;;    Before we can set up our configuration for third party packages we
 ;;    have to initialize the built-in Emacs package for fetching and
@@ -112,179 +116,21 @@
   (when (not (package-installed-p 'use-package))
     (package-refresh-contents)
     (package-install 'use-package)))
+
 (require 'use-package)
 
-  ;;;; Evil
-
-;; Which Key
-;;
-;; Which key is possibly the best package ever invented, except for
-;; maybe helm. When pressing a key chord it will show you all possible
-;; bindings and prefixes so you can interactively explore key bindings
-;; as you type them. It's nothing short of amazing and a great
-;; discovery tool. No real configuration is needed except that I do
-;; diminish it since I always have it on globally.
-(use-package which-key
-  :diminish ""
-  :init
-  (which-key-mode))
-
-
-;; General(.el)
-;;
-;; General is a convenient way to do evil / leader-esque
-;; keybindings. It also provides some macros for easy Emacs style
-;; keybindings. I simply use it because it's very convenient and
-;; integrates with use-package well.
-(use-package general
-  :config
-  
-  (general-def "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
-  (general-def "C-c j =" 'chasinglogic-indent-buffer)
-  (general-def "C-c f r" 'chasinglogic-rename-file-and-buffer)
-  (general-def "C-c f D" 'chasinglogic-delete-current-buffer-file)
-  (general-def "C-x 5 o" 'chasinglogic-select-frame-by-name)
-  (general-def "C-x C-b" 'ibuffer)
-  (general-def "M-;" 'comment-actually-dwim)
-  (general-def "M-/" 'hippie-expand)
-  (general-def "M-t" 'switch-to-buffer)
-
-  (setq general-override-states '(insert
-                                  emacs
-                                  hybrid
-                                  normal
-                                  visual
-                                  motion
-                                  operator
-                                  replace))
-
-  (general-evil-setup t)
-  (general-create-definer leader!
-    :states '(normal visual)
-    :keymaps 'override
-    :prefix "<SPC>")
-
-  (leader!
-    "<SPC>" 'execute-extended-command
-    "h" `(,(general-simulate-key "C-h") :wk "help")
-    "q" '(:which-key "quit")
-    "qf" 'delete-frame
-    "qq" 'save-buffers-kill-emacs)
-
-  (leader!
-    "j" '(:which-key "jumps")
-    "j=" 'chasinglogic-indent-buffer
-    "jb" 'chasinglogic-copy-breakpoint-for-here)
-
-  (leader!
-    "b" '(:which-key "buffers")
-    "bd" #'(lambda ()
-             (interactive)
-             (kill-buffer (current-buffer)))
-    "bs" #'(lambda ()
-             (interactive)
-             (switch-to-buffer "*scratch*"))
-    "br" 'revert-buffer
-    "bD" 'kill-buffer
-    "bm" 'ibuffer)
-
-  (leader!
-    "w"  '(:which-key "windows")
-    "wf" 'make-frame
-    "wo" 'chasinglogic-select-frame-by-name
-    "wh" 'evil-window-left
-    "wH" 'evil-window-move-far-left
-    "wj" 'evil-window-down
-    "wJ" 'evil-window-move-very-bottom
-    "wk" 'evil-window-up
-    "wK" 'evil-window-move-very-top
-    "wl" 'evil-window-right
-    "wL" 'evil-window-move-far-right
-    "wd" 'evil-window-delete
-    "wc" 'evil-window-delete
-    "wv" 'evil-window-vsplit
-    "ws" 'evil-window-split
-    "wm" 'delete-other-windows)
-
-  (leader!
-    "m" '(:which-key "misc")
-    "mon" 'chasinglogic-find-org-file-notes
-    "moi" 'chasinglogic-find-org-file-ideas
-    "mot" 'chasinglogic-find-org-file-todo
-    "mor" 'chasinglogic-add-to-reading-list)
-
-  (when (boundp 'tab-bar-mode)
-    (leader!
-      "t" '(:which-key "tabs")
-      "to" 'tab-bar-new-tab
-      "ts" 'tab-bar-select-tab-by-name
-      "tc" 'tab-bar-close-tab
-      "tp" 'tab-bar-switch-to-prev-tab
-      "tn" 'tab-bar-switch-to-next-tab))
-
-  (leader!
-    "f" '(:which-key "files")
-    "ff" 'find-file
-    "fs" 'save-buffer))
-
-(use-package evil
-  :ensure t
-  :init
-  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-  (setq evil-want-keybinding nil)
-  :config
-  (general-nmap
-    "-" #'(lambda () (interactive) (dired "."))
-    "<tab>" 'indent-according-to-mode
-    "gcc" 'comment-actually-dwim)
-  (general-vmap "gc" 'comment-or-uncomment-region)
-  (evil-mode 1)
-
-  (use-package evil-escape
-    :config
-    (evil-escape-mode 1))
-
-  (use-package evil-surround
-    :config
-    (global-evil-surround-mode 1))
-  
-  (use-package evil-collection
-    :config
-    (evil-collection-init))
-
-  (use-package evil-magit
-    :config
-    (require 'evil-magit)))
-
-;; Quelpa (install packages from git)
-;;     I maintain a few Emacs packages and it's very helpful to be able to
-;;     automatically install and update them. This is what the [[https://framagit.org/steckerhalter/quelpa][Quelpa]]
-;;     package does. It lets you treat git remotes as if they were regular
-;;     package repositories. Additionally we install [[https://framagit.org/steckerhalter/quelpa-use-package][quelpa-use-package]]
-;;     which adds a =:quelpa= keyword argument to `use-package'.
-;;     We also only call quelpa on use-package quelpa if it's not
-;;     installed because I don't nee to update it very often and it slows
-;;     down startup time significantly.
-(use-package quelpa
-  :init
-  (when (not (package-installed-p 'quelpa-use-package))
-    (quelpa
-     '(quelpa-use-package
-       :fetcher git
-       :url "https://framagit.org/steckerhalter/quelpa-use-package.git")))
-  (require 'quelpa-use-package))
+(require 'chasinglogic-evil)
+(require 'chasinglogic-keys)
 
 ;; Emacs environment variables (exec-path-from-shell)
-
-;; I use the `exec-path-from-shell' package to keep my shell and Emacs
-;; environment variables in sync. I pay a little in startup time for
-;; this but not maintaining two copies of environment variables is way
-;; worth it.
-(use-package exec-path-from-shell
-  :config
-  (when (eq 'system-type 'darwin)
+;;
+;; Only enabled for MacOS because my .profile works correctly on Linux
+(when (eq 'system-type 'darwin)
+  (use-package exec-path-from-shell
+    :config
     (exec-path-from-shell-initialize)))
 
+;; Ensure a few important paths are always present
 (mapc 
  (lambda (path)
    (add-to-list 'exec-path path)
@@ -293,165 +139,11 @@
   (concat (getenv "HOME") "/.local/bin")
   (concat (getenv "HOME") "/.cargo/bin")))
 
-;; Add the lisp directory where all other files are required from to
-;; the load path.
-(add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lisp"))
-
-;; Load all of my other configuration files. Order matters.
-(eval-and-compile
-  (setq-default mu4e-load-path (if (eq system-type 'darwin)
-                                   "/usr/local/share/emacs/site-lisp/mu/mu4e"
-                                 "/usr/share/emacs/site-lisp/mu4e")))
-
 ;; Global customization variables
 
-
-;;     First we set spaces instead of tabs and set the default
-;;     `tab-width' to 4 spaces.
-(setq-default indent-tabs-mode nil
-              tab-width 4)
-
-;; By default when Emacs tries to open a symlink that points to a git
-;; repository it prompts you like "do you really wanna open this
-;; file". I use symlinks like this a lot so I disable this prompt.
-(setq-default vc-follow-symlinks t)
-
-;; One of the best features of Emacs is it's ability to integrate
-;; with programming languages at a syntactic level. It enables you to
-;; really edit these languages at that level in some
-;; cases. One of the common tasks that it can automate is commenting
-;; and uncommenting text in a source file. Unfortunately the default
-;; function for this `comment-dwim' assumes that if you have no
-;; region you want to insert a line comment. I rarely if ever use
-;; line comments and would prefer it to instead comment out the
-;; current line if no region is selected so I wrote
-;; `comment-actually-dwim' that does this and overwrite the default
-;; `comment-dwim' keybinding with my version.
-(defun comment-actually-dwim (arg)
-  "A simpler and more functional version of `comment-dwim'. It
-simply calls `comment-or-uncomment-region' with the current line
-or the active region.
-
-The complexity in the original `comment-dwim' comes from trying
-to manage comments at the end of lines. I rarely do on line
-comments so this function better suits my needs."
-  (interactive "*P")
-  (comment-normalize-vars)
-  (if (use-region-p)
-      (comment-or-uncomment-region (region-beginning) (region-end) arg)
-    (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
-
-;; I use =M-x compile= for running all kinds of commands. This
-;; setting makes it so that the buffer auto scrolls to keep up with
-;; the output. More like a regular terminal would.
-(setq compilation-scroll-output t)
-
-;; As I discover commands that have the "new user warnings" when I use
-;; them I disable them here.
-(put 'downcase-region 'disabled nil)
-
-;; Don't pollute ~/.emacs.d/init.el with customize settings.
-(setq custom-file "~/.emacs-custom.el")
-
-;; hippie expand is dabbrev expand on steroids
-(setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                         try-expand-dabbrev-all-buffers
-                                         try-expand-dabbrev-from-kill
-                                         try-complete-file-name-partially
-                                         try-complete-file-name
-                                         try-expand-all-abbrevs
-                                         try-expand-list
-                                         try-expand-line
-                                         try-complete-lisp-symbol-partially
-                                         try-complete-lisp-symbol))
-
-;; Just save buffers before compiling
-(setq-default compilation-ask-about-save nil
-              ;; Always kill old compilation without prompting
-              compilation-always-kill t
-              ;; Automatically scroll to first error
-              compilation-scroll-output 'first-error)
-
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-
-;; Font
-;;     First set the font. I've tried many fonts in my time and I find
-;;     Source Code Pro to be a Pretty Good Font™. Other fonts I like are
-;;     Inconsolata and DejaVu Sans Mono, and one day I may switch back to
-;;     them but getting them on all platforms can be a hassle.
-;;     The only thing fancy about the way this font is getting set is that
-;;     I use two font sizes: one for my Mac because of the retina display
-;;     and one for everything else where I use regular monitors.
-(setq-default chasinglogic-font-size "11")
-(when (and (display-graphic-p) (eq system-type 'darwin))
-  ;; Retina display requires bigger font IMO.
-  (setq chasinglogic-font-size "15"))
-(set-frame-font (format "Fira Code %s" chasinglogic-font-size) nil t)
-
-;; Window Chrome
-;;     Emacs by default has lots of window chrome to make it more mouse
-;;     accessible. While I actually use my mouse quite a bit and love
-;;     Emacs mouse integration I really hate big UI elements and I never
-;;     use the mouse for the operations available in this chrome. These
-;;     mode disable lines remove all of this chrome so it's just Me, My
-;;     Buffer, and I.
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(when (display-graphic-p)
-  (scroll-bar-mode -1))
-
-;; On MacOS there's a new feature to have title bars match the window
-;; they belong to. This makes Emacs do that so the title bar looks
-;; like it's part of the buffer.
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-(add-to-list 'default-frame-alist '(ns-appearance . dark))
-
-;; Color Theme
-;;
-;;   I change this too often to really document why whatever
-;;   theme I'm in the mood for is the one I'm in the mood for.
-;; (use-package zenburn-theme :config (load-theme 'zenburn t))
-
-(use-package doom-themes
-  :config
-  (load-theme 'doom-palenight t)
-  (doom-themes-org-config))
-
-(use-package doom-modeline
-  :config
-  (doom-modeline-mode))
-
-;; Line numbers in programming modes.
-;;     I enable line numbers using the new Emacs 26
-;;     `display-line-numbers-mode' for all programming major modes.
-(defun enable-display-line-numbers-mode ()
-  "Enable display-line-numbers-mode"
-  (display-line-numbers-mode 1))
-(add-hook 'prog-mode-hook 'enable-display-line-numbers-mode)
-
-
-;; Automatically maximize Emacs frames when they are created
-;;     This is a custom function I wrote that maximizes the frame it's
-;;     passed. I then hook it into the `after-make-frame-functions' hook
-;;     so any time a frame is created it is maximized.
-(defun maximize-gui-frames (frame)
-  "Maxmize a the GUI frame FRAME."
-  (with-selected-frame frame
-    (when (display-graphic-p)
-      (set-frame-parameter nil 'fullscreen 'maximized))
-    (when (not display-graphic-p)
-      (disable-theme 'doom-solarized-light))))
-(add-hook 'after-make-frame-functions 'maximize-gui-frames)
-
-;; all-the-icons and doom-modeline
-;;
-;; Alternative to powerline that still looks good, isn't
-;; distracting, but also has all the useful information. I waffle on
-;; whether I actually like it or not over the basic modeline.
-;; (use-package all-the-icons)
-;; (use-package doom-modeline
-;;   :hook (after-init . doom-modeline-mode))
+;; Set mu4e load path as appropriate for the system.
+(eval-and-compile (require 'chasinglogic-globals))
+(eval-and-compile (require 'chasinglogic-editor))
 
 ;; Expand Region
 ;;
@@ -667,6 +359,7 @@ comments so this function better suits my needs."
 
 (use-package crux
   :general (leader!
+             "fS" 'crux-sudo-edit
              "fD" 'crux-delete-buffer-and-file
              "fr" 'crux-rename-buffer-and-file
              "x" '(lambda () (interactive) (ansi-term (executable-find "bash")))
@@ -676,6 +369,21 @@ comments so this function better suits my needs."
          ("C-c f D" . crux-delete-buffer-and-file)
          ("C-c f r" . crux-rename-buffer-and-file)
          ("C-x '" . crux-visit-term-buffer)))
+
+;; Better terminal emulator for Emacs
+(when module-file-suffix
+  (use-package vterm)
+  (setq crux-term-buffer-name "v")
+  (defun crux-visit-term-buffer ()
+    "Create or visit a terminal buffer. If the process in that buffer died, ask to restart."
+    (interactive)
+    (crux-start-or-switch-to (lambda ()
+                               (vterm (concat "*" crux-term-buffer-name "-term" "*")))
+                             (format "*%s-term*" crux-term-buffer-name))
+    (when (and (null (get-buffer-process (current-buffer)))
+               (y-or-n-p "The process has died.  Do you want to restart it? "))
+      (kill-buffer-and-window)
+      (crux-visit-term-buffer))))
 
 (defadvice term-handle-exit
   (after term-kill-buffer-on-exit activate)
@@ -720,242 +428,7 @@ comments so this function better suits my needs."
 ;; This is an enhanced incremental search provided by Ivy.
 (use-package swiper :bind ("C-M-s" . swiper))
 
-;;;; Minor Modes
-
-;; Abbrev mode is a simple but magical minor mode. I make some
-;; spelling mistakes all the time. At this point some of them have
-;; become muscle memory and so while I know the spelling is wrong I
-;; don't know if I'll ever be able to change them. This is where
-;; Abbrev mode comes in. I register abbreviations on a major mode or
-;; global basis and `abbrev-mode' will automatically expand them to
-;; the correction whenever I type them.
-(add-hook 'text-mode-hook 'abbrev-mode)
-
-;; Spell Checking (Flyspell)
-
-;; While Abbrev mode will solve my habitual spelling errors for me
-;; it's still nice to have spell check on so I can catch new spelling
-;; errors. This is baked into Emacs and requires the `aspell' (or
-;; `ispell') program to be installed. I enable `flyspell-mode' for all
-;; text buffers and use a subsequent hook for programming modes to
-;; disable it and instead enable the programming variant that spell
-;; checks comments instead of code.
-(defun chasinglogic-enable-flyspell ()
-  "Enable spell checking."
-  (flyspell-mode 1))
-
-(defun chasinglogic-disable-flyspell ()
-  "Enable spell checking."
-  (flyspell-mode -1))
-
-(add-hook 'text-mode-hook 'chasinglogic-enable-flyspell)
-(add-hook 'prog-mode-hook 'chasinglogic-disable-flyspell)
-
-;; Automatically Do important programming stuff Emacs has a series of
-;; modes that I call the "electric modes", as they all start with
-;; `electric-'. All of these modes perform important editing functions
-;; automatically.
-;;
-;; Electric indent mode on-the-fly reindents your code as you type. It
-;; checks for newlines and other common chars that are configured via
-;; the variable `electric-indent-chars'. This mode is invaluable and
-;; saves me a lot of formatting time.
-(electric-indent-mode 1)
-
-
-;; Electric layout mode automatically inserts newlines around some
-;; characters. The variable `electric-layout-rules' defines when and
-;; how to insert newlines. The short of it is for many modes this auto
-;; formats code.
-(electric-layout-mode 1)
-
-;; Electric pair mode automatically pairs common programming
-;; operators: =(=, ={=, ="=, ='=, etc. I find this behavior annoying
-;; in prose modes so I use a custom hook to only enable it for
-;; programming modes.
-
-
-(defun enable-electric-pair-local-mode ()
-  "Enable eletric pair mode locally."
-  (electric-pair-local-mode 1))
-(add-hook 'prog-mode-hook 'enable-electric-pair-local-mode)
-
-;; Show Paren Mode I'm just going to steal the description of this
-;; straight from the documentation: Toggle visualization of matching
-;; parens (Show Paren mode).
-(show-paren-mode 1)
-
-
-;; Diminish
-;;
-;; Diminish is a neat package that lets me easily hide minor modes
-;; from the mode line. It also has a `use-package' keyword that lets
-;; me do this for third party packages easily. Here we ensure that
-;; it's available and diminish some common minor modes:
-(use-package diminish
-  :init
-  (diminish 'abbrev-mode)
-  (diminish 'eldoc-mode)
-  (diminish 'undo-tree-mode))
-
-;; Paredit
-;;
-;; When talking about editing languages at a syntactic level one can't
-;; help but think of paredit. It's simply the best way to write lisp
-;; code. It adds two important to remember key bindings:
-;;
-;; | Key Bindings | Descripition |
-;; |-------------------+---------------------------| C-M-<Right Arrow>
-;; || Barf current expression | C-M-<Left Arrow> | Slurp current
-;; |expression |
-;;
-;; Additionally I overwrite one mapping so that Paredit uses my
-;; preferred `comment-actually-dwim' function instead of it's own that
-;; mostly mimics the Emacs default.
-(use-package paredit
-  :bind (:map paredit-mode-map
-              ;; I do not like any version of the original
-              ;; `comment-dwim' and paredit has it's own special
-              ;; version that I find more confusing. So overwrite it's
-              ;; mapping with my `comment-actually-dwim' function.
-              ("M-;" . comment-actually-dwim)))
-
-;; Company Mode
-;;
-;; Company stands for COMPlete ANYthing and it does. I enable it
-;; globally and diminish it since it is always on. I only set
-;; `company-dabbrev-downcase' to nil. This ignores casing when
-;; providing suggestions taken from inside the current buffer.
-(use-package company
-  :diminish ""
-  :config
-  (setq-default company-dabbrev-downcase nil)
-  (global-company-mode))
-
-;; LSP Mode
-;;
-;; LSP mode attempts to make Emacs as featureful as VSCode when it
-;; comes to "IDE-esque" features. I would say it gets almost all the
-;; way there. However I disable a lot of these features for
-;; performance or visual disruption reasons. Even with most of these
-;; UI elements disabled it provies the best completion and linting of
-;; any package in the Emacs ecosystem. The best part is that it's a
-;; single package so I don't have to maintain a milling =company-*=
-;; and =flycheck-*= packages. It consists of two packages `lsp-mode'
-;; itself that provides the Language Server interaction and `lsp-ui'
-;; that provides the bulk of interactive features for the Language
-;; Server. I only install `lsp-ui' for the Flycheck integration.
-(use-package lsp-mode
-  :init (setq-default lsp-auto-guess-root t
-                      lsp-prefer-flymake nil)
-  :commands 'lsp)
-
-;; Enable LSP for all prog modes
-(defun chasinglogic-enable-lsp ()
-  "Enable LSP mode."
-  (lsp))
-
-(add-hook 'prog-mode-hook 'chasinglogic-enable-lsp)
-
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :init
-  (setq-default
-   lsp-ui-doc nil
-   lsp-ui-imenu-enable nil
-   lsp-ui-peek-enable nil
-   lsp-ui-sideline nil))
-
-(use-package lsp-ivy
-  :after (lsp-mode ivy)
-  :commands (lsp-ivy-workspace-symbol lsp-ivy-global-workspace-symbol)
-  :general (leader!
-             "jw" 'lsp-ivy-workspace-symbol))
-
-;; LSP powered auto completion
-;;
-;; We need one more package to integrate LSP mode with my completion
-;; framework Company, the cleverly named, `company-lsp'. All that we
-;; need to do is add it to company backends.
-(use-package company-lsp
-  :config (push 'company-lsp company-backends)
-  :after (lsp-mode company))
-
-;; Flycheck
-;;
-;; Every good editor has syntax checking and Emacs is no different. I
-;; use Flycheck for this since it's the most consistent, best
-;; defaults, and functional package I've found for it. Flymake
-;; recently got a rewrite in Emacs core but I still prefer Flycheck. I
-;; do not install many =flycheck-*= packages as I use `lsp-mode' which
-;; integrates with Flycheck and for everything else the Flycheck
-;; defaults work great.
-;;
-;; I diminish Flycheck because it's almost always enabled so no reason
-;; to pollute the mode-line. Additionally I set the variable
-;; `flycheck-sh-posix-dash-executable' to an empty string. Most
-;; people, I certainly didn't, don't know that there is a minimalistic
-;; bash alternative called `dash' that is on a lot of Debian
-;; systems. It's an awful shell IMO but Flycheck supports linting for
-;; it. I use Dash.app on my Macbook and so Flycheck constanstly opens
-;; Dash.app and freaks out whenever I'm in a `sh-mode' buffer. Setting
-;; this to an empty string prevents Flycheck from trying to test Dash
-;; shell syntax.
-;;
-;; I enable Flycheck for all text modes.
-(use-package flycheck
-  :diminish ""
-  :general (leader!
-             "el" 'flycheck-list-errors
-             "ev" 'flycheck-verify-setup
-             "ep" 'flycheck-previous-error
-             "en" 'flycheck-next-error)
-  :bind (("C-c e l" . flycheck-list-errors)
-         ("C-c e v" . flycheck-verify-setup)
-         ("C-c e n" . flycheck-next-error)
-         ("C-c e p" . flycheck-previous-error))
-  :hook 'text-mode-hook
-  :config
-  ;; this trys to run the dash shell which I don't use but instead
-  ;; opens the Dash.app program which I do use.
-  (setq flycheck-sh-posix-dash-executable ""))
-
-;; Flycheck Vale
-;;
-;; The only additional Flycheck linter package I install is Flycheck
-;; Vale. This integrates the awesome
-;; [[https://github.com/errata-ai/vale][Vale prose linter]] with
-;; Flycheck. I use this for all my prose.
-(use-package flycheck-vale
-  :after 'flycheck
-  :config
-  (flycheck-vale-setup))
-
-;; Highlight TODO mode
-;;
-;; By default Emacs doesn't highlight TODO comments. This makes them
-;; stand out by fontifying them the same as Org mode TODO header
-;; keywords.
-(use-package hl-todo
-  :demand
-  :config
-  (global-hl-todo-mode))
-
-;; Writeroom Mode
-;;
-;; Writeroom Mode is a simple but great package that provides a
-;; focused editing experience. It removes all chrome and centers the
-;; buffer on the window so you can focus only on the prose.
-(use-package writeroom-mode :commands (writeroom-mode))
-
-
-;; anzu-mode enhances isearch & query-replace by showing total matches
-;; and current match position
-(use-package anzu
-  :diminish ""
-  :bind (("C-M-%" . anzu-query-replace-regexp)
-         ("M-%" . anzu-query-replace))
-  :config (global-anzu-mode))
+(require 'chasinglogic-minor-modes)
 
 ;; Org
 ;;
@@ -1306,46 +779,6 @@ comments so this function better suits my needs."
 
 ;;;; Major Modes
 
-
-;; Dired
-;;     I use dired as my primary file manager for anything that isn't
-;;     multimedia content (videos, photos, music). I really love it and
-;;     some kinds of file operations are simply not possible without it.
-;;     First we require `dired-x'. Dired-X provides many extra features
-;;     to Dired that take it from nice to unparalleled. See [[info:dired-x#Features][Dired-X
-;;     Features]] for a full list with more info.
-(require 'dired-x)
-;; Now we set the variable `dired-dwim-target' to `t'. This makes it
-;; such that when operating on files in Dired the target of the
-;; operation will automatically suggest other Dired buffers as the
-;; target preferring buffers that are visible. It's super handy.
-(setq-default dired-dwim-target t)
-;; always delete and copy recursively
-(setq dired-recursive-deletes 'always)
-(setq dired-recursive-copies 'always)
-
-;; Ediff
-;;     Ediff is a handy tool I don't use often enough. However I really
-;;     hate the default layout. This makes Ediff less eggregious about
-;;     upsetting my window manager when I load it.
-(setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
-
-;; Evergreen CI integration
-;;
-;;     This is one of my personal packages. At MongoDB we run our in house
-;;     CI system and this package integrates it into Emacs. We don't
-;;     maintain an in-house ELPA repository so I recommend, and myself do,
-;;     installing it with Quelpa.
-;; (use-package evergreen
-;;   :quelpa (evergreen :repo "evergreen-ci/evergreen.el" :fetcher github)
-;;   :commands (evergreen-patch evergreen-list-spawn-hosts)
-;;   :config
-;;   (setq-default evergreen-generate-description t
-;;                 evergreen-finalize-when-patching t
-;;                 evergreen-browse-when-patching t
-;;                 evergreen-default-project "mongodb-mongo-master"
-;;                 evergreen-assume-yes t))
-
 ;; Ruby
 ;;
 ;; I don't do much writing of Ruby so I find the built in `ruby-mode'
@@ -1612,8 +1045,9 @@ comments so this function better suits my needs."
     ("v" split-window-right "split window to right")
     ("s" split-window-below "split window below")))
 
-(require 'chasinglogic-frames)
-(require 'chasinglogic-utils)
+(when (not (display-graphic-p))
+  (use-package xclip :config (xclip-mode 1)))
+
 (require 'chasinglogic-email)
 (require 'auto-sync-mode)
 
