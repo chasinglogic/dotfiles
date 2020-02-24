@@ -1,4 +1,4 @@
-;;; chasinglogic-minor-modes.el --- Minor modes
+;;; chasinglogic-typescript.el --- Typescript language setup
 
 ;; Copyright (C) 2020 Mathew Robinson
 
@@ -26,29 +26,15 @@
 
 ;;; Code:
 
-;; Highlight TODO mode
+;; TypeScript
 ;;
-;; By default Emacs doesn't highlight TODO comments. This makes them
-;; stand out by fontifying them the same as Org mode TODO header
-;; keywords.
-(use-package hl-todo
-  :demand
+;; Nothing much to be done for TypeScript except install the major
+;; mode as I don't work on it all that much.
+(use-package typescript-mode
+  :mode "\\.ts\\'"
   :config
-  (global-hl-todo-mode))
+  (add-hook typescript-mode-hook 'lsp))
 
-;; anzu-mode enhances isearch & query-replace by showing total matches
-;; and current match position
-(use-package anzu
-  :diminish ""
-  :bind (("C-M-%" . anzu-query-replace-regexp)
-         ("M-%" . anzu-query-replace))
-  :config (global-anzu-mode)
+(provide 'chasinglogic-typescript)
 
-  (use-package evil-anzu
-    :after 'evil
-    ))
-
-
-(provide 'chasinglogic-minor-modes)
-
-;;; chasinglogic-minor-modes.el ends here
+;;; chasinglogic-typescript.el ends here

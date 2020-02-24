@@ -1,4 +1,4 @@
-;;; chasinglogic-minor-modes.el --- Minor modes
+;;; chasinglogic-ruby.el --- Ruby language setup
 
 ;; Copyright (C) 2020 Mathew Robinson
 
@@ -26,29 +26,20 @@
 
 ;;; Code:
 
-;; Highlight TODO mode
+;; Ruby
 ;;
-;; By default Emacs doesn't highlight TODO comments. This makes them
-;; stand out by fontifying them the same as Org mode TODO header
-;; keywords.
-(use-package hl-todo
-  :demand
-  :config
-  (global-hl-todo-mode))
-
-;; anzu-mode enhances isearch & query-replace by showing total matches
-;; and current match position
-(use-package anzu
+;; I don't do much writing of Ruby so I find the built in `ruby-mode'
+;; pretty much adequate with one exception: automatically adding `end'
+;; where needed.
+;;
+;; This package extends `electric-pair-mode' to handle languages like
+;; Ruby where the closing pair can sometimes be a word or other
+;; stranger set of symbols. In short it automatically adds `end' for
+;; `if''s, `functions''s, and loops in Ruby.
+(use-package ruby-electric
   :diminish ""
-  :bind (("C-M-%" . anzu-query-replace-regexp)
-         ("M-%" . anzu-query-replace))
-  :config (global-anzu-mode)
+  :hook 'ruby-mode)
 
-  (use-package evil-anzu
-    :after 'evil
-    ))
+(provide 'chasinglogic-ruby)
 
-
-(provide 'chasinglogic-minor-modes)
-
-;;; chasinglogic-minor-modes.el ends here
+;;; chasinglogic-ruby.el ends here

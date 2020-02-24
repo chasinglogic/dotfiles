@@ -14,7 +14,7 @@ syntax enable
 filetype plugin on
 set termguicolors
 set background=dark
-colorscheme dracula
+colorscheme palenight
 
 """ Set font for GUI
 if has('gui_running')

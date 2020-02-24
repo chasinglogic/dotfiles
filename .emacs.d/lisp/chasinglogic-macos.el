@@ -1,4 +1,4 @@
-;;; chasinglogic-minor-modes.el --- Minor modes
+;;; chasinglogic-macos.el --- Occasionally I'm forced to use a Mac
 
 ;; Copyright (C) 2020 Mathew Robinson
 
@@ -26,29 +26,13 @@
 
 ;;; Code:
 
-;; Highlight TODO mode
+;; Emacs environment variables (exec-path-from-shell)
 ;;
-;; By default Emacs doesn't highlight TODO comments. This makes them
-;; stand out by fontifying them the same as Org mode TODO header
-;; keywords.
-(use-package hl-todo
-  :demand
-  :config
-  (global-hl-todo-mode))
+;; Only enabled for MacOS because my .profile works correctly on Linux
+(use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize))
 
-;; anzu-mode enhances isearch & query-replace by showing total matches
-;; and current match position
-(use-package anzu
-  :diminish ""
-  :bind (("C-M-%" . anzu-query-replace-regexp)
-         ("M-%" . anzu-query-replace))
-  :config (global-anzu-mode)
+(provide 'chasinglogic-macos)
 
-  (use-package evil-anzu
-    :after 'evil
-    ))
-
-
-(provide 'chasinglogic-minor-modes)
-
-;;; chasinglogic-minor-modes.el ends here
+;;; chasinglogic-macos.el ends here
