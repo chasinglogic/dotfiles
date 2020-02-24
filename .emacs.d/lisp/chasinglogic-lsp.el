@@ -32,9 +32,9 @@
 ;; comes to "IDE-esque" features. I would say it gets almost all the
 ;; way there. However I disable a lot of these features for
 ;; performance or visual disruption reasons. Even with most of these
-;; UI elements disabled it provies the best completion and linting of
+;; UI elements disabled it provides the best completion and linting of
 ;; any package in the Emacs ecosystem. The best part is that it's a
-;; single package so I don't have to maintain a milling =company-*=
+;; single package so I don't have to maintain a million =company-*=
 ;; and =flycheck-*= packages. It consists of two packages `lsp-mode'
 ;; itself that provides the Language Server interaction and `lsp-ui'
 ;; that provides the bulk of interactive features for the Language
@@ -47,19 +47,11 @@
 ;; Enable LSP for all prog modes
 (defun chasinglogic-enable-lsp ()
   "Enable LSP mode."
-  (lsp))
+  (lsp)
+  ;; Eldoc integration is slow
+  (eldoc-mode -1))
 
 (add-hook 'prog-mode-hook 'chasinglogic-enable-lsp)
-
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :init
-  (setq
-   lsp-ui-doc nil
-   lsp-eldoc-function nil
-   lsp-ui-imenu-enable nil
-   lsp-ui-peek-enable nil
-   lsp-ui-sideline nil))
 
 (use-package lsp-ivy
   :after (lsp-mode ivy)

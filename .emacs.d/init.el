@@ -69,6 +69,9 @@
 ;; the load path.
 (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lisp"))
 
+;; Garbage collect less often
+(setq gc-cons-threshold 100000000)
+
 ;; Package initialization
 ;;    Before we can set up our configuration for third party packages we
 ;;    have to initialize the built-in Emacs package for fetching and
@@ -132,7 +135,15 @@
   (diminish 'undo-tree-mode))
 
 ;; Keybindings
-(require 'chasinglogic-evil)
+;; (require 'chasinglogic-evil)
+(use-package evil
+  :ensure t
+  :init
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+  :config
+  (evil-mode 1))
+
 (require 'chasinglogic-keys)
 
 ;; Default Emacs settings
