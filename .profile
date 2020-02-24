@@ -44,10 +44,10 @@ fi
 ### Set TERM
 
 # Linux
-if [ -n "$VTE_VERSION" ] && ([ -z "$TERM" ] || [ "$TERM" != "tmux-256color" ]); then
-    export TERM="vte-256color"
-elif [[ "$COLORTERM" == "truecolor" ]] && [ -f "$HOME/.terminfo/x/xterm-24bit" ]; then
+if [[ "$COLORTERM" == "truecolor" ]] && [ -f "$HOME/.terminfo/x/xterm-24bit" ]; then
     export TERM="xterm-24bit"
+elif [ -n "$VTE_VERSION" ] && ([ -z "$TERM" ] || [ "$TERM" != "tmux-256color" ]); then
+    export TERM="vte-256color"
 fi
 
 # For Mac I set TERM to iterm2 via it's preferences.
