@@ -127,31 +127,33 @@ If COPY is provided copy the value to kill ring instead of returning."
   (general-def "M-/" 'hippie-expand)
   (general-def "M-t" 'switch-to-buffer)
 
-  (setq general-override-states '(insert
-                                  emacs
-                                  hybrid
-                                  normal
-                                  visual
-                                  motion
-                                  operator
-                                  replace))
+  (if chasinglogic-evil-mode
+      (progn
+        (setq general-override-states '(insert
+                                        emacs
+                                        hybrid
+                                        normal
+                                        visual
+                                        motion
+                                        operator
+                                        replace))
+        (general-evil-setup t)
+        (general-nmap
+          "-" #'(lambda () (interactive) (dired "."))
+          "gcc" 'comment-actually-dwim
+          "<tab>" 'indent-according-to-mode
 
-  (general-evil-setup t)
-  (general-nmap
-    "-" #'(lambda () (interactive) (dired "."))
-    "gcc" 'comment-actually-dwim
-    "<tab>" 'indent-according-to-mode
+          ;; Some of the bindings are not setup correctly in Emacs terminal
+          ;; mode. It uses a different kbd identifier for some reason.
+          "ESC" '(lambda () (interactive) (evil-escape-func))
+          "TAB" 'indent-according-to-mode)
+        (general-vmap "gc" 'comment-or-uncomment-region)
 
-    ;; Some of the bindings are not setup correctly in Emacs terminal
-    ;; mode. It uses a different kbd identifier for some reason.
-    "ESC" '(lambda () (interactive) (evil-escape-func))
-    "TAB" 'indent-according-to-mode)
-  (general-vmap "gc" 'comment-or-uncomment-region)
-
-  (general-create-definer leader!
-    :states '(normal visual)
-    :keymaps 'override
-    :prefix "<SPC>")
+        (general-create-definer leader!
+          :states '(normal visual)
+          :keymaps 'override
+          :prefix "<SPC>"))
+    (general-create-definer leader! :prefix "C-c l"))
 
   (leader!
     "<SPC>" 'execute-extended-command
