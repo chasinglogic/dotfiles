@@ -9,14 +9,14 @@ set shiftround    " Round indent to nearest shiftwidth multiple
 set smartindent   " Do intelligent indentation based on programming symbols like {
 
 """ Formatting options
-set textwidth=80      " 80 Column text width
-set formatoptions+=ro " Auto insert comment character when making a new line
-set formatoptions+=q  " Allow formatting of comments with gq
-set formatoptions+=n  " recognize numbered lists
-set formatoptions+=j  " Remove comment char when joining lines
-set formatoptions-=t  " No visual wrapping
-set nowrap
-set nostartofline     " Don't go to the start of line after certain commands
+set textwidth=120      " 120 Column text width
+set formatoptions+=ro  " Auto insert comment character when making a new line
+set formatoptions+=q   " Allow formatting of comments with gq
+set formatoptions+=n   " recognize numbered lists
+set formatoptions+=j   " Remove comment char when joining lines
+set formatoptions-=t   " No visual wrapping
+set nowrap             " Don't do soft wrapping
+set nostartofline      " Don't go to the start of line after certain commands
 
 """ Tab completion settings for command line
 set wildignore+=*.o,*.git,*.svn,*.pyc "ignore these files
@@ -31,7 +31,9 @@ set mouse=a
 set hidden
 
 """ Ripgrep with vimgrep
-if executable("ag")
+if executable("rg")
+    set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+elseif executable("ag")
     set grepprg=ag\ --nogroup\ --nocolor\ --hidden
 else
     set grepprg=grep\ -R
@@ -53,18 +55,18 @@ set backspace=indent,eol,start
 " Backup and swap directories
 " Deliberate double slash: it makes the backup/swap take into account the full
 " path
-set backupdir=$HOME/.vim-backup//
+set backupdir=$HOME/.local/share/vim/backup//
 if !isdirectory(&backupdir)
     call mkdir(&backupdir, "p")
 endif
 
-set directory=$HOME/.vim-swap//
+set directory=$HOME/.local/share/vim/swap//
 if !isdirectory(&directory)
     call mkdir(&directory, "p")
 endif
 
 set undofile                 " keep persistent undo across vim runs
-set undodir=$HOME/.vim-undo/ " where to store undo files
+set undodir=$HOME/.local/share/vim/undo/ " where to store undo files
 if !isdirectory(&undodir)
     call mkdir(&undodir, "p")
 endif
@@ -82,6 +84,7 @@ let g:netrw_altv=1
 """ Tagfiles
 set tags=.tags,tags
 
+""" Always utf-8
 set encoding=utf-8
 
 """ Case insensitive search by default, unless Capital letter included
@@ -97,6 +100,3 @@ augroup END
 
 """ Ask to save when trying to close unsaved buffers
 set confirm
-
-""" Automatically strip trailing whitespace on save
-autocmd BufWritePre * %s/\s\+$//e

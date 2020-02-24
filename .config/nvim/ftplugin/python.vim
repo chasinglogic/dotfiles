@@ -9,6 +9,8 @@ if match(file_path, 'mongo') == -1
 endif
 
 if match(file_path, 'SConstruct') != -1 || match(file_path, 'SConscript') != -1
-    echo "Disabling python lint in a SCons file."
     let b:ale_linters = []
 endif
+
+""" Automatically strip trailing whitespace on save
+autocmd BufWritePre * %s/\s\+$//e
