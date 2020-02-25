@@ -116,7 +116,6 @@ If COPY is provided copy the value to kill ring instead of returning."
   (chasinglogic-find-org-file notes)
   (chasinglogic-find-org-file ideas)
   (chasinglogic-find-org-file todo)
-
   
   (general-def "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
   (general-def "C-c j =" 'chasinglogic-indent-buffer)
@@ -127,33 +126,33 @@ If COPY is provided copy the value to kill ring instead of returning."
   (general-def "M-/" 'hippie-expand)
   (general-def "M-t" 'switch-to-buffer)
 
-  (if chasinglogic-evil-mode
-      (progn
-        (setq general-override-states '(insert
-                                        emacs
-                                        hybrid
-                                        normal
-                                        visual
-                                        motion
-                                        operator
-                                        replace))
-        (general-evil-setup t)
-        (general-nmap
-          "-" #'(lambda () (interactive) (dired "."))
-          "gcc" 'comment-actually-dwim
-          "<tab>" 'indent-according-to-mode
+  (setq general-override-states '(insert
+                                  emacs
+                                  hybrid
+                                  normal
+                                  visual
+                                  motion
+                                  operator
+                                  replace))
+  (general-evil-setup t)
+  (general-nmap
+    "-" #'(lambda () (interactive) (dired "."))
+    "gcc" 'comment-actually-dwim
+    "<tab>" 'indent-according-to-mode)
 
-          ;; Some of the bindings are not setup correctly in Emacs terminal
-          ;; mode. It uses a different kbd identifier for some reason.
-          "ESC" '(lambda () (interactive) (evil-escape-func))
-          "TAB" 'indent-according-to-mode)
-        (general-vmap "gc" 'comment-or-uncomment-region)
+  ;; Some of the bindings are not setup correctly in Emacs terminal
+  ;; mode. It uses a different kbd identifier for some reason.
+  (unless (display-graphic-p)
+    (general-nmap
+      "ESC" '(lambda () (interactive) (evil-escape-func))
+      "TAB" 'indent-according-to-mode))
 
-        (general-create-definer leader!
-          :states '(normal visual)
-          :keymaps 'override
-          :prefix "<SPC>"))
-    (general-create-definer leader! :prefix "C-c l"))
+  (general-vmap "gc" 'comment-or-uncomment-region)
+
+  (general-create-definer leader!
+    :states '(normal visual)
+    :keymaps 'override
+    :prefix "<SPC>")
 
   (leader!
     "<SPC>" 'execute-extended-command
