@@ -46,11 +46,6 @@
   :config
   (evil-collection-init))
 
-(use-package evil-magit
-  :after 'magit
-  :config
-  (require 'evil-magit))
-
 (provide 'chasinglogic-evil)
 
 ;;; chasinglogic-evil.el ends here

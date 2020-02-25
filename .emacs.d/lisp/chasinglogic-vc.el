@@ -45,6 +45,11 @@
          ("C-x v c" . magit-commit)
          ("C-x v s" . magit-status))
   :config
+  (when chasinglogic-evil-mode
+    (use-package evil-magit
+      :config
+      (require 'evil-magit)))
+
   (setq magit-prefer-push-default t)
   (general-nmap
     :keymaps '(magit-mode-map magit-status-mode-map)
