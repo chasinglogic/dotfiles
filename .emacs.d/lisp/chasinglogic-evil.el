@@ -27,12 +27,8 @@
 ;;; Code:
 
 (use-package evil
-  :init
-  (setq evil-want-integration t ;; This is optional since it's already set to t by default.
-        evil-want-keybinding nil
-        chasinglogic-evil-mode t)
-  :config
-  (evil-mode 1))
+  :init (setq evil-want-keybinding nil)
+  :config (evil-mode 1))
 
 (use-package evil-escape
   :config

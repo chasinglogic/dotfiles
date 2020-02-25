@@ -132,7 +132,6 @@
   (diminish 'undo-tree-mode))
 
 ;; Keybindings
-(setq chasinglogic-evil-mode nil)
 (require 'chasinglogic-evil)
 (require 'chasinglogic-keys)
 
@@ -158,7 +157,6 @@
 
 ;; Programming languages
 (require 'chasinglogic-cc)
-(require 'chasinglogic-ivy)
 (require 'chasinglogic-markdown)
 (require 'chasinglogic-minor-modes)
 (require 'chasinglogic-projectile)
@@ -193,7 +191,6 @@
 ;; Enable system clipboard in terminal emacs
 (when (not (display-graphic-p))
   (use-package xclip :config (xclip-mode 1)))
-
 
 ;; Post initialization
 ;;

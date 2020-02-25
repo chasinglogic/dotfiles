@@ -91,13 +91,6 @@
       #'(lambda (a b) (< (length a) (length b))))))
 
   :config
-  ;; TODO maybe not needed anymore?
-  (defun chasinglogic-switch-project-action ()
-    "Single view magit status page when switching projects."
-    (interactive)
-    (magit-status)
-    (delete-other-windows))
-
   (setq-default projectile-require-project-root t
                 projectile-completion-system 'ivy
                 projectile-enable-caching nil
