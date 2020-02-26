@@ -52,6 +52,7 @@
 
     (general-nmap
       :keymaps '(magit-mode-map magit-status-mode-map)
+      "="     'magit-section-toggle
       "TAB"   'magit-section-toggle
       "<tab>" 'magit-section-toggle))
 

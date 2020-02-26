@@ -50,6 +50,13 @@
 ;; I enable Flycheck for all text modes.
 (use-package flycheck
   :diminish ""
+  :commands flycheck-mode
+  :init
+  (defun chasinglogic-enable-flycheck ()
+    (flycheck-mode 1))
+
+  (add-hook 'text-mode-hook 'chasinglogic-enable-flycheck)
+  (add-hook 'prog-mode-hook 'chasinglogic-enable-flycheck)
   :general (leader!
              "el" 'flycheck-list-errors
              "ev" 'flycheck-verify-setup
@@ -59,7 +66,6 @@
          ("C-c e v" . flycheck-verify-setup)
          ("C-c e n" . flycheck-next-error)
          ("C-c e p" . flycheck-previous-error))
-  :hook 'text-mode-hook
   :config
   ;; this trys to run the dash shell which I don't use but instead
   ;; opens the Dash.app program which I do use.

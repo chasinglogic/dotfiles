@@ -42,14 +42,23 @@
 (use-package lsp-mode
   :init (setq-default lsp-auto-guess-root t
                       lsp-prefer-flymake nil)
-  :commands 'lsp)
+  :commands 'lsp
+  :config
+  (use-package lsp-python-ms
+    :demand
+    :config
+    (require 'lsp-python-ms)))
+
+;; Increase the amount of data which Emacs reads from the
+;; process. Again the emacs default is too low 4k considering that the
+;; some of the language server responses are in 800k - 3M range.
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 ;; Enable LSP for all prog modes
 (defun chasinglogic-enable-lsp ()
   "Enable LSP mode."
   (lsp)
-  ;; Eldoc integration is slow
-  (eldoc-mode -1))
+  (eldoc-mode 1))
 
 (add-hook 'prog-mode-hook 'chasinglogic-enable-lsp)
 
