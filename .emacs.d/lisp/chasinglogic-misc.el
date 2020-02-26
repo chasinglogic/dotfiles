@@ -41,18 +41,20 @@
 
 ;; Better terminal emulator for Emacs
 (when module-file-suffix
-  (use-package vterm)
-  (setq crux-term-buffer-name "v")
-  (defun crux-visit-term-buffer ()
-    "Create or visit a terminal buffer. If the process in that buffer died, ask to restart."
-    (interactive)
-    (crux-start-or-switch-to (lambda ()
-                               (vterm (concat "*" crux-term-buffer-name "-term" "*")))
-                             (format "*%s-term*" crux-term-buffer-name))
-    (when (and (null (get-buffer-process (current-buffer)))
-               (y-or-n-p "The process has died.  Do you want to restart it? "))
-      (kill-buffer-and-window)
-      (crux-visit-term-buffer))))
+  (use-package vterm
+    :config
+    (setq crux-term-buffer-name "v")
+    (require 'crux)
+    (defun crux-visit-term-buffer ()
+      "Create or visit a terminal buffer. If the process in that buffer died, ask to restart."
+      (interactive)
+      (crux-start-or-switch-to (lambda ()
+                                 (vterm (concat "*" crux-term-buffer-name "-term" "*")))
+                               (format "*%s-term*" crux-term-buffer-name))
+      (when (and (null (get-buffer-process (current-buffer)))
+                 (y-or-n-p "The process has died.  Do you want to restart it? "))
+        (kill-buffer-and-window)
+        (crux-visit-term-buffer)))))
 
 (provide 'chasinglogic-misc)
 
