@@ -33,17 +33,6 @@
 ;; buffer on the window so you can focus only on the prose.
 (use-package writeroom-mode :commands (writeroom-mode))
 
-;; Flycheck Vale
-;;
-;; The only additional Flycheck linter package I install is Flycheck
-;; Vale. This integrates the awesome
-;; [[https://github.com/errata-ai/vale][Vale prose linter]] with
-;; Flycheck. I use this for all my prose.
-(use-package flycheck-vale
-  :after 'flycheck
-  :config
-  (flycheck-vale-setup))
-
 ;; Spell Checking (Flyspell)
 
 ;; While Abbrev mode will solve my habitual spelling errors for me
