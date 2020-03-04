@@ -15,6 +15,12 @@ function add_to_path() {
     fi
 }
 
+# FZF default find command
+export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
+# Use Python3 for Virtualenvwrapper
+export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
+# Plasma scale with HIDPI
+export PLASMA_USE_QT_SCALING=1
 # Packer's colorized output messes with terminals and other programs I use.
 export PACKER_NO_COLOR="1"
 # GPG can weirdly hang without this I've found
@@ -43,15 +49,6 @@ fi
 
 ### Set TERM
 
-# Linux
-if [[ "$COLORTERM" == "truecolor" ]] && [ -f "$HOME/.terminfo/x/xterm-24bit" ]; then
-    export TERM="xterm-24bit"
-elif [ -n "$VTE_VERSION" ] && ([ -z "$TERM" ] || [ "$TERM" != "tmux-256color" ]); then
-    export TERM="vte-256color"
-fi
-
-# For Mac I set TERM to iterm2 via it's preferences.
-
 # Fallback
 if [ -z "$TERM" ]; then
     export TERM="xterm-256color"
@@ -75,6 +72,9 @@ fi
 source_if_exists $HOME/.env.bash
 # Enable nix if I've installed it on this system
 source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
+# Set up virtualenvwrapper
+source_if_exists /usr/local/bin/virtualenvwrapper.sh
+source_if_exists $HOME/.local/bin/virtualenvwrapper.sh
 
 add_to_path /snap/bin
 add_to_path /opt/local/bin
@@ -89,13 +89,5 @@ add_to_path $HOME/.cask/bin
 add_to_path $HOME/.cask/bin
 add_to_path $HOME/Library/Python/3.7/bin
 
-# FZF default find command
-export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
-
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
-
-export PATH="$HOME/.cargo/bin:$PATH"
-export PLASMA_USE_QT_SCALING=1
-
-export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
