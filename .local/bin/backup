@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /home
+rsync --delete --exclude $USER/.cache --exclude $USER/.local/share -avz $USER $@
