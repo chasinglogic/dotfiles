@@ -78,7 +78,14 @@ alias cdw="cd $HOME/Work"
 alias g="git"
 alias tf="terraform"
 
-### My custom functions
+alias tm="tmux"
+
+alias venv="python3 -m venv"
+
+#############
+# FUNCTIONS #
+#############
+
 function dotfiles() {
     cd $(dfm where)
 }
@@ -89,14 +96,80 @@ function sp() {
     else
         cd $(projector find $1)
     fi
+
+    if [[ -d $(pwd)/.git ]]; then
+        NAME=$(basename $(git rev-parse --show-toplevel))
+        if [[ -d ~/.virtualenvs/$NAME ]]; then
+            workon $NAME
+        fi
+    fi
 }
+
 
 function source_if_exists() {
     [ -f $1 ] && source $1
 }
 
-source_if_exists $HOME/.bash/prompt.bash
-source_if_exists $HOME/.bash/python.bash
-source_if_exists $HOME/.bash/tmux.bash
+function v() {
+    NAME=$(basename $(git rev-parse --show-toplevel 2>/dev/null))
+
+    if [ -d .git ] && [ -d $HOME/.virtualenvs/$NAME ]; then
+        workon $NAME
+    elif [ -d .venv ]; then
+        source .venv/bin/activate
+    elif [ -d venv ]; then
+        source venv/bin/activate
+    elif [ -d .git ] && [ -d $HOME/.virtualenvs ]; then
+        mkvirtualenv $NAME
+    else
+        venv .venv
+        v
+    fi
+}
+
+function t {
+    tmux new-session -A -s $(pwd | awk -F\/ '{print $(NF)}')
+}
+
+##########
+# PROMPT #
+##########
+
+
+COMMAND_STATUS_COLOR="\$(tput bold)\$(tput setaf 5)"
+HOSTNAME_COLOR="\$(tput setaf 2)"
+PWD_COLOR="\$(tput setaf 6)"
+GIT_BRANCH_COLOR="\$(tput setaf 1)"
+LAMBDA_COLOR="\$(tput setaf 3)"
+USERNAME_COLOR="\$(tput setaf 13)"
+NO_COLOR="\e[0m"
+
+function parse_git_branch {
+    ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+    echo "${ref#refs/heads/} "
+}
+
+function asterisk_if_dirty {
+    [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]] && echo "*"
+}
+
+function lambda_or_delta {
+    if [[ $(asterisk_if_dirty) == "*" ]]; then
+        echo "Δ"
+        return
+    fi
+    echo "λ"
+}
+
+function last_command_status {
+    if [[ $? == "0" ]]; then
+        return
+    fi
+
+    echo "!! "
+}
+
+PS1="\[$COMMAND_STATUS_COLOR\]\$(last_command_status)\[$USERNAME_COLOR\]\u\[$LAMBDA_COLOR\]@\[$HOSTNAME_COLOR\]\H\[$PWD_COLOR\] \w \[$GIT_BRANCH_COLOR\]\$(parse_git_branch)\[$LAMBDA_COLOR\]\$(lambda_or_delta) \[$NO_COLOR\]"
+
 source_if_exists $HOME/.fzf.bash
 source_if_exists $HOME/.bashrc_extras
