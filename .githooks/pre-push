@@ -1,9 +1,11 @@
 #!/bin/bash
 
+if [[ $PWD == *"dfm/profiles"*  || $PWD == *"dfm/modules"* ]]; then
+    exit 0
+fi
+
 current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-
 push_command=$(ps -ocommand= -p $PPID)
-
 origin_remote=$(git remote -v | grep origin | grep push)
 
 if [[ "$push_command" != *"origin"* ]]; then
