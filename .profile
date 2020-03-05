@@ -73,8 +73,8 @@ source_if_exists $HOME/.env.bash
 # Enable nix if I've installed it on this system
 source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
 # Set up virtualenvwrapper
-source_if_exists /usr/local/bin/virtualenvwrapper.sh
-source_if_exists $HOME/.local/bin/virtualenvwrapper.sh
+# source_if_exists /usr/local/bin/virtualenvwrapper.sh
+# source_if_exists $HOME/.local/bin/virtualenvwrapper.sh
 
 add_to_path /snap/bin
 add_to_path /opt/local/bin
