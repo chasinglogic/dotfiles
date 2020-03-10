@@ -28,7 +28,7 @@ function confirm() {
 }
 
 case $current_branch in
-    "master") echo "Not allowed to push to origin master" && exit 1 ;;
+    # "master") echo "Not allowed to push to origin master" && exit 1 ;;
     # "v4."*) confirm ;;
     # "v3."*) confirm ;;
     # *) echo "Trying to push a topic branch: $current_branch to origin, preventing." && exit 1 ;;

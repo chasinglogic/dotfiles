@@ -173,3 +173,4 @@ PS1="\[$COMMAND_STATUS_COLOR\]\$(last_command_status)\[$USERNAME_COLOR\]\u\[$LAM
 
 source_if_exists $HOME/.fzf.bash
 source_if_exists $HOME/.bashrc_extras
+source_if_exists $HOME/.local/bin/virtualenvwrapper.sh
