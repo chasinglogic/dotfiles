@@ -65,9 +65,10 @@ if [[ $current_branch == master || $current_branch == stable ]]; then
     new_branch_name="$BRANCH_TYPE/$jira_ticket"
 else
     current_branch_suffix=$(echo $current_branch | awk -F"/" '{ print $NF }')
+    echo $current_branch_suffix
+    branch_prefix=""
     # Check if it's a JIRA ticket
     echo "$current_branch_suffix" | grep "^[A-Z]\{3,\}-[0-9]\{1,\}" > /dev/null
-    branch_prefix=""
     if [[ $? == 0 ]]; then
         branch_prefix=$current_branch
     else
