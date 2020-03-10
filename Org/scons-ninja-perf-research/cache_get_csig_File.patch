@@ -1,0 +1,25 @@
+diff --git a/src/third_party/scons-3.0.4/scons-local-3.0.4/SCons/Node/FS.py b/src/third_party/scons-3.0.4/scons-local-3.0.4/SCons/Node/FS.py
+index 352aeaebcc..0dc842c7c6 100644
+--- a/src/third_party/scons-3.0.4/scons-local-3.0.4/SCons/Node/FS.py
++++ b/src/third_party/scons-3.0.4/scons-local-3.0.4/SCons/Node/FS.py
+@@ -2732,6 +2732,11 @@ class File(Base):
+         """
+         if not self.rexists():
+             return SCons.Util.MD5signature('')
++
++        cs = getattr(self.attributes, "csig_cached", None)
++        if cs is not None:
++            return cs
++
+         fname = self.rfile().get_abspath()
+         try:
+             cs = SCons.Util.MD5filesignature(fname,
+@@ -2740,6 +2745,8 @@ class File(Base):
+             if not e.filename:
+                 e.filename = fname
+             raise
++
++        setattr(self.attributes, "csig_cached", cs)
+         return cs
+ 
+     @SCons.Memoize.CountMethodCall
