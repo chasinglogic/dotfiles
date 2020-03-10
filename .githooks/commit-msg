@@ -5,6 +5,10 @@ if [[ "$(pwd)" != *"Work"* ]]; then
     exit 0
 fi
 
+if [[ "$(pwd)" == *"dev-tools"* ]]; then
+    exit 0
+fi
+
 check_pattern() {
     head -n 1 $1 | grep "$2" > /dev/null
     if [[ $? == 0 ]]; then
