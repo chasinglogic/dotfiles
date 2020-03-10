@@ -1,0 +1,62 @@
+#!/bin/bash
+
+function help() {
+    echo "Usage: branch [options] <jira-ticket-id> [<description>]
+
+When branching from master or stable must use one of the type
+indicating flags. Otherwise the new branch name will be derived from
+the current branch.
+
+Options:
+  -y BRANCH_TYPE  Manually set the branch type to BRANCH_TYPE
+
+  -e  Indicates this is for an epic
+  -f  Indicates this is feature work
+  -t  Indicates this is a task issue type
+  -b  Indicates this is a bug issue type
+  -r  Indicates this is a release branch"
+    exit 0
+}
+
+
+current_branch=$(git branch | grep "*" | sed 's/\* //')
+BRANCH_TYPE=""
+
+while getopts "hfetbry:" opt; do
+    case "${opt}" in
+        h) help ;;
+        y) BRANCH_TYPE="${OPTARG}"; shift ;;
+        f) BRANCH_TYPE="feature";;
+        e) BRANCH_TYPE="epic";;
+        t) BRANCH_TYPE="task";;
+        b) BRANCH_TYPE="bug";;
+        r) BRANCH_TYPE="release";;
+    esac
+
+    shift
+done
+
+if [[ $current_branch == master || $current_branch == stable ]] && [ -z $BRANCH_TYPE ]; then
+    echo "Must use a type indicating flag when branching from master. Use -h to see Usage"
+    exit 1
+fi
+
+
+jira_ticket="$1"
+shift
+
+description="$@"
+
+if [[ $current_branch == master || $current_branch == stable ]]; then
+    new_branch_name="$BRANCH_TYPE/$jira_ticket"
+else
+    branch_prefix=$(echo $current_branch | awk 'BEGIN{FS=OFS="/"}{NF--; print}')
+    new_branch_name="$branch_prefix/$jira_ticket"
+fi
+    
+if [ ! -z "$description" ]; then
+    sanitized_description=$(echo "$description" | sed 's/ /-/g')
+    new_branch_name="$new_branch_name/$sanitized_description"
+fi
+
+git checkout -b $new_branch_name
