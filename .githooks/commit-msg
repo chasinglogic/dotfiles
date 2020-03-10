@@ -1,22 +1,7 @@
 #!/bin/bash
 
-# Not a mongo repo
+# Not a work repo
 if [[ "$(pwd)" != *"Work"* ]]; then
-    exit 0
-fi
-
-# Kernel Tools doesn't play by the same rules
-if [[ "$(pwd)" == *"kernel-tools"* ]]; then
-    exit 0
-fi
-
-# Neither does SCons
-if [[ "$(pwd)" == *"scons" ]]; then
-    exit 0
-fi
-
-# Or homebrew
-if [[ "$(pwd)" == *"homebrew"* ]]; then
     exit 0
 fi
 
