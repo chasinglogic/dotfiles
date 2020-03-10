@@ -1,0 +1,32 @@
+diff --git a/src/third_party/scons-3.0.4/scons-local-3.0.4/SCons/Node/FS.py b/src/third_party/scons-3.0.4/scons-local-3.0.4/SCons/Node/FS.py
+index 352aeaebcc..ef12756877 100644
+--- a/src/third_party/scons-3.0.4/scons-local-3.0.4/SCons/Node/FS.py
++++ b/src/third_party/scons-3.0.4/scons-local-3.0.4/SCons/Node/FS.py
+@@ -2726,12 +2726,18 @@ class File(Base):
+                 return contents.decode('utf-8', error='backslashreplace')
+ 
+ 
++    @SCons.Memoize.CountMethodCall
+     def get_content_hash(self):
+         """
+         Compute and return the MD5 hash for this file.
+         """
+         if not self.rexists():
+             return SCons.Util.MD5signature('')
++
++        cs = self._memo.get("get_content_hash", None)
++        if cs is not None:
++            return cs
++
+         fname = self.rfile().get_abspath()
+         try:
+             cs = SCons.Util.MD5filesignature(fname,
+@@ -2740,6 +2746,8 @@ class File(Base):
+             if not e.filename:
+                 e.filename = fname
+             raise
++
++        self._memo["get_content_hash"] = cs
+         return cs
+ 
+     @SCons.Memoize.CountMethodCall
