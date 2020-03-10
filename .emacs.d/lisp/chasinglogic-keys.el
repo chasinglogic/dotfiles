@@ -90,6 +90,40 @@ If COPY is provided copy the value to kill ring instead of returning."
             (message "%s" breakpoint))
         breakpoint)))
 
+  ;;; Copy the test path for Django manage.py test
+  (defun chasinglogic-copy-test-path-for-here (&optional copy)
+    (interactive (list t))
+    (let* ((file-name (if (projectile-project-root)
+                          (file-relative-name (buffer-file-name) (projectile-project-root))
+                        (file-name-nondirectory (buffer-file-name))))
+           (current-point (point))
+           (test-name (progn
+                        (re-search-backward "def ")
+                        (forward-word)
+                        (forward-char)
+                        (thing-at-point 'sexp)))
+           (test-class-name (progn
+                              (re-search-backward "class ")
+                              (forward-word)
+                              (forward-char)
+                              (thing-at-point 'sexp)))
+           (test-path (concat
+                       (string-remove-prefix "mpb/" file-name)
+                       ":" test-class-name
+                       "." test-name)))
+      (message "Copied: %s" test-path)
+      (kill-new test-path)
+      (goto-char current-point)))
+
+  (defun chasinglogic-run-test ()
+    "Run the test under point"
+    (interactive)
+    (chasinglogic-copy-test-path-for-here t)
+    (let ((default-directory (projectile-project-root))
+          (compilation-command (concat "cd mpb && python ./manage.py test " (current-kill 0))))
+      (puthash default-directory compilation-command projectile-compilation-cmd-map)
+      (compile compilation-command)))
+
   ;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
   (defun chasinglogic-unfill-paragraph (&optional region)
     "Takes a multi-line paragraph and makes it into a single line of text."
@@ -118,6 +152,7 @@ If COPY is provided copy the value to kill ring instead of returning."
   (chasinglogic-find-org-file todo)
   
   (general-def "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
+  (general-def "C-c j t" 'chasinglogic-copy-test-path-for-here)
   (general-def "C-c j =" 'chasinglogic-indent-buffer)
   (general-def "C-c f r" 'chasinglogic-rename-file-and-buffer)
   (general-def "C-c f D" 'chasinglogic-delete-current-buffer-file)
@@ -163,6 +198,7 @@ If COPY is provided copy the value to kill ring instead of returning."
 
   (leader!
     "j" '(:which-key "jumps")
+    "jt" 'chasinglogic-copy-test-path-for-here
     "j=" 'chasinglogic-indent-buffer
     "jb" 'chasinglogic-copy-breakpoint-for-here)
 
@@ -198,6 +234,7 @@ If COPY is provided copy the value to kill ring instead of returning."
 
   (leader!
     "m" '(:which-key "misc")
+    "mt" 'chasinglogic-run-test
     "mon" 'chasinglogic-find-org-file-notes
     "moi" 'chasinglogic-find-org-file-ideas
     "mot" 'chasinglogic-find-org-file-todo
