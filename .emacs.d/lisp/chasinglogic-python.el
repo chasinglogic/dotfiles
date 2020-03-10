@@ -52,15 +52,15 @@
   :init
   (setq-default chasinglogic-blacken-black-list
                 '("scons"
-                  "mongo"
-                  "enterprise"
-                  "mongo-enterprise-modules"
-                  "toolchain-builder"
-                  "kernel-tools"))
+                  "Work"))
 
   (defun chasinglogic-python-format-hook ()
     "Set up blacken-buffer on save if appropriate."
-    (unless (member (projectile-project-name) chasinglogic-blacken-black-list)
+    (unless (or
+             (member (projectile-project-name) chasinglogic-blacken-black-list)
+             (seq-some '(lambda (item)
+                          (string-match-p (regexp-quote item) (buffer-file-name)))
+                       chasinglogic-blacken-black-list))
       (message "Not in a blacklisted project, enabling format on save.")
       (add-hook 'before-save-hook 'blacken-buffer nil t)))
   (add-hook 'python-mode-hook 'chasinglogic-python-format-hook))

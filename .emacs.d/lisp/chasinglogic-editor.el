@@ -35,7 +35,7 @@
   ;;     The only thing fancy about the way this font is getting set is that
   ;;     I use two font sizes: one for my Mac because of the retina display
   ;;     and one for everything else where I use regular monitors.
-  (setq-default chasinglogic-font-size "11")
+  (setq-default chasinglogic-font-size "10")
   (when (and (display-graphic-p) (eq system-type 'darwin))
     ;; Retina display requires bigger font IMO.
     (setq chasinglogic-font-size "15"))
