@@ -44,6 +44,7 @@
                       lsp-prefer-flymake nil)
   :commands 'lsp
   :config
+  (setq lsp-signature-auto-activate nil)
   (use-package lsp-python-ms
     :demand
     :config
