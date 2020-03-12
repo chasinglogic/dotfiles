@@ -87,7 +87,7 @@
   ;; mode files can be found. I keep all of my Org files in
   ;; =~/Nextcloud/Org= so they are automatically synced to my
   ;; Nextcloud server by my clients.
-  (setq-default org-directory (file-name-as-directory "~/Nextcloud/Org")
+  (setq-default org-directory (file-name-as-directory "~/Org")
                 org-default-todo-file  (expand-file-name "inbox.org"  org-directory)
                 org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
                 org-default-ideas-file (expand-file-name "inbox.org" org-directory))

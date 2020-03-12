@@ -174,6 +174,8 @@
 ;;
 ;; The following snippet just installs and attaches these modes to
 ;; file extensions.
+(use-package dockerfile-mode :mode ("\\Dockerfile\\'"))
+(use-package protobuf-mode :mode ("\\.proto\\'"))
 (use-package vala-mode :mode ("\\.vala\\'"))
 (use-package meson-mode :mode ("meson\\.build"))
 (use-package powershell :mode ("\\.ps1\\'"))
