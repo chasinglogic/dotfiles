@@ -91,6 +91,11 @@
     (if (> (length (window-list)) 1)
         (kill-buffer-and-window)
       (kill-buffer)))
+
+  (defadvice tab-bar-close-tab
+      (after remove-tab-bar-on-last-closed activate)
+    (when (= (length (tab-bar-tabs)) 1)
+      (tab-bar-mode -1)))
   ) ;; end eval-and-compile
 
 ;; Color Theme
