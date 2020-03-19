@@ -102,10 +102,24 @@
 ;;
 ;;   I change this too often to really document why whatever
 ;;   theme I'm in the mood for is the one I'm in the mood for.
-(use-package doom-themes
+(use-package modus-vivendi-theme)
+(setq chasinglogic-dark-theme 'modus-vivendi)
+
+(use-package modus-operandi-theme
   :config
-  (load-theme 'doom-palenight t)
-  (doom-themes-org-config))
+  (load-theme 'modus-operandi t))
+(setq chasinglogic-light-theme 'modus-operandi)
+
+(defun chasinglogic-toggle-theme ()
+  "Toggle between light and dark theme"
+  (interactive)
+  (if (custom-theme-enabled-p chasinglogic-dark-theme)
+      (progn
+        (disable-theme chasinglogic-dark-theme)
+        (load-theme chasinglogic-light-theme t))
+    (progn
+        (disable-theme chasinglogic-dark-theme)
+        (load-theme chasinglogic-dark-theme t))))
 
 (use-package doom-modeline
   :config
