@@ -65,6 +65,13 @@
   :general (leader!
              "TAB" 'buffer-flip))
 
+(use-package multi-line
+  :config (setq-default multi-line-current-strategy
+                        (multi-line-strategy
+                         :respace (multi-line-default-respacers
+                                   (make-instance multi-line-always-newline))))
+  :bind ("C-;" . multi-line))
+
 (provide 'chasinglogic-misc)
 
 ;;; chasinglogic-misc.el ends here
