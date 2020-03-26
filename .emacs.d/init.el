@@ -132,7 +132,7 @@
   (diminish 'undo-tree-mode))
 
 ;; Keybindings
-(require 'chasinglogic-evil)
+;; (require 'chasinglogic-evil)
 (require 'chasinglogic-keys)
 
 ;; Default Emacs settings

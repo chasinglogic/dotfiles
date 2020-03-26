@@ -46,6 +46,8 @@ if [ -d /data/ccache ]; then
 else
     export CCACHE_MAXSIZE=20G
 fi
+# Make Helm look for my local tiller server
+export HELM_HOST=localhost:44134
 
 ### Set TERM
 
