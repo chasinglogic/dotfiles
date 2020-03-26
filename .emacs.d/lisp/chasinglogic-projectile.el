@@ -52,7 +52,8 @@
   :demand
   :general (leader! "p" '(:which-key "projects" :keymap projectile-command-map))
   :bind-keymap ("C-c p" . projectile-command-map)
-  :bind ("M-p" . projectile-find-file)
+  :bind (
+         ("M-p" . projectile-find-file)
          (:map projectile-command-map
                ("s" . counsel-projectile-rg)
                ("p" . projectile-switch-project)
