@@ -62,6 +62,7 @@ shopt -s dirspell
 # interactive shells.
 shopt -s autocd
 
+source $HOME/.profile
 source $HOME/.functions.sh
 source_if_exists $HOME/.env.sh
 source_if_exists $HOME/.aliases.sh
