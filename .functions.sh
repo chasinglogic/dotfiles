@@ -20,7 +20,11 @@ function sp() {
     CURRENT_SESSION=$(tmux list-sessions | grep '(attached)' | awk '{ print $1 }' | sed 's/:$//')
   fi
 
-  if [[ -n $(tmux list-sessions | grep $SESS_NAME) ]] && [[ "$SESS_NAME" != "$CURRENT_SESSION" ]]; then
+  if [[ "$SESS_NAME" != "$CURRENT_SESSION" ]]; then
+    if [[ -z $(tmux list-sessions | grep $SESS_NAME) ]]; then
+      tmux new-session -s $SESS_NAME -d
+    fi
+
     if [[ -n $TMUX ]]; then
       tmux switch-client -t $SESS_NAME
     else
