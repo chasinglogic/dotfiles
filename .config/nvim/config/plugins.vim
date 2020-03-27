@@ -16,10 +16,6 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-""" Auto-resize windows when they come into focus.
-Plug 'camspiers/animate.vim'
-Plug 'camspiers/lens.vim'
-
 """ Tpope general improvements
 Plug 'tpope/vim-vinegar'    " Netrw improvements
 Plug 'tpope/vim-commentary' " Commenting code
@@ -56,8 +52,7 @@ Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 
 """ Themes
 Plug 'icymind/NeoSolarized', { 'as': 'solarized' }
-Plug 'dracula/vim', {'as': 'dracula'}
-Plug 'drewtempelmeyer/palenight.vim'
+Plug 'chriskempson/base16-vim'
 
 """ Easy alignment
 Plug 'junegunn/vim-easy-align'
