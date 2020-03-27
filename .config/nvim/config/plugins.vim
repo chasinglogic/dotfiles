@@ -53,6 +53,7 @@ Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 """ Themes
 Plug 'icymind/NeoSolarized', { 'as': 'solarized' }
 Plug 'chriskempson/base16-vim'
+Plug 'chasinglogic/modus-themes-vim'
 
 """ Easy alignment
 Plug 'junegunn/vim-easy-align'
