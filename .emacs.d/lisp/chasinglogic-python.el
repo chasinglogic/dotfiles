@@ -77,8 +77,10 @@
   :config
   (defun chasinglogic-auto-venv ()
     "Automatically setup the venv when entering a project"
-    (when (file-exists-p (concat "~/.virtualenvs/" (projectile-project-name)))
-      (pyvenv-workon (projectile-project-name))))
+    (let ((venv-location (concat "~/.virtualenvs/" (projectile-project-name))))
+      (when (file-exists-p venv-location)
+        (message "Activating virtualenv: %s" venv-location)
+        (pyvenv-activate venv-location))))
   (add-hook 'projectile-after-switch-project-hook 'chasinglogic-auto-venv))
 
 ;; Load SCons files as Python
