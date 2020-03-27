@@ -87,6 +87,8 @@ nmap <Leader>ga :!git add %<CR>
 nmap <Leader>gc :Gcommit<CR>
 nmap <Leader>gs :Gstatus<CR>
 nmap <Leader>gb :Gblame<CR>
+nmap <Leader>gp :Gpush<CR>
+nmap <Leader>gl :Gpull<CR>
 
 """ Utility
 nmap YY ggyG<C-o><C-o> " Copy whole buffer without losing my place
