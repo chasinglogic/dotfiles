@@ -21,3 +21,9 @@ endfunction
 
 """ Hide grep output when running grep
 command! -nargs=* Grep :execute ':silent grep "<args>"'
+
+""" TODO: support more comment syntaxes than #
+command! -nargs=0 CommentBox execute 'args' CommentBoxAtPoint() 
+function! CommentBoxAtPoint()
+  normal 'I## <Esc>A ##<Esc>yyPVr#jpVr#'
+endfunction
