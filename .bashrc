@@ -69,3 +69,5 @@ source_if_exists $HOME/.aliases.sh
 source_if_exists $HOME/.prompt.sh
 # Setup rustup, cargo path
 [[ -f /home/chasinglogic/.rustrc ]] && source /home/chasinglogic/.rustrc
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
