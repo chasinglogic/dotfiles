@@ -1,6 +1,6 @@
 let file_path = expand('%:p')
 
-if match(file_path, 'mongo') == -1
+if match(file_path, 'Work') == -1
     """ Autoformat on save.
     augroup autofmt
         autocmd!

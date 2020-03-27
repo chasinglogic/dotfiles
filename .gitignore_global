@@ -20,8 +20,6 @@ node_modules/*
 *mypy_cache*
 .ccls-cache/*
 
-.evergreen.local.yml
-
 .tags
 TAGStmp/*
 
@@ -30,13 +28,4 @@ TAGStmp/*
 .venv/*
 venv*
 
-infra/*
-logs/*
-products/*
-tarballs/*
-tmp/*
-
-src/db/modules/enterprise*
-src/db/modules/enterprise/*
-src/mongo-tools*
-src/mongo/installer/compass/install_compass
+Session.vim

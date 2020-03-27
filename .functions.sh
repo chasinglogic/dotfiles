@@ -39,6 +39,21 @@ function t {
     tmux new-session -A -s $(pwd | awk -F\/ '{print $(NF)}')
 }
 
+export VIM_PROG=vim
+if [[ -x $(which nvim) ]]; then
+    export VIM_PROG=nvim
+fi
+
+function nv() {
+  if test $# -gt 0; then
+    env $VIM_PROG "$@"
+  elif test -f Session.vim; then
+    env $VIM_PROG -S
+  else
+    env $VIM_PROG -c Obsession
+  fi
+}
+
 # Poor man's virtualenvwrapper
 
 function checkvenvdir() {
