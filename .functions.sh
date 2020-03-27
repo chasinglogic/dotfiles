@@ -21,28 +21,46 @@ function sp() {
     fi
 }
 
-
-function source_if_exists() {
-    [ -f $1 ] && source $1
-}
-
 function v() {
-    NAME=$(basename $(git rev-parse --show-toplevel 2>/dev/null))
-
-    if [ -d .git ] && [ -d $HOME/.virtualenvs/$NAME ]; then
-        workon $NAME
-    elif [ -d .venv ]; then
-        source .venv/bin/activate
-    elif [ -d venv ]; then
-        source venv/bin/activate
-    elif [ -d .git ] && [ -d $HOME/.virtualenvs ]; then
-        mkvirtualenv $NAME
+    if [[ -d .git ]]; then
+        NAME=$(basename $(git rev-parse --show-toplevel 2>/dev/null))
     else
-        venv .venv
-        v
+        NAME=$(basename $(pwd))
+    fi
+
+    if [[ -d $HOME/.virtualenvs/$NAME ]]; then
+        workon $NAME
+    else
+        mkvirtualenv $NAME
     fi
 }
 
 function t {
     tmux new-session -A -s $(pwd | awk -F\/ '{print $(NF)}')
+}
+
+# Poor man's virtualenvwrapper
+
+function checkvenvdir() {
+    if [[ ! -d $HOME/.virtualenvs ]]; then
+        mkdir -p $HOME/.virtualenvs
+    fi
+}
+
+function workon() {
+    if [[ -d $HOME/.virtualenvs/$1 ]]; then
+        source $HOME/.virtualenvs/$1/bin/activate
+    fi
+}
+
+function mkvirtualenv() {
+    checkvenvdir
+    new_venv_path="$HOME/.virtualenvs/$1"
+    if [[ -d $new_venv_path ]]; then
+        echo "Virtualenv $1 already exists!"
+        return 1
+    fi
+
+    python3 -m venv $new_venv_path
+    workon $1
 }
