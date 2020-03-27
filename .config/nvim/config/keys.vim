@@ -20,6 +20,7 @@ nmap <Leader>fd :find ~/.config/nvim/init.vim<CR>
 nmap <Leader>fD :Delete<CR>
 nmap <Leader>fr :Rename
 nmap <Leader>fR :source %<CR>
+nmap <Leader>fq :wq<CR>
 
 """ Project level ops
 nmap <Leader>pf :FZF<CR>
