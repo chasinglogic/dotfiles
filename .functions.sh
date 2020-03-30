@@ -22,7 +22,7 @@ function sp() {
 
   if [[ "$SESS_NAME" != "$CURRENT_SESSION" ]]; then
     if [[ -z $(tmux list-sessions | grep $SESS_NAME) ]]; then
-      tmux new-session -s $SESS_NAME -d
+      tmux new-session -c $PROJECT -s $SESS_NAME -d
     fi
 
     if [[ -n $TMUX ]]; then
