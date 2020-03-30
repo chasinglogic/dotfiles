@@ -15,6 +15,7 @@ function add_to_path() {
     fi
 }
 
+export NOTES_DIR="$HOME/Dropbox/Notes"
 # FZF default find command
 export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
 # Use Python3 for Virtualenvwrapper
