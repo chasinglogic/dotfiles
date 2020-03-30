@@ -6,6 +6,7 @@ call plug#begin('~/.vim-plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+""" Automatically encrypt and decrypt my gpg notes
 Plug 'jamessan/vim-gnupg'
 
 """ Better folding for text formats like Markdown
@@ -39,6 +40,7 @@ Plug 'arrufat/vala.vim'
 Plug 'jiangmiao/auto-pairs'      " Auto closing of pairs
 Plug 'alvan/vim-closetag'        " Close (X)HTML tags
 Plug 'easymotion/vim-easymotion' " Easily jump around files
+Plug 'AndrewRadev/splitjoin.vim' " Easily split single-line statements to multi-line
 
 """ Linting
 
@@ -88,6 +90,10 @@ let g:neoformat_enabled_python3 = ['black']
 """ Vim-go settings
 let g:go_fmt_autosave = 1
 let g:go_fmt_command = "goimports"
+
+""" Split-join
+let g:splitjoin_ruby_trailing_comma = 1
+let g:splitjoin_python_brackets_on_separate_lines = 1
 
 " [Tags] Command to generate tags file
 let g:fzf_tags_command = '/usr/local/bin/ctags -R'

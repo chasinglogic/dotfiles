@@ -1,64 +1,194 @@
-#!/bin/bash
-# vi: ft=sh
+#!/usr/bin/env python3
+# vi: ft=python
+"""
+Create, edit, search, and list notes.
+"""
 
-if [ -z $NOTE_DIR ]; then
-    NOTE_DIR="$HOME/Nextcloud/Notes"
-fi
+import os
+import re
+import sys
+import subprocess
+import argparse
+import tempfile
 
-FIND_IN_NOTES=0
-ENCRYPT_NOTE=0
-while getopts ":es" opt; do
-    case ${opt} in
-        e) ENCRYPT_NOTE=1 ; shift ;;
-        s) FIND_IN_NOTES=1 ; shift ;;
-    esac
-done
+NOTE_DIR = os.getenv("NOTE_DIR", os.path.expanduser("~/Notes"),)
+DEFAULT_SUFFIX = os.getenv("NOTE_DEFAULT_SUFFIX", ".md",)
 
-if [[ $FIND_IN_NOTES == 1 ]]; then
-    grep_cmd="grep --context 2 --with-filename --line-number '$@'"
-    find $NOTE_DIR -name "*.md" -type f -exec $grep_cmd {} \;
-fi
 
-if [[ -z "$@" ]]; then
-    search="*"
-else
-    search="*$@*"
-fi
+def find_file(filename, search_dir=NOTE_DIR):
+    """Find filename in search_dir."""
+    term = re.compile(r".*{}.*".format(filename), re.IGNORECASE)
+    for root, dirs, files in os.walk(search_dir):
+        for file in files:
+            full_path = os.path.join(root, file)
+            if term.match(full_path):
+                return full_path
 
-# Have to do this weird loop so files with spaces are treated as one array item.
-files=()
-while IFS=  read -r -d $'\0'; do
-    files+=("$REPLY")
-done < <(find $NOTE_DIR -wholename "$search" -type f -print0)
+    return None
 
-if [[ ${#files[@]} -eq 1 ]]; then
-    file="${files[0]}"
-elif [[ "${#files[@]}" -eq "0" ]]; then
-    filename="$@"
-    # Strip off file extension so we can add back the correct one.
-    filename="${filename/.md*/}"
-    title=$(basename "$filename")
-    filename="$NOTE_DIR/$filename.md"
-    dir=$(dirname "$filename")
-    if [[ ! -d $dir ]]; then
-        mkdir -p $dir
-    fi
 
-    echo "# $title" > "$filename"
+def search_file(filename, term):
+    """Search filename for term."""
+    # TODO: smarter and bigger context
+    # TODO: highlight search term match in matched line
+    with open(filename) as fh:
+        lineno = 0
+        previous = None
+        matched = None
 
-    if [ "${ENCRYPT_NOTE}" -eq "1" ]; then
-        gpg --encrypt "$filename"
-        rm "$filename"
-        filename="$filename.gpg"
-    fi
+        for line in fh:
+            lineno += 1
+            if matched is not None:
+                print("{}:".format(filename))
+                if previous is not None:
+                    print("\tL{}| {}".format(previous[0], previous[1]))
+                print("\tL{}| {}".format(matched[0], matched[1]))
+                print("\tL{}| {}".format(lineno, line.rstrip()))
+                return
+            elif term.match(line):
+                matched = (lineno, line.rstrip())
+            else:
+                previous = (lineno, line.rstrip())
 
-    file="$filename"
-else
-    file=$(printf "\n%s" $files | fzf)
-fi
 
-if [ -t 1 ]; then
-    $EDITOR "$file"
-else
-    cat "$file"
-fi
+def encrypt(filename, target_file):
+    """
+    Encrypt file at filename to target_file, remove filename
+    """
+    subprocess.run(
+        ["gpg", "--yes", "--output", target_file, "--encrypt", filename,]
+    )
+    os.remove(filename)
+    return None
+
+
+def decrypt(filename, silent=False):
+    """
+    Decrypt filename and return a temporary file which contains the contents.
+    """
+    _, real_suffix = os.path.splitext(filename[: -len(".gpg")])
+    _, tmpfile = tempfile.mkstemp(suffix=real_suffix if real_suffix else None)
+    args = {
+        "args": ["gpg", "--yes", "--output", tmpfile, "--decrypt", filename,],
+    }
+    if silent:
+        args["stdout"] = subprocess.DEVNULL
+        args["stderr"] = subprocess.DEVNULL
+        args["stdin"] = subprocess.DEVNULL
+
+    subprocess.run(**args)
+    return tmpfile
+
+
+def is_encrypted_file(filename):
+    """Return whether or not filename represents an encrypted file."""
+    return filename.endswith(".gpg") or filename.endswith(".pgp")
+
+
+def editor(filename):
+    """Run $EDITOR on filename."""
+    subprocess.run(
+        args=[os.getenv("EDITOR", "vi"), filename,],
+        check=True,
+        stdout=sys.stdout,
+        stdin=sys.stdin,
+    )
+
+
+def edit(args):
+    """
+    Search for a note and edit it.
+    """
+    filename = " ".join(args.NAME)
+    full_path = find_file(filename)
+    if full_path is None:
+        print("Could not find a Note with that name.")
+        sys.exit(1)
+
+    encrypted = is_encrypted_file(full_path)
+    if encrypted:
+        edit_filename = decrypt(full_path)
+    else:
+        edit_filename = full_path
+
+    editor(edit_filename)
+    if encrypted:
+        encrypt(edit_filename, full_path)
+
+
+def list(_args):
+    """
+    List all notes.
+    """
+    for root, _dirs, files in os.walk(NOTE_DIR):
+        for file in files:
+            print(os.path.join(root, file))
+
+
+def create(args):
+    """
+    Create a note.
+    """
+    full_path = os.path.join(NOTE_DIR, " ".join(args.NAME))
+    _, suffix = os.path.splitext(full_path)
+    if not suffix:
+        full_path = full_path + DEFAULT_SUFFIX
+        print("fp", full_path)
+
+    os.makedirs(os.path.dirname(full_path), exist_ok=True)
+    with open(full_path, "w") as file:
+        file.write("")
+
+    editor(full_path)
+    if args.encrypt:
+        encrypt(full_path, full_path + ".gpg")
+
+
+def search(args):
+    """
+    Search notes.
+    """
+    term = re.compile(r".*{}.*".format(" ".join(args.SEARCH)), re.IGNORECASE)
+
+    for root, _, files in os.walk(NOTE_DIR):
+        for file in files:
+            filename = os.path.join(root, file)
+            if is_encrypted_file(file):
+                search_filename = decrypt(filename, silent=True)
+            else:
+                search_filename = filename
+
+            search_file(search_filename, term)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(help="note help")
+
+    create_parser = subparsers.add_parser("create", aliases=["c"], help="Create a note")
+    create_parser.add_argument(
+        "-e",
+        "--encrypt",
+        action="store_true",
+        help="Encrypt the note if it will be created",
+    )
+    create_parser.add_argument("NAME", nargs="+", help="Name of the note to create.")
+    create_parser.set_defaults(func=create)
+
+    list_parser = subparsers.add_parser("list", aliases=["l", "ls"], help="List notes")
+    list_parser.set_defaults(func=list)
+
+    edit_parser = subparsers.add_parser("edit", aliases=["e"], help="Edit notes")
+    edit_parser.add_argument("NAME", nargs="+", help="Name of the note to edit")
+    edit_parser.set_defaults(func=edit)
+
+    search_parser = subparsers.add_parser("search", help="Search notes.")
+    search_parser.add_argument("SEARCH", nargs="+", help="")
+    search_parser.set_defaults(func=search)
+
+    args = parser.parse_args()
+    args.func(args)
+
+
+if __name__ == "__main__":
+    main()
