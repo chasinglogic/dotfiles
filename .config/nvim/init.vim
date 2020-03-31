@@ -14,7 +14,8 @@ source $HOME/.config/nvim/config/utils.vim
 syntax enable
 filetype plugin on
 set termguicolors
-colorscheme modus-operandi
+set background=light
+colorscheme NeoSolarized
 
 """ Set font for GUI
 if has('gui_running')

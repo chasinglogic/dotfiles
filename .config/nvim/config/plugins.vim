@@ -1,5 +1,5 @@
 let g:airline_powerline_fonts = 1 " Pretty symbols from airline
-" let g:airline#extensions#tabline#enabled = 1  " Show a cool tabline to help me see my buffers
+let g:neosolarized_contrast = "high"
 
 call plug#begin('~/.vim-plugged')
 """ Fuzzy finding
@@ -14,8 +14,7 @@ Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 
 """ Prettier and more functional statusline
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'itchyny/lightline.vim'
 
 """ Tpope general improvements
 Plug 'tpope/vim-vinegar'    " Netrw improvements
@@ -55,7 +54,7 @@ Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 
 """ Themes
 Plug 'icymind/NeoSolarized', { 'as': 'solarized' }
-Plug 'chriskempson/base16-vim'
+Plug 'tomasr/molokai'
 Plug 'chasinglogic/modus-themes-vim'
 
 """ Easy alignment
@@ -87,9 +86,17 @@ nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 let g:neoformat_enabled_python = ['black']
 let g:neoformat_enabled_python3 = ['black']
 
+let g:lightline = {
+      \ 'colorscheme': 'solarized',
+      \ }
+
 """ Vim-go settings
 let g:go_fmt_autosave = 1
 let g:go_fmt_command = "goimports"
+
+""" Vimwiki settings
+let g:vimwiki_list = [{'path': '~/Dropbox/Notes',
+                      \ 'syntax': 'markdown', 'ext': '.md'}]
 
 """ Split-join
 let g:splitjoin_ruby_trailing_comma = 1

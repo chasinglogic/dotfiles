@@ -6,10 +6,25 @@ function dotfiles() {
   cd $(dfm where)
 }
 
+function tmux_session() {
+  SESS_NAME=$1
+  if [[ -z $(tmux list-sessions | grep $SESS_NAME) ]]; then
+    tmux new-session -c $PROJECT -s $SESS_NAME -d
+  fi
+
+  if [[ -n $TMUX ]]; then
+    tmux switch-client -t $SESS_NAME
+  else
+    tmux attach-session -t $SESS_NAME
+  fi
+}
+
 function sp() {
   PROJECT=""
   if [[ $1 == "" ]]; then
     PROJECT=$(projector list | fzf)
+  elif [[ $1 == "home" ]]; then
+    PROJECT=$HOME
   else
     PROJECT=$(projector find $1)
   fi
@@ -21,15 +36,7 @@ function sp() {
   fi
 
   if [[ "$SESS_NAME" != "$CURRENT_SESSION" ]]; then
-    if [[ -z $(tmux list-sessions | grep $SESS_NAME) ]]; then
-      tmux new-session -c $PROJECT -s $SESS_NAME -d
-    fi
-
-    if [[ -n $TMUX ]]; then
-      tmux switch-client -t $SESS_NAME
-    else
-      tmux attach-session -t $SESS_NAME
-    fi
+    tmux_session $SESS_NAME
     return
   fi
 
@@ -58,12 +65,7 @@ function v() {
 
 function t() {
   SESS_NAME=$(pwd | awk -F\/ '{print $(NF)}')
-  if [[ -n $TMUX ]]; then
-    tmux new-session -A -s $SESS_NAME
-  else
-    tmux new-session -s $SESS_NAME
-    tmux attach -t $SESS_NAME
-  fi
+  tmux_session $SESS_NAME
 }
 
 export VIM_PROG=vim
