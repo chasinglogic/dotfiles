@@ -1,0 +1,10 @@
+[Unit]
+Description=VimWiki index regenerator
+
+[Timer]
+OnBootSec=60min
+OnUnitActiveSec=60min
+Unit=regenerate_wiki_index.service
+
+[Install]
+WantedBy=timers.target

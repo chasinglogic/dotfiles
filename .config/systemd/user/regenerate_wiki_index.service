@@ -1,0 +1,6 @@
+[Unit]
+Description=VimWiki index regenerator service
+
+[Service]
+Type=oneshot
+ExecStart=/home/chasinglogic/.local/bin/generate_vimwiki_index

@@ -1,5 +1,9 @@
 let g:airline_powerline_fonts = 1 " Pretty symbols from airline
-let g:neosolarized_contrast = "high"
+
+""" Vimwiki
+let g:vimwiki_map_prefix = '<Leader>k'
+let g:vimwiki_list = [{'path': '~/Dropbox/Notes',
+                      \ 'syntax': 'markdown', 'ext': '.md'}]
 
 call plug#begin('~/.vim-plugged')
 """ Fuzzy finding
@@ -8,10 +12,6 @@ Plug 'junegunn/fzf.vim'
 
 """ Automatically encrypt and decrypt my gpg notes
 Plug 'jamessan/vim-gnupg'
-
-""" Better folding for text formats like Markdown
-Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-syntax'
 
 """ Prettier and more functional statusline
 Plug 'itchyny/lightline.vim'
@@ -34,18 +34,19 @@ Plug 'leafgarland/typescript-vim'    " Add typescript syntax files
 Plug 'Vimjas/vim-python-pep8-indent' " better python indentation
 Plug 'igankevich/mesonic'
 Plug 'arrufat/vala.vim'
+Plug 'vim-pandoc/vim-pandoc'         " Better folding for text formats like Markdown
+Plug 'vim-pandoc/vim-pandoc-syntax'
 
 """ Editor improvements
 Plug 'jiangmiao/auto-pairs'      " Auto closing of pairs
 Plug 'alvan/vim-closetag'        " Close (X)HTML tags
-Plug 'easymotion/vim-easymotion' " Easily jump around files
 Plug 'AndrewRadev/splitjoin.vim' " Easily split single-line statements to multi-line
 
 """ Linting
 
 """ Auto completion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'dense-analysis/ale' " Code linting and LSP client
+Plug 'dense-analysis/ale'    " Code linting and LSP client
 
 """ IDE-esque support for various languages
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
@@ -65,10 +66,8 @@ Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
 
 """ Wiki for notes
 Plug 'vimwiki/vimwiki'
-call plug#end()
 
-""" Vimwiki
-let g:vimwiki_map_prefix = '<Leader>k'
+call plug#end()
 
 """ Neoformat
 let g:neoformat_enabled_python = ['black', 'docformatter']
@@ -93,10 +92,6 @@ let g:lightline = {
 """ Vim-go settings
 let g:go_fmt_autosave = 1
 let g:go_fmt_command = "goimports"
-
-""" Vimwiki settings
-let g:vimwiki_list = [{'path': '~/Dropbox/Notes',
-                      \ 'syntax': 'markdown', 'ext': '.md'}]
 
 """ Split-join
 let g:splitjoin_ruby_trailing_comma = 1
