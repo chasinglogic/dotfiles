@@ -56,7 +56,7 @@ def encrypt(filename, target_file):
     Encrypt file at filename to target_file, remove filename
     """
     subprocess.run(
-        ["gpg", "--yes", "--output", target_file, "--encrypt", filename,]
+        ["gpg", "--yes", "--output", target_file, "--encrypt", filename]
     )
     os.remove(filename)
     return None
@@ -88,7 +88,7 @@ def is_encrypted_file(filename):
 def editor(filename):
     """Run $EDITOR on filename."""
     subprocess.run(
-        args=[os.getenv("EDITOR", "vi"), filename,],
+        args=[os.getenv("EDITOR", "vi"), filename],
         check=True,
         stdout=sys.stdout,
         stdin=sys.stdin,
@@ -104,6 +104,10 @@ def edit(args):
     if full_path is None:
         print("Could not find a Note with that name.")
         sys.exit(1)
+
+    if args.no_editor:
+        print(full_path)
+        return
 
     encrypted = is_encrypted_file(full_path)
     if encrypted:
@@ -139,6 +143,12 @@ def create(args):
     with open(full_path, "w") as file:
         file.write("")
 
+    if args.no_editor:
+        if args.encrypt:
+            full_path = full_path + ".gpg"
+        print(full_path)
+        return
+
     editor(full_path)
     if args.encrypt:
         encrypt(full_path, full_path + ".gpg")
@@ -163,6 +173,13 @@ def search(args):
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-n",
+        "--no-editor",
+        action="store_true",
+        help="Change the behavior of some commands to not invoke $EDITOR",
+    )
+
     subparsers = parser.add_subparsers(help="note help")
 
     create_parser = subparsers.add_parser("create", aliases=["c"], help="Create a note")
