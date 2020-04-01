@@ -78,6 +78,9 @@ let g:lightline = {
       \ 'colorscheme': 'solarized',
       \ }
 " }}}
+" Deoplete {{{
+let g:deoplete#enable_at_startup = 1
+" }}}
 " Vim-go settings {{{
 let g:go_fmt_autosave = 1
 let g:go_fmt_command = "goimports"
@@ -88,7 +91,6 @@ let g:splitjoin_python_brackets_on_separate_lines = 1
 " }}}
 " FZF {{{
 let g:fzf_tags_command = '/usr/local/bin/ctags -R'
-
 " Interactive searchign with Ripgrep
 " Taken from: https://github.com/junegunn/fzf.vim#example-advanced-ripgrep-integration
 function! RipgrepFzf(query, fullscreen)
