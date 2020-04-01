@@ -47,6 +47,10 @@ Plug 'dense-analysis/ale'    " Code linting and LSP client
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 " }}}
 " Themes {{{
 Plug 'icymind/NeoSolarized', { 'as': 'solarized' }
@@ -58,7 +62,6 @@ Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
 """ Wiki for notes
 Plug 'vimwiki/vimwiki'
 " }}}
-
 call plug#end()
 " }}}
 " Ultisnips {{{
