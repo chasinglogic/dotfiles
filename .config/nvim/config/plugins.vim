@@ -47,10 +47,6 @@ Plug 'dense-analysis/ale'    " Code linting and LSP client
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
 " }}}
 " Themes {{{
 Plug 'icymind/NeoSolarized', { 'as': 'solarized' }
@@ -72,14 +68,6 @@ let g:UltiSnipsEditSplit="vertical"
 " }}}
 " Vala {{{
 let g:vala_syntax_folding_enabled = 0
-" }}}
-" Language client configuration {{{
-let g:deoplete#enable_at_startup = 1
-call deoplete#custom#option('sources', {'_': [ 'ale', 'buffer'], 'python': ['ale', 'buffer']})
-
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 " }}}
 " Neoformat {{{
 let g:neoformat_enabled_python = ['black', 'docformatter']
