@@ -20,3 +20,8 @@ augroup file_type_mappings
   autocmd BufNewFile,BufRead SConscript set filetype=python
   autocmd BufNewFile,BufRead SConstruct set filetype=python
 augroup END
+
+""" Vimscript doesn't seem to load ftplugins
+augroup folding_in_vimscript
+  autocmd BufNewFile,BufRead *.vim set foldmethod=marker
+augroup END

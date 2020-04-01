@@ -6,9 +6,6 @@
 [include]
     path = ~/.gitconfig_local
 
-[remote]
-    pushDefault = fork
-
 [pull]
     default = current
 
@@ -56,5 +53,6 @@
 
 [diff]
     renameLimit = 4487
+
 [branch]
-	autosetupmerge = always
+    autosetupmerge = always
