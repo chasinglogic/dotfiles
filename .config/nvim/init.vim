@@ -1,6 +1,10 @@
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 let g:python3_host_prog = '/usr/bin/python3'
 let g:python_host_prog = '/usr/bin/python3'
+filetype plugin on
+syntax enable
+set termguicolors
+set background=light
 
 """ Theme settings
 let g:base16colorspace=256
@@ -13,10 +17,6 @@ source $HOME/.config/nvim/config/autocmds.vim
 source $HOME/.config/nvim/config/utils.vim
 
 """ Load Theme
-syntax enable
-filetype plugin on
-set termguicolors
-set background=light
 colorscheme NeoSolarized
 
 """ Set font for GUI

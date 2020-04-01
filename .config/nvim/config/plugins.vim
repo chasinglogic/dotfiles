@@ -1,22 +1,18 @@
-let g:airline_powerline_fonts = 1 " Pretty symbols from airline
-
-""" Vimwiki
+" Vimwiki Settings {{{
 let g:vimwiki_map_prefix = '<Leader>k'
 let g:vimwiki_list = [{'path': '~/Dropbox/Notes',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
-
+" }}}
+" Plugins {{{
 call plug#begin('~/.vim-plugged')
+" External Tool Integration {{{
 """ Fuzzy finding
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-
 """ Automatically encrypt and decrypt my gpg notes
 Plug 'jamessan/vim-gnupg'
-
-""" Prettier and more functional statusline
-Plug 'itchyny/lightline.vim'
-
-""" Tpope general improvements
+" }}}
+" Tpope general improvements {{{
 Plug 'tpope/vim-vinegar'    " Netrw improvements
 Plug 'tpope/vim-commentary' " Commenting code
 Plug 'tpope/vim-surround'   " Surrounding of text
@@ -27,8 +23,8 @@ Plug 'tpope/vim-abolish'    " Better abbreviations and Subvert is like fancy %s
 Plug 'tpope/vim-fugitive'   " Git integration
 Plug 'tpope/vim-markdown'   " Better markdown
 Plug 'tpope/vim-obsession'  " Automatic session management and restoration
-
-""" Language Support
+" }}}
+" Language Support {{{
 Plug 'PProvost/vim-ps1'              " I write powershell scripts sometimes
 Plug 'leafgarland/typescript-vim'    " Add typescript syntax files
 Plug 'Vimjas/vim-python-pep8-indent' " better python indentation
@@ -36,68 +32,70 @@ Plug 'igankevich/mesonic'
 Plug 'arrufat/vala.vim'
 Plug 'vim-pandoc/vim-pandoc'         " Better folding for text formats like Markdown
 Plug 'vim-pandoc/vim-pandoc-syntax'
-
-""" Editor improvements
+" }}}
+" Editor improvements {{{
 Plug 'jiangmiao/auto-pairs'      " Auto closing of pairs
 Plug 'alvan/vim-closetag'        " Close (X)HTML tags
 Plug 'AndrewRadev/splitjoin.vim' " Easily split single-line statements to multi-line
-
-""" Linting
-
-""" Auto completion
+Plug 'SirVer/ultisnips'          " Snippets in vim
+Plug 'itchyny/lightline.vim'     " Prettier and more functional statusline
+Plug 'junegunn/vim-easy-align'   " Automatically align based on regex
+" }}}
+" IDE-like Features (Linting, Formatting, completion etc.) {{{
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'dense-analysis/ale'    " Code linting and LSP client
-
-""" IDE-esque support for various languages
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-
-""" Themes
+" }}}
+" Themes {{{
 Plug 'icymind/NeoSolarized', { 'as': 'solarized' }
 Plug 'tomasr/molokai'
 Plug 'chasinglogic/modus-themes-vim'
-
-""" Easy alignment
-Plug 'junegunn/vim-easy-align'
-
-""" Writing
+" }}}
+" Vim for Prose (Blogs, Notes, etc.) {{{
 Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
-
 """ Wiki for notes
 Plug 'vimwiki/vimwiki'
+" }}}
 
 call plug#end()
-
-""" Neoformat
-let g:neoformat_enabled_python = ['black', 'docformatter']
-
+" }}}
+" Ultisnips {{{
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-f>"
+let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+let g:UltiSnipsEditSplit="vertical"
+" }}}
+" Vala {{{
 let g:vala_syntax_folding_enabled = 0
-
-""" Language client configuration
+" }}}
+" Language client configuration {{{
 let g:deoplete#enable_at_startup = 1
 call deoplete#custom#option('sources', {'_': [ 'ale', 'buffer'], 'python': ['ale', 'buffer']})
 
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
-let g:neoformat_enabled_python = ['black']
-let g:neoformat_enabled_python3 = ['black']
-
+" }}}
+" Neoformat {{{
+let g:neoformat_enabled_python = ['black', 'docformatter']
+let g:neoformat_enabled_python3 = ['black', 'docformatter']
+" }}}
+" Lightline {{{
 let g:lightline = {
       \ 'colorscheme': 'solarized',
       \ }
-
-""" Vim-go settings
+" }}}
+" Vim-go settings {{{
 let g:go_fmt_autosave = 1
 let g:go_fmt_command = "goimports"
-
-""" Split-join
+" }}}
+" Split-join {{{
 let g:splitjoin_ruby_trailing_comma = 1
 let g:splitjoin_python_brackets_on_separate_lines = 1
-
-" [Tags] Command to generate tags file
+" }}}
+" FZF {{{
 let g:fzf_tags_command = '/usr/local/bin/ctags -R'
 
 " Interactive searchign with Ripgrep
@@ -112,8 +110,7 @@ endfunction
 
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
-" Use a nice floating window for display
-
+" Neovim 0.4.0 floating window for FZF {{{
 if has('nvim-0.4.0')
   let $FZF_DEFAULT_OPTS='--layout=reverse --border'
   let g:fzf_layout = { 'window': 'call FloatingFZF()' }
@@ -151,3 +148,5 @@ if has('nvim-0.4.0')
     call nvim_open_win(buf, v:true, opts)
   endfunction
 endif
+" }}}
+" }}}
