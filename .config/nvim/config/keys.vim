@@ -14,8 +14,8 @@ nmap <Leader>noh :noh<CR>
 
 """ Files
 nmap <Leader>fs :w<CR>
-nmap <Leader>ff :FZF<CR>
-nmap <Leader>fe :find
+nmap <Leader>ff :find 
+nmap <Leader>fe :edit  
 nmap <Leader>fd :find ~/.config/nvim/init.vim<CR>
 nmap <Leader>fD :Delete<CR>
 nmap <Leader>fr :Rename
@@ -85,11 +85,12 @@ nmap <Leader>t5 :tabn 5<CR>
 
 """ Git
 nmap <Leader>ga :!git add %<CR>
-nmap <Leader>gc :Gcommit<CR>
-nmap <Leader>gs :Gstatus<CR>
-nmap <Leader>gb :Gblame<CR>
-nmap <Leader>gp :Gpush<CR>
-nmap <Leader>gl :Gpull<CR>
+nmap <Leader>gc :Git commit<CR>
+nmap <Leader>gs :Git<CR>
+nmap <Leader>gb :Git blame<CR>
+nmap <Leader>gp :Git push<CR>
+nmap <Leader>gu :Git pull<CR>
+nmap <Leader>gl :Gbrowse<CR>
 
 """ Utility
 nmap YY ggyG<C-o><C-o> " Copy whole buffer without losing my place

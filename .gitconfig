@@ -55,4 +55,5 @@
     renameLimit = 4487
 
 [branch]
-    autosetupmerge = always
+    autosetupmerge = true
+    autosetuprebase = remote

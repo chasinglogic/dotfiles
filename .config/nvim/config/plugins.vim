@@ -21,6 +21,7 @@ Plug 'tpope/vim-sleuth'     " Set tabwidth etc based on filetype
 Plug 'tpope/vim-eunuch'     " Useful commands like Rename, Delete, Move, SudoWrite
 Plug 'tpope/vim-abolish'    " Better abbreviations and Subvert is like fancy %s
 Plug 'tpope/vim-fugitive'   " Git integration
+Plug 'tpope/vim-rhubarb'    " Github integraiton for vim-fugitive
 Plug 'tpope/vim-markdown'   " Better markdown
 Plug 'tpope/vim-obsession'  " Automatic session management and restoration
 " }}}
