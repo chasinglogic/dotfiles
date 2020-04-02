@@ -6,6 +6,8 @@ if match(file_path, 'Work') == -1
         autocmd!
         autocmd BufWritePre *.py Neoformat
     augroup END
+
+    set textwidth=100
 endif
 
 if match(file_path, 'SConstruct') != -1 || match(file_path, 'SConscript') != -1

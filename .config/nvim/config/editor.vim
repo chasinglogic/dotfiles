@@ -9,7 +9,7 @@ set shiftround    " Round indent to nearest shiftwidth multiple
 set smartindent   " Do intelligent indentation based on programming symbols like {
 
 """ Formatting options
-set textwidth=120      " 120 Column text width
+set textwidth=80       " 80 Column text width
 set formatoptions+=ro  " Auto insert comment character when making a new line
 set formatoptions+=q   " Allow formatting of comments with gq
 set formatoptions+=n   " recognize numbered lists
