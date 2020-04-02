@@ -74,11 +74,6 @@ let g:vala_syntax_folding_enabled = 0
 let g:neoformat_enabled_python = ['black', 'docformatter']
 let g:neoformat_enabled_python3 = ['black', 'docformatter']
 " }}}
-" Lightline {{{
-let g:lightline = {
-      \ 'colorscheme': 'solarized',
-      \ }
-" }}}
 " Deoplete {{{
 let g:deoplete#enable_at_startup = 1
 " }}}

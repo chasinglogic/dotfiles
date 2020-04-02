@@ -15,6 +15,7 @@ source $HOME/.config/nvim/config/plugins.vim
 source $HOME/.config/nvim/config/keys.vim
 source $HOME/.config/nvim/config/autocmds.vim
 source $HOME/.config/nvim/config/utils.vim
+source $HOME/.config/nvim/config/my_statusline.vim
 
 """ Load Theme
 colorscheme NeoSolarized
