@@ -47,6 +47,7 @@ Plug 'dense-analysis/ale'    " Code linting and LSP client
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
+Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin list after vim-sleuth
 " }}}
 " Themes {{{
 Plug 'icymind/NeoSolarized', { 'as': 'solarized' }
