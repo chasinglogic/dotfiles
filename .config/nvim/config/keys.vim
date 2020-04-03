@@ -3,8 +3,8 @@ let mapleader = " "
 " }}}
 " Files {{{
 nmap <Leader>fs :w<CR>
-nmap <Leader>ff :find 
-nmap <Leader>fe :edit  
+nmap <Leader>ff :find
+nmap <Leader>fe :edit
 nmap <Leader>fd :find ~/.config/nvim/init.vim<CR>
 nmap <Leader>fD :Delete<CR>
 nmap <Leader>fr :Rename
@@ -85,11 +85,10 @@ nmap <Leader>gl  :Gbrowse<CR>
 " }}}
 " Utility {{{
 nmap YY ggyG<C-o><C-o> " Copy whole buffer without losing my place
-nmap <Tab> == " Indent stuff on this line.
 nmap <Leader><Leader> :Commands<CR> " Search through commands
 nmap <Leader>noh :noh<CR>  " Clear search highights
 imap fd <ESC>
-nmap <Leader>m :make 
+nmap <Leader>m :make
 " }}}
 " System / Vim management {{{
 nmap <Leader>spi :PlugInstall<CR>
