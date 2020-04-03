@@ -7,7 +7,7 @@ let g:vimwiki_list = [{'path': '~/Dropbox/Notes',
 call plug#begin('~/.vim-plugged')
 " External Tool Integration {{{
 """ Fuzzy finding
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 """ Automatically encrypt and decrypt my gpg notes
 Plug 'jamessan/vim-gnupg'
