@@ -19,7 +19,11 @@ function add_to_path() {
 
 export NOTES_DIR="$HOME/Dropbox/Notes"
 # FZF default find command
-export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
+if [[ -x $(which fd) ]]; then
+    export FZF_DEFAULT_COMMAND="fd --type f --hidden"
+else
+    export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
+fi
 # Use Python3 for Virtualenvwrapper
 export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
 # Plasma scale with HIDPI
