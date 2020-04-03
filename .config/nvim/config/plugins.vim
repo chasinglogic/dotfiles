@@ -39,7 +39,6 @@ Plug 'jiangmiao/auto-pairs'      " Auto closing of pairs
 Plug 'alvan/vim-closetag'        " Close (X)HTML tags
 Plug 'AndrewRadev/splitjoin.vim' " Easily split single-line statements to multi-line
 Plug 'SirVer/ultisnips'          " Snippets in vim
-Plug 'itchyny/lightline.vim'     " Prettier and more functional statusline
 Plug 'junegunn/vim-easy-align'   " Automatically align based on regex
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
