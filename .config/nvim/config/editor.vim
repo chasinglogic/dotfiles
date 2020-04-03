@@ -102,4 +102,5 @@ augroup AutoOpenListWindow
 augroup END
 " }}}
 " Ask to save when trying to close unsaved buffers {{{
-set confir" }}}"" }}}"m
+set confirm
+" }}}
