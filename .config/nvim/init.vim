@@ -17,7 +17,7 @@ source $HOME/.config/nvim/config/my_statusline.vim
 source $HOME/.config/nvim/config/abbrevs.vim
 
 """ Load Theme
-colorscheme NeoSolarized
+colorscheme dracula
 
 """ Set font for GUI
 if has('gui_running')

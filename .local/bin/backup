@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd /home
-rsync --delete --exclude $USER/Dropbox --exclude $USER/.cache --exclude $USER/.local/share -avz $USER $@
+rsync --delete --exclude $USER/Dropbox --exclude $USER/.cache -avz $USER $@

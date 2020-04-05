@@ -51,7 +51,7 @@ Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin
 " }}}
 " Themes {{{
 Plug 'icymind/NeoSolarized', { 'as': 'solarized' }
-Plug 'tomasr/molokai'
+Plug 'dracula/vim'
 Plug 'chasinglogic/modus-themes-vim'
 " }}}
 " Vim for Prose (Blogs, Notes, etc.) {{{
