@@ -17,10 +17,12 @@ function add_to_path() {
     fi
 }
 
+# Node version manager storage location
+export NVM_DIR="$HOME/.nvm"
 export NOTES_DIR="$HOME/Dropbox/Notes"
 # FZF default find command
 if [[ -x $(which fd) ]]; then
-    export FZF_DEFAULT_COMMAND="fd --type f --hidden"
+    export FZF_DEFAULT_COMMAND="fd --type f --hidden --exclude '.git/'"
 else
     export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
 fi
@@ -84,6 +86,16 @@ source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
 # Set up virtualenvwrapper
 # source_if_exists /usr/local/bin/virtualenvwrapper.sh
 # source_if_exists $HOME/.local/bin/virtualenvwrapper.sh
+if [[ -z $NVM_BIN ]]; then
+    source_if_exists $NVM_DIR/nvm.sh  # This loads nvm
+    source_if_exists $NVM_DIR/bash_completion  # This loads nvm bash_completion
+
+    if [[ ! -f $(nvm which 'lts/*') ]]; then
+        nvm install --lts
+    fi
+
+    nvm use --lts
+fi
 
 add_to_path /snap/bin
 add_to_path /opt/local/bin

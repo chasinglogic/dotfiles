@@ -21,3 +21,8 @@ modules:
     pull_only: true
     link: none
     location: ~/.tmux/plugins/tpm
+  # Node version manager
+  - repo: https://github.com/nvm-sh/nvm
+    pull_only: true
+    link: none
+    location: ~/.nvm

@@ -84,9 +84,9 @@ nmap <Leader>gu  :Git pull<CR>
 nmap <Leader>gl  :Gbrowse<CR>
 " }}}
 " Utility {{{
-nmap YY ggyG<C-o><C-o> " Copy whole buffer without losing my place
-nmap <Leader><Leader> :Commands<CR> " Search through commands
-nmap <Leader>noh :noh<CR>  " Clear search highights
+nmap YY ggyG<C-o><C-o>
+nmap <Leader><Leader> :Commands<CR>
+nmap <Leader>noh :noh<CR>
 imap fd <ESC>
 nmap <Leader>m :make
 " }}}
