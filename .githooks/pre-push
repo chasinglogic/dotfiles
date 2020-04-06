@@ -1,35 +1,25 @@
 #!/bin/bash
 
-if [[ $PWD == *"dfm/profiles"*  || $PWD == *"dfm/modules"* ]]; then
+remote="$1"
+if [[ $remote != "origin" ]]; then
     exit 0
 fi
 
 current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-push_command=$(ps -ocommand= -p $PPID)
-origin_remote=$(git remote -v | grep origin | grep push)
-
-if [[ "$push_command" != *"origin"* ]]; then
-    echo "Not pushing to origin, safe to push."
+if [[ $current_branch != "master" ]] && [[ $current_branch != "release/"* ]]; then
     exit 0
 fi
 
-function confirm() {
-    exec < /dev/tty
-
-    read -p "Are you sure you want to push to $current_branch? " -n 1 -r
-    echo    # (optional) move to a new line
-
-    exec <&- 
-
-    if [[ $REPLY =~ ^[Nn]$ ]]
-    then
+function check_for_invalid_commits() {
+    commit=$(git rev-list --all -n 1 --grep "$1")
+    if [[ -n $commit ]]; then
+        echo "Found a commit with invalid message pattern: $1"
         exit 1
     fi
 }
 
-case $current_branch in
-    # "master") echo "Not allowed to push to origin master" && exit 1 ;;
-    # "v4."*) confirm ;;
-    # "v3."*) confirm ;;
-    # *) echo "Trying to push a topic branch: $current_branch to origin, preventing." && exit 1 ;;
-esac
+check_for_invalid_commits "^fixup! "  $range
+check_for_invalid_commits "^squash! " $range
+check_for_invalid_commits "^WIP: "    $range
+check_for_invalid_commits "^wip: "    $range
+check_for_invalid_commits "^wip "     $range

@@ -4,7 +4,7 @@ let g:vimwiki_list = [{'path': '~/Dropbox/Notes',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
 " }}}
 " Plugins {{{
-call plug#begin('~/.vim-plugged')
+call plug#begin('~/.local/share/vim/plugins')
 " External Tool Integration {{{
 """ Fuzzy finding
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -51,7 +51,7 @@ Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin
 " }}}
 " Themes {{{
 Plug 'icymind/NeoSolarized', { 'as': 'solarized' }
-Plug 'dracula/vim'
+Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'chasinglogic/modus-themes-vim'
 " }}}
 " Vim for Prose (Blogs, Notes, etc.) {{{

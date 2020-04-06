@@ -57,3 +57,5 @@
 [branch]
     autosetupmerge = true
     autosetuprebase = remote
+[rebase]
+	autosquash = true
