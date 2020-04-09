@@ -86,10 +86,9 @@ source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
 # Set up virtualenvwrapper
 # source_if_exists /usr/local/bin/virtualenvwrapper.sh
 # source_if_exists $HOME/.local/bin/virtualenvwrapper.sh
+source_if_exists $NVM_DIR/nvm.sh  # This loads nvm
+source_if_exists $NVM_DIR/bash_completion  # This loads nvm bash_completion
 if [[ -z $NVM_BIN ]]; then
-    source_if_exists $NVM_DIR/nvm.sh  # This loads nvm
-    source_if_exists $NVM_DIR/bash_completion  # This loads nvm bash_completion
-
     if [[ ! -f $(nvm which 'lts/*') ]]; then
         nvm install --lts
     fi
