@@ -89,6 +89,9 @@ nmap <Leader><Leader> :Commands<CR>
 nmap <Leader>noh :noh<CR>
 imap fd <ESC>
 nmap <Leader>m :make
+" Copy file name to clipboard
+nmap ,cs :let @*=expand("%")<CR>
+nmap ,cl :let @*=expand("%:p")<CR>
 " }}}
 " System / Vim management {{{
 nmap <Leader>spi :PlugInstall<CR>

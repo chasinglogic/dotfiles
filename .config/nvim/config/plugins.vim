@@ -29,6 +29,7 @@ Plug 'tpope/vim-obsession'  " Automatic session management and restoration
 Plug 'PProvost/vim-ps1'              " I write powershell scripts sometimes
 Plug 'leafgarland/typescript-vim'    " Add typescript syntax files
 Plug 'Vimjas/vim-python-pep8-indent' " better python indentation
+Plug 'fisadev/vim-isort'
 Plug 'igankevich/mesonic'
 Plug 'arrufat/vala.vim'
 Plug 'vim-pandoc/vim-pandoc'         " Better folding for text formats like Markdown

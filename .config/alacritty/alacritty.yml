@@ -49,7 +49,7 @@ window:
   # Values for `decorations` (macOS only):
   #     - transparent: Title bar, transparent background and title bar buttons
   #     - buttonless: Title bar, transparent background, but no title bar buttons
-  decorations: full
+  decorations: none
 
   # Startup Mode (changes require restart)
   #
@@ -77,27 +77,6 @@ scrolling:
   # scrollback is enabled (history > 0).
   multiplier: 3
 
-  # Faux Scrolling
-  #
-  # The `faux_multiplier` setting controls the number of lines the terminal
-  # should scroll when the alternate screen buffer is active. This is used
-  # to allow mouse scrolling for applications like `man`.
-  #
-  # Specifying `0` will disable faux scrolling.
-  faux_multiplier: 3
-
-  # Scroll to the bottom when new text is written to the terminal.
-  auto_scroll: false
-
-# Spaces per Tab (changes require restart)
-#
-# This setting defines the width of a tab in cells.
-#
-# Some applications, like Emacs, rely on knowing about the width of a tab.
-# To prevent unexpected behavior in these applications, it's also required to
-# change the `it` value in terminfo when altering this setting.
-tabspaces: 8
-
 # Font configuration (changes require restart)
 font:
   # Normal (roman) font face
@@ -108,10 +87,10 @@ font:
      #   - (macOS) Menlo
      #   - (Linux) monospace
      #   - (Windows) Consolas
-    family: Source Code Pro
+    family: Hack
     style: Medium
   # Point size
-  size: 13.0
+  size: 11.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -145,39 +124,76 @@ font:
 # If `true`, bold text is drawn using the bright color variants.
 draw_bold_text_with_bright_colors: true
 
-# Colors (Solarized Light)
-colors:
-  # Default color
-  primary:
-    background: '0xfdf6e3' # base
-    foreground: '0x657b83' # base0
+schemes:
+  solarized_dark: &dark
+    # Default colors
+    primary:
+      background: '#002b36' # base03
+      foreground: '#839496' # base0
 
-  # Cursor color
-  cursor:
-    text:   '0xfdf6e3' # base
-    cursor: '0x657b83' # base0
+    # Cursor colors
+    cursor:
+      text:   '#002b36' # base03
+      cursor: '#839496' # base0
 
-  # Normal color
-  normal:
-    black:   '0x073642' # base0
-    red:     '0xdc322f' # re
-    green:   '0x859900' # gree
-    yellow:  '0xb58900' # yello
-    blue:    '0x268bd2' # blu
-    magenta: '0xd33682' # magent
-    cyan:    '0x2aa198' # cya
-    white:   '0xeee8d5' # base
+    # Normal colors
+    normal:
+      black:   '#073642' # base02
+      red:     '#dc322f' # red
+      green:   '#859900' # green
+      yellow:  '#b58900' # yellow
+      blue:    '#268bd2' # blue
+      magenta: '#d33682' # magenta
+      cyan:    '#2aa198' # cyan
+      white:   '#eee8d5' # base2
 
-  # Bright color
+    # Bright colors
     bright:
-    black:   '0x002b36' # base0
-    red:     '0xcb4b16' # orang
-    green:   '0x586e75' # base0
-    yellow:  '0x657b83' # base0
-    blue:    '0x839496' # base
-    magenta: '0x6c71c4' # viole
-    cyan:    '0x93a1a1' # base
-    white:   '0xfdf6e3' # bas
+      black:   '#586e75' # base01
+      red:     '#cb4b16' # orange
+      green:   '#586e75' # base01
+      yellow:  '#657b83' # base00
+      blue:    '#839496' # base0
+      magenta: '#6c71c4' # violet
+      cyan:    '#93a1a1' # base1
+      white:   '#fdf6e3' # base3
+
+  solarized_light: &light
+    # Default color
+    primary:
+      background: '0xfdf6e3' # base
+      foreground: '0x657b83' # base0
+  
+    # Cursor color
+    cursor:
+      text:   '0xfdf6e3' # base
+      cursor: '0x657b83' # base0
+  
+    # Normal color
+    normal:
+      black:   '0x073642' # base0
+      red:     '0xdc322f' # re
+      green:   '0x859900' # gree
+      yellow:  '0xb58900' # yello
+      blue:    '0x268bd2' # blu
+      magenta: '0xd33682' # magent
+      cyan:    '0x2aa198' # cya
+      white:   '0xeee8d5' # base
+  
+    # Bright color
+      bright:
+      black:   '0x002b36' # base0
+      red:     '0xcb4b16' # orang
+      green:   '0x586e75' # base0
+      yellow:  '0x657b83' # base0
+      blue:    '0x839496' # base
+      magenta: '0x6c71c4' # viole
+      cyan:    '0x93a1a1' # base
+      white:   '0xfdf6e3' # bas
+
+
+# Colors (Solarized Light)
+colors: *light
 
 # Visual Bell
 #
