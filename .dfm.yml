@@ -11,7 +11,7 @@ mappings:
 hooks:
   after_link:
     - |
-      if [[ ! -d "$HOME/.terminfo" ]]; then
+      if [ ! -d "$HOME/.terminfo" ]; then
           tic -x -o ~/.terminfo ~/.local/share/xterm-24bit.src
       fi
   after_sync:
