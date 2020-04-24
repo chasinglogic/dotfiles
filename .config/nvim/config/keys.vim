@@ -74,6 +74,7 @@ nmap <Leader>t4 :tabn 4<CR>
 nmap <Leader>t5 :tabn 5<CR>
 " }}}
 " Git {{{
+nmap <Leader>gg  :Git 
 nmap <Leader>ga  :!git add %<CR>
 nmap <Leader>gc  :Git commit<CR>
 nmap <Leader>gs  :Git<CR>
@@ -114,6 +115,6 @@ nmap [a <Plug>(ale_previous_wrap)
 nmap ]a <Plug>(ale_next_wrap)
 " }}}
 " Easy alignment {{{
-vmap <Enter> <Plug>(EasyAlign)
+vmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 " }}}

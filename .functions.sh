@@ -6,6 +6,18 @@ function dotfiles() {
   cd $(dfm where)
 }
 
+function et() {
+    emacsclient -nw $@
+}
+
+function ec() {
+    et $@
+}
+
+function page() {
+  $@ | less
+}
+
 function tmux_session() {
   SESS_NAME=$1
   if [[ -z $(tmux list-sessions | grep $SESS_NAME) ]]; then

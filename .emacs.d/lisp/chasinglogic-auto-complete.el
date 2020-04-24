@@ -38,15 +38,6 @@
   (setq-default company-dabbrev-downcase nil)
   (global-company-mode))
 
-;; LSP powered auto completion
-;;
-;; We need one more package to integrate LSP mode with my completion
-;; framework Company, the cleverly named, `company-lsp'. All that we
-;; need to do is add it to company backends.
-(use-package company-lsp
-  :config (push 'company-lsp company-backends)
-  :after (lsp-mode company))
-
 (provide 'chasinglogic-auto-complete)
 
 ;;; chasinglogic-auto-complete.el ends here
