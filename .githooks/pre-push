@@ -11,7 +11,7 @@ if [[ $current_branch != "master" ]] && [[ $current_branch != "release/"* ]]; th
 fi
 
 function check_for_invalid_commits() {
-    commit=$(git rev-list --all -n 1 --grep "$1")
+    commit=$(git rev-list -n 1 --grep "$1")
     if [[ -n $commit ]]; then
         echo "Found a commit with invalid message pattern: $1"
         exit 1
