@@ -16,7 +16,11 @@ if [[ $TERM == "dumb" ]]; then
     return
 fi
 
-source $HOME/.profile
+# Do bash-style backwards deletion, treat dir sep, dot, and other common
+# characters as words for readline bindings 
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+
 source $HOME/.functions.sh
+source $HOME/.profile
 source_if_exists $HOME/.env.sh
 source_if_exists $HOME/.aliases.sh

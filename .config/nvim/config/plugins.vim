@@ -22,14 +22,11 @@ Plug 'tpope/vim-eunuch'     " Useful commands like Rename, Delete, Move, SudoWri
 Plug 'tpope/vim-abolish'    " Better abbreviations and Subvert is like fancy %s
 Plug 'tpope/vim-fugitive'   " Git integration
 Plug 'tpope/vim-rhubarb'    " Github integraiton for vim-fugitive
-Plug 'tpope/vim-markdown'   " Better markdown
 Plug 'tpope/vim-obsession'  " Automatic session management and restoration
 " }}}
 " Language Support {{{
-Plug 'PProvost/vim-ps1'              " I write powershell scripts sometimes
 Plug 'leafgarland/typescript-vim'    " Add typescript syntax files
 Plug 'Vimjas/vim-python-pep8-indent' " better python indentation
-Plug 'fisadev/vim-isort'
 Plug 'igankevich/mesonic'
 Plug 'arrufat/vala.vim'
 Plug 'vim-pandoc/vim-pandoc'         " Better folding for text formats like Markdown
@@ -46,7 +43,6 @@ Plug 'junegunn/vim-easy-align'   " Automatically align based on regex
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'dense-analysis/ale'    " Code linting and LSP client
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
-Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin list after vim-sleuth
 " }}}
@@ -63,7 +59,7 @@ Plug 'vimwiki/vimwiki'
 call plug#end()
 " }}}
 " Ultisnips {{{
-let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsExpandTrigger="<c-k>"
 let g:UltiSnipsJumpForwardTrigger="<c-f>"
 let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 let g:UltiSnipsEditSplit="vertical"
@@ -77,10 +73,6 @@ let g:neoformat_enabled_python3 = ['black', 'docformatter']
 " }}}
 " Deoplete {{{
 let g:deoplete#enable_at_startup = 1
-" }}}
-" Vim-go settings {{{
-let g:go_fmt_autosave = 1
-let g:go_fmt_command = "goimports"
 " }}}
 " Split-join {{{
 let g:splitjoin_ruby_trailing_comma = 1

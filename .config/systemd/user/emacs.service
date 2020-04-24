@@ -7,7 +7,7 @@ Description=Emacs text editor
 Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 
 [Service]
-Type=notify
+Type=simple
 ExecStart=emacs --fg-daemon
 ExecStop=emacsclient --eval "(kill-emacs)"
 # The location of the SSH auth socket varies by distribution, and some

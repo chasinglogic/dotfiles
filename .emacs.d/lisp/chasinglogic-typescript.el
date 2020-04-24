@@ -33,7 +33,33 @@
 (use-package typescript-mode
   :mode "\\.ts\\'"
   :config
-  (add-hook typescript-mode-hook 'lsp))
+  (setq-default typescript-auto-indent-flag nil)
+  (defun chasinglogic-typescript-mode-hook ()
+    "Disable electric-layout-mode"
+    (electric-layout-mode -1))
+
+  (add-hook 'typescript-mode-hook #'chasinglogic-typescript-mode-hook))
+
+(use-package tide
+  :config
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (flycheck-mode +1)
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (eldoc-mode +1)
+    (tide-hl-identifier-mode +1)
+    (company-mode +1))
+
+  ;; aligns annotation to the right hand side
+  (setq company-tooltip-align-annotations t)
+
+  ;; formats the buffer before saving
+  (add-hook 'before-save-hook 'tide-format-before-save)
+  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+
+(use-package prettier-js
+  :hook (web-mode-hook typescript-mode-hook js2-mode-hook))
 
 (provide 'chasinglogic-typescript)
 

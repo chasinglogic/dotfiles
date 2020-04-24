@@ -52,6 +52,15 @@
   :diminish ""
   :commands flycheck-mode
   :init
+  (use-package flycheck-pycheckers)
+  (use-package flycheck-rust)
+
+  (defun chasinglogic-setup-flycheck-hook ()
+    (flycheck-rust-setup)
+    (flycheck-pycheckers-setup))
+
+  (add-hook 'flycheck-mode-hook 'chasinglogic-setup-flycheck-hook)
+
   (defun chasinglogic-enable-flycheck ()
     (flycheck-mode 1))
 

@@ -1,20 +1,13 @@
-" General Vim Editor configuration {{{
-" }}}
-" Use the right Python {{{
-let g:python3_host_prog = '/usr/bin/python3'
-let g:python_host_prog = '/usr/bin/python3'
-" }}}
 " Tab size {{{
 set tabstop=4     " A tab is 4 spaces
 set expandtab     " Always uses spaces instead of tabs
 set softtabstop=4 " Insert 4 spaces when tab is pressed
 set shiftwidth=4  " An indent is 4 spaces
 set shiftround    " Round indent to nearest shiftwidth multiple
-set smartindent   " Do intelligent indentation based on programming symbols like {
 " }}}
 " Formatting options {{{
 set textwidth=80       " 80 Column text width
-set formatoptions+=ro  " Auto insert comment character when making a new line
+set formatoptions-=ro  " Auto insert comment character when making a new line
 set formatoptions+=q   " Allow formatting of comments with gq
 set formatoptions+=n   " recognize numbered lists
 set formatoptions+=j   " Remove comment char when joining lines
@@ -22,6 +15,7 @@ set formatoptions-=t   " No visual wrapping
 set nowrap             " Don't do soft wrapping
 set nostartofline      " Don't go to the start of line after certain commands
 set autoindent         " Copy indent from current line when starting a new line
+filetype plugin indent on
 " }}}
 " Tab completion settings for command line {{{
 set wildignore+=*.o,*.git,*.svn,*.pyc "ignore these files

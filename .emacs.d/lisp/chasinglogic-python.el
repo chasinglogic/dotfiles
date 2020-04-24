@@ -65,24 +65,6 @@
       (add-hook 'before-save-hook 'blacken-buffer nil t)))
   (add-hook 'python-mode-hook 'chasinglogic-python-format-hook))
 
-;; Making Emacs and virtualenvs work together has been one of the most
-;; frustrating things about my time with Emacs. After literal years of
-;; tweaking and testing I finally have a solution that I like. I use
-;; `virtualenvwrapper' to create my virtualenvs with names that match
-;; the names returned by =(projectile-project-name)=, essentially this
-;; is just the basename of the project directory. Then whenever I run
-;; `projectile-switch-project' check for a matching virtualenv if so
-;; activate it with the `pyvenv' package.
-(use-package pyvenv
-  :config
-  (defun chasinglogic-auto-venv ()
-    "Automatically setup the venv when entering a project"
-    (let ((venv-location (concat "~/.virtualenvs/" (projectile-project-name))))
-      (when (file-exists-p venv-location)
-        (message "Activating virtualenv: %s" venv-location)
-        (pyvenv-activate venv-location))))
-  (add-hook 'projectile-after-switch-project-hook 'chasinglogic-auto-venv))
-
 ;; Load SCons files as Python
 (add-to-list 'auto-mode-alist '("SConscript" . python-mode))
 (add-to-list 'auto-mode-alist '("SConstruct" . python-mode))

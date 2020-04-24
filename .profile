@@ -1,5 +1,10 @@
 set -o emacs
 
+function find_executable() {
+    X=$(which $1 2>/dev/null)
+    echo $X
+}
+
 function source_if_exists() {
     if [[ -f $1 ]]; then
         source $1
@@ -20,12 +25,6 @@ function add_to_path() {
 # Node version manager storage location
 export NVM_DIR="$HOME/.nvm"
 export NOTES_DIR="$HOME/Dropbox/Notes"
-# FZF default find command
-if [[ -x $(which fd) ]]; then
-    export FZF_DEFAULT_COMMAND="fd --type f --hidden --exclude '.git/'"
-else
-    export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
-fi
 # Use Python3 for Virtualenvwrapper
 export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
 # Plasma scale with HIDPI
@@ -111,3 +110,13 @@ add_to_path $HOME/Library/Python/3.7/bin
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
+
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# This has to be after the $PATH is set up.
+# FZF default find command
+if [[ -x $(find_executable fd) ]]; then
+    export FZF_DEFAULT_COMMAND="fd --type f --hidden --exclude '.git/'"
+else
+    export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
+fi

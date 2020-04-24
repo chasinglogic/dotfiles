@@ -136,7 +136,6 @@
 (require 'chasinglogic-keys)
 
 ;; Default Emacs settings
-(require 'chasinglogic-globals)
 (require 'chasinglogic-dired)
 (require 'chasinglogic-editor)
 (require 'chasinglogic-text-utils)
@@ -151,9 +150,7 @@
 (require 'chasinglogic-prose)
 
 ;; Applications
-(require 'chasinglogic-email)
 (require 'chasinglogic-org)
-(require 'auto-sync-mode)
 
 ;; Programming languages
 (require 'chasinglogic-cc)
