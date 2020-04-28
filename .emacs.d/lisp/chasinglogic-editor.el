@@ -34,7 +34,7 @@
 ;;     The only thing fancy about the way this font is getting set is that
 ;;     I use two font sizes: one for my Mac because of the retina display
 ;;     and one for everything else where I use regular monitors.
-(setq-default chasinglogic-font-size "10")
+(setq-default chasinglogic-font-size "11")
 (when (eq system-type 'darwin)
   ;; Retina display requires bigger font IMO.
   (setq chasinglogic-font-size "15"))
@@ -185,14 +185,13 @@ comments so this function better suits my needs."
 ;;
 ;;   I change this too often to really document why whatever
 ;;   theme I'm in the mood for is the one I'm in the mood for.
+(use-package doom-themes)
+(use-package modus-operandi)
 
-(use-package modus-vivendi-theme)
-(use-package modus-operandi-theme)
-
-(defvar chasinglogic-dark-theme 'modus-vivendi)
+(defvar chasinglogic-dark-theme 'doom-palenight)
 (defvar chasinglogic-light-theme 'modus-operandi)
 
-(load-theme chasinglogic-light-theme t)
+(load-theme chasinglogic-dark-theme t)
 
 (defun chasinglogic-toggle-theme ()
   "Toggle between light and dark theme."
