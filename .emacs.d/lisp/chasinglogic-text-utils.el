@@ -35,54 +35,6 @@
 (use-package expand-region
   :bind ("C-M-h" . expand-region))
 
-;; Avy
-;;     only compare it to EasyMotion for Vim but it's actually much
-;;     better IMO. It has many "jumping" commands for going to words,
-;;     subwords, characters, lines etc. Here I only bind a few of the
-;;     most useful ones to me.
-(use-package avy
-  :general
-  (leader!
-    "jj" 'avy-goto-word-1
-    "jw" 'avy-goto-word-1
-    "jl" 'avy-goto-line
-    "jh" 'avy-goto-heading)
-  :bind
-  (("M-j"     . 'avy-goto-word-1)
-   ("C-c j c" . 'avy-goto-char)
-   ("C-c j j" . 'avy-goto-word-1)
-   ("C-c j l" . 'avy-goto-line)
-   ("C-c j h" . 'avy-goto-heading))
-  :config
-  ;; When non-nil, a gray background will be added during the selection.
-  (setq avy-background t))
-
-;; Ace Window
-;;
-;;     One of the hardest parts coming to Emacs from Vim was learning
-;;     window management. The default keybinding =C-x o= felt cumbersome
-;;     to press not to mention use. Luckily there is a package (again
-;;     from `abo-abo') that solves this problem. Ace Window will
-;;     highlight windows with a number and let you jump to them by
-;;     pressing the corresponding number. It's also smart and when there
-;;     are only two windows will simply cycle between them without
-;;     prompting. I bind it to `M-o' as the original command bound to
-;;     that key I never use and I prefer meta bindings for commonly
-;;     pressed commands.
-(require 'term)
-(use-package ace-window
-  :commands 'ace-window
-  :init (defun chasinglogic-ace-window (arg)
-          "Create a window if only one window and/or call ace-window"
-          (interactive "p")
-          (when (eq (length (window-list)) 1)
-            (split-window-horizontally))
-          (ace-window arg))
-  :config (setq aw-scope 'frame)
-  :bind (("M-o" . chasinglogic-ace-window)
-         (:map term-raw-map
-               ("M-o" . ace-window))))
-
 ;; Yasnippet
 ;;
 ;; Yasnippet is definitely in my top 5 packages. It's the most

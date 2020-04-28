@@ -61,25 +61,6 @@
 
   :commands 'magit-status)
 
-;; xgen-cru (MongoDB Code Reviews)
-;;
-;; `xgen-cru' is an internal tool for posting code reviews to
-;; Rietveld. It's an Emacs wrapper around our Python script that most
-;; people use. I keep it in a directory called `kernel-tools' and I
-;; use `use-package' to load it from this local directory. I only set
-;; a few options so it will pass my work email to the script.
-(eval-and-compile
-  (setq-default kernel-tools (concat (getenv "HOME") "/Work/kernel-tools/codereview")))
-(use-package xgen-cru
-  :load-path kernel-tools
-  :commands (xgen-cru-update-review xgen-cru-post-review)
-  :config
-  (setq-default
-   xgen-cru-upload-email "mathew.robinson@mongodb.com"
-   xgen-cru-jira-username "mathew.robinson"
-   xgen-cru-upload-py-path (concat kernel-tools "/upload.py")))
-
-
 ;; Git Link
 ;;
 ;; This packages opens and creates github links from within
