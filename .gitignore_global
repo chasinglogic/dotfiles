@@ -1,7 +1,7 @@
 *flycheck*
 *#*#
 *.#*
-.dir-locals.el
+/.dir-locals.el
 
 *.bak
 *.log
