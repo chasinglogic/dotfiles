@@ -26,7 +26,111 @@
 
 ;;; Code:
 
+;;;; Personal utility functions and macros
+
 (setq chasinglogic-evil-mode (bound-and-true-p evil-mode))
+
+;; Indent the buffer
+;;
+;;     This function uses Emacs built in indent facilities to indent the
+;;     entire buffer. It doesn't work so great on languages where
+;;     whitespace has semantic meaning, like Python, but it is a godsend
+;;     for structured languages that are commonly poorly formatted, like
+;;     HTML.
+(defun chasinglogic-indent-buffer ()
+  "Indent the entire buffer."
+  (interactive)
+  (indent-region-line-by-line (point-min) (point-max)))
+
+;; GDB/LLDB Debugging
+;;     I maintain a developer toolchain that means I have to frequently
+;;     interact with GDB *and* LLDB. Since LLDB does not have Emacs
+;;     integration this function allow me to easily get breakpoints for
+;;     wherever I am.
+;;
+;;     It checks for the `projectile-project-root' and if found will make
+;;     the filename relative to this directory. Otherwise the full path
+;;     of the `buffer-file-name' will be used. It grabs the line number
+;;     the point is currently at then simply concatenates the generated
+;;     filename, a colon, and the line number. When called interactively
+;;     it will add it to the kill ring effectively "copying" the
+;;     breakpoint for easy pasting.
+(defun chasinglogic-copy-breakpoint-for-here (&optional copy)
+  "Return a filename:linenumber pair for point for use with LLDB/GDB.
+
+If COPY is provided copy the value to kill ring instead of returning."
+  (interactive (list t))
+  (let* ((line-number (format "%d" (line-number-at-pos)))
+         (file-name (if (projectile-project-root)
+                        (file-relative-name (buffer-file-name) (projectile-project-root))
+                      (file-name-nondirectory (buffer-file-name))))
+         (breakpoint (concat file-name ":" line-number)))
+    (if copy
+        (progn
+          (kill-new breakpoint)
+          (message "%s" breakpoint))
+      breakpoint)))
+
+  ;;; Copy the test path for Django manage.py test
+(defun chasinglogic-copy-test-path-for-here (&optional copy)
+  (interactive (list t))
+  (let* ((file-name (if (projectile-project-root)
+                        (file-relative-name (buffer-file-name) (projectile-project-root))
+                      (file-name-nondirectory (buffer-file-name))))
+         (current-point (point))
+         (test-name (progn
+                      (re-search-backward "def ")
+                      (forward-word)
+                      (forward-char)
+                      (thing-at-point 'sexp)))
+         (test-class-name (progn
+                            (re-search-backward "class ")
+                            (forward-word)
+                            (forward-char)
+                            (thing-at-point 'sexp)))
+         (test-path (concat
+                     (string-remove-prefix "mpb/" file-name)
+                     ":" test-class-name
+                     "." test-name)))
+    (message "Copied: %s" test-path)
+    (kill-new test-path)
+    (goto-char current-point)))
+
+(defun chasinglogic-run-test ()
+  "Run the test under point"
+  (interactive)
+  (chasinglogic-copy-test-path-for-here t)
+  (let ((default-directory (projectile-project-root))
+        (compilation-command (concat "cd mpb && python ./manage.py test " (current-kill 0))))
+    (puthash default-directory compilation-command projectile-compilation-cmd-map)
+    (compile compilation-command)))
+
+  ;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
+(defun chasinglogic-unfill-paragraph (&optional region)
+  "Takes a multi-line paragraph and makes it into a single line of text."
+  (interactive (progn (barf-if-buffer-read-only) '(t)))
+  (let ((fill-column (point-max))
+        ;; This would override `fill-column' if it's an integer.
+        (emacs-lisp-docstring-fill-column t))
+    (fill-paragraph nil region)))
+
+;; Finding org files
+;;
+;;     I keep all of my org files in `org-directory' and some of them are
+;;     encrypted. This macro lets me easily define functions for quickly
+;;     finding them. It's a macro because [[https://www.jamesporter.me/2013/06/14/emacs-lisp-closures-exposed.html][Emacs has crazy scoping rules]]
+;;     that make returning lambdas from functions difficult.
+(defmacro chasinglogic-find-org-file (name)
+  "Create a function to find the org file NAME."
+  `(defun ,(intern (format "chasinglogic-find-org-file-%s" name)) ()
+     (interactive)
+     (let ((file-name (expand-file-name ,(format "%s.org" name) org-directory)))
+       (find-file (if (file-exists-p (concat file-name ".gpg"))
+                      (concat file-name ".gpg")
+                    file-name)))))
+(chasinglogic-find-org-file notes)
+(chasinglogic-find-org-file ideas)
+(chasinglogic-find-org-file todo)
 
 ;; Which Key
 ;;
@@ -41,7 +145,6 @@
   :init
   (which-key-mode))
 
-
 ;; General(.el)
 ;;
 ;; General is a convenient way to do evil / leader-esque
@@ -49,109 +152,7 @@
 ;; keybindings. I simply use it because it's very convenient and
 ;; integrates with use-package well.
 (use-package general
-  :config
-  ;; Indent the buffer
-  ;;
-  ;;     This function uses Emacs built in indent facilities to indent the
-  ;;     entire buffer. It doesn't work so great on languages where
-  ;;     whitespace has semantic meaning, like Python, but it is a godsend
-  ;;     for structured languages that are commonly poorly formatted, like
-  ;;     HTML.
-  (defun chasinglogic-indent-buffer ()
-    "Indent the entire buffer."
-    (interactive)
-    (indent-region-line-by-line (point-min) (point-max)))
-
-  ;; GDB/LLDB Debugging
-  ;;     I maintain a developer toolchain that means I have to frequently
-  ;;     interact with GDB *and* LLDB. Since LLDB does not have Emacs
-  ;;     integration this function allow me to easily get breakpoints for
-  ;;     wherever I am.
-  ;;
-  ;;     It checks for the `projectile-project-root' and if found will make
-  ;;     the filename relative to this directory. Otherwise the full path
-  ;;     of the `buffer-file-name' will be used. It grabs the line number
-  ;;     the point is currently at then simply concatenates the generated
-  ;;     filename, a colon, and the line number. When called interactively
-  ;;     it will add it to the kill ring effectively "copying" the
-  ;;     breakpoint for easy pasting.
-  (defun chasinglogic-copy-breakpoint-for-here (&optional copy)
-    "Return a filename:linenumber pair for point for use with LLDB/GDB.
-
-If COPY is provided copy the value to kill ring instead of returning."
-    (interactive (list t))
-    (let* ((line-number (format "%d" (line-number-at-pos)))
-           (file-name (if (projectile-project-root)
-                          (file-relative-name (buffer-file-name) (projectile-project-root))
-                        (file-name-nondirectory (buffer-file-name))))
-           (breakpoint (concat file-name ":" line-number)))
-      (if copy
-          (progn
-            (kill-new breakpoint)
-            (message "%s" breakpoint))
-        breakpoint)))
-
-  ;;; Copy the test path for Django manage.py test
-  (defun chasinglogic-copy-test-path-for-here (&optional copy)
-    (interactive (list t))
-    (let* ((file-name (if (projectile-project-root)
-                          (file-relative-name (buffer-file-name) (projectile-project-root))
-                        (file-name-nondirectory (buffer-file-name))))
-           (current-point (point))
-           (test-name (progn
-                        (re-search-backward "def ")
-                        (forward-word)
-                        (forward-char)
-                        (thing-at-point 'sexp)))
-           (test-class-name (progn
-                              (re-search-backward "class ")
-                              (forward-word)
-                              (forward-char)
-                              (thing-at-point 'sexp)))
-           (test-path (concat
-                       (string-remove-prefix "mpb/" file-name)
-                       ":" test-class-name
-                       "." test-name)))
-      (message "Copied: %s" test-path)
-      (kill-new test-path)
-      (goto-char current-point)))
-
-  (defun chasinglogic-run-test ()
-    "Run the test under point"
-    (interactive)
-    (chasinglogic-copy-test-path-for-here t)
-    (let ((default-directory (projectile-project-root))
-          (compilation-command (concat "cd mpb && python ./manage.py test " (current-kill 0))))
-      (puthash default-directory compilation-command projectile-compilation-cmd-map)
-      (compile compilation-command)))
-
-  ;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
-  (defun chasinglogic-unfill-paragraph (&optional region)
-    "Takes a multi-line paragraph and makes it into a single line of text."
-    (interactive (progn (barf-if-buffer-read-only) '(t)))
-    (let ((fill-column (point-max))
-          ;; This would override `fill-column' if it's an integer.
-          (emacs-lisp-docstring-fill-column t))
-      (fill-paragraph nil region)))
-
-  ;; Finding org files
-  ;;
-  ;;     I keep all of my org files in `org-directory' and some of them are
-  ;;     encrypted. This macro lets me easily define functions for quickly
-  ;;     finding them. It's a macro because [[https://www.jamesporter.me/2013/06/14/emacs-lisp-closures-exposed.html][Emacs has crazy scoping rules]]
-  ;;     that make returning lambdas from functions difficult.
-  (defmacro chasinglogic-find-org-file (name)
-    "Create a function to find the org file NAME."
-    `(defun ,(intern (format "chasinglogic-find-org-file-%s" name)) ()
-       (interactive)
-       (let ((file-name (expand-file-name ,(format "%s.org" name) org-directory)))
-         (find-file (if (file-exists-p (concat file-name ".gpg"))
-                        (concat file-name ".gpg")
-                      file-name)))))
-  (chasinglogic-find-org-file notes)
-  (chasinglogic-find-org-file ideas)
-  (chasinglogic-find-org-file todo)
-  
+  :config 
   (general-def "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
   (general-def "C-c j t" 'chasinglogic-copy-test-path-for-here)
   (general-def "C-c j =" 'chasinglogic-indent-buffer)

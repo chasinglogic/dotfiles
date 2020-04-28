@@ -42,6 +42,9 @@
               flycheck-python-pylint-executable python-shell-interpreter
               flycheck-python-pycompile-executable python-shell-interpreter)
 
+(use-package py-isort
+  :commands 'py-isort-buffer)
+
 ;; Next I use the Black Python formatter for my code. This package
 ;; integrates it into Emacs and lets me run it as an after save
 ;; hook. My hook has to be a little smarter however because my work

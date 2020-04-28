@@ -35,19 +35,13 @@
 ;;
 ;; First we install the `clang-format' package and point it at the
 ;; MongoDB toolchain binary since it's always the right version.
-(use-package clang-format
-  :commands (clang-format-buffer)
-  :config
-  (setq clang-format-binary "/opt/mongodbtoolchain/v3/bin/clang-format"))
-
+(use-package clang-format :commands (clang-format-buffer))
 ;; Use clang-tidy for flycheck on top of the compilation checking
 ;; provided by LSP. I use clangd as my language server which does
 ;; support clang-tidy but unfortunately it ignores the configuration
 ;; files
 (use-package flycheck-clang-tidy)
-
 (use-package ccls)
-
 ;; Next create a C++ mode hook that makes Emacs format / indent things
 ;; correctly according to MongoDB's style guide. Additionally make it
 ;; so Flycheck will pass ~-std=c++17~ when doing syntax checking and

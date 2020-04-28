@@ -34,16 +34,44 @@
 ;;     The only thing fancy about the way this font is getting set is that
 ;;     I use two font sizes: one for my Mac because of the retina display
 ;;     and one for everything else where I use regular monitors.
-(setq-default chasinglogic-font-size "11")
-(when (eq system-type 'darwin)
-  ;; Retina display requires bigger font IMO.
-  (setq chasinglogic-font-size "15"))
+(setq-default
+;; By default when Emacs tries to open a symlink that points to a git
+;; repository it prompts you like "do you really wanna open this
+;; file". I use symlinks like this a lot so I disable this prompt.
+ vc-follow-symlinks t
+ ;; Use spaces instead of tabs
+ indent-tabs-mode nil
+ ;; default tab size to 4 spaces
+ tab-width 4
+ chasinglogic-font-size (if (eq system-type 'darwin) "15" "11")
+ chasinglogic-font (format "Hack-%s" chasinglogic-font-size)
+ ;; Just save buffers before compiling
+ compilation-ask-about-save nil
+ ;; Always kill old compilation without prompting
+ compilation-always-kill t
+ ;; I use =M-x compile= for running all kinds of commands. This
+ ;; setting makes it so that the buffer auto scrolls to keep up with
+ ;; the output. More like a regular terminal would.
+ compilation-scroll-output t
+ ;; hippie expand is dabbrev expand on steroids
+ hippie-expand-try-functions-list '(try-expand-dabbrev
+                                    try-expand-dabbrev-all-buffers
+                                    try-expand-dabbrev-from-kill
+                                    try-complete-file-name-partially
+                                    try-complete-file-name
+                                    try-expand-all-abbrevs
+                                    try-expand-list
+                                    try-expand-line
+                                    try-complete-lisp-symbol-partially
+                                    try-complete-lisp-symbol)
+ ;; Don't pollute init.el with custom settings
+ custom-file "~/.local/share/emacs/custom.el"
+ ;; Ediff is a handy tool I don't use often enough. However I really
+ ;; hate the default layout. This makes Ediff less eggregious about
+ ;; upsetting my window manager when I load it.
+ ediff-window-setup-function 'ediff-setup-windows-plain)
 
-;; Faster than set-frame-font
-(setq chasinglogic-font (format "Hack-%s" chasinglogic-font-size))
-(add-to-list 'default-frame-alist (cons 'font chasinglogic-font))
-
-;; Window Chrome
+;;;; Window Chrome
 ;;     Emacs by default has lots of window chrome to make it more mouse
 ;;     accessible. While I actually use my mouse quite a bit and love
 ;;     Emacs mouse integration I really hate big UI elements and I never
@@ -53,12 +81,31 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
+(use-package doom-modeline :config (doom-modeline-mode))
 
+(add-to-list 'default-frame-alist (cons 'font chasinglogic-font))
 ;; On MacOS there's a new feature to have title bars match the window
 ;; they belong to. This makes Emacs do that so the title bar looks
 ;; like it's part of the buffer.
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . dark))
+
+
+;;;; Advices
+
+;; When the shell exits close the buffer and window
+(defadvice term-handle-exit
+    (after term-kill-buffer-on-exit activate)
+  (if (> (length (window-list)) 1)
+      (kill-buffer-and-window)
+    (kill-buffer)))
+
+(defadvice tab-bar-close-tab
+    (after remove-tab-bar-on-last-closed activate)
+  (when (= (length (tab-bar-tabs)) 1)
+    (tab-bar-mode -1)))
+
+;;;; Hooks
 
 ;; Line numbers in programming modes.
 ;;     I enable line numbers using the new Emacs 26
@@ -66,6 +113,7 @@
 (defun enable-display-line-numbers-mode ()
   "Enable display-line-numbers-mode"
   (display-line-numbers-mode 1))
+
 (add-hook 'text-mode-hook 'enable-display-line-numbers-mode)
 (add-hook 'prog-mode-hook 'enable-display-line-numbers-mode)
 (add-hook 'org-mode-hook '(lambda () (display-line-numbers-mode -1)))
@@ -80,32 +128,12 @@
     (set-frame-parameter nil 'fullscreen 'maximized)))
 (add-hook 'after-make-frame-functions 'maximize-gui-frames)
 
-;; When the shell exits close the buffer and window
-(defadvice term-handle-exit
-    (after term-kill-buffer-on-exit activate)
-  (if (> (length (window-list)) 1)
-      (kill-buffer-and-window)
-    (kill-buffer)))
-
-(defadvice tab-bar-close-tab
-    (after remove-tab-bar-on-last-closed activate)
-  (when (= (length (tab-bar-tabs)) 1)
-    (tab-bar-mode -1)))
-
-;; First we set spaces instead of tabs and set the default
-;; `tab-width' to 4 spaces.
-(setq-default indent-tabs-mode nil
-              tab-width 4)
-
 ;; Attempt to display ANSI colors in compilation buffer, at the very
 ;; least sanitize them out.
 (add-hook 'compilation-filter-hook
-  (lambda () (ansi-color-apply-on-region (point-min) (point-max))))
+          (lambda () (ansi-color-apply-on-region (point-min) (point-max))))
 
-;; By default when Emacs tries to open a symlink that points to a git
-;; repository it prompts you like "do you really wanna open this
-;; file". I use symlinks like this a lot so I disable this prompt.
-(setq-default vc-follow-symlinks t)
+;;;; Misc
 
 ;; One of the best features of Emacs is it's ability to integrate
 ;; with programming languages at a syntactic level. It enables you to
@@ -132,45 +160,12 @@ comments so this function better suits my needs."
       (comment-or-uncomment-region (region-beginning) (region-end) arg)
     (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
 
-;; I use =M-x compile= for running all kinds of commands. This
-;; setting makes it so that the buffer auto scrolls to keep up with
-;; the output. More like a regular terminal would.
-(setq compilation-scroll-output t)
-
 ;; As I discover commands that have the "new user warnings" when I use
 ;; them I disable them here.
 (put 'downcase-region 'disabled nil)
 
-;; Don't pollute ~/.emacs.d/init.el with customize settings.
-(setq custom-file "~/.emacs-custom.el")
-
-;; hippie expand is dabbrev expand on steroids
-(setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                         try-expand-dabbrev-all-buffers
-                                         try-expand-dabbrev-from-kill
-                                         try-complete-file-name-partially
-                                         try-complete-file-name
-                                         try-expand-all-abbrevs
-                                         try-expand-list
-                                         try-expand-line
-                                         try-complete-lisp-symbol-partially
-                                         try-complete-lisp-symbol))
-
-;; Just save buffers before compiling
-(setq-default compilation-ask-about-save nil
-              ;; Always kill old compilation without prompting
-              compilation-always-kill t
-              ;; Automatically scroll to first error
-              compilation-scroll-output 'first-error)
-
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-
-;; Ediff
-;;     Ediff is a handy tool I don't use often enough. However I really
-;;     hate the default layout. This makes Ediff less eggregious about
-;;     upsetting my window manager when I load it.
-(setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
 
 ;; Ensure a few important paths are always present
 (mapc 
@@ -181,12 +176,10 @@ comments so this function better suits my needs."
   (concat (getenv "HOME") "/.local/bin")
   (concat (getenv "HOME") "/.cargo/bin")))
 
-;; Color Theme
-;;
-;;   I change this too often to really document why whatever
-;;   theme I'm in the mood for is the one I'm in the mood for.
+;;;; Color Theme
+
 (use-package doom-themes)
-(use-package modus-operandi)
+(use-package modus-operandi-theme)
 
 (defvar chasinglogic-dark-theme 'doom-palenight)
 (defvar chasinglogic-light-theme 'modus-operandi)
@@ -203,8 +196,6 @@ comments so this function better suits my needs."
     (progn
       (disable-theme chasinglogic-dark-theme)
       (load-theme chasinglogic-dark-theme t))))
-
-(use-package doom-modeline :config (doom-modeline-mode))
 
 (provide 'chasinglogic-editor)
 

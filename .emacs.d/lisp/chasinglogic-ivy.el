@@ -61,11 +61,6 @@
          (:map minibuffer-local-map
                ("M-r" . 'counsel-minibuffer-history))))
 
-;; Swiper
-;;
-;; This is an enhanced incremental search provided by Ivy.
-(use-package swiper :bind ("C-M-s" . swiper))
-
 (provide 'chasinglogic-ivy)
 
 ;;; chasinglogic-ivy.el ends here
