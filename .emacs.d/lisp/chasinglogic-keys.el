@@ -72,7 +72,7 @@ If COPY is provided copy the value to kill ring instead of returning."
       breakpoint)))
 
   ;;; Copy the test path for Django manage.py test
-(defun chasinglogic-copy-test-path-for-here (&optional copy)
+(defun chasinglogic-copy-mpbx-test-path-for-here (&optional copy)
   (interactive (list t))
   (let* ((file-name (if (projectile-project-root)
                         (file-relative-name (buffer-file-name) (projectile-project-root))
@@ -96,12 +96,46 @@ If COPY is provided copy the value to kill ring instead of returning."
     (kill-new test-path)
     (goto-char current-point)))
 
+(defun chasinglogic-run-mpbx-test ()
+  "Run the test under point"
+  (interactive)
+  (chasinglogic-copy-mpbx-test-path-for-here t)
+  (let ((default-directory (projectile-project-root))
+        (compilation-command (concat "cd mpb && python ./manage.py test " (current-kill 0))))
+    (puthash default-directory compilation-command projectile-compilation-cmd-map)
+    (compile compilation-command)))
+
+  ;;; Copy the test path for Django manage.py test
+(defun chasinglogic-copy-test-path-for-here (&optional copy)
+  (interactive (list t))
+  (let* ((file-name (if (projectile-project-root)
+                        (file-relative-name (buffer-file-name) (projectile-project-root))
+                      (file-name-nondirectory (buffer-file-name))))
+         (current-point (point))
+         (test-name (progn
+                      (re-search-backward "def ")
+                      (forward-word)
+                      (forward-char)
+                      (thing-at-point 'sexp)))
+         (test-class-name (progn
+                            (re-search-backward "class ")
+                            (forward-word)
+                            (forward-char)
+                            (thing-at-point 'sexp)))
+         (test-path (concat
+                     file-name
+                     "::" test-class-name
+                     "::" test-name)))
+    (message "Copied: %s" test-path)
+    (kill-new test-path)
+    (goto-char current-point)))
+
 (defun chasinglogic-run-test ()
   "Run the test under point"
   (interactive)
   (chasinglogic-copy-test-path-for-here t)
   (let ((default-directory (projectile-project-root))
-        (compilation-command (concat "cd mpb && python ./manage.py test " (current-kill 0))))
+        (compilation-command (concat "./common/scripts/tests " (current-kill 0))))
     (puthash default-directory compilation-command projectile-compilation-cmd-map)
     (compile compilation-command)))
 
