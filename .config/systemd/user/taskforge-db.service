@@ -1,0 +1,25 @@
+[Unit]
+Name=taskforge db
+
+[Service]
+Type=simple
+TimeoutStartSec=5m
+
+ExecStartPre=-/usr/bin/podman rm "taskforge-db"
+ExecStart=/usr/bin/podman run \
+                          --name taskforge-db \
+                          --publish 127.0.0.1:5432:5432 \
+                          -v taskforge-db-volume:/var/lib/postgresql/data \
+                          -e POSTGRES_DB=taskforge \
+                          -e POSTGRES_USER=taskforge \
+                          -e POSTGRES_PASSWORD=taskforge \
+                          postgres:latest
+
+ExecReload=-/usr/bin/podman stop "taskforge-db"
+ExecReload=-/usr/bin/podman rm "taskforge-db"
+ExecStop=-/usr/bin/podman stop "taskforge-db"
+Restart='always'
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

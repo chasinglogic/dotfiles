@@ -1,0 +1,25 @@
+[Unit]
+Name=transaction db
+
+[Service]
+Type=simple
+TimeoutStartSec=5m
+
+ExecStartPre=-/usr/bin/podman rm "transaction-db"
+ExecStart=/usr/bin/podman run \
+                          --name transaction-db \
+                          --publish 127.0.0.1:5432:5432 \
+                          -v transaction-db-volume:/var/lib/postgresql/data \
+                          -e POSTGRES_DB=transactions \
+                          -e POSTGRES_USER=mpb \
+                          -e POSTGRES_PASSWORD=wasp_pattern_boot \
+                          postgres:latest
+
+ExecReload=-/usr/bin/podman stop "transaction-db"
+ExecReload=-/usr/bin/podman rm "transaction-db"
+ExecStop=-/usr/bin/podman stop "transaction-db"
+Restart='always'
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
