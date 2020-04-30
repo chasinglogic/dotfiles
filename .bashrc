@@ -10,12 +10,52 @@
 # list, subject to the value of HISTIGNORE.  The second and subsequent lines of
 # a multi-line compound command are not tested, and are added to the history
 # regardless of the  value of HISTCONTROL.
-export HISTCONTROL=ignoredups:erasedups
+export HISTCONTROL=ignorespace:ignoredups:erasedups
+
+# The number of commands to remember in the command  history  (see
+# HISTORY  below).   If  the value is 0, commands are not saved in
+# the history list.  Numeric values less than zero result in every
+# command  being  saved  on  the history list (there is no limit).
+# The shell sets the  default  value  to  500  after  reading  any
+# startup files.
+export HISTSIZE=100000
+
+# The maximum number of lines contained in the history file.  When
+# this variable is assigned a value, the  history  file  is  trun‐
+# cated,  if  necessary,  to  contain  no more than that number of
+# lines by removing the oldest entries.  The history file is  also
+# truncated  to this size after writing it when a shell exits.  If
+# the value is 0, the history file  is  truncated  to  zero  size.
+# Non-numeric  values  and  numeric  values less than zero inhibit
+# truncation.  The shell sets the default value to  the  value  of
+# HISTSIZE after reading any startup files.
+export HISTFILESIZE=100000
 
 # If the histappend shell option is enabled (see the description of shopt under
 # SHELL BUILTIN COMMANDS below), the lines are  appended to the history file,
 # otherwise the history file is overwritten.
 shopt -s histappend
+
+# Read the contents of $HISTFILE and insert them in to the current
+# running session history. this will raise the history counter by the
+# amount of lines in $HISTFILE. Note that the line count of $HISTFILE is
+# not necessarily $HISTFILESIZE.
+_bash_history_sync() {
+    builtin history -a
+    HISTFILESIZE=$HISTSIZE
+    builtin history -c
+    builtin history -r
+}
+
+PROMPT_COMMAND=_bash_history_sync
+
+# The history() function overrides the builtin history to make sure that
+# the history is synchronised before it is displayed. This is necessary
+# for the history expansion by number.
+history() {
+    _bash_history_sync
+    builtin history "$@"
+}
 
 # If  set,  the pattern ** used in a pathname expansion context will match all
 # files and zero or more directories and subdirectories.  If the pattern is
