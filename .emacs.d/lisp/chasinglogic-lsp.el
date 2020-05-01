@@ -44,16 +44,23 @@
                       lsp-prefer-flymake nil)
   :commands 'lsp
   :config
-  (setq lsp-signature-auto-activate nil)
-  (use-package lsp-python-ms
-    :demand
-    :config
-    (require 'lsp-python-ms)))
+  (setq lsp-signature-auto-activate nil))
+
+(use-package lsp-python-ms)
+(require 'lsp-python-ms)
+
+(use-package company-lsp
+  :init
+  (defun chasinglogic-setup-lsp-completion ()
+    (setq-local company-backends company-backends)
+    (add-to-list 'company-backends 'company-lsp))
+
+  (add-hook 'lsp-mode-hook 'chasinglogic-setup-lsp-completion))
 
 ;; Increase the amount of data which Emacs reads from the
 ;; process. Again the emacs default is too low 4k considering that the
 ;; some of the language server responses are in 800k - 3M range.
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
+(setq read-process-output-max (* (* 1024 1024) 3)) ;; 3mb
 
 ;; Enable LSP for all prog modes
 (defun chasinglogic-enable-lsp ()
