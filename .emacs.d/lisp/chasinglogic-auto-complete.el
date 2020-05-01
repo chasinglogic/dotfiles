@@ -35,7 +35,32 @@
 (use-package company
   :diminish ""
   :config
-  (setq-default company-dabbrev-downcase nil)
+  (setq-default company-idle-delay 0.25
+                company-minimum-prefix-length 2
+                company-tooltip-limit 14
+                company-tooltip-align-annotations t
+                company-require-match 'never
+                company-global-modes
+                '(not erc-mode message-mode help-mode gud-mode eshell-mode)
+                company-frontends '(company-pseudo-tooltip-frontend
+                                    company-echo-metadata-frontend)
+
+                ;; Buffer-local backends will be computed when loading a major mode, so
+                ;; only specify a global default here.
+                company-backends  '(company-capf company-dabbrev)
+
+                ;; Company overrides `company-active-map' based on
+                ;; `company-auto-complete-chars'; no magic please!
+                company-auto-complete-chars nil
+
+                ;; Only search the current buffer for `company-dabbrev' (a backend that
+                ;; suggests text your open buffers). This prevents Company from causing
+                ;; lag once you have a lot of buffers open.
+                company-dabbrev-other-buffers nil
+                ;; Make `company-dabbrev' fully case-sensitive, to improve UX with
+                ;; domain-specific words with particular casing.
+                company-dabbrev-ignore-case nil
+                company-dabbrev-downcase nil)
   (global-company-mode))
 
 (provide 'chasinglogic-auto-complete)

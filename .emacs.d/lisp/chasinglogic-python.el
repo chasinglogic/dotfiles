@@ -26,24 +26,16 @@
 
 ;;; Code:
 
-;; Python
-;;
-;; I write a lot of Python code. Luckily I only write Python 3 code
-;; nowadays so the first thing to do is set the
-;; `python-shell-interpreter' variable to Python 3. Additionally tell
-;; Flycheck to always use this variable for the various Python linters
-;; it runs.
-
-;; Use correct Python3
-(setq-default python-shell-interpreter (if (eq system-type 'darwin)
-                                           "/usr/local/bin/python3"
-                                         "python3"))
-(setq-default flycheck-python-flake8-executable python-shell-interpreter
-              flycheck-python-pylint-executable python-shell-interpreter
+(setq-default python-shell-interpreter (executable-find "python3")
               flycheck-python-pycompile-executable python-shell-interpreter)
 
+;; Sort imports
 (use-package py-isort
-  :commands 'py-isort-buffer)
+  :commands 'py-isort-buffer
+  :init
+  (defun chasinglogic-python-isort-hook ()
+    (py-isort))
+  (add-hook 'python-mode-hook 'chasinglogic-python-isort-hook))
 
 ;; Next I use the Black Python formatter for my code. This package
 ;; integrates it into Emacs and lets me run it as an after save
