@@ -43,6 +43,7 @@
                 company-global-modes
                 '(not erc-mode message-mode help-mode gud-mode eshell-mode)
                 company-frontends '(company-pseudo-tooltip-frontend
+                                    company-tng-frontend
                                     company-echo-metadata-frontend)
 
                 ;; Buffer-local backends will be computed when loading a major mode, so
