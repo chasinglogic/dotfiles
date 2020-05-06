@@ -72,6 +72,10 @@
                                    (make-instance multi-line-always-newline))))
   :bind ("C-;" . multi-line))
 
+
+(use-package ace-window
+  :bind ("M-o" . ace-window))
+
 (provide 'chasinglogic-misc)
 
 ;;; chasinglogic-misc.el ends here
