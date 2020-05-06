@@ -106,8 +106,12 @@ If COPY is provided copy the value to kill ring instead of returning."
     (compile compilation-command)))
 
   ;;; Copy the test path for Django manage.py test
-(defun chasinglogic-copy-test-path-for-here (&optional copy)
-  (interactive (list t))
+(defun chasinglogic-copy-test-path-for-here (&optional full-file)
+  "Copy the test path of the test under cursor for pytest.
+
+FULL-FILE indicates the full file-name should be copied instead of
+just the singular test."
+  (interactive)
   (let* ((file-name (if (projectile-project-root)
                         (file-relative-name (buffer-file-name) (projectile-project-root))
                       (file-name-nondirectory (buffer-file-name))))
@@ -124,14 +128,25 @@ If COPY is provided copy the value to kill ring instead of returning."
                             (thing-at-point 'sexp)))
          (test-path (concat
                      file-name
-                     "::" test-class-name
-                     "::" test-name)))
+                     (unless full-file
+                       (concat 
+                        "::" test-class-name
+                        "::" test-name)))))
     (message "Copied: %s" test-path)
     (kill-new test-path)
     (goto-char current-point)))
 
 (defun chasinglogic-run-test ()
-  "Run the test under point"
+  "Run test under point."
+  (interactive)
+  (chasinglogic-copy-test-path-for-here)
+  (let ((default-directory (projectile-project-root))
+        (compilation-command (concat "./common/scripts/tests " (current-kill 0))))
+    (puthash default-directory compilation-command projectile-compilation-cmd-map)
+    (compile compilation-command)))
+
+(defun chasinglogic-run-test-file ()
+  "Run the currently visited test file."
   (interactive)
   (chasinglogic-copy-test-path-for-here t)
   (let ((default-directory (projectile-project-root))
@@ -275,6 +290,7 @@ If COPY is provided copy the value to kill ring instead of returning."
   (leader!
     "m" '(:which-key "misc")
     "mt" 'chasinglogic-run-test
+    "mT" 'chasinglogic-run-test-file
     "mon" 'chasinglogic-find-org-file-notes
     "moi" 'chasinglogic-find-org-file-ideas
     "mot" 'chasinglogic-find-org-file-todo
