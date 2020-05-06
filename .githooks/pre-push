@@ -1,25 +1,15 @@
 #!/bin/bash
 
-remote="$1"
-if [[ $remote != "origin" ]]; then
-    exit 0
-fi
-
-current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-if [[ $current_branch != "master" ]] && [[ $current_branch != "release/"* ]]; then
-    exit 0
-fi
-
 function check_for_invalid_commits() {
-    commit=$(git rev-list -n 1 --grep "$1" --all)
+    commit=$(git log -n1 --grep "$1")
     if [[ -n $commit ]]; then
         echo "Found a commit with invalid message pattern: $1"
         exit 1
     fi
 }
 
-check_for_invalid_commits "^fixup! "  $range
-check_for_invalid_commits "^squash! " $range
-check_for_invalid_commits "^WIP: "    $range
-check_for_invalid_commits "^wip: "    $range
-check_for_invalid_commits "^wip "     $range
+check_for_invalid_commits "^fixup! "
+check_for_invalid_commits "^squash! "
+check_for_invalid_commits "^WIP: "   
+check_for_invalid_commits "^wip: "   
+check_for_invalid_commits "^wip "    
