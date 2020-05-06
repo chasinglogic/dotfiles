@@ -107,6 +107,7 @@ add_to_path $HOME/.local/bin
 add_to_path $HOME/.cask/bin
 add_to_path $HOME/.cask/bin
 add_to_path $HOME/Library/Python/3.7/bin
+add_to_path $HOME/.pyenv/bin
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
