@@ -197,6 +197,12 @@ comments so this function better suits my needs."
       (disable-theme chasinglogic-dark-theme)
       (load-theme chasinglogic-dark-theme t))))
 
+;; Note that ‘uniquify’ is builtin. This configures how buffers with
+;; the same name are made unique.
+(require 'uniquify)
+(setq uniquify-separator "/"               ;; The separator in buffer names.
+      uniquify-buffer-name-style 'forward) ;; names/in/this/style
+
 (provide 'chasinglogic-editor)
 
 ;;; chasinglogic-editor.el ends here

@@ -151,6 +151,7 @@
 
 ;; Applications
 (require 'chasinglogic-org)
+(require 'chasinglogic-email)
 
 ;; Programming languages
 (require 'chasinglogic-cc)

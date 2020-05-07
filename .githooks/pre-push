@@ -1,5 +1,13 @@
 #!/bin/bash
 
+if [[ $(pwd) == *"TransactionService"* ]]; then
+    exit 0
+fi
+
+if [[ $(pwd) == *"MPBX"* ]]; then
+    exit 0
+fi
+
 function check_for_invalid_commits() {
     commit=$(git log -n1 --grep "$1")
     if [[ -n $commit ]]; then
