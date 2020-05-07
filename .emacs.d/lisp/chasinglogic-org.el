@@ -119,6 +119,14 @@
   (defun chasinglogic-org-mode-hook ()
     "Enable some org mode specific settings"
     ;; Electric pair mode makes org links super annoying to write
+    (when (string-match "Org/" (buffer-file-name))
+      (add-hook 'after-save-hook
+                (lambda ()
+                  (shell-command
+                   "dfm sync --name Org --message 'Notes synced from Emacs'"
+                  "*dfm output*"))
+                nil
+                'local-only))
     (display-line-numbers-mode -1)
     (electric-pair-local-mode -1))
   (add-hook 'org-mode-hook 'chasinglogic-org-mode-hook)

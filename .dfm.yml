@@ -22,6 +22,9 @@ modules:
   # My encrypted secret files
   - repo: keybase://private/chasinglogic/secrets
     name: secrets
+  # My Org files
+  - repository: keybase://private/chasinglogic/Org
+    name: Org
   # Tmux plugin manager
   - repo: https://github.com/tmux-plugins/tpm
     pull_only: true
