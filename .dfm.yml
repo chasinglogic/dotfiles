@@ -21,6 +21,7 @@ hooks:
 modules:
   # My encrypted secret files
   - repo: keybase://private/chasinglogic/secrets
+    name: secrets
   # Tmux plugin manager
   - repo: https://github.com/tmux-plugins/tpm
     pull_only: true
