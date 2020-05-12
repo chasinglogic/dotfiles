@@ -18,7 +18,7 @@ if !exists('g:vscode')
 endif
 
 """ Load Theme
-set background=light
+set background=dark
 colorscheme NeoSolarized
 
 """ Set font for GUI

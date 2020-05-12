@@ -121,3 +121,7 @@ if [[ -x $(find_executable fd) ]]; then
 else
     export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
 fi
+
+if [[ -x $(find_executable dfm) ]]; then
+    export DOTFILES=$(dfm where)
+fi

@@ -43,6 +43,7 @@ Plug 'junegunn/vim-easy-align'   " Automatically align based on regex
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'dense-analysis/ale'    " Code linting and LSP client
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
+Plug 'ajh17/VimCompletesMe'" Allow <tab> to trigger completion
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin list after vim-sleuth
 " }}}
@@ -131,4 +132,7 @@ if has('nvim-0.4.0')
   endfunction
 endif
 " }}}
+" }}}
+" CoC {{{
+let g:coc_global_extensions = ['coc-tsserver', 'coc-python']
 " }}}

@@ -18,6 +18,16 @@ function page() {
   $@ | less
 }
 
+function tmux_session_name() {
+  if [ -z $1 ]; then
+    return "default"
+  fi
+
+  echo $1 |\
+  awk -F\/ '{print $(NF)}' |\
+  sed 's/\./-/g'
+}
+
 function tmux_session() {
   SESS_NAME=$1
   if [[ -z $(tmux list-sessions | grep $SESS_NAME) ]]; then
@@ -41,7 +51,7 @@ function sp() {
     PROJECT=$(projector find $1)
   fi
 
-  SESS_NAME=$(echo $PROJECT | awk -F\/ '{print $(NF)}')
+  SESS_NAME=$(tmux_session_name $PROJECT)
   CURRENT_SESSION=""
   if [[ -n $TMUX ]]; then
     CURRENT_SESSION=$(tmux list-sessions | grep '(attached)' | awk '{ print $1 }' | sed 's/:$//')
@@ -76,7 +86,7 @@ function v() {
 }
 
 function t() {
-  SESS_NAME=$(pwd | awk -F\/ '{print $(NF)}')
+  SESS_NAME=$(tmux_session_name $(pwd))
   tmux_session $SESS_NAME
 }
 
