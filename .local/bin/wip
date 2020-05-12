@@ -1,2 +1,2 @@
 #!/bin/bash
-git commit --no-gpg-sign -m "squash! $(echo $@)"
+git commit --no-gpg-sign -m "WIP: $(echo $@)"
