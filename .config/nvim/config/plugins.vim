@@ -11,6 +11,8 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 """ Automatically encrypt and decrypt my gpg notes
 Plug 'jamessan/vim-gnupg'
+""" Live preview markdown files
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 " }}}
 " Tpope general improvements {{{
 Plug 'tpope/vim-vinegar'    " Netrw improvements

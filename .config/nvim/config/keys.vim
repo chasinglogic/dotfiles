@@ -74,15 +74,16 @@ nmap <Leader>t4 :tabn 4<CR>
 nmap <Leader>t5 :tabn 5<CR>
 " }}}
 " Git {{{
-nmap <Leader>gg  :Git 
+nmap <Leader>gg  :Git
 nmap <Leader>ga  :!git add %<CR>
 nmap <Leader>gc  :Git commit<CR>
 nmap <Leader>gs  :Git<CR>
 nmap <Leader>gb  :Git blame<CR>
 nmap <Leader>gp  :Git push<CR>
-nmap <Leader>gfp :Git push --force-with-lease<CR>
+nmap <Leader>gpf :Git push --force-with-lease<CR>
 nmap <Leader>gu  :Git pull<CR>
 nmap <Leader>gl  :Gbrowse<CR>
+nmap <Leader>gv  :Git vader<CR>
 " }}}
 " Utility {{{
 nmap YY ggyG<C-o><C-o>
