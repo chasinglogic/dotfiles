@@ -56,6 +56,8 @@ else
 fi
 # Make Helm look for my local tiller server
 export HELM_HOST=localhost:44134
+# Make Firefox use Wayland
+export MOZ_ENABLE_WAYLAND=1
 
 ### Set TERM
 
