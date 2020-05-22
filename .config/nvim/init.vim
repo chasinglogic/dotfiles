@@ -1,3 +1,5 @@
+let g:python3_host_prog="/usr/bin/python3"
+
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 filetype plugin on
 syntax enable
@@ -5,7 +7,7 @@ set termguicolors
 
 """ Theme settings
 let g:base16colorspace=256
-let g:neosolarized_contrast = "high"
+let g:neosolarized_contrast = "normal"
 
 source $HOME/.config/nvim/config/editor.vim
 source $HOME/.config/nvim/config/keys.vim
@@ -25,5 +27,3 @@ colorscheme NeoSolarized
 if has('gui_running')
     set guifont=Hack:h16
 end
-
-set shortmess=O

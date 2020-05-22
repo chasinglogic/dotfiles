@@ -42,7 +42,16 @@ Plug 'SirVer/ultisnips'          " Snippets in vim
 Plug 'junegunn/vim-easy-align'   " Automatically align based on regex
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+
+" NOTE: you need to install completion sources to get completions. Check
+" our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'fgrsnau/ncm2-otherbuf'
+Plug 'ncm2/ncm2-ultisnips'
+
 Plug 'dense-analysis/ale'    " Code linting and LSP client
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
 Plug 'ajh17/VimCompletesMe'" Allow <tab> to trigger completion
@@ -62,10 +71,11 @@ Plug 'vimwiki/vimwiki'
 call plug#end()
 " }}}
 " Ultisnips {{{
-let g:UltiSnipsExpandTrigger="<c-k>"
-let g:UltiSnipsJumpForwardTrigger="<c-f>"
-let g:UltiSnipsJumpBackwardTrigger="<c-b>"
-let g:UltiSnipsEditSplit="vertical"
+" c-j c-k for moving in snippet
+" let g:UltiSnipsExpandTrigger		= "<Plug>(ultisnips_expand)"
+let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
+let g:UltiSnipsRemoveSelectModeMappings = 0
 " }}}
 " Vala {{{
 let g:vala_syntax_folding_enabled = 0
@@ -74,8 +84,21 @@ let g:vala_syntax_folding_enabled = 0
 let g:neoformat_enabled_python = ['black', 'docformatter']
 let g:neoformat_enabled_python3 = ['black', 'docformatter']
 " }}}
-" Deoplete {{{
-let g:deoplete#enable_at_startup = 1
+" ncm2 (Completion) {{{
+" enable ncm2 for all buffers
+autocmd BufEnter * call ncm2#enable_for_buffer()
+
+" IMPORTANT: :help Ncm2PopupOpen for more information
+set completeopt=noinsert,menuone,noselect
+
+" Press enter key to trigger snippet expansion
+" The parameters are the same as `:help feedkeys()`
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+
+" Use <TAB> to select the popup menu:
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
 " }}}
 " Split-join {{{
 let g:splitjoin_ruby_trailing_comma = 1
@@ -100,19 +123,19 @@ if has('nvim-0.4.0')
   let $FZF_DEFAULT_OPTS='--layout=reverse --border'
   let g:fzf_layout = { 'window': 'call FloatingFZF()' }
   let g:fzf_colors =
-    \ { 'fg':      ['fg', 'Normal'],
-    \   'bg':      ['bg', 'Normal'],
-    \   'hl':      ['fg', 'Comment'],
-    \   'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-    \   'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-    \   'hl+':     ['fg', 'Statement'],
-    \   'info':    ['fg', 'PreProc'],
-    \   'border':  ['fg', 'Normal'],
-    \   'prompt':  ['fg', 'Conditional'],
-    \   'pointer': ['fg', 'Exception'],
-    \   'marker':  ['fg', 'Keyword'],
-    \   'spinner': ['fg', 'Label'],
-    \   'header':  ['fg', 'Comment'] }
+        \ { 'fg':      ['fg', 'Normal'],
+        \   'bg':      ['bg', 'Normal'],
+        \   'hl':      ['fg', 'Comment'],
+        \   'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+        \   'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+        \   'hl+':     ['fg', 'Statement'],
+        \   'info':    ['fg', 'PreProc'],
+        \   'border':  ['fg', 'Normal'],
+        \   'prompt':  ['fg', 'Conditional'],
+        \   'pointer': ['fg', 'Exception'],
+        \   'marker':  ['fg', 'Keyword'],
+        \   'spinner': ['fg', 'Label'],
+        \   'header':  ['fg', 'Comment'] }
 
   function! FloatingFZF()
     let buf = nvim_create_buf(v:false, v:true)

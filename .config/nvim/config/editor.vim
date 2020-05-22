@@ -98,3 +98,8 @@ augroup END
 " Ask to save when trying to close unsaved buffers {{{
 set confirm
 " }}}
+" Message control {{{
+set shortmess=O
+" From ncm2 suggested settings
+set shortmess+=c
+" }}}
