@@ -32,5 +32,6 @@ modules:
     location: ~/.nvm
   - repo: https://github.com/hlissner/doom-emacs
     location: ~/.emacs.d
+    branch: develop
     link: none
     pull_only: true
