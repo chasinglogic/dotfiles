@@ -30,8 +30,11 @@ function tmux_session_name() {
 
 function tmux_session() {
   SESS_NAME=$1
-  if [[ -z $(tmux list-sessions | grep $SESS_NAME) ]]; then
-    tmux new-session -c $PROJECT -s $SESS_NAME -d
+  if [[ -z $(tmux list-sessions | grep "^$SESS_NAME") ]]; then
+    echo "Creating $SESS_NAME"
+    tmux new-session -s $SESS_NAME -d
+  else
+    echo "$SESS_NAME already exists."
   fi
 
   if [[ -n $TMUX ]]; then
@@ -57,12 +60,12 @@ function sp() {
     CURRENT_SESSION=$(tmux list-sessions | grep '(attached)' | awk '{ print $1 }' | sed 's/:$//')
   fi
 
+  cd $PROJECT
   if [[ "$SESS_NAME" != "$CURRENT_SESSION" ]]; then
     tmux_session $SESS_NAME
     return
   fi
 
-  cd $PROJECT
   if [[ -d $(pwd)/.git ]]; then
     NAME=$(basename $(git rev-parse --show-toplevel))
     if [[ -d ~/.virtualenvs/$NAME ]]; then
