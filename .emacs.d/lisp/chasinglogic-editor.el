@@ -44,7 +44,7 @@
  ;; default tab size to 4 spaces
  tab-width 4
  chasinglogic-font-size (if (eq system-type 'darwin) "15" "11")
- chasinglogic-font (format "Source Code Pro-%s" chasinglogic-font-size)
+ chasinglogic-font (format "Fira Code-%s" chasinglogic-font-size)
  ;; Just save buffers before compiling
  compilation-ask-about-save nil
  ;; Always kill old compilation without prompting
@@ -179,12 +179,11 @@ comments so this function better suits my needs."
 ;;;; Color Theme
 
 (use-package doom-themes)
-(use-package modus-operandi-theme)
 
-(defvar chasinglogic-dark-theme 'doom-palenight)
-(defvar chasinglogic-light-theme 'modus-operandi)
+(defvar chasinglogic-dark-theme 'doom-solarized-dark)
+(defvar chasinglogic-light-theme 'doom-solarized-light)
 
-(load-theme chasinglogic-dark-theme t)
+(load-theme chasinglogic-light-theme t)
 
 (defun chasinglogic-toggle-theme ()
   "Toggle between light and dark theme."
