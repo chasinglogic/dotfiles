@@ -1,8 +1,3 @@
-" Vimwiki Settings {{{
-let g:vimwiki_map_prefix = '<Leader>k'
-let g:vimwiki_list = [{'path': '~/Dropbox/Notes',
-                      \ 'syntax': 'markdown', 'ext': '.md'}]
-" }}}
 " Plugins {{{
 call plug#begin('~/.local/share/vim/plugins')
 " External Tool Integration {{{
@@ -11,68 +6,55 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 """ Automatically encrypt and decrypt my gpg notes
 Plug 'jamessan/vim-gnupg'
-""" Live preview markdown files
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 " }}}
 " Tpope general improvements {{{
 Plug 'tpope/vim-vinegar'    " Netrw improvements
 Plug 'tpope/vim-commentary' " Commenting code
 Plug 'tpope/vim-surround'   " Surrounding of text
-Plug 'tpope/vim-endwise'    " Add 'end' in ruby and bash scripts smartly
 Plug 'tpope/vim-sleuth'     " Set tabwidth etc based on filetype
 Plug 'tpope/vim-eunuch'     " Useful commands like Rename, Delete, Move, SudoWrite
 Plug 'tpope/vim-abolish'    " Better abbreviations and Subvert is like fancy %s
 Plug 'tpope/vim-fugitive'   " Git integration
 Plug 'tpope/vim-rhubarb'    " Github integraiton for vim-fugitive
 Plug 'tpope/vim-obsession'  " Automatic session management and restoration
+Plug 'tpope/vim-endwise'    " Automatically add 'end' and similar language constructs
 " }}}
 " Language Support {{{
 Plug 'leafgarland/typescript-vim'    " Add typescript syntax files
 Plug 'Vimjas/vim-python-pep8-indent' " better python indentation
-Plug 'igankevich/mesonic'
-Plug 'arrufat/vala.vim'
+Plug 'igankevich/mesonic'            " Meson.build syntax support
+Plug 'arrufat/vala.vim'              " Vala language syntax support
 Plug 'vim-pandoc/vim-pandoc'         " Better folding for text formats like Markdown
 Plug 'vim-pandoc/vim-pandoc-syntax'
 " }}}
 " Editor improvements {{{
-Plug 'jiangmiao/auto-pairs'      " Auto closing of pairs
+Plug 'jiangmiao/auto-pairs'      " Auto pair things
 Plug 'alvan/vim-closetag'        " Close (X)HTML tags
 Plug 'AndrewRadev/splitjoin.vim' " Easily split single-line statements to multi-line
 Plug 'SirVer/ultisnips'          " Snippets in vim
 Plug 'junegunn/vim-easy-align'   " Automatically align based on regex
+Plug 'vim-airline/vim-airline'   " More useful and aesthetic status line
+Plug 'vim-airline/vim-airline-themes'
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-
-" NOTE: you need to install completion sources to get completions. Check
-" our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'fgrsnau/ncm2-otherbuf'
-Plug 'ncm2/ncm2-ultisnips'
-
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'deoplete-plugins/deoplete-jedi'
 Plug 'dense-analysis/ale'    " Code linting and LSP client
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
-Plug 'ajh17/VimCompletesMe'" Allow <tab> to trigger completion
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin list after vim-sleuth
 " }}}
 " Themes {{{
 Plug 'icymind/NeoSolarized', { 'as': 'solarized' }
 Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'chasinglogic/modus-themes-vim'
 " }}}
 " Vim for Prose (Blogs, Notes, etc.) {{{
 Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
-""" Wiki for notes
-Plug 'vimwiki/vimwiki'
 " }}}
 call plug#end()
 " }}}
 " Ultisnips {{{
-" c-j c-k for moving in snippet
-" let g:UltiSnipsExpandTrigger		= "<Plug>(ultisnips_expand)"
+let g:UltiSnipsExpandTrigger		= "<c-x>"
 let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
 let g:UltiSnipsRemoveSelectModeMappings = 0
@@ -84,21 +66,10 @@ let g:vala_syntax_folding_enabled = 0
 let g:neoformat_enabled_python = ['black', 'docformatter']
 let g:neoformat_enabled_python3 = ['black', 'docformatter']
 " }}}
-" ncm2 (Completion) {{{
-" enable ncm2 for all buffers
-autocmd BufEnter * call ncm2#enable_for_buffer()
-
-" IMPORTANT: :help Ncm2PopupOpen for more information
-set completeopt=noinsert,menuone,noselect
-
-" Press enter key to trigger snippet expansion
-" The parameters are the same as `:help feedkeys()`
-inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
-
-" Use <TAB> to select the popup menu:
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
+" Deoplete (Completion) {{{
+let g:deoplete#enable_at_startup = 1
+" <TAB>: completion.
+inoremap <expr> <TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " }}}
 " Split-join {{{
 let g:splitjoin_ruby_trailing_comma = 1
@@ -160,4 +131,8 @@ endif
 " }}}
 " CoC {{{
 let g:coc_global_extensions = ['coc-tsserver', 'coc-python']
+" }}}
+" Airline {{{
+let g:airline_powerline_fonts = 1
+let g:airline_theme='solarized'
 " }}}
