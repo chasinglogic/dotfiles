@@ -30,7 +30,7 @@ modules:
     pull_only: true
     link: none
     location: ~/.nvm
-  - repository: https://github.com/hlissner/doom-emacs
+  - repo: https://github.com/hlissner/doom-emacs
     location: ~/.emacs.d
     link: none
     pull_only: true
