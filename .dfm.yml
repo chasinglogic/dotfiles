@@ -17,7 +17,9 @@ hooks:
   after_sync:
     - systemctl --user daemon-reload
     - systemctl --user enable mbsync.timer emacs
+    - ~/.emacs.d/bin/doom clean
     - ~/.emacs.d/bin/doom sync
+    - ~/.emacs.d/bin/doom update
 
 modules:
   # Tmux plugin manager
