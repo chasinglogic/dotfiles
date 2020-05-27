@@ -100,7 +100,14 @@
    :prefix "t"
    "x" 'chasinglogic-run-mpbx-test
    "r" 'chasinglogic-run-mpb-test)
-  (map! :leader :r "<SPC>" 'counsel-M-x))
+  (map! :leader :r "<SPC>" 'counsel-M-x)
+  (map! :leader :r "w m" 'doom/window-maximize-buffer)
+
+  (map! :leader
+        "t p" 'tab-previous
+        "t n" 'tab-next
+        "t c" 'tab-close
+        "t o" 'tab-new))
 
 
   ;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
@@ -115,6 +122,5 @@
 
 (after! org
   (load! "org.el"))
-
 
 (load! "work.el")

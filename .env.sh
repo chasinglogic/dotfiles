@@ -2,7 +2,13 @@
 # ENV setup. #
 ##############
 
-export SHELLNAME=$(basename $SHELL)
+if [[ -n $BASH_VERSION ]]; then
+    export SHELLNAME="bash";
+elif [[ -n $ZSH_VERSION ]]; then
+    export SHELLNAME="zsh";
+else
+    export SHELLNAME="sh";
+fi
 
 source_if_exists $HOME/.${SHELLNAME}rc.local
 # Load the profile if it's not loaded yet. My .profile is idempotent so it can
