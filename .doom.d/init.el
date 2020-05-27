@@ -66,6 +66,7 @@
        ;;clojure      ; java with a lisp
        data           ; config/data formats
        emacs-lisp     ; drown in parentheses
+       (go +lsp)
        json           ; At least it ain't XML
        javascript     ; all(hope(abandon(ye(who(enter(here))))))
        markdown       ; writing docs for people to ignore

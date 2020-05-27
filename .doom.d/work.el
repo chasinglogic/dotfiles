@@ -1,4 +1,9 @@
 
+(defun chasinglogic-dont-format-work-code ()
+  "We don't use black at Work."
+  (when (string-match-p "/Work/" (buffer-file-name))
+    (format-all-mode -1)))
+(add-hook 'python-mode-hook 'chasinglogic-dont-format-work-code)
 
   ;;; Copy the test path for Django manage.py test
 (defun chasinglogic-copy-mpbx-test-path-for-here (&optional copy)
