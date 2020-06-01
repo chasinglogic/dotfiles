@@ -80,6 +80,10 @@ if [[ "$(uname)" == "Darwin" ]]; then
     export CLICOLOR=1
 fi
 
+if [[ -f ~/.terminfo/x/xterm-24bit  ]]; then
+    export TERM="xterm-24bit"
+fi
+
 # Storage for miscellaneous or system specific environment variables
 source_if_exists $HOME/.env.bash
 # Enable nix if I've installed it on this system
