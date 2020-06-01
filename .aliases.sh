@@ -1,15 +1,12 @@
 alias ll="ls -alF"
 alias la="ls -a"
 alias l="ls -CF"
-alias em="emacsclient -a '' -nw"
 
 alias cd..="cd .."
-alias cdc="cd $HOME/Code"
-alias cdw="cd $HOME/Work"
 
 alias g="git"
-alias tf="terraform"
-
-alias tm="tmux"
 
 alias venv="python3 -m venv"
+
+alias vim="$VIM_PROG"
+alias e="$EDITOR"
