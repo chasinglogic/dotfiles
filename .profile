@@ -59,19 +59,19 @@ export HELM_HOST=localhost:44134
 # Make Firefox use Wayland
 export MOZ_ENABLE_WAYLAND=1
 
-### Set TERM
-
-# Fallback
-if [ -z "$TERM" ]; then
-    export TERM="xterm-256color"
+# Find the vim to use.
+if [[ -n $(find_executable nvim) ]]; then
+    export VIM_PROG=nvim
+elif [[ -n $(find_executable vim) ]]; then
+    export VIM_PROG=vim
+else
+    export VIM_PROG=vi
 fi
 
-if [[ -x $(which nvim) ]]; then
-    export EDITOR="nvim"
-elif [[ -x $(which vim) ]]; then
-    export EDITOR="vim"
+if [[ -n $(find_executable emacsclient) ]]; then
+    export EDITOR="emacsclient -a '' -nw"
 else
-    export EDITOR="vi"
+    export EDITOR="$VIM_PROG"
 fi
 
 # Mac specific fixes
@@ -118,12 +118,12 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 # This has to be after the $PATH is set up.
 # FZF default find command
-if [[ -x $(find_executable fd) ]]; then
+if [[ -n $(find_executable fd) ]]; then
     export FZF_DEFAULT_COMMAND="fd --type f --hidden --exclude '.git/'"
 else
     export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
 fi
 
-if [[ -x $(find_executable dfm) ]]; then
+if [[ -n $(find_executable dfm) ]]; then
     export DOTFILES=$(dfm where)
 fi
