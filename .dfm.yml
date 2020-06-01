@@ -30,3 +30,4 @@ modules:
     link: none
     location: ~/.nvm
   - repository: git@github.com:chasinglogic/secrets.git
+    name: secrets
