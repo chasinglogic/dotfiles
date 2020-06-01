@@ -53,11 +53,13 @@ nmap <C-w>d <C-w>c
 nmap <C-w>m <C-w>o
 " }}}
 " Terminal {{{
-nmap <Leader>'  :split term://zsh<CR>
+nmap <Leader>'  :FloatermToggle<CR>
 nmap <Leader>xx :terminal<CR>
 nmap <Leader>xt :tabnew<CR>:terminal<CR>
+nmap <Leader>xs :new<CR>:terminal<CR>
+nmap <Leader>xv :vnew<CR>:terminal<CR>
 tnoremap fd     <C-\><C-n>
-tnoremap jk     <C-\><C-n>:tabprev<CR>
+tnoremap jk     <C-\><C-n>:FloatermToggle<CR>
 " }}}
 " Tabs {{{
 nmap ]t :tabnext<CR>
@@ -82,7 +84,8 @@ nmap <Leader>gb  :Git blame<CR>
 nmap <Leader>gp  :Git push<CR>
 nmap <Leader>gpf :Git push --force-with-lease<CR>
 nmap <Leader>gu  :Git pull<CR>
-nmap <Leader>gl  :Gbrowse<CR>
+nmap <Leader>gl  :GBrowse<CR>
+vmap <Leader>gl  :GBrowse<CR>
 nmap <Leader>gv  :Git vader<CR>
 " }}}
 " Utility {{{
