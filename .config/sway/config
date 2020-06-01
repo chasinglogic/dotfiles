@@ -11,8 +11,6 @@ set $menu rofi -show drun
 
 set $lock swaylock -d -c 000000 --image /home/chasinglogic/Pictures/DSCF0308-4.blurred.jpg
 
-output "*" bg "/home/chasinglogic/Pictures/wallpaper.jpg" fill
-
 set $laptop eDP-1
 bindswitch lid:on output $laptop disable
 bindswitch lid:off output $laptop enable
@@ -106,7 +104,7 @@ bar {
     # The default just shows the current date and time.
     status_command i3status
 
-    font = "Source Code Pro 13"
+    font = "Hack 13"
 }
 
-exec mako --default-timeout 5000 --font "Source Code Pro 13"
+exec mako --default-timeout 5000 --font "Hack 13"
