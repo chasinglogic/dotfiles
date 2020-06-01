@@ -151,7 +151,7 @@
 
 ;; Applications
 (require 'chasinglogic-org)
-;; (require 'chasinglogic-email)
+(require 'chasinglogic-email)
 
 ;; Programming languages
 (require 'chasinglogic-cc)
@@ -162,6 +162,7 @@
 (require 'chasinglogic-rust)
 (require 'chasinglogic-typescript)
 (require 'chasinglogic-web)
+(require 'chasinglogig-go)
 
 ;; Miscellaneous Major Modes
 ;;
