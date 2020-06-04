@@ -180,10 +180,10 @@ comments so this function better suits my needs."
 
 (use-package doom-themes)
 
-(defvar chasinglogic-dark-theme 'doom-solarized-dark)
-(defvar chasinglogic-light-theme 'doom-solarized-light)
+(setq chasinglogic-dark-theme 'doom-solarized-dark)
+(setq chasinglogic-light-theme 'doom-solarized-light)
 
-(load-theme chasinglogic-light-theme t)
+(load-theme chasinglogic-dark-theme t)
 
 (defun chasinglogic-toggle-theme ()
   "Toggle between light and dark theme."

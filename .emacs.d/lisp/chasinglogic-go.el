@@ -30,9 +30,16 @@
   :mode ("\\.go\\'")
   :config
   (setq gofmt-command "goimports")
-  (add-hook 'go-mode-hook
-            #'(lambda ()
-                (add-hook 'before-save-hook 'gofmt-before-save))))
+  (defun chasinglogic-go-hook ()
+    (mapc #'(lambda (checker) (flycheck-select-checker checker))
+          (list
+           'go-gofmt
+           'go-golint
+           'go-vet
+           'go-build))
+    (add-hook 'before-save-hook 'gofmt-before-save))
+
+  (add-hook 'go-mode-hook 'chasinglogic-go-hook))
 
 (provide 'chasinglogic-go)
 
