@@ -119,7 +119,7 @@
   (defun chasinglogic-org-mode-hook ()
     "Enable some org mode specific settings"
     ;; Electric pair mode makes org links super annoying to write
-    (when (string-match "Org/" (buffer-file-name))
+    (when (string-match "/Org/" (buffer-file-name))
       (add-hook 'after-save-hook
                 (lambda ()
                   (shell-command
@@ -130,91 +130,6 @@
     (display-line-numbers-mode -1)
     (electric-pair-local-mode -1))
   (add-hook 'org-mode-hook 'chasinglogic-org-mode-hook)
-
-  (defun chasinglogic-org-agenda-hook ()
-    "Set frame name to Agenda"
-    (set-frame-name "Agenda"))
-  (add-hook 'org-agenda-mode-hook 'chasinglogic-org-agenda-hook)
-
-  ;; Org Agenda
-  ;;
-  ;; I use the Org agenda to track what tasks I have to do at any
-  ;; given time. I sync this up my Nextcloud instance where it works
-  ;; on my phone and iPad via the Beorg app. It's actually a really
-  ;; nice system but my primary consumption of this information is via
-  ;; agenda views.
-  ;;
-  ;; First define what files can contain TODO's for the Agenda:
-  (setq-default org-agenda-files (list org-default-todo-file
-                                       (expand-file-name "todo.org" org-directory)))
-
-  ;; Next define the priorities that are available to tasks. I use
-  ;; priorities A - D with A being the highest priority.
-  (setq-default org-highest-priority ?A
-                org-lowest-priority ?D
-                org-default-priority ?D)
-
-  ;; This variable makes it so when completing a task Org logs the
-  ;; time it was completed.
-  (setq-default org-log-done 'time)
-  ;; Make the agenda the only window when a view is selected. I rarely
-  ;; want to look at my agenda and something else. I want to focus
-  ;; entirely on planning.
-  (setq-default org-agenda-window-setup 'only-window)
-  ;; Now we define the valid TODO states a heading can be in. I use
-  ;; three states: TODO, NEXT, and DONE. NEXT means either the next
-  ;; task to do for a project or the task I'm currently working on for
-  ;; that project.
-  (setq-default org-todo-keywords '((sequence "TODO" "NEXT(n!)" "STARTED(s!)" "|" "DONE(d!)" "CANCELLED(c!)"))
-                org-todo-keyword-faces '(("TODO" . (:foreground "#cc9393" :weight bold))
-                                         ("NEXT" . (:foreground "#b58900" :weight bold))
-                                         ("STARTED". (:foreground "#6c71c4" :weight bold))
-                                         ("DONE" . (:foreground "green" :weight bold))
-                                         ("CANCELLED" . (:foreground "#dc322f"))))
-
-  ;; Daily Agenda
-  ;;
-  ;; This is my most referenced Agenda view. It shows me all scheduled
-  ;; items for the day, my "next actions", as well as all of stuck
-  ;; projects. My =todo.org= file has top level headings that
-  ;; represent projects. Projects range in scope but it's usually
-  ;; something that will require more than one step to complete. Stuck
-  ;; projects are any level 1 headings in =todo.org= that have no NEXT
-  ;; or STARTED subheading.
-  ;;
-  ;; We define how to find them via the variable `org-stuck-projects':
-  (setq-default org-stuck-projects '("+LEVEL=1/-DONE" ("STARTED" "NEXT") nil ""))
-
-  ;; Definition of Agenda Custom Commands
-  ;;
-  ;; The code that implements the views described above.
-  (setq-default org-agenda-custom-commands
-                '(
-
-                  ("r" "Reading List"
-                   ((tags "+reading_list" ((org-agenda-overriding-header "Reading List")
-                                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "Reading List"))))))
-
-                  ("d" "Daily Agenda"
-                   (
-                    (agenda
-                     ;; Query ("" matches everything)
-                     ""
-                     ;; Settings
-                     ((org-agenda-overriding-header "Today:")
-                      ;; Span 1 day (daily agenda)
-                      (org-agenda-span 1)
-                      ;; Sort by priority highest to lowest then tag
-                      (org-agenda-sorting-strategy '(todo-state-down priority-down tag-up))
-                      ;; 7 day advanced warning for deadlines
-                      (org-deadline-warning-days 7)))
-                    (todo "" ((org-agenda-overriding-header "Next Actions:")
-                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'nottodo '("NEXT" "STARTED")))
-                              (org-agenda-sorting-strategy '(todo-state-down))))
-                    (stuck "" ((org-agenda-files (list (expand-file-name "todo.org" org-directory)))
-                               (org-agenda-overriding-header "Stuck Projects:")))
-                    (todo "" ((org-agenda-overriding-header "Inbox:")
-                              (org-agenda-files (list (expand-file-name "inbox.org"org-directory)))))))))
 
   ;; Capture Templates
   ;;
@@ -227,27 +142,6 @@
   ;; First start the declaration of the variable:
   (setq-default org-capture-templates
                 '(
-                  ;; Capture: TODO
-                  ;;
-                  ;; This is the simplest, and probably most used,
-                  ;; capture template I have. It just records a TODO
-                  ;; item with the default priority of `M'.
-                  ("t" "Task todo" entry (file org-default-todo-file) "* TODO %?")
-
-                  ;; Capture: Reading List
-                  ;;
-                  ;; This captures a TODO item that should be on my
-                  ;; reading list. I most frequently interact with
-                  ;; this template via my utility function
-                  ;; `chasinglogic-add-to-reading-list' which is
-                  ;; defined later on in this document. It will
-                  ;; capture whatever text is in the active region.
-                  ("r" "Reading list" entry (file org-default-todo-file)
-                   "* TODO %i %? :reading_list:
-:PROPERTIES:
-:CREATED: %t
-:END:")
-
                   ;; Capture: Notes
 
                   ;; A generic Note capture this should always be a
@@ -260,21 +154,6 @@
                   ;; since I list my notes in the buffer in reverse
                   ;; chronological order of their creation.
                   ("n" "A new note" entry (file org-default-notes-file) "* %?" :prepend t)
-
-                  ;; Capture: Interview
-
-                  ;; When conducting an interview I file this into my
-                  ;; Notes under the Interviews heading. I also tag
-                  ;; these entries with the dates they were conducted
-                  ;; on.
-                  ("I" "Interview"
-                   entry (file+headline org-default-notes-file "Interviews")
-                   "** Interviewee: %? :interview:
-:PROPERTIES:
-:DATE: %t
-:END:
-
-")
 
                   ;; Capture: Idea
 
@@ -289,53 +168,6 @@
 :DATE: %t
 :END:
          ")))
-
-  ;; Add to reading list
-  ;;
-  ;; I get a lot of weekly newsletter emails. Since I read my email in
-  ;; Emacs I can quickly add the link under the point to my reading
-  ;; list with this command. It will grab the link, make an HTTP
-  ;; request to try and find the title of the webpage then insert a
-  ;; reading list entry whose heading is a link with the display text
-  ;; of the title of the page. I find the extra step to determine the
-  ;; page title can be slow but is worth it for two reasons:
-  ;;
-  ;;  - Reading links to determine their target is hard on Mobile
-  ;;    where I consume the reading list the most.
-  ;;  - A lot of newsletters use affialiate or click tracking links so
-  ;;    the links often have no indication of where they actually go.
-  (defun chasinglogic-add-to-reading-list ()
-    (interactive)
-    (let ((url (thing-at-point 'url)))
-      (org-capture-string
-       (concat "[[" url "]["
-               ;; Get the link title if possible
-               (condition-case nil
-                   ;; Get title of web page, with the help of
-                   ;; functions in url.el
-                   (with-current-buffer (url-retrieve-synchronously url)
-                     ;; find title by grep the html code
-                     (goto-char 0)
-                     (re-search-forward "<title>\\([^<]*\\)</title>" nil t 1)
-                     (setq web_title_str (match-string 1))
-                     ;; find charset by grep the html code
-                     (goto-char 0)
-                     (re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
-                     ;; downcase the charaset. e.g, UTF-8 is not
-                     ;; acceptible for emacs, while utf-8 is ok.
-                     (setq coding_charset (downcase (match-string 1)))
-                     ;; Sometimes titles have newlines but that breaks
-                     ;; our org link so strip them.
-                     (replace-regexp-in-string
-                      "\n" ""
-                      ;; decode the string of title.
-                      (decode-coding-string web_title_str (intern coding_charset))))
-                 ;; Work even in the case of transient network
-                 ;; failure. If so just use the url as the title.
-                 (error url))
-               "]]")
-       "r")
-      (org-capture-finalize)))
 
   ;; Org Export
   ;;

@@ -68,8 +68,6 @@
   (lsp)
   (eldoc-mode 1))
 
-(add-hook 'prog-mode-hook 'chasinglogic-enable-lsp)
-
 (use-package lsp-ivy
   :after (lsp-mode ivy)
   :commands (lsp-ivy-workspace-symbol lsp-ivy-global-workspace-symbol)

@@ -133,6 +133,7 @@
 
 ;; Keybindings
 (require 'chasinglogic-evil)
+(require 'chasinglogic-work)
 (require 'chasinglogic-keys)
 
 ;; Default Emacs settings
@@ -162,7 +163,7 @@
 (require 'chasinglogic-rust)
 (require 'chasinglogic-typescript)
 (require 'chasinglogic-web)
-(require 'chasinglogig-go)
+(require 'chasinglogic-go)
 
 ;; Miscellaneous Major Modes
 ;;
@@ -181,11 +182,17 @@
 (use-package toml-mode :mode ("\\gitconfig\\'" "\\.toml\\'"))
 (use-package cmake-mode :mode ("\\CMake.*txt\\'"))
 (use-package nginx-mode :mode ("\\.conf'"))
+(use-package kubel :commands (kubel kubernetes))
 
 ;; Misc
 (require 'chasinglogic-misc)
 (when (eq 'system-type 'darwin)
-  (require 'chasinglogic-macos))
+  ;; Emacs environment variables (exec-path-from-shell)
+  ;;
+  ;; Only enabled for MacOS because my .profile works correctly on Linux
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize)))
 
 ;; Post initialization
 ;;
