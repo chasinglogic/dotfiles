@@ -178,10 +178,11 @@ comments so this function better suits my needs."
 
 ;;;; Color Theme
 
-(use-package doom-themes)
+(use-package modus-operandi-theme)
+(use-package modus-vivendi-theme)
 
-(setq chasinglogic-dark-theme 'doom-solarized-dark)
-(setq chasinglogic-light-theme 'doom-solarized-light)
+(setq chasinglogic-dark-theme 'modus-vivendi)
+(setq chasinglogic-light-theme 'modus-operandi)
 
 (load-theme chasinglogic-dark-theme t)
 
