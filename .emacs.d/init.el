@@ -202,3 +202,4 @@
 ;; First Maximize this frame, the initial frame won't see our hooks in
 ;; `make-frame-init-functions'.
 (toggle-frame-maximized)
+(put 'narrow-to-region 'disabled nil)
