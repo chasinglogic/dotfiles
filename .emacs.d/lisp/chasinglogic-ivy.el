@@ -40,6 +40,10 @@
 
   (ivy-mode 1))
 
+;; Better command sorting
+(use-package amx
+  :config (amx-mode 1))
+
 (use-package counsel
   :general (leader!
              "<SPC>" 'counsel-M-x

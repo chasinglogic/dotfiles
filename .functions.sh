@@ -42,7 +42,7 @@ function v() {
     python3 -m venv --prompt $NAME $ENVDIR
   fi
 
-  if [[ -n $(env | grep VIRTUAL_ENV) ]]; then
+  if [[ -n $(env | grep 'VIRTUAL_ENV=') ]]; then
     deactivate
   fi
 
@@ -56,5 +56,19 @@ function nv() {
     env $VIM_PROG -S
   else
     env $VIM_PROG -c Obsession .
+  fi
+}
+
+function t() {
+  SESS_NAME=${PWD##*/}
+  tmux has-session -t $SESS_NAME
+  if [ $? -ne 0 ]; then
+    tmux new-session -s $SESS_NAME -d
+  fi
+
+  if [[ -n $TMUX ]]; then
+    tmux switch-client -t $SESS_NAME
+  else
+    tmux attach-session -t $SESS_NAME
   fi
 }
