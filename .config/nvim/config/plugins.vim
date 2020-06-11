@@ -23,6 +23,8 @@ Plug 'tpope/vim-endwise'    " Automatically add 'end' and similar language const
 " }}}
 " Language Support {{{
 Plug 'leafgarland/typescript-vim'    " Add typescript syntax files
+Plug 'yuezk/vim-js'                  " Better modern JS support
+Plug 'maxmellon/vim-jsx-pretty'      " JSX support
 Plug 'Vimjas/vim-python-pep8-indent' " better python indentation
 Plug 'igankevich/mesonic'            " Meson.build syntax support
 Plug 'arrufat/vala.vim'              " Vala language syntax support
@@ -47,7 +49,7 @@ Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin list after vim-sleuth
 " }}}
 " Themes {{{
-Plug 'icymind/NeoSolarized', { 'as': 'solarized' }
+Plug 'overcache/NeoSolarized', { 'as': 'solarized' }
 Plug 'dracula/vim', { 'as': 'dracula' }
 " }}}
 " Vim for Prose (Blogs, Notes, etc.) {{{
@@ -136,5 +138,4 @@ let g:coc_global_extensions = ['coc-tsserver', 'coc-python']
 " }}}
 " Airline {{{
 let g:airline_powerline_fonts = 1
-let g:airline_theme='solarized'
 " }}}

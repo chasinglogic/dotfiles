@@ -183,6 +183,14 @@
 (use-package cmake-mode :mode ("\\CMake.*txt\\'"))
 (use-package nginx-mode :mode ("\\.conf'"))
 (use-package kubel :commands (kubel kubernetes))
+(use-package js2-mode
+  :config
+  (setq js-indent-level 2
+        )
+  (add-hook 'js-mode #'(lambda ()
+                         (js2-minor-mode)
+                         (electric-indent-local-mode -1)
+                         (electric-layout-local-mode -1))))
 
 ;; Misc
 (require 'chasinglogic-misc)

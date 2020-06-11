@@ -35,6 +35,11 @@
 (use-package expand-region
   :bind ("C-M-h" . expand-region))
 
+;; Format all the things. It's better than tool-specific format
+;; packages. https://github.com/lassik/emacs-format-all-the-code
+(use-package format-all
+  :commands (format-all-buffer format-all-mode))
+
 ;; Yasnippet
 ;;
 ;; Yasnippet is definitely in my top 5 packages. It's the most

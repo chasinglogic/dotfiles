@@ -126,104 +126,100 @@ If COPY is provided copy the value to kill ring instead of returning."
   (general-def "M-;" 'comment-actually-dwim)
   (general-def "M-/" 'hippie-expand)
   (general-def "M-t" 'switch-to-buffer)
+  
+  (setq general-override-states '(insert
+                                  emacs
+                                  hybrid
+                                  normal
+                                  visual
+                                  motion
+                                  operator
+                                  replace))
+  (general-evil-setup t)
+  (general-nmap
+   "-" #'(lambda () (interactive) (dired "."))
+   "gcc" 'comment-actually-dwim
+   "<tab>" 'indent-according-to-mode)
+  
+  ;; Some of the bindings are not setup correctly in Emacs terminal
+  ;; mode. It uses a different kbd identifier for some reason.
+  (unless (display-graphic-p)
+    (general-nmap
+     "ESC" '(lambda () (interactive) (evil-escape-func))
+     "TAB" 'indent-according-to-mode))
+  
+  (general-vmap "gc" 'comment-or-uncomment-region)
 
-  (if chasinglogic-evil-mode
-      (progn
-        (setq general-override-states '(insert
-                                        emacs
-                                        hybrid
-                                        normal
-                                        visual
-                                        motion
-                                        operator
-                                        replace))
-        (general-evil-setup t)
-        (general-nmap
-          "-" #'(lambda () (interactive) (dired "."))
-          "gcc" 'comment-actually-dwim
-          "<tab>" 'indent-according-to-mode)
-        
-        ;; Some of the bindings are not setup correctly in Emacs terminal
-        ;; mode. It uses a different kbd identifier for some reason.
-        (unless (display-graphic-p)
-          (general-nmap
-            "ESC" '(lambda () (interactive) (evil-escape-func))
-            "TAB" 'indent-according-to-mode))
-        
-        (general-vmap "gc" 'comment-or-uncomment-region)
-
-        (general-create-definer leader!
-          :states '(normal visual)
-          :keymaps 'override
-          :prefix "<SPC>"))
-    (general-create-definer leader!
-      :prefix "C-c l"))
+  (general-create-definer leader!
+    :states '(normal visual)
+    :keymaps 'override
+    :prefix "<SPC>")
 
   (leader!
-    "<SPC>" 'execute-extended-command
-    "h" `(,(general-simulate-key "C-h") :wk "help")
-    "q" '(:which-key "quit")
-    "qf" 'delete-frame
-    "qq" 'save-buffers-kill-emacs)
+   "<SPC>" 'execute-extended-command
+   "h" `(,(general-simulate-key "C-h") :wk "help")
+   "q" '(:which-key "quit")
+   "qf" 'delete-frame
+   "qq" 'save-buffers-kill-emacs)
 
   (leader!
-    "j" '(:which-key "jumps")
-    "jt" 'chasinglogic-copy-test-path-for-here
-    "j=" 'chasinglogic-indent-buffer
-    "jb" 'chasinglogic-copy-breakpoint-for-here)
+   "j" '(:which-key "jumps")
+   "jt" 'chasinglogic-copy-test-path-for-here
+   "j=" 'chasinglogic-indent-buffer
+   "jb" 'chasinglogic-copy-breakpoint-for-here)
 
   (leader!
-    "b" '(:which-key "buffers")
-    "bd" #'(lambda ()
-             (interactive)
-             (kill-buffer (current-buffer)))
-    "bs" #'(lambda ()
-             (interactive)
-             (switch-to-buffer "*scratch*"))
-    "br" 'revert-buffer
-    "bD" 'kill-buffer
-    "bm" 'ibuffer)
+   "b" '(:which-key "buffers")
+   "bd" #'(lambda ()
+            (interactive)
+            (kill-buffer (current-buffer)))
+   "bs" #'(lambda ()
+            (interactive)
+            (switch-to-buffer "*scratch*"))
+   "br" 'revert-buffer
+   "bD" 'kill-buffer
+   "bm" 'ibuffer)
 
   (leader!
-    "w"  '(:which-key "windows")
-    "wr" 'window-configuration-to-register
-    "wf" 'make-frame
-    "wh" 'evil-window-left
-    "wH" 'evil-window-move-far-left
-    "wj" 'evil-window-down
-    "wJ" 'evil-window-move-very-bottom
-    "wk" 'evil-window-up
-    "wK" 'evil-window-move-very-top
-    "wl" 'evil-window-right
-    "wL" 'evil-window-move-far-right
-    "wd" 'evil-window-delete
-    "wc" 'evil-window-delete
-    "wv" 'evil-window-vsplit
-    "ws" 'evil-window-split
-    "wm" 'delete-other-windows)
+   "w"  '(:which-key "windows")
+   "wr" 'window-configuration-to-register
+   "wf" 'make-frame
+   "wh" 'evil-window-left
+   "wH" 'evil-window-move-far-left
+   "wj" 'evil-window-down
+   "wJ" 'evil-window-move-very-bottom
+   "wk" 'evil-window-up
+   "wK" 'evil-window-move-very-top
+   "wl" 'evil-window-right
+   "wL" 'evil-window-move-far-right
+   "wd" 'evil-window-delete
+   "wc" 'evil-window-delete
+   "wv" 'evil-window-vsplit
+   "ws" 'evil-window-split
+   "wm" 'delete-other-windows)
 
   (leader!
-    "m" '(:which-key "misc")
-    "mt" 'chasinglogic-run-test
-    "mT" 'chasinglogic-run-test-file
-    "mon" 'chasinglogic-find-org-file-notes
-    "moi" 'chasinglogic-find-org-file-ideas
-    "mot" 'chasinglogic-find-org-file-todo
-    "mor" 'chasinglogic-add-to-reading-list)
+   "m" '(:which-key "misc")
+   "mt" 'chasinglogic-run-test
+   "mT" 'chasinglogic-run-test-file
+   "mon" 'chasinglogic-find-org-file-notes
+   "moi" 'chasinglogic-find-org-file-ideas
+   "mot" 'chasinglogic-find-org-file-todo
+   "mor" 'chasinglogic-add-to-reading-list)
 
   (when (boundp 'tab-bar-mode)
     (leader!
-      "t" '(:which-key "tabs")
-      "to" 'tab-bar-new-tab
-      "ts" 'tab-bar-select-tab-by-name
-      "tc" 'tab-bar-close-tab
-      "tp" 'tab-bar-switch-to-prev-tab
-      "tn" 'tab-bar-switch-to-next-tab))
+     "t" '(:which-key "tabs")
+     "to" 'tab-bar-new-tab
+     "ts" 'tab-bar-select-tab-by-name
+     "tc" 'tab-bar-close-tab
+     "tp" 'tab-bar-switch-to-prev-tab
+     "tn" 'tab-bar-switch-to-next-tab))
 
   (leader!
-    "f" '(:which-key "files")
-    "ff" 'find-file
-    "fs" 'save-buffer))
+   "f" '(:which-key "files")
+   "ff" 'find-file
+   "fs" 'save-buffer))
 
 (provide 'chasinglogic-keys)
 

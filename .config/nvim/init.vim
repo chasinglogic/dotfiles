@@ -7,7 +7,7 @@ set termguicolors
 
 """ Theme settings
 let g:base16colorspace=256
-let g:neosolarized_contrast = "normal"
+let g:neosolarized_contrast = "high"
 
 source $HOME/.config/nvim/config/editor.vim
 source $HOME/.config/nvim/config/keys.vim
@@ -20,7 +20,7 @@ if !exists('g:vscode')
 endif
 
 """ Load Theme
-set background=light
+set background=dark
 colorscheme NeoSolarized
 
 """ Set font for GUI

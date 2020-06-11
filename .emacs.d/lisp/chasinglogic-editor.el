@@ -35,6 +35,8 @@
 ;;     I use two font sizes: one for my Mac because of the retina display
 ;;     and one for everything else where I use regular monitors.
 (setq-default
+ ;; Lockfiles trip up auto reloading compilers like react-scripts
+ create-lockfiles nil
 ;; By default when Emacs tries to open a symlink that points to a git
 ;; repository it prompts you like "do you really wanna open this
 ;; file". I use symlinks like this a lot so I disable this prompt.
@@ -81,7 +83,7 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
-(use-package doom-modeline :config (doom-modeline-mode))
+;; (use-package doom-modeline :config (doom-modeline-mode))
 
 (add-to-list 'default-frame-alist (cons 'font chasinglogic-font))
 ;; On MacOS there's a new feature to have title bars match the window
@@ -178,11 +180,10 @@ comments so this function better suits my needs."
 
 ;;;; Color Theme
 
-(use-package modus-operandi-theme)
-(use-package modus-vivendi-theme)
+(use-package doom-themes)
 
-(setq chasinglogic-dark-theme 'modus-vivendi)
-(setq chasinglogic-light-theme 'modus-operandi)
+(defvar chasinglogic-dark-theme 'doom-solarized-dark)
+(defvar chasinglogic-light-theme 'doom-solarized-light)
 
 (load-theme chasinglogic-dark-theme t)
 
