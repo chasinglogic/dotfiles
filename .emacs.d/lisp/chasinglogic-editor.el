@@ -180,12 +180,13 @@ comments so this function better suits my needs."
 
 ;;;; Color Theme
 
-(use-package doom-themes)
+(use-package modus-vivendi-theme)
+(use-package modus-operandi-theme)
 
-(defvar chasinglogic-dark-theme 'doom-solarized-dark)
-(defvar chasinglogic-light-theme 'doom-solarized-light)
+(defvar chasinglogic-dark-theme 'modus-vivendi)
+(defvar chasinglogic-light-theme 'modus-operandi)
 
-(load-theme chasinglogic-dark-theme t)
+(load-theme chasinglogic-light-theme t)
 
 (defun chasinglogic-toggle-theme ()
   "Toggle between light and dark theme."

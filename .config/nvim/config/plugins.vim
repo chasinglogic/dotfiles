@@ -15,9 +15,8 @@ Plug 'tpope/vim-sleuth'     " Set tabwidth etc based on filetype
 Plug 'tpope/vim-eunuch'     " Useful commands like Rename, Delete, Move, SudoWrite
 Plug 'tpope/vim-abolish'    " Better abbreviations and Subvert is like fancy %s
 Plug 'tpope/vim-fugitive'   " Git integration
-Plug 'tpope/vim-rhubarb'    " Github integraiton for vim-fugitive
-Plug 'tpope/vim-obsession'  " Automatic session management and restoration
 Plug 'tpope/vim-endwise'    " Automatically add 'end' and similar language constructs
+Plug 'tpope/vim-rsi'        " Readline bindings in the vim command line
 " }}}
 " Language Support {{{
 Plug 'leafgarland/typescript-vim'    " Add typescript syntax files
@@ -35,12 +34,11 @@ Plug 'alvan/vim-closetag'        " Close (X)HTML tags
 Plug 'AndrewRadev/splitjoin.vim' " Easily split single-line statements to multi-line
 Plug 'SirVer/ultisnips'          " Snippets in vim
 Plug 'junegunn/vim-easy-align'   " Automatically align based on regex
-Plug 'vim-airline/vim-airline'   " More useful and aesthetic status line
-Plug 'vim-airline/vim-airline-themes'
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'deoplete-plugins/deoplete-jedi'
+Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
 Plug 'dense-analysis/ale'    " Code linting and LSP client
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
@@ -48,7 +46,7 @@ Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin
 " }}}
 " Themes {{{
 Plug 'overcache/NeoSolarized', { 'as': 'solarized' }
-Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'chasinglogic/modus-themes-vim'
 " }}}
 " Vim for Prose (Blogs, Notes, etc.) {{{
 Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode

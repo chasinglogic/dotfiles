@@ -28,6 +28,28 @@
 
 ;;;; Personal utility functions and macros
 
+(defun chasinglogic-get-compilation-command (dirname)
+  (cond
+   ((string-match-p (regexp-quote "/Work/MPBX") dirname)
+    (progn
+      (chasinglogic-copy-mpbx-test-path-for-here t)
+      (concat "cd mpb && python ./manage.py test " (current-kill 0))))
+   ((string-match-p (regexp-quote "Work") dirname)
+    (progn
+      (chasinglogic-copy-test-path-for-here t)
+      (concat "./common/scripts/tests " (current-kill 0))))
+
+   ((string-match-p ".*\\.go" (buffer-file-name))
+    (chasinglogic-go-run-test-command))))
+
+(defun chasinglogic-run-test ()
+  "Dispatch to the correct test runner based on file type and project."
+  (interactive)
+  (let* ((default-directory (projectile-project-root))
+        (compilation-command (chasinglogic-get-compilation-command default-directory)))
+    (puthash default-directory compilation-command projectile-compilation-cmd-map)
+    (compile compilation-command)))
+
 ;; Indent the buffer
 ;;
 ;;     This function uses Emacs built in indent facilities to indent the
@@ -200,6 +222,7 @@ If COPY is provided copy the value to kill ring instead of returning."
 
   (leader!
    "m" '(:which-key "misc")
+   "md" 'chasinglogic-toggle-theme
    "mt" 'chasinglogic-run-test
    "mT" 'chasinglogic-run-test-file
    "mon" 'chasinglogic-find-org-file-notes

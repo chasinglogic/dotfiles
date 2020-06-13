@@ -91,15 +91,6 @@ just the singular test."
     (kill-new test-path)
     (goto-char current-point)))
 
-(defun chasinglogic-run-test ()
-  "Run test under point."
-  (interactive)
-  (chasinglogic-copy-test-path-for-here)
-  (let ((default-directory (projectile-project-root))
-        (compilation-command (concat "./common/scripts/tests " (current-kill 0))))
-    (puthash default-directory compilation-command projectile-compilation-cmd-map)
-    (compile compilation-command)))
-
 (defun chasinglogic-run-test-file ()
   "Run the currently visited test file."
   (interactive)
