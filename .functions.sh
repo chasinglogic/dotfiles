@@ -25,9 +25,6 @@ function sp() {
   fi
 
   cd $PROJECT
-  if [[ -d $PROJECT/env ]]; then
-    v
-  fi
 }
 
 function v() {

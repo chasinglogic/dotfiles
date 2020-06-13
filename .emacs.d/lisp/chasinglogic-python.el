@@ -29,6 +29,15 @@
 (setq-default python-shell-interpreter (executable-find "python3")
               flycheck-python-pycompile-executable python-shell-interpreter)
 
+(use-package pyvenv
+  :config
+  (defun chasinglogic-auto-activate-venv ()
+    (let ((venv-dir (concat (projectile-project-root) "env")))
+      (when (file-exists-p venv-dir)
+        (pyvenv-activate venv-dir))))
+  (add-hook 'projectile-after-switch-project-hook 'chasinglogic-auto-activate-venv)
+  (pyvenv-mode))
+
 ;; Sort imports
 (use-package py-isort
   :commands 'py-isort-buffer
