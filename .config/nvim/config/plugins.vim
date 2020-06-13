@@ -6,8 +6,6 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 """ Automatically encrypt and decrypt my gpg notes
 Plug 'jamessan/vim-gnupg'
-""" Implement a floating popup terminal
-Plug 'voldikss/vim-floaterm'
 " }}}
 " Tpope general improvements {{{
 Plug 'tpope/vim-vinegar'    " Netrw improvements
