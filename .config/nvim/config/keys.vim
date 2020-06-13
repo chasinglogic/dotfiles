@@ -53,13 +53,12 @@ nmap <C-w>d <C-w>c
 nmap <C-w>m <C-w>o
 " }}}
 " Terminal {{{
-nmap <Leader>'  :FloatermToggle<CR>
+nmap <Leader>'  :tabnew<CR>:terminal<CR>
 nmap <Leader>xx :terminal<CR>
 nmap <Leader>xt :tabnew<CR>:terminal<CR>
 nmap <Leader>xs :new<CR>:terminal<CR>
 nmap <Leader>xv :vnew<CR>:terminal<CR>
 tnoremap fd     <C-\><C-n>
-tnoremap jk     <C-\><C-n>:FloatermToggle<CR>
 " }}}
 " Tabs {{{
 nmap ]t :tabnext<CR>
@@ -122,3 +121,7 @@ nmap ]a <Plug>(ale_next_wrap)
 vmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 " }}}
+map <M-j> :tabnext<CR>
+map <M-k> :tabprev<CR>
+tnoremap <M-j> <C-\><C-n>:tabnext<CR>
+tnoremap <M-k> <C-\><C-n>:tabprev<CR>
