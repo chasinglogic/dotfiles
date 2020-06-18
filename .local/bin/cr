@@ -1,20 +1,3 @@
 #!/bin/bash
 
-MONGODB_JIRA_USERNAME="mathew.robinson"
 
-MERGE_BASE=$(git merge-base --fork-point origin/master $(git rev-parse --abbrev-ref HEAD))
-
-flags=(--jira_user=\"$MONGODB_JIRA_USERNAME\" --git_similarity 99 --rev $MERGE_BASE...HEAD $@)
-
-if [[ $flags == *--help* || $flags == *-h* ]]; then
-    python ~/Work/kernel-tools/codereview/upload.py --help
-    return
-fi
-
-if [[ $flags != *--reviewers* ]]; then flags+=(--reviewers=\"$MONGODB_DEFAULT_REVIEWERS\"); fi
-if [[ $flags != *--title* ]]; then
-    TITLE=$(git log -n 1 --format='%s')
-    flags+=(--title=\"$TITLE\");
-fi
-
-eval python3 ~/Work/kernel-tools/codereview/upload.py ${flags[@]}
