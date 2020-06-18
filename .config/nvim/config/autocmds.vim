@@ -1,18 +1,22 @@
 """ Terminal stuff
+function! s:close_shell_terms()
+  let l:expansion = expand('<afile>')
+  if l:expansion =~# ".*bash$" || l:expansion =~# ".*zsh$" 
+    call nvim_input('<CR>')
+  endif
+endfunction
+
 augroup terminal_settings
-    autocmd!
+  autocmd!
 
-    autocmd TermOpen * setlocal nonumber
-    autocmd TermOpen * startinsert
-    autocmd BufWinEnter,WinEnter term://* startinsert
-    autocmd BufLeave term://* stopinsert
+  autocmd TermOpen * setlocal nonumber
+  autocmd TermOpen * startinsert
+  autocmd BufWinEnter,WinEnter term://* startinsert
+  autocmd BufLeave term://* stopinsert
 
-    " Ignore fzf as that will close terminal automatically. Otherwise if the
-    " shell exits then close the terminal window and buffer.
-    autocmd TermClose term://*
-          \ if (expand('<afile>') !~ "fzf") |
-          \   call nvim_input('<CR>')  |
-          \ endif
+  " Ignore fzf as that will close terminal automatically. Otherwise if the
+  " shell exits then close the terminal window and buffer.
+  autocmd TermClose term://* call s:close_shell_terms()
 augroup END
 
 """ Map non-standard files to filetypes

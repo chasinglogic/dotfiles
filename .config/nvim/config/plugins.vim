@@ -25,15 +25,13 @@ Plug 'maxmellon/vim-jsx-pretty'      " JSX support
 Plug 'Vimjas/vim-python-pep8-indent' " better python indentation
 Plug 'igankevich/mesonic'            " Meson.build syntax support
 Plug 'arrufat/vala.vim'              " Vala language syntax support
-Plug 'vim-pandoc/vim-pandoc'         " Better folding for text formats like Markdown
-Plug 'vim-pandoc/vim-pandoc-syntax'
 " }}}
 " Editor improvements {{{
 Plug 'jiangmiao/auto-pairs'      " Auto pair things
 Plug 'alvan/vim-closetag'        " Close (X)HTML tags
 Plug 'AndrewRadev/splitjoin.vim' " Easily split single-line statements to multi-line
 Plug 'SirVer/ultisnips'          " Snippets in vim
-Plug 'junegunn/vim-easy-align'   " Automatically align based on regex
+Plug 'junegunn/vim-easy-align'         " Align stuff.
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -43,6 +41,7 @@ Plug 'dense-analysis/ale'    " Code linting and LSP client
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin list after vim-sleuth
+Plug 'vim-test/vim-test'
 " }}}
 " Themes {{{
 Plug 'overcache/NeoSolarized', { 'as': 'solarized' }
@@ -89,49 +88,10 @@ endfunction
 
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
-" Neovim 0.4.0 floating window for FZF {{{
-if has('nvim-0.4.0')
-  let $FZF_DEFAULT_OPTS='--layout=reverse --border'
-  let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-  let g:fzf_colors =
-        \ { 'fg':      ['fg', 'Normal'],
-        \   'bg':      ['bg', 'Normal'],
-        \   'hl':      ['fg', 'Comment'],
-        \   'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-        \   'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-        \   'hl+':     ['fg', 'Statement'],
-        \   'info':    ['fg', 'PreProc'],
-        \   'border':  ['fg', 'Normal'],
-        \   'prompt':  ['fg', 'Conditional'],
-        \   'pointer': ['fg', 'Exception'],
-        \   'marker':  ['fg', 'Keyword'],
-        \   'spinner': ['fg', 'Label'],
-        \   'header':  ['fg', 'Comment'] }
-
-  function! FloatingFZF()
-    let buf = nvim_create_buf(v:false, v:true)
-    let height = float2nr(&lines - (&lines * 2 / 10))
-    let width = float2nr(&columns - (&columns * 2 / 10))
-    let col = float2nr((&columns - width) / 2)
-    let row = float2nr((&lines - height) / 2)
-
-    let opts = {
-          \ 'relative': 'editor',
-          \ 'row': row,
-          \ 'col': col,
-          \ 'width': width,
-          \ 'height': height,
-          \ 'style': 'minimal',
-          \ }
-
-    call nvim_open_win(buf, v:true, opts)
-  endfunction
-endif
-" }}}
 " }}}
 " CoC {{{
 let g:coc_global_extensions = ['coc-tsserver', 'coc-python']
 " }}}
-" Airline {{{
-let g:airline_powerline_fonts = 1
+" Vim Test {{{
+let test#strategy = 'neovim'
 " }}}
