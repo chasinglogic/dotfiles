@@ -51,6 +51,7 @@ nmap <Leader>br :e %<CR>
 nmap <Leader>w <C-w>
 nmap <C-w>d <C-w>c
 nmap <C-w>m <C-w>o
+map <M-o> <C-w>w
 " }}}
 " Terminal {{{
 nmap <Leader>'  :tabnew<CR>:terminal<CR>
@@ -59,10 +60,15 @@ nmap <Leader>xt :tabnew<CR>:terminal<CR>
 nmap <Leader>xs :new<CR>:terminal<CR>
 nmap <Leader>xv :vnew<CR>:terminal<CR>
 tnoremap fd     <C-\><C-n>
+tmap <C-o> <C-\><C-n>
 " }}}
 " Tabs {{{
 nmap ]t :tabnext<CR>
 nmap [t :tabprev<CR>
+tnoremap <M-j> <C-\><C-n>:tabnext<CR>
+tnoremap <M-k> <C-\><C-n>:tabprev<CR>
+map <M-j> :tabnext<CR>
+map <M-k> :tabprev<CR>
 nmap <Leader>tn :tabnext<CR>
 nmap <Leader>tp :tabprev<CR>
 nmap <Leader>to :tabnew<CR>
@@ -121,7 +127,7 @@ nmap ]a <Plug>(ale_next_wrap)
 vmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 " }}}
-map <M-j> :tabnext<CR>
-map <M-k> :tabprev<CR>
-tnoremap <M-j> <C-\><C-n>:tabnext<CR>
-tnoremap <M-k> <C-\><C-n>:tabprev<CR>
+" Testing {{{
+noremap <Leader>mt :TestNearest<CR>
+noremap <Leader>mT :TestFile<CR>
+" }}}

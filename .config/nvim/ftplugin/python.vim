@@ -1,6 +1,6 @@
-let file_path = expand('%:p')
+let s:file_path = expand('%:p')
 
-if match(file_path, 'Work') == -1
+if match(s:file_path, 'Work') == -1
     """ Autoformat on save.
     augroup autofmt
         autocmd!
@@ -8,9 +8,21 @@ if match(file_path, 'Work') == -1
     augroup END
 
     set textwidth=100
+    let test#python#runner = 'pytest'
+else
+    if match(s:file_path, 'MPBX') != -1
+        let test#python#runner = 'djangotest'
+        let test#python#djangotest#executable = 'cd mpb && python manage.py test'
+        let test#python#nosettests#executable = 'cd mpb && python manage.py test'
+    else
+        let test#python#runner = 'pytest'
+        let test#python#pytest#executable = './common/scripts/test'
+    endif
 endif
 
-if match(file_path, 'SConstruct') != -1 || match(file_path, 'SConscript') != -1
+echo "Set: ".test#python#runner
+
+if match(s:file_path, 'SConstruct') != -1 || match(s:file_path, 'SConscript') != -1
     let b:ale_linters = []
 endif
 
