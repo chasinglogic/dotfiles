@@ -20,8 +20,6 @@ else
     endif
 endif
 
-echo "Set: ".test#python#runner
-
 if match(s:file_path, 'SConstruct') != -1 || match(s:file_path, 'SConscript') != -1
     let b:ale_linters = []
 endif

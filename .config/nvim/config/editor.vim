@@ -87,6 +87,7 @@ set encoding=utf-8
 " Case insensitive search by default, unless Capital letter included {{{
 set ignorecase
 set smartcase
+set nohlsearch " Don't highlight search matches after search is completed
 " }}}
 " Open location and quickfix list when running one of those commands {{{
 augroup AutoOpenListWindow
