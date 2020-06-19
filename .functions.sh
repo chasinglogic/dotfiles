@@ -24,6 +24,12 @@ function sp() {
     PROJECT=$(projector find $1)
   fi
 
+  if [[ $? != 0 ]]; then
+    EXITCODE=$?
+    echo $PROJECT
+    return $EXITCODE
+  fi
+
   cd $PROJECT
 }
 
