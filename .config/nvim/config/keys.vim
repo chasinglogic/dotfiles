@@ -131,3 +131,6 @@ nmap ga <Plug>(EasyAlign)
 noremap <Leader>mt :TestNearest<CR>
 noremap <Leader>mT :TestFile<CR>
 " }}}
+" Tab completion {{{
+inoremap <expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+" }}}
