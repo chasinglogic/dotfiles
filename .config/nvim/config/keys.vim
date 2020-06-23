@@ -110,7 +110,7 @@ nmap <Leader>spg :PlugUpgrade<CR>
 nmap <Leader>sps :PlugStatus<CR>
 nmap <Leader>spc :PlugClean<CR>
 nmap <Leader>sq  :q<CR>
-nmap <Leader>q   :q<CR>
+nmap <Leader>qq   :qa<CR>
 " }}}
 " Writing {{{
 nmap <Leader>rm  :Goyo<CR>

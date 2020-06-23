@@ -27,29 +27,6 @@
 ;;; Code:
 
 
-;; Dired
-;;     I use dired as my primary file manager for anything that isn't
-;;     multimedia content (videos, photos, music). I really love it and
-;;     some kinds of file operations are simply not possible without it.
-;;     First we require `dired-x'. Dired-X provides many extra features
-;;     to Dired that take it from nice to unparalleled. See [[info:dired-x#Features][Dired-X
-;;     Features]] for a full list with more info.
-(require 'dired-x)
-
-;; Now we set the variable `dired-dwim-target' to `t'. This makes it
-;; such that when operating on files in Dired the target of the
-;; operation will automatically suggest other Dired buffers as the
-;; target preferring buffers that are visible. It's super handy.
-(setq dired-dwim-target t)
-
-;; always delete and copy recursively
-(setq dired-recursive-deletes 'always
-      dired-recursive-copies 'always)
-
-;; Various dired settings
-(setq dired-auto-revert-buffer t ; Just revert on changes, don't ask me
-      dired-clean-confirm-killing-deleted-buffers nil) ; Just kill buffers when I delete the file in dired. Don't ask.
-
 (provide 'chasinglogic-dired)
 
 ;;; chasinglogic-dired.el ends here

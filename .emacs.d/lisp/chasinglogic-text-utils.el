@@ -26,19 +26,12 @@
 
 ;;; Code:
 
-;; Expand Region
-;;
-;;     Expand region takes the idea of, what I consider, one of the best
-;;     key bindings in Emacs `M-h' (`mark-paragraph') and makes it work
-;;     incrementally with semantic units. It's beautiful and useful. For
-;;     consistency I bind it to `C-M-h'.
-(use-package expand-region
-  :bind ("C-M-h" . expand-region))
-
 ;; Format all the things. It's better than tool-specific format
 ;; packages. https://github.com/lassik/emacs-format-all-the-code
 (use-package format-all
-  :commands (format-all-buffer format-all-mode))
+  :commands (format-all-buffer format-all-mode)
+  :init
+  (add-hook 'prog-mode-hook (lambda () (format-all-mode 1))))
 
 ;; Yasnippet
 ;;
@@ -85,12 +78,6 @@
 ;; the variable `electric-indent-chars'. This mode is invaluable and
 ;; saves me a lot of formatting time.
 (electric-indent-mode 1)
-
-;; Electric layout mode automatically inserts newlines around some
-;; characters. The variable `electric-layout-rules' defines when and
-;; how to insert newlines. The short of it is for many modes this auto
-;; formats code.
-(electric-layout-mode 1)
 
 (provide 'chasinglogic-text-utils)
 

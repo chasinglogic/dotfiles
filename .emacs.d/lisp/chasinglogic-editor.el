@@ -22,31 +22,23 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
-;; Font
-;;     First set the font. I've tried many fonts in my time and I find
-;;     Source Code Pro to be a Pretty Good Font™. Other fonts I like are
-;;     Inconsolata and DejaVu Sans Mono, and one day I may switch back to
-;;     them but getting them on all platforms can be a hassle.
-;;     The only thing fancy about the way this font is getting set is that
-;;     I use two font sizes: one for my Mac because of the retina display
-;;     and one for everything else where I use regular monitors.
 (setq-default
  ;; Lockfiles trip up auto reloading compilers like react-scripts
  create-lockfiles nil
-;; By default when Emacs tries to open a symlink that points to a git
-;; repository it prompts you like "do you really wanna open this
-;; file". I use symlinks like this a lot so I disable this prompt.
+ ;; By default when Emacs tries to open a symlink that points to a git
+ ;; repository it prompts you like "do you really wanna open this
+ ;; file". I use symlinks like this a lot so I disable this prompt.
  vc-follow-symlinks t
  ;; Use spaces instead of tabs
  indent-tabs-mode nil
  ;; default tab size to 4 spaces
  tab-width 4
  chasinglogic-font-size (if (eq system-type 'darwin) "15" "11")
- chasinglogic-font (format "Fira Code-%s" chasinglogic-font-size)
+ chasinglogic-font (format "Dejavu Sans Mono-%s" chasinglogic-font-size)
  ;; Just save buffers before compiling
  compilation-ask-about-save nil
  ;; Always kill old compilation without prompting
@@ -170,7 +162,7 @@ comments so this function better suits my needs."
 
 
 ;; Ensure a few important paths are always present
-(mapc 
+(mapc
  (lambda (path)
    (add-to-list 'exec-path path)
    (setenv "PATH" (concat (getenv "PATH") ":" path)))
@@ -180,11 +172,16 @@ comments so this function better suits my needs."
 
 ;;;; Color Theme
 
-(use-package modus-vivendi-theme)
-(use-package modus-operandi-theme)
+(use-package solarized-theme
+  :config
+  ;; make the fringe stand out from the background
+  (setq solarized-distinct-fringe-background t)
 
-(defvar chasinglogic-dark-theme 'modus-vivendi)
-(defvar chasinglogic-light-theme 'modus-operandi)
+  ;; make the modeline high contrast
+  (setq solarized-high-contrast-mode-line t))
+
+(defvar chasinglogic-dark-theme 'solarized-dark)
+(defvar chasinglogic-light-theme 'solarized-light)
 
 (load-theme chasinglogic-light-theme t)
 
@@ -204,6 +201,31 @@ comments so this function better suits my needs."
 (require 'uniquify)
 (setq uniquify-separator "/"               ;; The separator in buffer names.
       uniquify-buffer-name-style 'forward) ;; names/in/this/style
+
+;; Dired
+;;     I use dired as my primary file manager for anything that isn't
+;;     multimedia content (videos, photos, music). I really love it and
+;;     some kinds of file operations are simply not possible without it.
+;;     First we require `dired-x'. Dired-X provides many extra features
+;;     to Dired that take it from nice to unparalleled. See [[info:dired-x#Features][Dired-X
+;;     Features]] for a full list with more info.
+(require 'dired-x)
+
+;; Now we set the variable `dired-dwim-target' to `t'. This makes it
+;; such that when operating on files in Dired the target of the
+;; operation will automatically suggest other Dired buffers as the
+;; target preferring buffers that are visible. It's super handy.
+(setq dired-dwim-target t)
+
+;; always delete and copy recursively
+(setq dired-recursive-deletes 'always
+      dired-recursive-copies 'always)
+
+;; Various dired settings
+(setq dired-auto-revert-buffer t ; Just revert on changes, don't ask me
+      dired-clean-confirm-killing-deleted-buffers nil) ; Just kill buffers when I delete the file in dired. Don't ask.
+
+
 
 (provide 'chasinglogic-editor)
 

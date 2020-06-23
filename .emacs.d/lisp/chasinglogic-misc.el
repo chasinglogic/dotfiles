@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -49,14 +49,6 @@
       (vterm (format "*%s*" buffer-name)))
     (setq crux-term-func #'crux-vterm)))
 
-(use-package buffer-flip
-  :bind  (:map buffer-flip-map
-               ("M-<tab>" .   buffer-flip-forward) 
-               ("M-S-<tab>" . buffer-flip-backward) 
-               ("M-ESC" .     buffer-flip-abort))
-  :general (leader!
-             "TAB" 'buffer-flip))
-
 (use-package multi-line
   :config (setq-default multi-line-current-strategy
                         (multi-line-strategy
@@ -67,6 +59,28 @@
 
 (use-package ace-window
   :bind ("M-o" . ace-window))
+
+;; Highlight TODO mode
+;;
+;; By default Emacs doesn't highlight TODO comments. This makes them
+;; stand out by fontifying them the same as Org mode TODO header
+;; keywords.
+(use-package hl-todo
+  :demand
+  :config
+  (global-hl-todo-mode))
+
+;; anzu-mode enhances isearch & query-replace by showing total matches
+;; and current match position, it also does the smartest
+;; case-insensitive replacing you've ever seen.
+(use-package anzu
+  :diminish ""
+  :bind (("C-M-%" . anzu-query-replace-regexp)
+         ("M-%" . anzu-query-replace))
+  :config
+  (global-anzu-mode)
+  (use-package evil-anzu
+    :after 'evil))
 
 (provide 'chasinglogic-misc)
 

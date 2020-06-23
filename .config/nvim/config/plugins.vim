@@ -34,6 +34,10 @@ Plug 'SirVer/ultisnips'          " Snippets in vim
 Plug 'junegunn/vim-easy-align'         " Align stuff.
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'deoplete-plugins/deoplete-jedi'
 Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
@@ -53,7 +57,7 @@ Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
 call plug#end()
 " }}}
 " Ultisnips {{{
-let g:UltiSnipsExpandTrigger		= "<c-x>"
+let g:UltisnipsExpandTrigger = "<c-j>"
 let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
 let g:UltiSnipsRemoveSelectModeMappings = 0
@@ -67,8 +71,9 @@ let g:neoformat_enabled_python3 = ['black', 'docformatter']
 " }}}
 " Deoplete (Completion) {{{
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
 " <TAB>: completion.
-inoremap <expr> <TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 " }}}
 " Split-join {{{
 let g:splitjoin_ruby_trailing_comma = 1
@@ -94,4 +99,14 @@ let g:coc_global_extensions = ['coc-tsserver', 'coc-python']
 " }}}
 " Vim Test {{{
 let test#strategy = 'neovim'
+" }}}
+" LanguageClient-neovim {{{
+" Required for operations modifying multiple buffers like rename.
+set hidden
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'python': ['/usr/local/bin/pyls'],
+    \ 'go': ['~/Code/go/bin/gopls'],
+    \ }
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 " }}}

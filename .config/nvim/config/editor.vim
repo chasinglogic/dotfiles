@@ -44,8 +44,8 @@ set clipboard+=unnamedplus
 " Let find search from pwd {{{
 set path=$PWD/**
 " }}}
-" Live preview substitution {{{
-set inccommand=nosplit
+" Live preview some commands {{{
+set inccommand=split
 " }}}
 " Intuitive backspacing in insert mode {{{
 set backspace=indent,eol,start
@@ -69,7 +69,7 @@ if !isdirectory(&undodir)
 endif
 " }}}
 " Completion {{{
-set completeopt-=preview " Don't show completion preview
+set completeopt=noinsert,menuone,noselect
 " }}}
 " Auto read files from disk when changed {{{
 set autoread
