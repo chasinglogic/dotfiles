@@ -5,8 +5,8 @@ Name=transaction db
 Type=simple
 TimeoutStartSec=5m
 
-ExecStartPre=-/usr/bin/docker rm "transaction-db"
-ExecStart=/usr/bin/docker run \
+ExecStartPre=-/usr/bin/podman rm "transaction-db"
+ExecStart=/usr/bin/podman run \
                           --name transaction-db \
                           --publish 127.0.0.1:5432:5432 \
                           -v transaction-db-volume:/var/lib/postgresql/data \
@@ -15,9 +15,9 @@ ExecStart=/usr/bin/docker run \
                           -e POSTGRES_PASSWORD=wasp_pattern_boot \
                           postgres:latest
 
-ExecReload=-/usr/bin/docker stop "transaction-db"
-ExecReload=-/usr/bin/docker rm "transaction-db"
-ExecStop=-/usr/bin/docker stop "transaction-db"
+ExecReload=-/usr/bin/podman stop "transaction-db"
+ExecReload=-/usr/bin/podman rm "transaction-db"
+ExecStop=-/usr/bin/podman stop "transaction-db"
 Restart='always'
 RestartSec=30
 

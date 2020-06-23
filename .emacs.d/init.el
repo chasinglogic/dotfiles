@@ -137,7 +137,6 @@
 (require 'chasinglogic-keys)
 
 ;; Default Emacs settings
-(require 'chasinglogic-dired)
 (require 'chasinglogic-editor)
 (require 'chasinglogic-text-utils)
 
@@ -152,10 +151,8 @@
 
 ;; Applications
 (require 'chasinglogic-org)
-(require 'chasinglogic-email)
 
 ;; Programming languages
-(require 'chasinglogic-cc)
 (require 'chasinglogic-markdown)
 (require 'chasinglogic-minor-modes)
 (require 'chasinglogic-projectile)
@@ -164,6 +161,7 @@
 (require 'chasinglogic-typescript)
 (require 'chasinglogic-web)
 (require 'chasinglogic-go)
+(require 'chasinglogic-javascript)
 
 ;; Miscellaneous Major Modes
 ;;
@@ -194,13 +192,11 @@
 
 ;; Misc
 (require 'chasinglogic-misc)
-(when (eq 'system-type 'darwin)
-  ;; Emacs environment variables (exec-path-from-shell)
-  ;;
-  ;; Only enabled for MacOS because my .profile works correctly on Linux
-  (use-package exec-path-from-shell
-    :config
-    (exec-path-from-shell-initialize)))
+(setenv "GOPATH" (concat (getenv "HOME") "/Code/go"))
+;; Emacs environment variables (exec-path-from-shell)
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
 
 ;; Post initialization
 ;;

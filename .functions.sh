@@ -21,7 +21,7 @@ function sp() {
   elif [[ $1 == "home" ]]; then
     PROJECT=$HOME
   else
-    PROJECT=$(projector find $1)
+    PROJECT=$(projector find "(?i)$1")
   fi
 
   if [[ $? != 0 ]]; then

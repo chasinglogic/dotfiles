@@ -40,9 +40,6 @@
 
   (add-hook 'typescript-mode-hook #'chasinglogic-typescript-mode-hook))
 
-(use-package prettier-js
-  :hook ((web-mode typescript-mode js2-mode) . prettier-js-mode))
-
 (provide 'chasinglogic-typescript)
 
 ;;; chasinglogic-typescript.el ends here

@@ -29,6 +29,4 @@ set statusline+=\ %q
 set statusline+=\ %f
 set statusline+=%=
 set statusline+=%{GitStatusLine()}
-set statusline+=\ filetype%y
-set statusline+=\ L[%l/%L]
-set statusline+=\  
+set statusline+=\ ft%y
