@@ -1,3 +1,9 @@
+"" Ultisnips {{{
+let g:UltiSnipsExpandTrigger = "<c-j>"
+let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
+" }}}
+
 " Plugins {{{
 call plug#begin('~/.local/share/vim/plugins')
 " External Tool Integration {{{
@@ -56,12 +62,6 @@ Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
 " }}}
 call plug#end()
 " }}}
-" Ultisnips {{{
-let g:UltisnipsExpandTrigger = "<c-j>"
-let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
-let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
-let g:UltiSnipsRemoveSelectModeMappings = 0
-" }}}
 " Vala {{{
 let g:vala_syntax_folding_enabled = 0
 " }}}
@@ -71,9 +71,6 @@ let g:neoformat_enabled_python3 = ['black', 'docformatter']
 " }}}
 " Deoplete (Completion) {{{
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
-" <TAB>: completion.
-inoremap <expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 " }}}
 " Split-join {{{
 let g:splitjoin_ruby_trailing_comma = 1
