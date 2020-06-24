@@ -1,0 +1,6 @@
+#!/bin/bash
+
+search=$1;
+shift;
+
+kubectl get pods $@ | grep $search | awk '{ print $1 }';

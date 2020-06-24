@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -36,10 +36,7 @@
   :mode ("\\.rs\\'")
   :config
   (setq rust-format-on-save t)
-  (defun chasinglogic-rust-mode-hook ()
-    (setq-local compile-command "cargo clippy && cargo test"))
-  (add-hook 'rust-mode-hook 'chasinglogic-rust-mode-hook)
-  (add-hook 'rust-mode-hook #'lsp))
+  (add-hook 'rust-mode-hook 'chasinglogic-enable-lsp))
 
 (provide 'chasinglogic-rust)
 

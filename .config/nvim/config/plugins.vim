@@ -3,7 +3,9 @@ let g:UltiSnipsExpandTrigger = "<c-j>"
 let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
 " }}}
-
+" Polyglot {{{
+let g:polyglot_disabled = ['jsx']
+" }}}
 " Plugins {{{
 call plug#begin('~/.local/share/vim/plugins')
 " External Tool Integration {{{
@@ -21,16 +23,12 @@ Plug 'tpope/vim-sleuth'     " Set tabwidth etc based on filetype
 Plug 'tpope/vim-eunuch'     " Useful commands like Rename, Delete, Move, SudoWrite
 Plug 'tpope/vim-abolish'    " Better abbreviations and Subvert is like fancy %s
 Plug 'tpope/vim-fugitive'   " Git integration
+Plug 'tpope/vim-rhubarb'    " Github integration
 Plug 'tpope/vim-endwise'    " Automatically add 'end' and similar language constructs
 Plug 'tpope/vim-rsi'        " Readline bindings in the vim command line
 " }}}
 " Language Support {{{
-Plug 'leafgarland/typescript-vim'    " Add typescript syntax files
-Plug 'yuezk/vim-js'                  " Better modern JS support
-Plug 'maxmellon/vim-jsx-pretty'      " JSX support
-Plug 'Vimjas/vim-python-pep8-indent' " better python indentation
-Plug 'igankevich/mesonic'            " Meson.build syntax support
-Plug 'arrufat/vala.vim'              " Vala language syntax support
+Plug 'sheerun/vim-polyglot'
 " }}}
 " Editor improvements {{{
 Plug 'jiangmiao/auto-pairs'      " Auto pair things

@@ -170,32 +170,6 @@ comments so this function better suits my needs."
   (concat (getenv "HOME") "/.local/bin")
   (concat (getenv "HOME") "/.cargo/bin")))
 
-;;;; Color Theme
-
-(use-package solarized-theme
-  :config
-  ;; make the fringe stand out from the background
-  (setq solarized-distinct-fringe-background t)
-
-  ;; make the modeline high contrast
-  (setq solarized-high-contrast-mode-line t))
-
-(defvar chasinglogic-dark-theme 'solarized-dark)
-(defvar chasinglogic-light-theme 'solarized-light)
-
-(load-theme chasinglogic-light-theme t)
-
-(defun chasinglogic-toggle-theme ()
-  "Toggle between light and dark theme."
-  (interactive)
-  (if (custom-theme-enabled-p chasinglogic-dark-theme)
-      (progn
-        (disable-theme chasinglogic-dark-theme)
-        (load-theme chasinglogic-light-theme t))
-    (progn
-      (disable-theme chasinglogic-dark-theme)
-      (load-theme chasinglogic-dark-theme t))))
-
 ;; Note that ‘uniquify’ is builtin. This configures how buffers with
 ;; the same name are made unique.
 (require 'uniquify)
@@ -225,7 +199,33 @@ comments so this function better suits my needs."
 (setq dired-auto-revert-buffer t ; Just revert on changes, don't ask me
       dired-clean-confirm-killing-deleted-buffers nil) ; Just kill buffers when I delete the file in dired. Don't ask.
 
+;; operators: =(=, ={=, ="=, ='=, etc. I find this behavior annoying
+;; in prose modes so I use a custom hook to only enable it for
+;; programming modes.
+(defun enable-electric-pair-local-mode ()
+  "Enable eletric pair mode locally."
+  (electric-pair-local-mode 1))
+(add-hook 'prog-mode-hook 'enable-electric-pair-local-mode)
 
+;; Show Paren Mode I'm just going to steal the description of this
+;; straight from the documentation: Toggle visualization of matching
+;; parens (Show Paren mode).
+(show-paren-mode 1)
+
+;; Abbrev mode is a simple but magical minor mode. I make some
+;; spelling mistakes all the time. At this point some of them have
+;; become muscle memory and so while I know the spelling is wrong I
+;; don't know if I'll ever be able to change them. This is where
+;; Abbrev mode comes in. I register abbreviations on a major mode or
+;; global basis and `abbrev-mode' will automatically expand them to
+;; the correction whenever I type them.
+(add-hook 'text-mode-hook 'abbrev-mode)
+
+;; Electric indent mode on-the-fly reindents your code as you type. It
+;; checks for newlines and other common chars that are configured via
+;; the variable `electric-indent-chars'. This mode is invaluable and
+;; saves me a lot of formatting time.
+(electric-indent-mode 1)
 
 (provide 'chasinglogic-editor)
 

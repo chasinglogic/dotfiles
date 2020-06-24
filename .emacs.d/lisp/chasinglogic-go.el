@@ -22,16 +22,17 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
 (use-package go-mode
   :mode ("\\.go\\'")
+  :init
+  (add-hook 'go-mode-hook 'chasinglogic-enable-lsp)
   :config
   (setq gofmt-command "goimports")
   (defun chasinglogic-go-hook ()
-    (lsp)
     (add-hook 'before-save-hook 'gofmt-before-save))
   (add-hook 'go-mode-hook 'chasinglogic-go-hook))
 
