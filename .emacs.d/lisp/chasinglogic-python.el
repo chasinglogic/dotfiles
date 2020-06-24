@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -42,9 +42,7 @@
 (use-package py-isort
   :commands 'py-isort-buffer
   :init
-  (defun chasinglogic-python-isort-hook ()
-    (py-isort))
-  (add-hook 'python-mode-hook 'chasinglogic-python-isort-hook))
+  (add-hook 'python-mode-hook 'py-isort-before-save))
 
 ;; Next I use the Black Python formatter for my code. This package
 ;; integrates it into Emacs and lets me run it as an after save
@@ -69,10 +67,7 @@
       (add-hook 'before-save-hook 'blacken-buffer nil t)))
   (add-hook 'python-mode-hook 'chasinglogic-python-format-hook))
 
-;; Load SCons files as Python
-(add-to-list 'auto-mode-alist '("SConscript" . python-mode))
-(add-to-list 'auto-mode-alist '("SConstruct" . python-mode))
-(add-to-list 'auto-mode-alist '("\\.vars\\'" . python-mode))
+(add-hook 'python-mode-hook 'chasinglogic-enable-lsp)
 
 (provide 'chasinglogic-python)
 

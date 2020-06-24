@@ -132,21 +132,137 @@
   (diminish 'undo-tree-mode))
 
 ;; Keybindings
-(require 'chasinglogic-evil)
+
+(use-package evil
+  :init (setq evil-want-keybinding nil)
+  :config (evil-mode 1))
+
+(use-package evil-escape
+  :config
+  (evil-escape-mode 1))
+
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1))
+
+(use-package evil-collection
+  :config
+  (evil-collection-init))
+
+;;;; Color Theme
+
+(use-package solarized-theme
+  :config
+  ;; make the fringe stand out from the background
+  (setq solarized-distinct-fringe-background t)
+
+  ;; make the modeline high contrast
+  (setq solarized-high-contrast-mode-line t))
+
+(defvar chasinglogic-dark-theme 'solarized-dark)
+(defvar chasinglogic-light-theme 'solarized-light)
+
+(load-theme chasinglogic-light-theme t)
+
+(defun chasinglogic-toggle-theme ()
+  "Toggle between light and dark theme."
+  (interactive)
+  (if (custom-theme-enabled-p chasinglogic-dark-theme)
+      (progn
+        (disable-theme chasinglogic-dark-theme)
+        (load-theme chasinglogic-light-theme t))
+    (progn
+      (disable-theme chasinglogic-dark-theme)
+      (load-theme chasinglogic-dark-theme t))))
+
+;; Default / built-in Emacs feature settings
+(require 'chasinglogic-editor)
+;; Work specific commands or settings
 (require 'chasinglogic-work)
+
 (require 'chasinglogic-keys)
 
-;; Default Emacs settings
-(require 'chasinglogic-editor)
-(require 'chasinglogic-text-utils)
-
 ;; Tools
+
+;; Company Mode
+;;
+;; Company stands for COMPlete ANYthing and it does. I enable it
+;; globally and diminish it since it is always on. I only set
+;; `company-dabbrev-downcase' to nil. This ignores casing when
+;; providing suggestions taken from inside the current buffer.
+(use-package company
+  :diminish ""
+  :config
+  (setq-default company-idle-delay 0.25
+                company-minimum-prefix-length 2
+                company-tooltip-limit 14
+                company-tooltip-align-annotations t
+                company-require-match 'never
+                company-global-modes
+                '(not erc-mode message-mode help-mode gud-mode eshell-mode)
+                company-frontends '(company-pseudo-tooltip-frontend
+                                    company-tng-frontend
+                                    company-echo-metadata-frontend)
+
+                ;; Buffer-local backends will be computed when loading a major mode, so
+                ;; only specify a global default here.
+                company-backends  '(company-capf company-dabbrev)
+
+                ;; Company overrides `company-active-map' based on
+                ;; `company-auto-complete-chars'; no magic please!
+                company-auto-complete-chars nil
+
+                ;; Only search the current buffer for `company-dabbrev' (a backend that
+                ;; suggests text your open buffers). This prevents Company from causing
+                ;; lag once you have a lot of buffers open.
+                company-dabbrev-other-buffers nil
+                ;; Make `company-dabbrev' fully case-sensitive, to improve UX with
+                ;; domain-specific words with particular casing.
+                company-dabbrev-ignore-case nil
+                company-dabbrev-downcase nil)
+  (global-company-mode))
+
+(use-package yasnippet
+  :diminish 'yas-minor-mode
+  :config (yas-global-mode 1))
+
+;; Format all the things. It's better than tool-specific format
+;; packages. https://github.com/lassik/emacs-format-all-the-code
+(use-package format-all
+  :commands (format-all-buffer format-all-mode)
+  :init
+  (add-hook 'prog-mode-hook (lambda () (format-all-mode 1))))
+
+;; LSP Mode
+(use-package lsp-mode
+  :init (setq-default lsp-auto-guess-root t)
+  :commands 'lsp
+  :config
+  (setq lsp-signature-auto-activate nil))
+
+(use-package company-lsp
+  :init
+  (defun chasinglogic-setup-lsp-completion ()
+    (setq-local company-backends company-backends)
+    (add-to-list 'company-backends 'company-lsp))
+
+  (add-hook 'lsp-mode-hook 'chasinglogic-setup-lsp-completion))
+
+;; Increase the amount of data which Emacs reads from the
+;; process. Again the emacs default is too low 4k considering that the
+;; some of the language server responses are in 800k - 3M range.
+(setq read-process-output-max (* (* 1024 1024) 3)) ;; 3mb
+
+;; Enable LSP hook
+(defun chasinglogic-enable-lsp ()
+  "Enable LSP mode."
+  (lsp)
+  (eldoc-mode 1))
+
 (require 'chasinglogic-ivy)
-(require 'chasinglogic-auto-complete)
 (require 'chasinglogic-minor-modes)
-(require 'chasinglogic-lint)
+;; (require 'chasinglogic-lint)
 (require 'chasinglogic-vc)
-(require 'chasinglogic-lsp)
 (require 'chasinglogic-prose)
 
 ;; Applications

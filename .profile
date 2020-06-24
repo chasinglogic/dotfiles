@@ -76,6 +76,9 @@ if [[ "$(uname)" == "Darwin" ]]; then
     export CLICOLOR=1
 fi
 
+# Inform Emacs and other programs they can use truecolor
+export COLORTERM=truecolor
+
 # Storage for miscellaneous or system specific environment variables
 source_if_exists $HOME/.env.bash
 # Enable nix if I've installed it on this system

@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -31,6 +31,7 @@
   (electric-layout-mode -1))
 
 (add-hook 'js-mode-hook 'chasinglogic-js-mode-hook)
+(add-hook 'js-mode-hook 'chasinglogic-enable-lsp)
 
 (provide 'chasinglogic-javascript)
 

@@ -14,7 +14,7 @@ function redact() {
   $@ 1>/dev/null 2>/dev/null
 }
 
-function sp() {
+function pp() {
   PROJECT=""
   if [[ $1 == "" ]]; then
     PROJECT=$(projector list | fzf)

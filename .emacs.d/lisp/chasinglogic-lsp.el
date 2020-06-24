@@ -22,51 +22,9 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
-
-;; LSP Mode
-;;
-;; LSP mode attempts to make Emacs as featureful as VSCode when it
-;; comes to "IDE-esque" features. I would say it gets almost all the
-;; way there. However I disable a lot of these features for
-;; performance or visual disruption reasons. Even with most of these
-;; UI elements disabled it provides the best completion and linting of
-;; any package in the Emacs ecosystem. The best part is that it's a
-;; single package so I don't have to maintain a million =company-*=
-;; and =flycheck-*= packages. It consists of two packages `lsp-mode'
-;; itself that provides the Language Server interaction and `lsp-ui'
-;; that provides the bulk of interactive features for the Language
-;; Server. I only install `lsp-ui' for the Flycheck integration.
-(use-package lsp-mode
-  :init (setq-default lsp-auto-guess-root t
-                      lsp-prefer-flymake nil)
-  :commands 'lsp
-  :config
-  (setq lsp-signature-auto-activate nil))
-
-(use-package lsp-python-ms)
-(require 'lsp-python-ms)
-
-(use-package company-lsp
-  :init
-  (defun chasinglogic-setup-lsp-completion ()
-    (setq-local company-backends company-backends)
-    (add-to-list 'company-backends 'company-lsp))
-
-  (add-hook 'lsp-mode-hook 'chasinglogic-setup-lsp-completion))
-
-;; Increase the amount of data which Emacs reads from the
-;; process. Again the emacs default is too low 4k considering that the
-;; some of the language server responses are in 800k - 3M range.
-(setq read-process-output-max (* (* 1024 1024) 3)) ;; 3mb
-
-;; Enable LSP for all prog modes
-(defun chasinglogic-enable-lsp ()
-  "Enable LSP mode."
-  (lsp)
-  (eldoc-mode 1))
 
 (use-package lsp-ivy
   :after (lsp-mode ivy)
