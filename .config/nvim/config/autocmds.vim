@@ -11,8 +11,6 @@ augroup terminal_settings
 
   autocmd TermOpen * setlocal nonumber
   autocmd TermOpen * startinsert
-  autocmd BufWinEnter,WinEnter term://* startinsert
-  autocmd BufLeave term://* stopinsert
 
   " Ignore fzf as that will close terminal automatically. Otherwise if the
   " shell exits then close the terminal window and buffer.

@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -48,6 +48,7 @@
                 javascript-ident-level 2
                 js2-basic-offset 2)
   (defun chasinglogic-web-mode-hook ()
+    (lsp)
     ;; indent case statements
     (c-set-offset 'case-label '+))
   (add-hook 'web-mode-hook 'chasinglogic-web-mode-hook)

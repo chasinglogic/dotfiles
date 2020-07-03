@@ -67,8 +67,6 @@ nmap ]t :tabnext<CR>
 nmap [t :tabprev<CR>
 tnoremap <M-j> <C-\><C-n>:tabnext<CR>
 tnoremap <M-k> <C-\><C-n>:tabprev<CR>
-map <M-j> :tabnext<CR>
-map <M-k> :tabprev<CR>
 nmap <Leader>tn :tabnext<CR>
 nmap <Leader>tp :tabprev<CR>
 nmap <Leader>to :tabnew<CR>

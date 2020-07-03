@@ -3,9 +3,6 @@ let g:UltiSnipsExpandTrigger = "<c-j>"
 let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
 " }}}
-" Polyglot {{{
-let g:polyglot_disabled = ['jsx']
-" }}}
 " Plugins {{{
 call plug#begin('~/.local/share/vim/plugins')
 " External Tool Integration {{{
@@ -98,10 +95,16 @@ let test#strategy = 'neovim'
 " LanguageClient-neovim {{{
 " Required for operations modifying multiple buffers like rename.
 set hidden
+let g:LanguageClient_diagnosticsList = "Location"
+let g:LanguageClient_useVirtualText = "No"
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'python': ['/usr/local/bin/pyls'],
-    \ 'go': ['~/Code/go/bin/gopls'],
-    \ }
+      \ 'typescript': ['typescript-language-server', '--stdio'],
+      \ 'typescriptreact': ['typescript-language-server', '--stdio'],
+      \ 'javascript': ['typescript-language-server', '--stdio'],
+      \ 'javascript.jsx': ['typescript-language-server', '--stdio'],
+      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+      \ 'python': ['/usr/local/bin/pyls'],
+      \ 'go': ['~/Code/go/bin/gopls'],
+      \ }
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 " }}}
