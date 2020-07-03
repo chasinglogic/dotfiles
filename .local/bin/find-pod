@@ -1,6 +1,24 @@
 #!/bin/bash
 
-search=$1;
+while getopts ':l' flag; do
+  case "$flag" in
+    l) limit=1;;
+    \?) exit 42;;
+  esac
+done
+
+shift $((OPTIND - 1))
+
+search=$1
 shift;
 
-kubectl get pods $@ | grep $search | awk '{ print $1 }';
+if [[ -n $search ]]; then
+    output=$(kubectl get pods --all-namespaces | grep -v NAME | grep $search | awk '{ print $2 }')
+    if [[ -n $limit ]]; then
+        echo $(echo "$output" | head -n1)
+    else
+        echo "$output"
+    fi
+else
+    kubectl get pods --all-namespaces | grep -v NAME | awk '{ print $2 }' | fzf
+fi

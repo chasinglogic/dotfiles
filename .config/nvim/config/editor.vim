@@ -14,7 +14,7 @@ set formatoptions+=j   " Remove comment char when joining lines
 set formatoptions-=t   " No visual wrapping
 set nowrap             " Don't do soft wrapping
 set nostartofline      " Don't go to the start of line after certain commands
-set autoindent         " Copy indent from current line when starting a new line
+set smartindent        " Copy indent from current line when starting a new line
 filetype plugin indent on
 " }}}
 " Tab completion settings for command line {{{

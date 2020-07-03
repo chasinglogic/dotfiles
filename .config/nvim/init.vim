@@ -20,7 +20,11 @@ if !exists('g:vscode')
 endif
 
 """ Load Theme
-set background=light
+if strftime("%H") < 18
+  set background=light
+else
+  set background=dark
+endif
 colorscheme NeoSolarized
 
 """ Set font for GUI

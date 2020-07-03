@@ -261,7 +261,7 @@
 
 (require 'chasinglogic-ivy)
 (require 'chasinglogic-minor-modes)
-;; (require 'chasinglogic-lint)
+(require 'chasinglogic-lint)
 (require 'chasinglogic-vc)
 (require 'chasinglogic-prose)
 

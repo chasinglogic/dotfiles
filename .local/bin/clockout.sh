@@ -1,12 +1,13 @@
 #!/bin/bash
 
-REPOSITORIES=$(projector list)
+REPOSITORIES=$(projector list | grep -v Work)
 
 for repository in $REPOSITORIES; do
     cd $repository
 
     fork=$(git remote -v | grep fork)
-    if [[ $fork != "" && $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]]; then
+    mine=$(git remote -v | grep chasinglogic )
+    if [[ ($mine != "" || $fork != "") && $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]]; then
         echo ""
         echo "$repository is dirty prompting for commit message."
         echo ""

@@ -14,6 +14,21 @@ function redact() {
   $@ 1>/dev/null 2>/dev/null
 }
 
+function st() {
+  sess=""
+  if [[ -n $1 ]]; then
+    sess=$(tmux list-session -F "#S" | grep -i $1)
+  else
+    sess=$(tmux list-session -F "#S" | fzf)
+  fi
+
+  if [[ -n $TMUX ]]; then
+    tmux switch-client -t $sess
+  else
+    tmux attach-session -t $sess
+  fi
+}
+
 function sp() {
   PROJECT=""
   if [[ $1 == "" ]]; then
