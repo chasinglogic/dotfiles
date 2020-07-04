@@ -63,6 +63,7 @@ let g:vala_syntax_folding_enabled = 0
 " Neoformat {{{
 let g:neoformat_enabled_python = ['black', 'docformatter']
 let g:neoformat_enabled_python3 = ['black', 'docformatter']
+nmap <Leader>f :Neoformat<CR>
 " }}}
 " Deoplete (Completion) {{{
 let g:deoplete#enable_at_startup = 1
@@ -106,5 +107,6 @@ let g:LanguageClient_serverCommands = {
       \ 'python': ['/usr/local/bin/pyls'],
       \ 'go': ['~/Code/go/bin/gopls'],
       \ }
+
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 " }}}
