@@ -13,9 +13,6 @@ for repository in $REPOSITORIES; do
         echo ""
         PAGER="" git diff
         read -p "Commit Message: " commit_message
-        if [[ $commit_message != "WIP:"* ]]; then
-            commit_message="WIP: $commit_message"
-        fi
         git add --all
         git commit -m "$commit_message"
     fi
