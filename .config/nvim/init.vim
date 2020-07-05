@@ -25,6 +25,7 @@ if strftime("%H") < 18
 else
   set background=dark
 endif
+
 colorscheme NeoSolarized
 
 """ Set font for GUI
