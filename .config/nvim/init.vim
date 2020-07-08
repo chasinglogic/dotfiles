@@ -20,7 +20,7 @@ if !exists('g:vscode')
 endif
 
 """ Load Theme
-if strftime("%H") < 18
+if strftime("%H") < 18 && strftime('%H') > 9
   set background=light
 else
   set background=dark
