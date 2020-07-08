@@ -20,7 +20,8 @@ if !exists('g:vscode')
 endif
 
 """ Load Theme
-if strftime("%H") < 18 && strftime('%H') > 9
+let s:current_hour = str2nr(strftime("%H"))
+if 8 < s:current_hour && s:current_hour < 18 
   set background=light
 else
   set background=dark
