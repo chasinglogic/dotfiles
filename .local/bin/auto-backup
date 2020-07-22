@@ -15,3 +15,4 @@ else
 fi
 
 backup $TARGET
+notify-send 'Backup Complete' "An auto backup has run backing up this machine to $TARGET"

@@ -3,7 +3,7 @@ Description=Auto Backup on schedule
 
 [Timer]
 OnBootSec=60min
-OnUnitActiveSec=240min
+OnUnitActiveSec=2hour
 Unit=auto-backup.service
 
 [Install]
