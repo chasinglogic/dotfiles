@@ -21,7 +21,7 @@ endif
 
 """ Load Theme
 let s:current_hour = str2nr(strftime("%H"))
-if 8 < s:current_hour && s:current_hour < 18 
+if 7 < s:current_hour && s:current_hour < 18 
   set background=light
 else
   set background=dark
