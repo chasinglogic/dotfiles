@@ -1,3 +1,22 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+set -eou pipefail
 
+ARGS="$@"
+if [[ $ARGS != *"--base"* ]]; then
+    NAME=$(basename $(git rev-parse --show-toplevel))
+    BASE=""
+    if [[ $NAME == "MPBX" ]]; then
+        BASE="release/v5"
+    else
+        BASE="master"
+    fi
+
+    ARGS="$ARGS --base $BASE"
+fi
+
+gh pr create \
+     --fill \
+     --reviewer mpb-com/backend \
+     --assignee chasinglogic \
+     $ARGS

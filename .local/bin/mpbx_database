@@ -1,0 +1,8 @@
+#!/usr/bin/sh
+docker run \
+    --name mpbx-$1-db \
+    -v mpbx-$1-data:/var/lib/mysql \
+    -e MYSQL_ROOT_PASSWORD=root \
+    -e MYSQL_DATABASE=mpb \
+    --publish 3306:3306 \
+    mysql:5.6

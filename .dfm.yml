@@ -14,9 +14,8 @@ hooks:
       if [ ! -d "$HOME/.terminfo" ]; then
           tic -x -o ~/.terminfo ~/.local/share/xterm-24bit.src
       fi
-  after_sync:
     - systemctl --user daemon-reload
-    - systemctl --user enable mbsync.timer emacs
+    - systemctl --user enable mbsync.timer emacs auto-backup.timer
 
 modules:
   # Tmux plugin manager

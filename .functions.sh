@@ -2,6 +2,10 @@
 # FUNCTIONS #
 #############
 
+function pyenv_activate() {
+  eval "$(pyenv init -)"
+}
+
 function dotfiles() {
   cd $DOTFILES
 }
