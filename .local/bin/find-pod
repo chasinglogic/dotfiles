@@ -1,8 +1,9 @@
 #!/bin/bash
 
-while getopts ':l' flag; do
+while getopts ':lv' flag; do
   case "$flag" in
     l) limit=1;;
+    v) verbose=1;;
     \?) exit 42;;
   esac
 done
@@ -13,12 +14,20 @@ search=$1
 shift;
 
 if [[ -n $search ]]; then
-    output=$(kubectl get pods --all-namespaces | grep -v NAME | grep $search | awk '{ print $2 }')
-    if [[ -n $limit ]]; then
-        echo $(echo "$output" | head -n1)
-    else
-        echo "$output"
-    fi
+  pods=$(kubectl get pods --all-namespaces)
+  header=$(echo "$pods" | head -n1)
+  body=$(echo "$pods" | grep -v NAME | grep $search)
+  if [[ -n $verbose ]]; then
+    echo "$header"
+  else
+    body=$(echo "$body" | awk '{ print $2 }')
+  fi
+
+  if [[ -n $limit ]]; then
+    echo $(echo "$body" | head -n1)
+  else
+    echo "$body"
+  fi
 else
-    kubectl get pods --all-namespaces | grep -v NAME | awk '{ print $2 }' | fzf
+    kubectl get pods --all-namespaces | grep -v NAME | fzf | awk '{ print $2 }'
 fi

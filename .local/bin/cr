@@ -15,8 +15,9 @@ if [[ $ARGS != *"--base"* ]]; then
     ARGS="$ARGS --base $BASE"
 fi
 
-gh pr create \
-     --fill \
-     --reviewer mpb-com/backend \
-     --assignee chasinglogic \
-     $ARGS
+if [[ $(pwd) == *"/Work/"* ]]; then
+    ARGS="$ARGS --reviewer mpb-com/backend";
+fi
+
+URL=$(gh pr create --fill --assignee chasinglogic $ARGS)
+xdg-open $URL
