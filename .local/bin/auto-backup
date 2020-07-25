@@ -1,18 +1,5 @@
 #!/usr/bin/env bash
 
-MACHINE=$(hostname)
-TARGET=""
-
-if [[ $MACHINE == "galactica" ]]; then
-    echo "This is a server backup"
-    TARGET=""
-elif [[ $MACHINE == "the-enterprise" ]]; then
-    echo "This is a work backup"
-    TARGET="galactica:backups/work"
-else
-    echo "This is a personal backup"
-    TARGET="galactica:backups/personal"
-fi
-
+TARGET="galactica:backups/$(hostname)"
 backup $TARGET
 notify-send 'Backup Complete' "An auto backup has run backing up this machine to $TARGET"
