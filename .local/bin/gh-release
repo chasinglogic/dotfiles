@@ -1,0 +1,142 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import argparse
+import requests
+from subprocess import check_output
+
+
+def get_repo():
+    remotes = check_output(["git", "remote", "-v"]).decode("utf-8").split("\n")
+    for remote in remotes:
+        if not remote:
+            continue
+
+        first_segment, _ = remote.split(" ")
+        _, url = first_segment.split("\t")
+
+        if "github.com" not in url:
+            continue
+
+        if url.startswith("ssh") or url.startswith("git@"):
+            return url.split(":")[-1]
+        else:
+            return "/".join(url.split("/")[-2:])
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--pre-release",
+        "-p",
+        action="store_true",
+        help="Indicates this is a pre-release",
+    )
+    parser.add_argument(
+        "--draft", "-d", action="store_true", help="Indicates this is a draft release",
+    )
+    parser.add_argument(
+        "--repo",
+        "-r",
+        type=str,
+        default=get_repo(),
+        help="The repository to create the release on in :owner/:repo format, will attempt to parse from git remotes if not given",
+    )
+    parser.add_argument(
+        "version", help="The version being released, must have a corresponding git tag",
+    )
+    args = parser.parse_args()
+
+    token = os.getenv("GITHUB_TOKEN")
+    if not token:
+        print("$GITHUB_TOKEN must be set.")
+        sys.exit(1)
+
+    version_commit = (
+        check_output(["git", "show", "--no-patch", "--pretty=%H", args.version])
+        .decode("utf-8")
+        .strip()
+    )
+
+    all_version_commits = (
+        check_output(
+            [
+                "git",
+                "for-each-ref",
+                "--sort=-taggerdate",
+                "--format",
+                "%(objectname)",
+                "refs/tags",
+            ]
+        )
+        .decode("utf-8")
+        .split("\n")
+    )
+    last_version_commit = all_version_commits[1]
+    last_version_tag = (
+        check_output(["git", "tag", "--points-at", last_version_commit])
+        .decode("utf-8")
+        .strip()
+    )
+
+    messages = check_output(
+        [
+            "git",
+            "log",
+            "--pretty=format:%h %s",
+            f"{last_version_commit}...{version_commit}",
+        ]
+    ).decode("utf-8")
+    changelog = "\n".join(
+        [
+            f"- {message}"
+            for message in messages.split("\n")
+            if message and not message.endswith(f"release: {args.version}")
+        ]
+    )
+
+    emails = check_output(
+        [
+            "git",
+            "log",
+            "--pretty=format:%an <%ae>",
+            f"{last_version_commit}...{version_commit}",
+        ]
+    ).decode("utf-8")
+    contributors = "\n".join({f"- {email}" for email in emails.split("\n") if email})
+
+    release_notes = f"# Release {args.version}\n\n{changelog}\n\n## Contributors to this Release\n\n{contributors}\n"
+    body = {
+        "tag_name": args.version,
+        "name": f"Release {args.version}",
+        "body": release_notes,
+        "draft": args.draft,
+        "prerelease": args.pre_release,
+    }
+
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json",
+    }
+
+    print("Creating release", args.version)
+    print("Previous version", last_version_tag, last_version_commit)
+    print("Pre-release?", args.pre_release)
+    print("Draft release?", args.draft)
+    print("Repository", args.repo)
+    print("============= Release Notes ============")
+    print(release_notes)
+
+    ans = input("Does this look correct? (y/N) ")
+    if ans.startswith("y"):
+        response = requests.post(
+            f"https://api.github.com/repos/{args.repo}/releases",
+            headers=headers,
+            json=body,
+        )
+        response.raise_for_status()
+
+
+if __name__ == "__main__":
+    main()
