@@ -21,7 +21,7 @@ endif
 
 """ Load Theme
 let s:current_hour = str2nr(strftime("%H"))
-if !empty("$VIM_BG")
+if !empty($VIM_BG)
   set background="$VIM_BG"
 elseif 7 < s:current_hour && s:current_hour < 18 
   set background=light
