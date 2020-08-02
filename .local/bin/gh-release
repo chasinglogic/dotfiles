@@ -25,6 +25,40 @@ def get_repo():
             return "/".join(url.split("/")[-2:])
 
 
+def get_last_version():
+    all_version_commits = (
+        check_output(
+            [
+                "git",
+                "for-each-ref",
+                "--sort=-taggerdate",
+                "--format",
+                "%(objectname)",
+                "refs/tags",
+            ]
+        )
+        .decode("utf-8")
+        .split("\n")
+    )
+    last_version_commit = all_version_commits[1]
+    return (
+        (
+            check_output(["git", "tag", "--points-at", last_version_commit])
+            .decode("utf-8")
+            .strip()
+        ),
+        last_version_commit,
+    )
+
+
+def get_commit_for_tag(tag):
+    return (
+        check_output(["git", "show", "--no-patch", "--pretty=%H", tag])
+        .decode("utf-8")
+        .strip()
+    )
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -44,6 +78,19 @@ def main():
         help="The repository to create the release on in :owner/:repo format, will attempt to parse from git remotes if not given",
     )
     parser.add_argument(
+        "--last-version",
+        "-l",
+        type=str,
+        default="",
+        help="The last version to use to generate the changelog from, auto-detected if not provided",
+    )
+    parser.add_argument(
+        "--title",
+        "-t",
+        action="store_true",
+        help="If given use the release name as the markdown title, otherwise title is omitted for Github style formatting",
+    )
+    parser.add_argument(
         "version", help="The version being released, must have a corresponding git tag",
     )
     args = parser.parse_args()
@@ -53,32 +100,13 @@ def main():
         print("$GITHUB_TOKEN must be set.")
         sys.exit(1)
 
-    version_commit = (
-        check_output(["git", "show", "--no-patch", "--pretty=%H", args.version])
-        .decode("utf-8")
-        .strip()
-    )
+    version_commit = get_commit_for_tag(args.version)
 
-    all_version_commits = (
-        check_output(
-            [
-                "git",
-                "for-each-ref",
-                "--sort=-taggerdate",
-                "--format",
-                "%(objectname)",
-                "refs/tags",
-            ]
-        )
-        .decode("utf-8")
-        .split("\n")
-    )
-    last_version_commit = all_version_commits[1]
-    last_version_tag = (
-        check_output(["git", "tag", "--points-at", last_version_commit])
-        .decode("utf-8")
-        .strip()
-    )
+    if args.last_version:
+        last_version_tag = args.last_version
+        last_version_commit = get_commit_for_tag(args.last_version)
+    else:
+        last_version_tag, last_version_commit = get_last_version()
 
     messages = check_output(
         [
@@ -106,7 +134,15 @@ def main():
     ).decode("utf-8")
     contributors = "\n".join({f"- {email}" for email in emails.split("\n") if email})
 
-    release_notes = f"# Release {args.version}\n\n{changelog}\n\n## Contributors to this Release\n\n{contributors}\n"
+    if args.title:
+        release_notes = f"# Release {args.version}\n\n"
+    else:
+        release_notes = ""
+
+    release_notes += (
+        f"{changelog}\n\n## Contributors to this Release\n\n{contributors}\n"
+    )
+
     body = {
         "tag_name": args.version,
         "name": f"Release {args.version}",
