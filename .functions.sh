@@ -50,6 +50,9 @@ function sp() {
   fi
 
   cd $PROJECT
+  if [ -f .env ]; then
+    source .env
+  fi
 }
 
 function v() {
