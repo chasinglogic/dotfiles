@@ -15,8 +15,15 @@ if [[ $ARGS != *"--base"* ]]; then
     ARGS="$ARGS --base $BASE"
 fi
 
-if [[ $(pwd) == *"/Work/"* ]]; then
-    ARGS="$ARGS --reviewer mpb-com/backend";
+if [[ $(pwd) == *"/Work/*Service"* || $(pwd) == *"/Work/MPBX"* ]]; then
+    ARGS="$ARGS --reviewer mpb-com/python";
+elif [[ $(pwd) == *"/Work/Toucan"* || $(pwd) == *"/Work/Flamingo"* ]]; then
+    ARGS="$ARGS --reviewer mpb-com/javascript"
+elif [[ $(pwd) == *"/Work/WebdriverTests"* ]]; then
+    ARGS="$ARGS --reviewer GareeTest --reviewer surbhikhr --reviewer davidttest"
+else
+    echo "Failed to detect reviewers: $(pwd)"
+    exit 1
 fi
 
 URL=$(gh pr create --fill --assignee chasinglogic $ARGS)
