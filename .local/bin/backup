@@ -2,3 +2,4 @@
 
 cd /home
 rsync --delete --exclude $USER/.local/share/containers --exclude $USER/Dropbox --exclude $USER/.cache -avz $USER $@
+exit $?
