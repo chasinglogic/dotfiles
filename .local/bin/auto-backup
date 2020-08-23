@@ -2,4 +2,12 @@
 
 TARGET="galactica:backups/$(hostname)"
 backup $TARGET
-notify-send 'Backup Complete' "An auto backup has run backing up this machine to $TARGET"
+TITLE="Backup Complete"
+MESSAGE="An auto backup has run backing up this machine to $TARGET"
+if [[ $? != 0 ]]; then
+    TITLE="Backup Failed"
+    MESSAGE="An auto backup has failed to back up this machine to $TARGET"
+fi
+
+
+notify-send "$TITLE" "$MESSAGE"
