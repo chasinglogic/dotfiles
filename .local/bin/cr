@@ -15,12 +15,14 @@ if [[ $ARGS != *"--base"* ]]; then
     ARGS="$ARGS --base $BASE"
 fi
 
-if [[ $(pwd) == *"/Work/*Service"* || $(pwd) == *"/Work/MPBX"* ]]; then
+if [[ $(pwd) == *"/Work/"*"Service"* || $(pwd) == *"/Work/MPBX"* || $(pwd) == *"/Work/common-be-scripts"* ]]; then
     ARGS="$ARGS --reviewer mpb-com/python";
 elif [[ $(pwd) == *"/Work/Toucan"* || $(pwd) == *"/Work/Flamingo"* ]]; then
     ARGS="$ARGS --reviewer mpb-com/javascript"
 elif [[ $(pwd) == *"/Work/WebdriverTests"* ]]; then
     ARGS="$ARGS --reviewer GareeTest --reviewer surbhikhr --reviewer davidttest"
+elif [[ $(pwd) == *"/Work/k8s-letsencrypt"* || $(pwd) == *"/Work/environments"* || $(pwd) == *"/Work/KubernetesConfig"* ]]; then
+    ARGS="$ARGS --reviewer mpb-com/operations"
 else
     echo "Failed to detect reviewers: $(pwd)"
     exit 1

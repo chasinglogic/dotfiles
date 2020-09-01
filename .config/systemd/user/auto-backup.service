@@ -2,5 +2,4 @@
 Description=Automatically do a backup
 
 [Service]
-Type=oneshot
-ExecStart=/home/chasinglogic/.local/bin/auto-backup
+ExecStart=%h/.local/bin/auto-backup %h

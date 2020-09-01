@@ -41,6 +41,7 @@
     a = add
     c = commit
     r = rebase
+    rc = rebase --continue
     f = fetch
     pl = pull
     ps = push
