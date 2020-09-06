@@ -4,15 +4,7 @@ set -eou pipefail
 
 ARGS="$@"
 if [[ $ARGS != *"--base"* ]]; then
-    NAME=$(basename $(git rev-parse --show-toplevel))
-    BASE=""
-    if [[ $NAME == "MPBX" ]]; then
-        BASE="release/v5"
-    else
-        BASE="master"
-    fi
-
-    ARGS="$ARGS --base $BASE"
+    ARGS="$ARGS --base master"
 fi
 
 if [[ $(pwd) == *"/Work/"*"Service"* || $(pwd) == *"/Work/MPBX"* || $(pwd) == *"/Work/common-be-scripts"* ]]; then
@@ -20,7 +12,7 @@ if [[ $(pwd) == *"/Work/"*"Service"* || $(pwd) == *"/Work/MPBX"* || $(pwd) == *"
 elif [[ $(pwd) == *"/Work/Toucan"* || $(pwd) == *"/Work/Flamingo"* ]]; then
     ARGS="$ARGS --reviewer mpb-com/javascript"
 elif [[ $(pwd) == *"/Work/WebdriverTests"* ]]; then
-    ARGS="$ARGS --reviewer GareeTest --reviewer surbhikhr --reviewer davidttest"
+    ARGS="$ARGS --reviewer mpb-com/qa"
 elif [[ $(pwd) == *"/Work/k8s-letsencrypt"* || $(pwd) == *"/Work/environments"* || $(pwd) == *"/Work/KubernetesConfig"* ]]; then
     ARGS="$ARGS --reviewer mpb-com/operations"
 else
