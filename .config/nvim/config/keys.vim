@@ -4,11 +4,6 @@ let mapleader = " "
 " Files {{{
 nmap <Leader>fs :w<CR>
 nmap <Leader>ff :find
-nmap <Leader>fe :edit
-nmap <Leader>fd :find ~/.config/nvim/init.vim<CR>
-nmap <Leader>fD :Delete<CR>
-nmap <Leader>fr :Rename
-nmap <Leader>fR :source %<CR>
 nmap <Leader>fq :wq<CR>
 " }}}
 " Project level ops {{{
@@ -16,18 +11,11 @@ nmap <Leader>pf :FZF<CR>
 nmap <Leader>ps :RG<CR>
 nmap <Leader>pt :Tags<CR>
 nmap <Leader>pg :Grep<Space>
-nmap <Leader>pq :FZFQuickFix<CR>
-nmap <Leader>pa :args `git ls-files`<CR>:argdo
-nmap <Leader>pr :args `git ls-files`<CR>:argdo %s/
 nmap <Leader>pc :make<CR>
 " }}}
 " Lists {{{
-nmap <Leader>en :lnext<CR>
-nmap <Leader>ep :lprev<CR>
-nmap <Leader>qn :cnext<CR>
-nmap <Leader>qn :cprev<CR>
 nmap ]q  :cnext<CR>
-nmap [q  :cprev<CR>
+nnoremap [q  :cprev<CR>
 nmap ]wq :cwindow<CR>
 nmap ]wl :lwindow<CR>
 nmap ]l  :lnext<CR>
@@ -37,14 +25,14 @@ nmap [l  :lprev<CR>
 nmap <Leader>j=  gg=G<C-o>:echo "Indented buffer"<CR>
 nmap <Leader>jp  <C-o>
 nmap <Leader>jn  <C-i>
-nmap <Leader>ji  :FZFTag<CR>
-nmap <Leader>jtd :ALEGotoDefitinion<CR>
+nmap <Leader>ji  :Tags<CR>
 " }}}
 " Buffers {{{
+" Interactively search open buffers with FZF
 nmap <Leader>bb :Buffers<CR>
+" Switch to the last buffer and delete this one.
 nmap <Leader>bd :bprevious\|bdelete #<CR>
-nmap <Leader>bD :bdelete!<CR>
-nmap <Leader>bs :tabnew __scratch__<CR>:setlocal buftype=nofile<CR>:setlocal bufhidden=hide<CR>:setlocal noswapfile<CR>
+nmap <Leader>bs :Scratch<CR>
 nmap <Leader>br :e %<CR>
 " }}}
 " Windows {{{

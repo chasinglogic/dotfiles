@@ -6,7 +6,7 @@ set shiftwidth=4  " An indent is 4 spaces
 set shiftround    " Round indent to nearest shiftwidth multiple
 " }}}
 " Formatting options {{{
-set textwidth=80       " 80 Column text width
+set textwidth=80       " 80 Column text width by default
 set formatoptions-=ro  " Auto insert comment character when making a new line
 set formatoptions+=q   " Allow formatting of comments with gq
 set formatoptions+=n   " recognize numbered lists
@@ -18,7 +18,8 @@ set smartindent        " Copy indent from current line when starting a new line
 filetype plugin indent on
 " }}}
 " Tab completion settings for command line {{{
-set wildignore+=*.o,*.git,*.svn,*.pyc "ignore these files
+" Ignore these kinds of files when pressing <TAB> to complete a command.
+set wildignore+=*.o,*.git,*.svn,*.pyc,env/*
 " }}}
 " Line numbers {{{
 set number
@@ -29,7 +30,7 @@ set mouse=a
 " Keep buffers open in background {{{
 set hidden
 " }}}
-" Ripgrep with vimgrep {{{
+" Setup an appropriate vimgrep command {{{
 if executable("rg")
     set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
 elseif executable("ag")
@@ -62,13 +63,31 @@ set directory=$HOME/.local/share/vim/swap//
 if !isdirectory(&directory)
     call mkdir(&directory, "p")
 endif
-set undofile                 " keep persistent undo across vim runs
+
+set undofile " keep persistent undo across vim runs
 set undodir=$HOME/.local/share/vim/undo/ " where to store undo files
 if !isdirectory(&undodir)
     call mkdir(&undodir, "p")
 endif
 " }}}
 " Completion {{{
+"
+" menu	    Use a popup menu to show the possible completions.  The
+"           menu is only shown when there is more than one match and
+"           sufficient colors are available.  |ins-completion-menu|
+
+" menuone  Use the popup menu also when there is only one match.
+"          Useful when there is additional information about the
+"          match, e.g., what file it comes from.
+
+
+" noinsert  Do not insert any text for a match until the user selects
+"           a match from the menu. Only works in combination with
+"           "menu" or "menuone". No effect if "longest" is present.
+
+" noselect  Do not select a match in the menu, force the user to
+"           select one from the menu. Only works in combination with
+"           "menu" or "menuone".
 set completeopt=noinsert,menuone,noselect
 " }}}
 " Auto read files from disk when changed {{{
@@ -79,7 +98,7 @@ au CursorHold * checktime
 let g:netrw_altv=1
 " }}}
 " Tagfiles {{{
-set tags=.tags,tags
+set tags=TAGS,.tags,tags
 " }}}
 " Always utf-8 {{{
 set encoding=utf-8
@@ -101,6 +120,10 @@ set confirm
 " }}}
 " Message control {{{
 set shortmess=O
-" From ncm2 suggested settings
-set shortmess+=c
+" }}}
+" Higlight YankedText after yanking {{{
+augroup highlight_yank
+    autocmd!
+    autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank("IncSearch", 1000)
+augroup END
 " }}}

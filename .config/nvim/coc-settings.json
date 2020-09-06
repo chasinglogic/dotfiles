@@ -1,5 +1,6 @@
 {
     "suggest.autoTrigger": true,
-    "diagnostic.refreshOnInsertMode": true,
-    "suggest.floatEnable": true
+    "suggest.floatEnable": true,
+
+    "diagnostic.refreshOnInsertMode": true
 }
