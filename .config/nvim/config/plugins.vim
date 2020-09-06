@@ -9,8 +9,6 @@ call plug#begin('~/.local/share/vim/plugins')
 """ Fuzzy finding
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-""" Automatically encrypt and decrypt my gpg notes
-Plug 'jamessan/vim-gnupg'
 " }}}
 " Tpope general improvements {{{
 Plug 'tpope/vim-vinegar'    " Netrw improvements
@@ -31,12 +29,11 @@ Plug 'sheerun/vim-polyglot'
 Plug 'jiangmiao/auto-pairs'      " Auto pair things
 Plug 'alvan/vim-closetag'        " Close (X)HTML tags
 Plug 'AndrewRadev/splitjoin.vim' " Easily split single-line statements to multi-line
-Plug 'SirVer/ultisnips'          " Snippets in vim
-Plug 'junegunn/vim-easy-align'         " Align stuff.
+Plug 'SirVer/UltiSnips'          " Snippets in vim
+Plug 'junegunn/vim-easy-align'   " Align stuff.
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'SirVer/UltiSnips'
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " Plug 'deoplete-plugins/deoplete-jedi'
 " Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
@@ -47,31 +44,22 @@ Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin
 " }}}
 " Themes {{{
 Plug 'overcache/NeoSolarized', { 'as': 'solarized' }
-Plug 'chasinglogic/modus-themes-vim'
 " }}}
 " Vim for Prose (Blogs, Notes, etc.) {{{
 Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
 " }}}
 call plug#end()
 " }}}
-" Vala {{{
-let g:vala_syntax_folding_enabled = 0
-" }}}
 " Neoformat {{{
 let g:neoformat_enabled_python = ['black', 'docformatter']
 let g:neoformat_enabled_python3 = ['black', 'docformatter']
-nmap <Leader>f :Neoformat<CR>
-" }}}
-" Deoplete (Completion) {{{
-let g:deoplete#enable_at_startup = 1
 " }}}
 " Split-join {{{
 let g:splitjoin_ruby_trailing_comma = 1
 let g:splitjoin_python_brackets_on_separate_lines = 1
 " }}}
 " FZF {{{
-let g:fzf_tags_command = '/usr/local/bin/ctags -R'
-" Interactive searchign with Ripgrep
+" Interactive searching with Ripgrep
 " Taken from: https://github.com/junegunn/fzf.vim#example-advanced-ripgrep-integration
 function! RipgrepFzf(query, fullscreen)
   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
@@ -80,7 +68,6 @@ function! RipgrepFzf(query, fullscreen)
   let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
-
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
 " }}}
