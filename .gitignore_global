@@ -30,3 +30,5 @@ TAGStmp/*
 venv*
 
 Session.vim
+
+env/*
