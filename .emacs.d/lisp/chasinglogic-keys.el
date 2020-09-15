@@ -22,11 +22,17 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
 ;;;; Personal utility functions and macros
+
+(defun chasinglogic-kill ()
+  (interactive)
+  (if (display-graphic-p)
+      (save-buffers-kill-emacs)
+    (save-buffers-kill-terminal)))
 
 (defun chasinglogic-get-compilation-command (dirname)
   (cond
@@ -46,7 +52,7 @@
   "Dispatch to the correct test runner based on file type and project."
   (interactive)
   (let* ((default-directory (projectile-project-root))
-        (compilation-command (chasinglogic-get-compilation-command default-directory)))
+         (compilation-command (chasinglogic-get-compilation-command default-directory)))
     (puthash default-directory compilation-command projectile-compilation-cmd-map)
     (compile compilation-command)))
 
@@ -91,7 +97,7 @@ If COPY is provided copy the value to kill ring instead of returning."
           (message "%s" breakpoint))
       breakpoint)))
 
-  ;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
+  ;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
 (defun chasinglogic-unfill-paragraph (&optional region)
   "Takes a multi-line paragraph and makes it into a single line of text."
   (interactive (progn (barf-if-buffer-read-only) '(t)))
@@ -138,7 +144,7 @@ If COPY is provided copy the value to kill ring instead of returning."
 ;; keybindings. I simply use it because it's very convenient and
 ;; integrates with use-package well.
 (use-package general
-  :config 
+  :config
   (general-def "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
   (general-def "C-c j t" 'chasinglogic-copy-test-path-for-here)
   (general-def "C-c j =" 'chasinglogic-indent-buffer)
@@ -148,7 +154,7 @@ If COPY is provided copy the value to kill ring instead of returning."
   (general-def "M-;" 'comment-actually-dwim)
   (general-def "M-/" 'hippie-expand)
   (general-def "M-t" 'switch-to-buffer)
-  
+
   (setq general-override-states '(insert
                                   emacs
                                   hybrid
@@ -159,17 +165,17 @@ If COPY is provided copy the value to kill ring instead of returning."
                                   replace))
   (general-evil-setup t)
   (general-nmap
-   "-" #'(lambda () (interactive) (dired "."))
-   "gcc" 'comment-actually-dwim
-   "<tab>" 'indent-according-to-mode)
-  
+    "-" #'(lambda () (interactive) (dired "."))
+    "gcc" 'comment-actually-dwim
+    "<tab>" 'indent-according-to-mode)
+
   ;; Some of the bindings are not setup correctly in Emacs terminal
   ;; mode. It uses a different kbd identifier for some reason.
   (unless (display-graphic-p)
     (general-nmap
-     "ESC" '(lambda () (interactive) (evil-escape-func))
-     "TAB" 'indent-according-to-mode))
-  
+      "ESC" '(lambda () (interactive) (evil-escape-func))
+      "TAB" 'indent-according-to-mode))
+
   (general-vmap "gc" 'comment-or-uncomment-region)
 
   (general-create-definer leader!
@@ -178,71 +184,71 @@ If COPY is provided copy the value to kill ring instead of returning."
     :prefix "<SPC>")
 
   (leader!
-   "<SPC>" 'execute-extended-command
-   "h" `(,(general-simulate-key "C-h") :wk "help")
-   "q" '(:which-key "quit")
-   "qf" 'delete-frame
-   "qq" 'save-buffers-kill-emacs)
+    "<SPC>" 'execute-extended-command
+    "h" `(,(general-simulate-key "C-h") :wk "help")
+    "q" '(:which-key "quit")
+    "qf" 'delete-frame
+    "qq" 'chasinglogic-kill)
 
   (leader!
-   "j" '(:which-key "jumps")
-   "jt" 'chasinglogic-copy-test-path-for-here
-   "j=" 'chasinglogic-indent-buffer
-   "jb" 'chasinglogic-copy-breakpoint-for-here)
+    "j" '(:which-key "jumps")
+    "jt" 'chasinglogic-copy-test-path-for-here
+    "j=" 'chasinglogic-indent-buffer
+    "jb" 'chasinglogic-copy-breakpoint-for-here)
 
   (leader!
-   "b" '(:which-key "buffers")
-   "bd" #'(lambda ()
-            (interactive)
-            (kill-buffer (current-buffer)))
-   "bs" #'(lambda ()
-            (interactive)
-            (switch-to-buffer "*scratch*"))
-   "br" 'revert-buffer
-   "bD" 'kill-buffer
-   "bm" 'ibuffer)
+    "b" '(:which-key "buffers")
+    "bd" #'(lambda ()
+             (interactive)
+             (kill-buffer (current-buffer)))
+    "bs" #'(lambda ()
+             (interactive)
+             (switch-to-buffer "*scratch*"))
+    "br" 'revert-buffer
+    "bD" 'kill-buffer
+    "bm" 'ibuffer)
 
   (leader!
-   "w"  '(:which-key "windows")
-   "wr" 'window-configuration-to-register
-   "wf" 'make-frame
-   "wh" 'evil-window-left
-   "wH" 'evil-window-move-far-left
-   "wj" 'evil-window-down
-   "wJ" 'evil-window-move-very-bottom
-   "wk" 'evil-window-up
-   "wK" 'evil-window-move-very-top
-   "wl" 'evil-window-right
-   "wL" 'evil-window-move-far-right
-   "wd" 'evil-window-delete
-   "wc" 'evil-window-delete
-   "wv" 'evil-window-vsplit
-   "ws" 'evil-window-split
-   "wm" 'delete-other-windows)
+    "w"  '(:which-key "windows")
+    "wr" 'window-configuration-to-register
+    "wf" 'make-frame
+    "wh" 'evil-window-left
+    "wH" 'evil-window-move-far-left
+    "wj" 'evil-window-down
+    "wJ" 'evil-window-move-very-bottom
+    "wk" 'evil-window-up
+    "wK" 'evil-window-move-very-top
+    "wl" 'evil-window-right
+    "wL" 'evil-window-move-far-right
+    "wd" 'evil-window-delete
+    "wc" 'evil-window-delete
+    "wv" 'evil-window-vsplit
+    "ws" 'evil-window-split
+    "wm" 'delete-other-windows)
 
   (leader!
-   "m" '(:which-key "misc")
-   "md" 'chasinglogic-toggle-theme
-   "mt" 'chasinglogic-run-test
-   "mT" 'chasinglogic-run-test-file
-   "mon" 'chasinglogic-find-org-file-notes
-   "moi" 'chasinglogic-find-org-file-ideas
-   "mot" 'chasinglogic-find-org-file-todo
-   "mor" 'chasinglogic-add-to-reading-list)
+    "m" '(:which-key "misc")
+    "md" 'chasinglogic-toggle-theme
+    "mt" 'chasinglogic-run-test
+    "mT" 'chasinglogic-run-test-file
+    "mon" 'chasinglogic-find-org-file-notes
+    "moi" 'chasinglogic-find-org-file-ideas
+    "mot" 'chasinglogic-find-org-file-todo
+    "mor" 'chasinglogic-add-to-reading-list)
 
   (when (boundp 'tab-bar-mode)
     (leader!
-     "t" '(:which-key "tabs")
-     "to" 'tab-bar-new-tab
-     "ts" 'tab-bar-select-tab-by-name
-     "tc" 'tab-bar-close-tab
-     "tp" 'tab-bar-switch-to-prev-tab
-     "tn" 'tab-bar-switch-to-next-tab))
+      "t" '(:which-key "tabs")
+      "to" 'tab-bar-new-tab
+      "ts" 'tab-bar-select-tab-by-name
+      "tc" 'tab-bar-close-tab
+      "tp" 'tab-bar-switch-to-prev-tab
+      "tn" 'tab-bar-switch-to-next-tab))
 
   (leader!
-   "f" '(:which-key "files")
-   "ff" 'find-file
-   "fs" 'save-buffer))
+    "f" '(:which-key "files")
+    "ff" 'find-file
+    "fs" 'save-buffer))
 
 (provide 'chasinglogic-keys)
 

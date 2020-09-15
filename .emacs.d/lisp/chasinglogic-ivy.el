@@ -22,12 +22,14 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
 ;; Ivy
 (use-package ivy
+  :general (leader!
+             "on" 'ivy-occur-next-error)
   :bind (("C-c C-r" . ivy-resume)
          ("<f6>"    . ivy-resume))
   :config

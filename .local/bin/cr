@@ -7,7 +7,7 @@ if [[ $ARGS != *"--base"* ]]; then
     ARGS="$ARGS --base master"
 fi
 
-if [[ $(pwd) == *"/Work/"*"Service"* || $(pwd) == *"/Work/MPBX"* || $(pwd) == *"/Work/common-be-scripts"* ]]; then
+if [[ $(pwd) == *"/Work/"*"Service"* || $(pwd) == *"/Work/RoadRunner"* || $(pwd) == *"/Work/MPBX"* || $(pwd) == *"/Work/common-be-scripts"* ]]; then
     ARGS="$ARGS --reviewer mpb-com/python";
 elif [[ $(pwd) == *"/Work/Toucan"* || $(pwd) == *"/Work/Flamingo"* ]]; then
     ARGS="$ARGS --reviewer mpb-com/javascript"

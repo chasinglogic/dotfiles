@@ -151,16 +151,11 @@
 
 ;;;; Color Theme
 
-(use-package solarized-theme
-  :config
-  ;; make the fringe stand out from the background
-  (setq solarized-distinct-fringe-background t)
+(use-package modus-vivendi-theme)
+(use-package modus-operandi-theme)
 
-  ;; make the modeline high contrast
-  (setq solarized-high-contrast-mode-line t))
-
-(defvar chasinglogic-dark-theme 'solarized-dark)
-(defvar chasinglogic-light-theme 'solarized-light)
+(defvar chasinglogic-dark-theme 'modus-vivendi)
+(defvar chasinglogic-light-theme 'modus-operandi)
 
 (load-theme chasinglogic-light-theme t)
 

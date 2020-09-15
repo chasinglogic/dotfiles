@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -71,7 +71,14 @@
   ;;      versions. Additionally I use `counsel-rg' with `counsel-projectile-rg'
   ;;      to search my projects. I use ripgrep both in and out of Emacs so
   ;;      I can keep the experience consistent and fast.
-  (use-package counsel-projectile :commands 'counsel-projectile-rg)
+  (use-package counsel-projectile
+    :commands 'counsel-projectile-rg
+    :config
+    (setq counsel-rg-base-command
+          (split-string
+           (if (memq system-type '(ms-dos windows-nt))
+               "rg -M 240 --with-filename --no-heading --line-number --hidden --color never %s --path-separator / ."
+             "rg -M 240 --with-filename --no-heading --line-number --color never --hidden %s"))))
 
   ;; Projector => Projectile integration
   ;;
@@ -86,7 +93,7 @@
     (interactive)
     (setq
      projectile-known-projects
-     (sort 
+     (sort
       (delete ""
               (split-string
                (shell-command-to-string "projector list") "\n"))
