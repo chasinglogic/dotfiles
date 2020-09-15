@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -124,7 +124,7 @@
                 (lambda ()
                   (shell-command
                    "dfm sync --name Org --message 'Notes synced from Emacs'"
-                  "*dfm output*"))
+                   "*dfm output*"))
                 nil
                 'local-only))
     (display-line-numbers-mode -1)
@@ -212,6 +212,14 @@
 (use-package org-bullets
   :after org
   :hook '(org-mode . org-bullets-mode))
+
+(use-package deft
+  :commands 'deft
+  :config
+  (setq deft-extensions ("org")
+        deft-use-filename-as-title t
+        deft-recursive t
+        deft-directory "~/Notes"))
 
 (provide 'chasinglogic-org)
 

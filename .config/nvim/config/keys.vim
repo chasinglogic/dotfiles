@@ -8,7 +8,7 @@ nmap <Leader>fq :wq<CR>
 " }}}
 " Project level ops {{{
 nmap <Leader>pf :FZF<CR>
-nmap <Leader>ps :RG<CR>
+nmap <Leader>ps :Rg<CR>
 nmap <Leader>pt :Tags<CR>
 nmap <Leader>pg :Grep<Space>
 nmap <Leader>pc :make<CR>
@@ -120,4 +120,7 @@ noremap <Leader>mT :TestFile<CR>
 " Tab completion {{{
 " disabled in favour of COC
 " inoremap <expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+" }}}
+" Notes {{{
+nmap <Leader>no :NV<CR>
 " }}}

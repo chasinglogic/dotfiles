@@ -47,7 +47,8 @@
     :init
     (defun crux-vterm (buffer-name)
       (vterm (format "*%s*" buffer-name)))
-    (setq crux-term-func #'crux-vterm)))
+    (setq crux-term-func #'crux-vterm
+          crux-term-buffer-name "terminal")))
 
 (use-package multi-line
   :config (setq-default multi-line-current-strategy

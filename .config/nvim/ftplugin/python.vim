@@ -1,10 +1,10 @@
 let s:file_path = expand('%:p')
 
 if match(s:file_path, 'Work') == -1
-    set textwidth=90
-else
     set textwidth=120
-    set makeprg="mpb"
+else
+    set textwidth=90
+    set makeprg=mpb
 endif
 
 if match(s:file_path, 'MPBX') == -1

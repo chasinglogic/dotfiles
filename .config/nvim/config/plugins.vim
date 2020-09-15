@@ -47,6 +47,7 @@ Plug 'overcache/NeoSolarized', { 'as': 'solarized' }
 " }}}
 " Vim for Prose (Blogs, Notes, etc.) {{{
 Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
+Plug 'alok/notational-fzf-vim' " Manage notes easily and find them easily
 " }}}
 call plug#end()
 " }}}
@@ -59,17 +60,10 @@ let g:splitjoin_ruby_trailing_comma = 1
 let g:splitjoin_python_brackets_on_separate_lines = 1
 " }}}
 " FZF {{{
-" Interactive searching with Ripgrep
-" Taken from: https://github.com/junegunn/fzf.vim#example-advanced-ripgrep-integration
-function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
-  let initial_command = printf(command_fmt, shellescape(a:query))
-  let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
-  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
-endfunction
-command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
-
+command! -bang -nargs=* Rg
+    \ call fzf#vim#grep(
+    \   'rg --hidden --no-heading --color=always -- '.shellescape(<q-args>), 1,
+    \   fzf#vim#with_preview(), <bang>0)
 " }}}
 " CoC {{{
 " Some servers have issues with backup files, see #649.
@@ -186,4 +180,7 @@ nnoremap <silent><nowait> <space>ck  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>cp  :<C-u>CocListResume<CR>
 
 let g:coc_global_extensions = ['coc-tsserver', 'coc-python', 'coc-snippets']
+" }}}
+" Notational Velocity (Notes) {{{
+let g:nv_search_paths = ['~/Notes']
 " }}}
