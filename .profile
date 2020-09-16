@@ -68,11 +68,7 @@ else
     export VIM_PROG=vi
 fi
 
-# if [[ $(find_executable emacsclient) ]]; then
-    # export EDITOR="emacsclient -nw -a ''"
-# else
 export EDITOR="$VIM_PROG"
-# fi
 
 # Mac specific fixes
 if [[ "$(uname)" == "Darwin" ]]; then

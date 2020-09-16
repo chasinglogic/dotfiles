@@ -3,7 +3,6 @@ let mapleader = " "
 " }}}
 " Files {{{
 nmap <Leader>fs :w<CR>
-nmap <Leader>ff :find
 nmap <Leader>fq :wq<CR>
 " }}}
 " Project level ops {{{
@@ -11,7 +10,7 @@ nmap <Leader>pf :FZF<CR>
 nmap <Leader>ps :Rg<CR>
 nmap <Leader>pt :Tags<CR>
 nmap <Leader>pg :Grep<Space>
-nmap <Leader>pc :make<CR>
+nmap <Leader>pc :make 
 " }}}
 " Lists {{{
 nmap ]q  :cnext<CR>
@@ -37,16 +36,11 @@ nmap <Leader>br :e %<CR>
 " }}}
 " Windows {{{
 nmap <Leader>w <C-w>
-nmap <C-w>d <C-w>c
 nmap <C-w>m <C-w>o
 map <M-o> <C-w>w
 " }}}
 " Terminal {{{
-nmap <Leader>'  :tabnew<CR>:terminal<CR>
-nmap <Leader>xx :terminal<CR>
-nmap <Leader>xt :tabnew<CR>:terminal<CR>
-nmap <Leader>xs :new<CR>:terminal<CR>
-nmap <Leader>xv :vnew<CR>:terminal<CR>
+nmap <Leader>'  :ToggleTerminal<CR>
 tnoremap fd     <C-\><C-n>
 tmap <C-o> <C-\><C-n>
 " }}}
@@ -68,23 +62,11 @@ nmap <Leader>t5 :tabn 5<CR>
 " }}}
 " Git {{{
 nmap <Leader>gg  :Git
-nmap <Leader>ga  :!git add %<CR>
-nmap <Leader>gc  :Git commit<CR>
 nmap <Leader>gs  :Git<CR>
-nmap <Leader>gb  :Git blame<CR>
-nmap <Leader>gp  :Git push<CR>
-nmap <Leader>gpf :Git push --force-with-lease<CR>
-nmap <Leader>gu  :Git pull<CR>
 nmap <Leader>gl  :GBrowse<CR>
-vmap <Leader>gl  :GBrowse<CR>
-nmap <Leader>gv  :Git vader<CR>
 " }}}
 " Utility {{{
-nmap YY ggyG<C-o><C-o>
-nmap <Leader><Leader> :Commands<CR>
-nmap <Leader>noh :noh<CR>
 imap fd <ESC>
-nmap <Leader>m :make
 " Copy file name to clipboard
 nmap ,cs :let @*=expand("%")<CR>
 nmap ,cl :let @*=expand("%:p")<CR>
@@ -93,17 +75,6 @@ nmap ,cl :let @*=expand("%:p")<CR>
 nmap <Leader>spi :PlugInstall<CR>
 nmap <Leader>spu :PlugUpdate<CR>
 nmap <Leader>spg :PlugUpgrade<CR>
-nmap <Leader>sps :PlugStatus<CR>
-nmap <Leader>spc :PlugClean<CR>
-nmap <Leader>sq  :q<CR>
-nmap <Leader>qq   :qa<CR>
-" }}}
-" Writing {{{
-nmap <Leader>rm  :Goyo<CR>
-nmap <Leader>rww :Wordy
-nmap <Leader>rwn :NextWordy<CR>
-nmap <Leader>rwp :PrevWordy<CR>
-nmap <Leader>rwo :NoWordy<CR>
 " }}}
 " Linting {{{
 nmap [a <Plug>(ale_previous_wrap)
@@ -114,8 +85,7 @@ vmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 " }}}
 " Testing {{{
-noremap <Leader>mt :TestNearest<CR>
-noremap <Leader>mT :TestFile<CR>
+noremap <Leader>mt :RunTest<CR>
 " }}}
 " Tab completion {{{
 " disabled in favour of COC
