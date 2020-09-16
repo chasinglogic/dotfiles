@@ -41,6 +41,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin list after vim-sleuth
+Plug 'caenrique/nvim-toggle-terminal'
 " }}}
 " Themes {{{
 Plug 'overcache/NeoSolarized', { 'as': 'solarized' }
@@ -60,10 +61,14 @@ let g:splitjoin_ruby_trailing_comma = 1
 let g:splitjoin_python_brackets_on_separate_lines = 1
 " }}}
 " FZF {{{
-command! -bang -nargs=* Rg
-    \ call fzf#vim#grep(
-    \   'rg --hidden --no-heading --color=always -- '.shellescape(<q-args>), 1,
-    \   fzf#vim#with_preview(), <bang>0)
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --hidden --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+command! -nargs=* -bang Rg call RipgrepFzf(<q-args>, <bang>0)
 " }}}
 " CoC {{{
 " Some servers have issues with backup files, see #649.
