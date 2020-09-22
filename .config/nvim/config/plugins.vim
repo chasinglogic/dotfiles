@@ -53,8 +53,8 @@ Plug 'alok/notational-fzf-vim' " Manage notes easily and find them easily
 call plug#end()
 " }}}
 " Neoformat {{{
-let g:neoformat_enabled_python = ['black', 'docformatter']
-let g:neoformat_enabled_python3 = ['black', 'docformatter']
+let g:neoformat_enabled_python = ['black', 'isort', 'docformatter']
+let g:neoformat_enabled_python3 = ['black',  'isort', 'docformatter']
 " }}}
 " Split-join {{{
 let g:splitjoin_ruby_trailing_comma = 1
@@ -128,13 +128,13 @@ nmap <leader>cf  <Plug>(coc-format-selected)
 
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
-xmap <leader>ca  <Plug>(coc-codeaction-selected)
 nmap <leader>ca  <Plug>(coc-codeaction-selected)
 
 " Remap keys for applying codeAction to the current buffer.
 nmap <leader>cba  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
 nmap <a-cr>  <Plug>(coc-fix-current)
+imap <a-cr>  <ESC><a-cr>i
 
 " Map function and class text objects
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
@@ -184,7 +184,7 @@ nnoremap <silent><nowait> <space>ck  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>cp  :<C-u>CocListResume<CR>
 
-let g:coc_global_extensions = ['coc-tsserver', 'coc-python', 'coc-snippets']
+let g:coc_global_extensions = ['coc-tsserver', 'coc-snippets']
 " }}}
 " Notational Velocity (Notes) {{{
 let g:nv_search_paths = ['~/Notes']

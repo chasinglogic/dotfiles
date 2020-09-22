@@ -13,7 +13,6 @@ target/*
 
 *DS_Store*
 .dropbox*
-.vscode/*
 clang+llvm*/
 node_modules/*
 
@@ -32,3 +31,5 @@ venv*
 Session.vim
 
 env/*
+
+.env.local
