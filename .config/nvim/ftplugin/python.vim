@@ -13,7 +13,7 @@ if match(s:file_path, 'MPBX') == -1
         autocmd!
         autocmd BufWritePre *.py Neoformat
     augroup END
-else
-    """ Automatically strip trailing whitespace on save
-    autocmd BufWritePre * %s/\s\+$//e
 endif
+
+""" Automatically strip trailing whitespace on save
+autocmd BufWritePre * %s/\s\+$//e

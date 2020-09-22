@@ -50,8 +50,8 @@ function sp() {
   fi
 
   cd $PROJECT
-  if [ -f .env ]; then
-    source .env
+  if [ -f .env.local ]; then
+    source .env.local
   fi
 }
 

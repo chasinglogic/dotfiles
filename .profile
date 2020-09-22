@@ -68,7 +68,11 @@ else
     export VIM_PROG=vi
 fi
 
-export EDITOR="$VIM_PROG"
+if [[ $(find_executable code) ]]; then
+    export EDITOR="code --wait"
+else
+    export EDITOR="$VIM_PROG"
+fi
 
 # Mac specific fixes
 if [[ "$(uname)" == "Darwin" ]]; then
@@ -96,11 +100,11 @@ if [[ -z $NVM_BIN ]]; then
     nvm use --lts
 fi
 
+add_to_path /usr/bin
 add_to_path /snap/bin
 add_to_path /opt/local/bin
 add_to_path /usr/local/bin
 add_to_path /usr/local/sbin
-add_to_path /usr/bin
 add_to_path /usr/lib/icecream/bin
 add_to_path $GOPATH/bin
 add_to_path $HOME/.cargo/bin
