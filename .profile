@@ -111,7 +111,7 @@ add_to_path $HOME/.cargo/bin
 add_to_path $HOME/.local/bin
 add_to_path $HOME/.cask/bin
 add_to_path $HOME/.cask/bin
-add_to_path $HOME/Library/Python/3.7/bin
+add_to_path $HOME/Library/Python/3.8/bin
 add_to_path $HOME/.pyenv/bin
 add_to_path $HOME/.mpb/common-be-scripts
 
