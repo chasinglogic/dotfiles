@@ -23,4 +23,8 @@ else
 fi
 
 URL=$(gh pr create --fill --assignee chasinglogic $ARGS)
-xdg-open $URL
+if [[ $(uname) == "Darwin" ]]; then
+    open $URL
+else
+    xdg-open $URL
+fi

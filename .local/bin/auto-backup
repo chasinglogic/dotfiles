@@ -17,4 +17,8 @@ if [[ $? != 0 ]]; then
     MESSAGE="An auto backup has failed to back up this machine to $TARGET"
 fi
 
-notify-send "$TITLE" "$MESSAGE"
+if [[ "$(uname)" == "Darwin" ]]; then
+    osascript -e "display notification \"$MESSAGE\" with title \"$TITLE\""
+else
+    notify-send "$TITLE" "$MESSAGE"
+fi

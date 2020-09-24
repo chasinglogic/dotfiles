@@ -3,6 +3,7 @@ prompt_for_commit_message: true
 always_sync_modules: true
 mappings:
   - match: ".*gpg-agent.conf.darwin"
+    dest: ~/.gnupg/gpg-agent.conf
     target_os:
       - "Darwin"
   - match: "README.md"
