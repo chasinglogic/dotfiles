@@ -78,10 +78,10 @@ fi
 if [[ "$(uname)" == "Darwin" ]]; then
     export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
     export CLICOLOR=1
+else
+    # Inform Emacs and other programs they can use truecolor
+    export COLORTERM=truecolor
 fi
-
-# Inform Emacs and other programs they can use truecolor
-export COLORTERM=truecolor
 
 # Storage for miscellaneous or system specific environment variables
 source_if_exists $HOME/.env.bash

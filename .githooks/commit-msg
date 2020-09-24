@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Not a mongo repo
+if [[ "$(pwd)" != *"Work"* ]]; then
+    exit 0
+fi
+
+# Kernel Tools doesn't play by the same rules
+if [[ "$(pwd)" == *"kernel-tools"* ]]; then
+    exit 0
+fi
+
+# Neither does SCons
+if [[ "$(pwd)" == *"scons" ]]; then
+    exit 0
+fi
+
+# Or homebrew
+if [[ "$(pwd)" == *"homebrew"* ]]; then
+    exit 0
+fi
+
+check_pattern() {
+    head -n 1 $1 | grep "$2" > /dev/null
+    if [[ $? == 0 ]]; then
+        exit 0
+    fi
+}
+
+check_pattern $1 "^[A-Z]\{3,\}-[0-9]\{1,\}"
+check_pattern $1 "^WIP: .*"
+check_pattern $1 "^wip: .*"
+check_pattern $1 "^wip .*"
+
+echo "Must include a JIRA ticket or WIP in your commit message"
+exit 1
