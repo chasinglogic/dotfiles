@@ -16,6 +16,11 @@ modules:
     pull_only: true
     link: none
     location: ~/.tmux/plugins/tpm
+  # Oh My ZSH
+  - repo: https://github.com/ohmyzsh/ohmyzsh
+    pull_only: true
+    link: none
+    location: ~/.oh-my-zsh
   # Node version manager
   - repo: https://github.com/nvm-sh/nvm
     pull_only: true
@@ -23,4 +28,3 @@ modules:
     location: ~/.nvm
   - repository: git@github.com:chasinglogic/secrets.git
     name: secrets
-    location: ~/.config/dfm/modules/secrets

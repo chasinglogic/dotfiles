@@ -1,34 +1,36 @@
-# This makes TRAMP from Emacs work when ZSH is the default shell.
-#
-# Otherwise TRAMP hangs forever waiting for a prompt that never shows
-# because of the regex.
-if [[ $TERM == "dumb" ]]; then
-    unsetopt zle
-    unsetopt prompt_cr
-    unsetopt prompt_subst
-    if whence -w precmd >/dev/null; then
-        unfunction precmd
-    fi
-    if whence -w preexec >/dev/null; then
-        unfunction preexec
-    fi
-    export PS1="$ "
-    return
-fi
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-# Do bash-style backwards deletion, treat dir sep, dot, and other common
-# characters as words for readline bindings 
-WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+# Path to your oh-my-zsh installation.
+export ZSH="/Users/chasinglogic/.oh-my-zsh"
 
-source $HOME/.functions.sh
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+ZSH_THEME=""
+
+# Uncomment the following line to disable bi-weekly auto-update checks.
+DISABLE_AUTO_UPDATE="true"
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(
+    git
+    docker
+    dotenv
+    helm
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+
 source $HOME/.profile
+source $HOME/.prompt.zsh
+source $HOME/.functions.sh
 source_if_exists $HOME/.env.sh
 source_if_exists $HOME/.aliases.sh
-
-HISTSIZE=5000               # How many lines of history to keep in memory
-HISTFILE=~/.zsh_history     # Where to save history to disk
-SAVEHIST=5000               # Number of history entries to save to disk
-HISTDUP=erase               # Erase duplicates in the history file
-setopt    appendhistory     # Append history to the history file (no overwriting)
-setopt    sharehistory      # Share history across terminals
-setopt    incappendhistory  # Immediately append to the history file, not just when a term is killed
