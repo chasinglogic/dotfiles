@@ -13,6 +13,8 @@ elif [[ $(pwd) == *"/Work/Toucan"* || $(pwd) == *"/Work/Flamingo"* ]]; then
     ARGS="$ARGS --reviewer mpb-com/javascript"
 elif [[ $(pwd) == *"/Work/WebdriverTests"* ]]; then
     ARGS="$ARGS --reviewer mpb-com/qa"
+elif [[ $(pwd) == *"/Work/API-Docs"* ]]; then
+    ARGS="$ARGS --reviewer mpb-com/qa --reviewer mpb-com/python --reviewer mpb-com/javascript"
 elif [[ $(pwd) == *"/Work/k8s-letsencrypt"* || $(pwd) == *"/Work/environments"* || $(pwd) == *"/Work/KubernetesConfig"* ]]; then
     ARGS="$ARGS --reviewer mpb-com/operations"
 elif [[ $(pwd) != *"/Work/"* ]]; then
