@@ -1,3 +1,9 @@
+if [[ "$CHASINGLOGIC_PROFILE" == 1 ]]; then
+    return;
+fi
+
+export CHASINGLOGIC_PROFILE=1
+
 set -o emacs
 
 function find_executable() {
