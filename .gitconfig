@@ -1,7 +1,6 @@
 [user]
     email = mathew@chasinglogic.io
     name = Mathew Robinson
-	signingkey = B234F5A177B0BF2AEC9812DD88959B39915D4E36
 
 [include]
     path = ~/.gitconfig_local
@@ -20,7 +19,6 @@
     verbose = true
 [commit]
     verbose = true
-	gpgsign = true
 
 [pretty]
     olcolor = %Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>
