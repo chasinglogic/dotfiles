@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+        <key>UserName</key>
+        <string>chasinglogic</string>
+        <key>KeepAlive</key>
+        <false/>
+        <key>RunAtLoad</key>
+        <false/>
+        <key>Label</key>
+        <string>io.chasinglogic.auto_backup</string>
+        <key>ProgramArguments</key>
+        <array>
+                <string>bash</string>
+                <string>/Users/chasinglogic/.local/bin/auto-backup</string>
+        </array>
+        <key>StartInterval</key>
+        <integer>21600</integer>
+</dict>
+</plist>

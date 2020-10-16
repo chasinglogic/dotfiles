@@ -2,6 +2,6 @@
 
 cd $HOME/..
 echo "Starting backup..."
-rsync --delete --exclude $USER/.local/share/containers --exclude $USER/Dropbox --exclude $USER/.cache --exclude $USER/Library/Application\ Support -avz $USER $@
+rsync --delete --exclude $USER/Pictures --exclude $USER/Library --exclude $USER/Documents --exclude $USER/Desktop --exclude $USER/.local/share/containers --exclude $USER/Dropbox --exclude $USER/.cache --exclude $USER/Library/Application\ Support -avz $USER $@
 echo "Backup complete with code: $?"
 exit $?
