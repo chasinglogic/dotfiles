@@ -1,3 +1,5 @@
+export PATH="/usr/local/opt/helm@2/bin:$PATH"
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
