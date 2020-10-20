@@ -1,11 +1,3 @@
-if [[ "$CHASINGLOGIC_PROFILE" == 1 ]]; then
-    return;
-fi
-
-export CHASINGLOGIC_PROFILE=1
-
-set -o emacs
-
 function find_executable() {
     X=$(which $1 2>/dev/null)
     echo $X
@@ -27,6 +19,15 @@ function add_to_path() {
         export PATH="$1:$PATH"
     fi
 }
+
+if [[ "$CHASINGLOGIC_PROFILE" == 1 ]]; then
+    return;
+fi
+
+export CHASINGLOGIC_PROFILE=1
+
+set -o emacs
+
 
 # Node version manager storage location
 export NVM_DIR="$HOME/.nvm"
