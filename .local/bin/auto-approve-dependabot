@@ -44,7 +44,7 @@ def get_reviews_requested():
     return [pr["node"] for pr in response.json()["data"]["search"]["edges"]]
 
 
-def get_pr_from_node(node):
+def get_pr_from_node(pr_node):
     url = f"https://api.github.com/repos/{pr_node['repository']['nameWithOwner']}/pulls/{pr_node['number']}"
     response = requests.get(url, headers=headers)
     return response.json()
