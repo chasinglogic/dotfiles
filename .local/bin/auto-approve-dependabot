@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+
+import os
+import requests
+
+token = os.getenv("GITHUB_TOKEN")
+assert token, "Must set $GITHUB_TOKEN"
+
+who = os.getenv("GITHUB_REVIEWER", "chasinglogic")
+assert who, "Must set your github username as $GITHUB_REVIEWER"
+
+
+query = {
+    "query": f"""{{
+  search(query: "type:pr state:open review-requested:{who}", type: ISSUE, first: 100) {{
+    issueCount
+    pageInfo {{
+      endCursor
+      startCursor
+    }}
+    edges {{
+      node {{
+        ... on PullRequest {{
+          repository {{
+            nameWithOwner
+          }}
+          number
+          url
+        }}
+      }}
+    }}
+  }}
+}}
+"""
+}
+
+headers = {"Authorization": f"Bearer {token}"}
+
+
+def get_reviews_requested():
+    response = requests.post(
+        "https://api.github.com/graphql", json=query, headers=headers
+    )
+    return [pr["node"] for pr in response.json()["data"]["search"]["edges"]]
+
+
+def get_pr_from_node(node):
+    url = f"https://api.github.com/repos/{pr_node['repository']['nameWithOwner']}/pulls/{pr_node['number']}"
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+
+def approve(pr):
+    review_url = f"{pr['url']}/reviews"
+    approval = {"event": "APPROVE"}
+    res = requests.post(review_url, json=approval, headers=headers)
+    res.raise_for_status()
+
+
+def merge(pr):
+    merge_url = f"{pr['url']}/merge"
+    res = requests.put(merge_url)
+    res.raise_for_status()
+
+
+def main():
+    pr_nodes = get_reviews_requested()
+    for pr_node in pr_nodes:
+        pr = get_pr_from_node(pr_node)
+        if "dependabot" in pr["user"]["login"]:
+            print("Found dependabot PR!", pr["title"])
+            approve(pr)
+            print("Approved PR:", pr_node["url"])
+            if pr["mergeable"]:
+                merge(pr)
+
+
+if __name__ == "__main__":
+    main()
