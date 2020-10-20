@@ -58,9 +58,11 @@ def approve(pr):
 
 
 def merge(pr):
-    merge_url = f"{pr['url']}/merge"
-    res = requests.put(merge_url)
-    res.raise_for_status()
+    y_or_no = input(f"Do you want to merge {pr['title']}? y/[n] ")
+    if y_or_no and y_or_no.lower()[0] == "y":
+        merge_url = f"{pr['url']}/merge"
+        res = requests.put(merge_url)
+        res.raise_for_status()
 
 
 def main():
