@@ -57,14 +57,6 @@ def approve(pr):
     res.raise_for_status()
 
 
-def merge(pr):
-    y_or_no = input(f"Do you want to merge {pr['title']}? y/[n] ")
-    if y_or_no and y_or_no.lower()[0] == "y":
-        merge_url = f"{pr['url']}/merge"
-        res = requests.put(merge_url)
-        res.raise_for_status()
-
-
 def main():
     pr_nodes = get_reviews_requested()
     for pr_node in pr_nodes:
@@ -74,7 +66,7 @@ def main():
             approve(pr)
             print("Approved PR:", pr_node["url"])
             if pr["mergeable"]:
-                merge(pr)
+                print("That PR is now mergeable!")
 
 
 if __name__ == "__main__":
