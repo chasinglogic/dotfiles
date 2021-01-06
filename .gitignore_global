@@ -33,3 +33,7 @@ Session.vim
 env/*
 
 .env.local
+
+mat.py
+
+/ignore/*
