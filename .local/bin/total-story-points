@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+
+import sys
+import requests
+import os
+
+
+BASE_URL = 'https://mpbphotographic.atlassian.net/'
+TOKEN = 'kKxRgieEbJesHpRZZhjn0057'
+SP_FIELD = 'customfield_10021'
+
+
+
+def search_issues(jql, start=0):
+    response = requests.get(
+        f'{BASE_URL}/rest/api/2/search',
+        params={'jql': jql, 'startAt': start},
+        auth=('mathew@mpb.com', TOKEN),
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+    )
+    data = response.json()
+    issues = data['issues']
+    if data['total'] > start:
+        return issues + search_issues(jql, start=start + data['maxResults'])
+
+    return issues
+
+
+
+def main():
+    query = ' '.join(sys.argv[1:])
+    issues = search_issues(query)
+    total = 0
+    for issue in issues:
+        total += issue['fields'][SP_FIELD]
+
+    print(f'Out of {len(issues)} tickets you have a total of {total} story points.')
+
+
+
+if __name__ == '__main__':
+    main()

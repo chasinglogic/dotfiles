@@ -10,3 +10,6 @@ alias venv="python3 -m venv"
 
 alias vim="$VIM_PROG"
 alias e="$EDITOR"
+
+alias k='kubectl'
+alias logs='kubectl logs'

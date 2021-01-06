@@ -44,7 +44,7 @@ Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin
 Plug 'caenrique/nvim-toggle-terminal'
 " }}}
 " Themes {{{
-Plug 'overcache/NeoSolarized', { 'as': 'solarized' }
+Plug 'dracula/vim', { 'as': 'dracula' }
 " }}}
 " Vim for Prose (Blogs, Notes, etc.) {{{
 Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
