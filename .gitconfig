@@ -18,6 +18,7 @@
 
 [add]
     verbose = true
+
 [commit]
     verbose = true
 
@@ -66,3 +67,7 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[url "https://invent.kde.org/"]
+	insteadOf = kde:
+[url "ssh://git@invent.kde.org/"]
+	pushInsteadOf = kde:
