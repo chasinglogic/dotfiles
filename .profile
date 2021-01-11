@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-set -o emacs
-
-=======
->>>>>>> Always define shell env functions
 function find_executable() {
     X=$(which $1 2>/dev/null)
     echo $X
@@ -31,11 +26,8 @@ fi
 
 export CHASINGLOGIC_PROFILE=1
 
-<<<<<<< HEAD
-=======
 set -o emacs
 
->>>>>>> Always define shell env functions
 # Node version manager storage location
 export NVM_DIR="$HOME/.nvm"
 export NOTES_DIR="$HOME/Dropbox/Notes"
