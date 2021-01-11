@@ -36,3 +36,16 @@ source $HOME/.prompt.zsh
 source $HOME/.functions.sh
 source_if_exists $HOME/.env.sh
 source_if_exists $HOME/.aliases.sh
+
+# kdesrc-build ##################################################
+
+## Add kdesrc-build to PATH
+export PATH="$HOME/kde/src/kdesrc-build:$PATH"
+
+## Run projects built with kdesrc-build
+function kdesrc-run
+{
+  source "$HOME/kde/build/$1/prefix.sh" && "$HOME/kde/usr/bin/$@"
+}
+#################################################################
+
