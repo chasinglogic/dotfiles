@@ -109,3 +109,4 @@ source_if_exists $HOME/.aliases.sh
 source_if_exists $HOME/.prompt.sh
 # Setup rustup, cargo path
 [[ -f /home/chasinglogic/.rustrc ]] && source /home/chasinglogic/.rustrc
+source "$HOME/.cargo/env"

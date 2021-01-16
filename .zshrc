@@ -48,4 +48,3 @@ function kdesrc-run
   source "$HOME/kde/build/$1/prefix.sh" && "$HOME/kde/usr/bin/$@"
 }
 #################################################################
-

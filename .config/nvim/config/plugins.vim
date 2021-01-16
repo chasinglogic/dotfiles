@@ -48,7 +48,6 @@ Plug 'dracula/vim', { 'as': 'dracula' }
 " }}}
 " Vim for Prose (Blogs, Notes, etc.) {{{
 Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
-Plug 'alok/notational-fzf-vim' " Manage notes easily and find them easily
 " }}}
 call plug#end()
 " }}}

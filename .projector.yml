@@ -1,6 +1,7 @@
 code_dirs:
   - ~/Code
   - ~/Work
+  - ~/kde/src
   - ~/.config/dfm/profiles
 
 excludes:
