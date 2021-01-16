@@ -13,3 +13,5 @@ alias e="$EDITOR"
 
 alias k='kubectl'
 alias logs='kubectl logs'
+
+alias zyp='sudo zypper'

@@ -1,4 +1,6 @@
-let g:python3_host_prog="/usr/local/bin/python3"
+if has('macunix')
+    let g:python3_host_prog="/usr/local/bin/python3"
+endif
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 filetype plugin on

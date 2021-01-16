@@ -124,7 +124,6 @@ add_to_path $HOME/.mpb/common-be-scripts
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
 
-export PATH="$HOME/.cargo/bin:$PATH"
 
 # This has to be after the $PATH is set up.
 # FZF default find command
@@ -137,3 +136,4 @@ fi
 if [[ -n $(find_executable dfm) ]]; then
     export DOTFILES=$(dfm where)
 fi
+source "$HOME/.cargo/env"
