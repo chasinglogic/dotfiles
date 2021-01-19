@@ -6,6 +6,9 @@ mappings:
     dest: ~/.gnupg/gpg-agent.conf
     target_os:
       - "Darwin"
+  - match: "Library"
+    target_os:
+      - "Darwin"
   - match: "README.md"
     skip: true
 
