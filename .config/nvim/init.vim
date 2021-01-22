@@ -22,4 +22,6 @@ augroup CustomColors
     autocmd ColorScheme * highlight LineNr guifg=white guibg='#424450' ctermfg=white ctermbg=238
 augroup END
 
-colorscheme dracula
+let g:neosolarized_contrast = "high"
+set background=dark
+colorscheme NeoSolarized
