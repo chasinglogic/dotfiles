@@ -45,6 +45,7 @@ Plug 'caenrique/nvim-toggle-terminal'
 " }}}
 " Themes {{{
 Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'overcache/NeoSolarized'
 " }}}
 " Vim for Prose (Blogs, Notes, etc.) {{{
 Plug 'junegunn/goyo.vim'      " Distraction free writing like writeroom-mode
