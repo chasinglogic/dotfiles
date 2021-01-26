@@ -33,11 +33,10 @@ Plug 'SirVer/UltiSnips'          " Snippets in vim
 Plug 'junegunn/vim-easy-align'   " Align stuff.
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" Plug 'deoplete-plugins/deoplete-jedi'
-" Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
-" Plug 'dense-analysis/ale'    " Code linting and LSP client
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'deoplete-plugins/deoplete-jedi'
+Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
+Plug 'dense-analysis/ale'    " Code linting and LSP client
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin list after vim-sleuth

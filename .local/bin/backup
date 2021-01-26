@@ -12,6 +12,10 @@ rsync \
     --exclude $USER/.local/share/containers \
     --exclude $USER/Dropbox \
     --exclude $USER/.cache \
+    --exclude $USER/.nvm \
+    --exclude $USER/.ansible \
+    --exclude $USER/.npm \
+    --exclude $USER/.vscode \
     --exclude $USER/Library/Application\ Support \
     -avz $USER $@
 echo "Backup complete with code: $?"
