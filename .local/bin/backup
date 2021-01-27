@@ -9,11 +9,14 @@ rsync \
     --exclude $USER/Library \
     --exclude $USER/Documents \
     --exclude $USER/Desktop \
-    --exclude $USER/.local/share/containers \
+    --exclude $USER/.local/share \
     --exclude $USER/Dropbox \
+    --exclude $USER/.ipython \
     --exclude $USER/.cache \
     --exclude $USER/.nvm \
     --exclude $USER/.ansible \
+    --exclude $USER/.mysql_histor \
+    --exclude $USER/.Trash \
     --exclude $USER/.npm \
     --exclude $USER/.vscode \
     --exclude $USER/Library/Application\ Support \
