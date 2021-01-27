@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TARGET="galactica:backups/$(hostname)"
+TARGET="192.168.1.154:backups/$(hostname)"
 
 if [[ -n $1 ]]; then
     export HOME=$1
