@@ -19,6 +19,7 @@ rsync \
     --exclude $USER/.Trash \
     --exclude $USER/.npm \
     --exclude $USER/.vscode \
+    --exclude $USER/Downloads \
     --exclude $USER/Library/Application\ Support \
     -avz $USER $@
 echo "Backup complete with code: $?"
