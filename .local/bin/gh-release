@@ -28,7 +28,8 @@ class Version:
     @classmethod
     def from_str(cls, verstr):
         if not Version.is_version_string(verstr):
-            raise Exception("Got unexpected input: {verstr}".format(verstr=verstr))
+            raise Exception(
+                "Got unexpected input: {verstr}".format(verstr=verstr))
 
         major, minor, patch = verstr.split(".")
         suffix = None
@@ -124,7 +125,7 @@ def get_repo():
 
 def get_last_version():
     versions = [
-        Version.from_str(ver[len("refs/tags/") :])
+        Version.from_str(ver[len("refs/tags/"):])
         for ver in (
             check_output(
                 [
@@ -139,7 +140,7 @@ def get_last_version():
             .decode("utf-8")
             .split("\n")
         )
-        if ver[len("refs/tags/") :]
+        if ver[len("refs/tags/"):]
     ]
     if not versions:
         return Version(0, 0, 0)
@@ -240,7 +241,9 @@ def main():
         [
             f"- {message}"
             for message in messages.split("\n")
-            if message and not message.endswith(f"release: {version}")
+            if message
+            and not message.endswith(f"release: {version}")
+            and 'Merge pull request' not in message
         ]
     )
 
@@ -252,7 +255,8 @@ def main():
             f"{last_version_commit}...{version_commit}",
         ]
     ).decode("utf-8")
-    contributors = "\n".join({f"- {email}" for email in emails.split("\n") if email})
+    contributors = "\n".join(
+        {f"- {email}" for email in emails.split("\n") if email})
 
     if args.title:
         release_notes = f"# Release {version}\n\n"
@@ -289,10 +293,17 @@ def main():
         return
 
     if os.path.isfile("package.json"):
-        with open("package.json", "w+") as pkg_json_file:
-            pkg_json = json.load(pkg_json_file)
+        with open("package.json") as pkg_json_file:
+            pkg_json = json.loads(pkg_json_file.read())
             pkg_json["version"] = str(version)
-            json.dump(pkg_json, pkg_json_file)
+
+        with open("package.json", "w") as pkg_json_file:
+            json.dump(
+                pkg_json,
+                pkg_json_file,
+                indent=4,
+            )
+
         git("add", "package.json")
         git("commit", "-m", f"release: {version}")
         git("push")
