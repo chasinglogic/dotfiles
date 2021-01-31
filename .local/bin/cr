@@ -1,32 +1,109 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 
-set -eou pipefail
+import os
+import webbrowser
+import subprocess
+import sys
+import shutil
+import re
 
-ARGS="$@"
-if [[ $ARGS != *"--base"* ]]; then
-    ARGS="$ARGS --base master"
-fi
 
-if [[ $(pwd) == *"/Work/"*"Service"* || $(pwd) == *"/Work/RoadRunner"* || $(pwd) == *"/Work/MPBX"* || $(pwd) == *"/Work/common-be-scripts"* ]]; then
-    ARGS="$ARGS --reviewer mpb-com/python";
-elif [[ $(pwd) == *"/Work/Toucan"* || $(pwd) == *"/Work/Flamingo"* ]]; then
-    ARGS="$ARGS --reviewer mpb-com/javascript"
-elif [[ $(pwd) == *"/Work/WebdriverTests"* ]]; then
-    ARGS="$ARGS --reviewer mpb-com/qa"
-elif [[ $(pwd) == *"/Work/API-Docs"* ]]; then
-    ARGS="$ARGS --reviewer mpb-com/qa --reviewer mpb-com/python --reviewer mpb-com/javascript"
-elif [[ $(pwd) == *"/Work/k8s-letsencrypt"* || $(pwd) == *"/Work/environments"* || $(pwd) == *"/Work/KubernetesConfig"* ]]; then
-    ARGS="$ARGS --reviewer mpb-com/operations"
-elif [[ $(pwd) != *"/Work/"* ]]; then
-    echo "Not a work repository, no reviewers required."
-else
-    echo "Failed to detect reviewers: $(pwd)"
-    exit 1
-fi
+REVIEWERS = {
+    'mpb-com/python': [
+        'RoadRunner',
+        'MPBX',
+        'common-be-scripts',
+    ],
+    'mpb-com/javascript': [
+        'Flamingo',
+        'Toucan',
+    ],
+    'mpb-com/qa': [
+        'WebdriverTests',
+        'PerformanceTests',
+        'python-test-sdk',
+    ],
+    'mpb-com/operations': [
+        'k8s-letsencrypt',
+        'environments',
+        'KubernetesConfig',
+        'Helm-Cloudbuiler',
+    ],
+}
 
-URL=$(gh pr create --fill --assignee chasinglogic $ARGS)
-if [[ $(uname) == "Darwin" ]]; then
-    open $URL
-else
-    xdg-open $URL
-fi
+
+
+class Args:
+
+    def __init__(self):
+        self.args = sys.argv[1:]
+        self.args.insert(0, 'gh')
+        self.args.insert(1, 'pr')
+        self.args.insert(2, 'create')
+
+    def add_flag(self, flag, argument=None):
+        if flag in self.args:
+            return
+
+        if argument:
+            self.args.extend([flag, argument])
+        else:
+            self.args.append(flag)
+
+
+
+def main():
+    hub_cli = shutil.which('gh')
+    if not hub_cli:
+        print('To use this tool you need to install the GitHub CLI.')
+        print('')
+        print('For installation instructions go here: https://github.com/cli/cli#installation')
+        sys.exit(1)
+
+    args = Args()
+    args.add_flag('--base', 'master')
+    args.add_flag('--fill')
+    assignee_name = os.getenv('GITHUB_USERNAME', '')
+    if not assignee_name:
+        print(
+            'WARNING: $GITHUB_USERNAME is not set and so the --assignee '
+            'flag if not manually provided will cause errors.'
+        )
+    args.add_flag('--assignee', assignee_name)
+
+    pwd = os.getcwd()
+    repo_name = os.path.basename(pwd)
+    reviewer = ''
+    for team, repositories in REVIEWERS.items():
+        if repo_name.lower() in [r.lower() for r in repositories]:
+            reviewer = team
+            break
+
+    if reviewer:
+        args.add_flag('--reviewer', reviewer)
+    elif not reviewer and 'Work' in pwd:
+        print(f'Unable to auto-detect reviewer for {repo_name}!')
+        print()
+        print('Does your directory name differ from the repository name?')
+        print()
+        print(
+            'If not please submit a PR to add it to the list '
+            'of known repositories in common-be-scripts.'
+        )
+        sys.exit(1)
+    else:
+        print('Not a Work repository, reviewer not required.')
+
+    proc = subprocess.run(args.args, check=False, capture_output=True)
+    url = proc.stdout.decode('utf-8')
+    if not url:
+        url = proc.stderr.decode('utf-8')
+        url = re.search(r'https://github.com.*', url).group(0)
+
+    if url:
+        print(url)
+        webbrowser.open(url)
+
+
+if __name__ == '__main__':
+    main()
