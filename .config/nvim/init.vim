@@ -7,6 +7,9 @@ filetype plugin on
 syntax enable
 set termguicolors
 
+set expandtab
+set smarttab
+
 """ Theme settings
 source $HOME/.config/nvim/config/editor.vim
 source $HOME/.config/nvim/config/keys.vim
