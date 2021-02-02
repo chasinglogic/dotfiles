@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import re
+import sys
 
 jira_matcher = r"([A-Z]+-[0-9]+)"
 regex = re.compile(jira_matcher)
@@ -15,7 +16,7 @@ def main():
       if output:
           jira_tickets.add(output[0])
 
-  print(f"key in ({",".join(jira_tickets)})")
+  print(f"key in ({','.join(jira_tickets)})")
 
 if __name__ == '__main__':
   main()
