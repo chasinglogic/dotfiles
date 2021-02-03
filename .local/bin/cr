@@ -9,37 +9,35 @@ import re
 
 
 REVIEWERS = {
-    'mpb-com/python': [
-        'RoadRunner',
-        'MPBX',
-        'common-be-scripts',
+    "mpb-com/python": [
+        "RoadRunner",
+        "MPBX",
+        "common-be-scripts",
     ],
-    'mpb-com/javascript': [
-        'Flamingo',
-        'Toucan',
+    "mpb-com/javascript": [
+        "Flamingo",
+        "Toucan",
     ],
-    'mpb-com/qa': [
-        'WebdriverTests',
-        'PerformanceTests',
-        'python-test-sdk',
+    "mpb-com/qa": [
+        "WebdriverTests",
+        "PerformanceTests",
+        "python-test-sdk",
     ],
-    'mpb-com/operations': [
-        'k8s-letsencrypt',
-        'environments',
-        'KubernetesConfig',
-        'Helm-Cloudbuiler',
+    "mpb-com/operations": [
+        "k8s-letsencrypt",
+        "environments",
+        "KubernetesConfig",
+        "Helm-Cloudbuiler",
     ],
 }
 
 
-
 class Args:
-
     def __init__(self):
         self.args = sys.argv[1:]
-        self.args.insert(0, 'gh')
-        self.args.insert(1, 'pr')
-        self.args.insert(2, 'create')
+        self.args.insert(0, "gh")
+        self.args.insert(1, "pr")
+        self.args.insert(2, "create")
 
     def add_flag(self, flag, argument=None):
         if flag in self.args:
@@ -51,59 +49,61 @@ class Args:
             self.args.append(flag)
 
 
-
 def main():
-    hub_cli = shutil.which('gh')
+    hub_cli = shutil.which("gh")
     if not hub_cli:
-        print('To use this tool you need to install the GitHub CLI.')
-        print('')
-        print('For installation instructions go here: https://github.com/cli/cli#installation')
+        print("To use this tool you need to install the GitHub CLI.")
+        print("")
+        print(
+            "For installation instructions go here: https://github.com/cli/cli#installation"
+        )
         sys.exit(1)
 
     args = Args()
-    args.add_flag('--base', 'master')
-    args.add_flag('--fill')
-    assignee_name = os.getenv('GITHUB_USERNAME', '')
+    args.add_flag("--base", "master")
+    args.add_flag("--fill")
+    assignee_name = os.getenv("GITHUB_USERNAME", "")
     if not assignee_name:
         print(
-            'WARNING: $GITHUB_USERNAME is not set and so the --assignee '
-            'flag if not manually provided will cause errors.'
+            "WARNING: $GITHUB_USERNAME is not set and so the --assignee "
+            "flag if not manually provided will cause errors."
         )
-    args.add_flag('--assignee', assignee_name)
+    args.add_flag("--assignee", assignee_name)
 
     pwd = os.getcwd()
     repo_name = os.path.basename(pwd)
-    reviewer = ''
+    reviewer = ""
     for team, repositories in REVIEWERS.items():
         if repo_name.lower() in [r.lower() for r in repositories]:
             reviewer = team
             break
 
     if reviewer:
-        args.add_flag('--reviewer', reviewer)
-    elif not reviewer and 'Work' in pwd:
-        print(f'Unable to auto-detect reviewer for {repo_name}!')
+        args.add_flag("--reviewer", reviewer)
+    elif not reviewer and "Work" in pwd:
+        print(f"Unable to auto-detect reviewer for {repo_name}!")
         print()
-        print('Does your directory name differ from the repository name?')
+        print("Does your directory name differ from the repository name?")
         print()
         print(
-            'If not please submit a PR to add it to the list '
-            'of known repositories in common-be-scripts.'
+            "If not please submit a PR to add it to the list "
+            "of known repositories in common-be-scripts."
         )
         sys.exit(1)
     else:
-        print('Not a Work repository, reviewer not required.')
+        print("Not a Work repository, reviewer not required.")
 
     proc = subprocess.run(args.args, check=False, capture_output=True)
-    url = proc.stdout.decode('utf-8')
+    url = proc.stdout.decode("utf-8")
     if not url:
-        url = proc.stderr.decode('utf-8')
-        url = re.search(r'https://github.com.*', url).group(0)
+        url = proc.stderr.decode("utf-8")
+        url = re.search(r"https://github.com.*", url).group(0)
 
+    url = url.strip()
     if url:
         print(url)
         webbrowser.open(url)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
