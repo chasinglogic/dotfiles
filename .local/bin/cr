@@ -13,6 +13,10 @@ REVIEWERS = {
         "RoadRunner",
         "MPBX",
         "common-be-scripts",
+        "TransactionService",
+        "SearchService",
+        "TaxService",
+        "TranslationService",
     ],
     "mpb-com/javascript": [
         "Flamingo",

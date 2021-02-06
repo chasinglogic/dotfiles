@@ -13,13 +13,14 @@ from copy import deepcopy
 class Version:
     """A semver object."""
 
-    release_ver = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(-[A-z0-9]+)?$")
+    release_ver = re.compile(r"^(v)?[0-9]+\.[0-9]+\.[0-9]+(-[A-z0-9]+)?$")
 
-    def __init__(self, major, minor, patch, suffix=None):
+    def __init__(self, major, minor, patch, suffix=None, use_v_prefix=False):
         self.major = major
         self.minor = minor
         self.patch = patch
         self.suffix = suffix
+        self.use_v_prefix = use_v_prefix
 
     @staticmethod
     def is_version_string(verstr):
@@ -36,7 +37,18 @@ class Version:
         if "-" in patch:
             patch, suffix = patch.split("-")
 
-        return cls(int(major), int(minor), int(patch), suffix)
+        use_v_prefix = False
+        if major.startswith('v'):
+            major = major[1:]
+            use_v_prefix = True
+
+        return cls(
+            int(major),
+            int(minor),
+            int(patch),
+            suffix,
+            use_v_prefix=use_v_prefix,
+        )
 
     def increment_patch(self):
         self.patch += 1
@@ -51,11 +63,12 @@ class Version:
         self.patch = 0
 
     def __str__(self):
-        return "{major}.{minor}.{patch}{suffix}".format(
+        return "{prefix}{major}.{minor}.{patch}{suffix}".format(
             major=self.major,
             minor=self.minor,
             patch=self.patch,
             suffix="-" + self.suffix if self.suffix else "",
+            prefix="v" if self.use_v_prefix else "",
         )
 
     def __eq__(self, other):
