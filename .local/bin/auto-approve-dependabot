@@ -21,6 +21,10 @@ query = {
     edges {{
       node {{
         ... on PullRequest {{
+          title
+          author {{
+            login
+          }}
           repository {{
             nameWithOwner
           }}
@@ -44,29 +48,20 @@ def get_reviews_requested():
     return [pr["node"] for pr in response.json()["data"]["search"]["edges"]]
 
 
-def get_pr_from_node(pr_node):
-    url = f"https://api.github.com/repos/{pr_node['repository']['nameWithOwner']}/pulls/{pr_node['number']}"
-    response = requests.get(url, headers=headers)
-    return response.json()
-
-
 def approve(pr):
-    review_url = f"{pr['url']}/reviews"
+    url = f"https://api.github.com/repos/{pr['repository']['nameWithOwner']}/pulls/{pr['number']}/reviews"
     approval = {"event": "APPROVE"}
-    res = requests.post(review_url, json=approval, headers=headers)
+    res = requests.post(url, json=approval, headers=headers)
     res.raise_for_status()
 
 
 def main():
     pr_nodes = get_reviews_requested()
-    for pr_node in pr_nodes:
-        pr = get_pr_from_node(pr_node)
-        if "dependabot" in pr["user"]["login"]:
+    for pr in pr_nodes:
+        if "dependabot" in pr["author"]["login"]:
             print("Found dependabot PR!", pr["title"])
             approve(pr)
-            print("Approved PR:", pr_node["url"])
-            if pr["mergeable"]:
-                print("That PR is now mergeable!")
+            print("Approved PR:", pr["url"])
 
 
 if __name__ == "__main__":
