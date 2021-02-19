@@ -41,6 +41,8 @@ export PACKER_NO_COLOR="1"
 export GPG_TTY=$(tty)
 # Needed for the go compiler and tooling
 export GOPATH="$HOME/Code/go"
+# Make helm work with our internal chart museum
+export GODEBUG=x509ignoreCN=0
 # Set LANG and Locale so it's always what I expect
 export LANG=en_US.UTF-8
 export LC_ALL="en_US.UTF-8"

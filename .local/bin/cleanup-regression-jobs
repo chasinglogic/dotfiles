@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+
+import subprocess
+
+
+def main():
+    job_output = subprocess.check_output(["kubectl", "get", "jobs"])
+    jobs_to_cleanup = []
+    for line in job_output.decode("utf-8").split("\n"):
+        if line.startswith("regression-"):
+            jobs_to_cleanup.append(line.split()[0])
+
+    if jobs_to_cleanup:
+        print("Will delete these jobs:")
+        print(jobs_to_cleanup)
+        y_or_n = input("continue? ")
+        if y_or_n.lower()[0] != "y":
+            return
+
+        for job in jobs_to_cleanup:
+            subprocess.run(["kubectl", "delete", "job", job])
+    else:
+        print("No leftover regression jobs.")
+
+    pod_output = subprocess.check_output(["kubectl", "get", "pods"])
+    pods_to_cleanup = []
+    for line in pod_output.decode("utf-8").split("\n"):
+        if line.startswith("regression-"):
+            pods_to_cleanup.append(line.split()[0])
+
+    if pods_to_cleanup:
+        print("Will delete these pods:")
+        print(pods_to_cleanup)
+        y_or_n = input("continue? ")
+        if y_or_n.lower()[0] != "y":
+            return
+
+        for pod in pods_to_cleanup:
+            subprocess.run(["kubectl", "delete", "pod", pod])
+    else:
+        print("No leftover regression pods.")
+
+
+if __name__ == "__main__":
+    main()
