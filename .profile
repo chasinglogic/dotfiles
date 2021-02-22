@@ -20,12 +20,6 @@ function add_to_path() {
     fi
 }
 
-if [[ "$CHASINGLOGIC_PROFILE" == 1 ]]; then
-    return;
-fi
-
-export CHASINGLOGIC_PROFILE=1
-
 set -o emacs
 
 # Node version manager storage location
