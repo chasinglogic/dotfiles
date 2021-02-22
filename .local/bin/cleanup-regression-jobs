@@ -7,8 +7,10 @@ def main():
     job_output = subprocess.check_output(["kubectl", "get", "jobs"])
     jobs_to_cleanup = []
     for line in job_output.decode("utf-8").split("\n"):
-        if line.startswith("regression-"):
-            jobs_to_cleanup.append(line.split()[0])
+        columns = line.split()
+        name, completions = columns[0], columns[1]
+        if name.startswith("regression-") and completions == "1/1":
+            jobs_to_cleanup.append(name)
 
     if jobs_to_cleanup:
         print("Will delete these jobs:")
