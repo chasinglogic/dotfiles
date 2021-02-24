@@ -8,6 +8,9 @@ def main():
     jobs_to_cleanup = []
     for line in job_output.decode("utf-8").split("\n"):
         columns = line.split()
+        if not columns:
+          continue
+
         name, completions = columns[0], columns[1]
         if name.startswith("regression-") and completions == "1/1":
             jobs_to_cleanup.append(name)
