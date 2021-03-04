@@ -100,8 +100,8 @@ def main():
     proc = subprocess.run(args.args, check=False, capture_output=True)
     url = proc.stdout.decode("utf-8")
     if not url:
-        url = proc.stderr.decode("utf-8")
-        url = re.search(r"https://github.com.*", url).group(0)
+        print(proc.stderr.decode("utf-8"))
+        return
 
     url = url.strip()
     if url:
