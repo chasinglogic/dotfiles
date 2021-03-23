@@ -78,6 +78,8 @@ fi
 if [[ "$(uname)" == "Darwin" ]]; then
     export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
     export CLICOLOR=1
+    export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=1
+    export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1
 else
     # Inform Emacs and other programs they can use truecolor
     export COLORTERM=truecolor
