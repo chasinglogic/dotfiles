@@ -51,6 +51,7 @@ function sp() {
 
   cd $PROJECT
   if [ -f .env.local ]; then
+    echo "Found .env.local"
     source .env.local
   fi
 }
