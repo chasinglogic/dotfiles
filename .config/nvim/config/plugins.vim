@@ -34,7 +34,6 @@ Plug 'SirVer/UltiSnips'          " Snippets in vim
 Plug 'junegunn/vim-easy-align'   " Align stuff.
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
-" Plug 'rmagatti/auto-session'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'deoplete-plugins/deoplete-jedi'
 Plug 'dense-analysis/ale'    " Code linting and LSP client
