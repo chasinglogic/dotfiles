@@ -56,6 +56,10 @@ function sp() {
 }
 
 function v() {
+  if [[ -n $(env | grep 'VIRTUAL_ENV=') ]]; then
+    deactivate
+  fi
+
   TOP_LEVEL=$(git rev-parse --show-toplevel 2>/dev/null)
   if [[ $? != 0 ]]; then
     TOP_LEVEL=$(pwd)
@@ -65,10 +69,9 @@ function v() {
   ENVDIR="$TOP_LEVEL/env"
   if [[ ! -d $ENVDIR ]]; then
     python3 -m venv --prompt $NAME $ENVDIR
-  fi
-
-  if [[ -n $(env | grep 'VIRTUAL_ENV=') ]]; then
-    deactivate
+    source $ENVDIR/bin/activate
+    pip install pynvim
+    return 0
   fi
 
   source $ENVDIR/bin/activate
