@@ -70,9 +70,7 @@ else
     export VIM_PROG=vi
 fi
 
-if [[ $(find_executable code) ]]; then
-    export EDITOR="code --wait"
-else
+if [[ "$EDITOR" != "code --wait" ]]; then
     export EDITOR="$VIM_PROG"
 fi
 
