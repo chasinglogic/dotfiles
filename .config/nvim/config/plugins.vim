@@ -79,4 +79,5 @@ inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 " disable autocompletion, because we use deoplete for completion
 let g:jedi#completions_enabled = 0
+let g:deoplete#sources#jedi#extra_path = ['src']
 " }}} 
