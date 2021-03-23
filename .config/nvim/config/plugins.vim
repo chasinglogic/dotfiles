@@ -37,10 +37,8 @@ Plug 'junegunn/vim-easy-align'   " Align stuff.
 " Plug 'rmagatti/auto-session'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'deoplete-plugins/deoplete-jedi'
-Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
 Plug 'dense-analysis/ale'    " Code linting and LSP client
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
-Plug 'sgur/vim-editorconfig'  " Use .editorconfig if present has to be in plugin list after vim-sleuth
 Plug 'caenrique/nvim-toggle-terminal'
 " }}}
 " Themes {{{
