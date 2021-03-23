@@ -11,6 +11,10 @@ import subprocess
 import sys
 import tempfile
 
+RECIPIENTS = os.getenv(
+    "NOTE_RECIPIENTS",
+    "",
+)
 NOTE_DIR = os.getenv(
     "NOTE_DIR",
     os.path.expanduser("~/Notes"),
@@ -21,14 +25,19 @@ DEFAULT_SUFFIX = os.getenv(
 )
 
 
+def notes(search_dir=NOTE_DIR):
+    for root, dirs, files in os.walk(NOTE_DIR):
+        dirs[:] = [d for d in dirs if not d.startswith(".")]
+        for file in files:
+            yield os.path.join(root, file)
+
+
 def find_file(filename, search_dir=NOTE_DIR):
     """Find filename in search_dir."""
     term = re.compile(r".*{}.*".format(filename), re.IGNORECASE)
-    for root, dirs, files in os.walk(search_dir):
-        for file in files:
-            full_path = os.path.join(root, file)
-            if term.match(full_path):
-                return full_path
+    for note in notes(search_dir=search_dir):
+        if term.match(note):
+            return note
 
     return None
 
@@ -37,31 +46,38 @@ def search_file(filename, term):
     """Search filename for term."""
     # TODO: smarter and bigger context
     # TODO: highlight search term match in matched line
-    with open(filename) as fh:
+    with open(filename, "r", encoding="utf-8") as fh:
         lineno = 0
         previous = None
         matched = None
 
-        for line in fh:
-            lineno += 1
-            if matched is not None:
-                print("{}:".format(filename))
-                if previous is not None:
-                    print("\tL{}| {}".format(previous[0], previous[1]))
-                print("\tL{}| {}".format(matched[0], matched[1]))
-                print("\tL{}| {}".format(lineno, line.rstrip()))
-                return
-            elif term.match(line):
-                matched = (lineno, line.rstrip())
-            else:
-                previous = (lineno, line.rstrip())
+        try:
+            for line in fh:
+                lineno += 1
+                if matched is not None:
+                    print("{}:".format(filename))
+                    if previous is not None:
+                        print("\tL{}| {}".format(previous[0], previous[1]))
+                    print("\tL{}| {}".format(matched[0], matched[1]))
+                    print("\tL{}| {}".format(lineno, line.rstrip()))
+                    return
+                elif term.match(line):
+                    matched = (lineno, line.rstrip())
+                else:
+                    previous = (lineno, line.rstrip())
+        except UnicodeDecodeError:
+            pass
 
 
 def encrypt(filename, target_file):
     """
     Encrypt file at filename to target_file, remove filename
     """
-    subprocess.run(["gpg", "--yes", "--output", target_file, "--encrypt", filename])
+    args = ["gpg", "--yes", "--output", target_file, "--encrypt", filename]
+    recipients = RECIPIENTS.split(",")
+    for recipient in recipients:
+        args.extend(["-r", recipient])
+    subprocess.run(args)
     os.remove(filename)
     return None
 
@@ -106,116 +122,103 @@ def editor(filename):
     )
 
 
-def edit(args):
-    """
-    Search for a note and edit it.
-    """
-    filename = " ".join(args.NAME)
-    full_path = find_file(filename)
-    if full_path is None:
-        print("Could not find a Note with that name.")
-        sys.exit(1)
-
-    if args.no_editor:
-        print(full_path)
-        return
-
-    encrypted = is_encrypted_file(full_path)
-    if encrypted:
-        edit_filename = decrypt(full_path)
-    else:
-        edit_filename = full_path
-
-    editor(edit_filename)
-    if encrypted:
-        encrypt(edit_filename, full_path)
-
-
-def list(_args):
+def list_notes():
     """
     List all notes.
     """
-    for root, _dirs, files in os.walk(NOTE_DIR):
-        for file in files:
-            print(os.path.join(root, file))
+    for note in notes():
+        print(note)
 
 
-def create(args):
-    """
-    Create a note.
-    """
-    full_path = os.path.join(NOTE_DIR, " ".join(args.NAME))
-    _, suffix = os.path.splitext(full_path)
-    if not suffix:
-        full_path = full_path + DEFAULT_SUFFIX
-        print("fp", full_path)
-
-    os.makedirs(os.path.dirname(full_path), exist_ok=True)
-    with open(full_path, "w") as file:
-        file.write("")
-
-    if args.no_editor:
-        if args.encrypt:
-            full_path = full_path + ".gpg"
-        print(full_path)
-        return
-
-    editor(full_path)
-    if args.encrypt:
-        encrypt(full_path, full_path + ".gpg")
-
-
-def search(args):
+def search(search_term: str):
     """
     Search notes.
     """
-    term = re.compile(r".*{}.*".format(" ".join(args.SEARCH)), re.IGNORECASE)
+    term = re.compile(r".*{}.*".format(search_term), re.IGNORECASE)
 
-    for root, _, files in os.walk(NOTE_DIR):
-        for file in files:
-            filename = os.path.join(root, file)
-            if is_encrypted_file(file):
-                search_filename = decrypt(filename, silent=True)
-            else:
-                search_filename = filename
+    for note in notes():
+        if is_encrypted_file(note):
+            search_filename = decrypt(note, silent=True)
+        else:
+            search_filename = note
 
-            search_file(search_filename, term)
+        search_file(search_filename, term)
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-n",
         "--no-editor",
+        "-n",
         action="store_true",
         help="Change the behavior of some commands to not invoke $EDITOR",
     )
-
-    subparsers = parser.add_subparsers(help="note help")
-
-    create_parser = subparsers.add_parser("create", aliases=["c"], help="Create a note")
-    create_parser.add_argument(
-        "-e",
+    parser.add_argument(
+        "--search",
+        "-s",
+        type=str,
+        help="If given search notes for the given text.",
+    )
+    parser.add_argument(
+        "--list",
+        "-l",
+        action="store_true",
+        help="If given list all notes",
+    )
+    parser.add_argument(
         "--encrypt",
+        "-e",
         action="store_true",
         help="Encrypt the note if it will be created",
     )
-    create_parser.add_argument("NAME", nargs="+", help="Name of the note to create.")
-    create_parser.set_defaults(func=create)
-
-    list_parser = subparsers.add_parser("list", aliases=["l", "ls"], help="List notes")
-    list_parser.set_defaults(func=list)
-
-    edit_parser = subparsers.add_parser("edit", aliases=["e"], help="Edit notes")
-    edit_parser.add_argument("NAME", nargs="+", help="Name of the note to edit")
-    edit_parser.set_defaults(func=edit)
-
-    search_parser = subparsers.add_parser("search", help="Search notes.")
-    search_parser.add_argument("SEARCH", nargs="+", help="")
-    search_parser.set_defaults(func=search)
-
+    parser.add_argument(
+        "NAME",
+        nargs="*",
+        help="Name of the note to edit or create.",
+    )
     args = parser.parse_args()
-    args.func(args)
+
+    if args.list:
+        list_notes()
+        return
+
+    if args.search:
+        search(args.search)
+        return
+
+    if not args.NAME:
+        print('ERROR: Must provide a name if not using search or list flags.')
+        sys.exit(1)
+
+    name = " ".join(args.NAME)
+    path = find_file(name)
+    if path is None:
+        new_path = os.path.join(NOTE_DIR, name)
+        _, suffix = os.path.splitext(new_path)
+        if not suffix:
+            new_path += DEFAULT_SUFFIX
+
+        os.makedirs(os.path.dirname(new_path), exist_ok=True)
+        with open(new_path, "w") as note:
+            note.write("")
+
+        path = new_path
+        if args.encrypt:
+            path += ".gpg"
+            encrypt(new_path, path)
+
+    if args.no_editor:
+        print(path)
+    else:
+        encrypted = is_encrypted_file(path)
+        if encrypted:
+            fp = decrypt(path)
+        else:
+            fp = path
+
+        editor(fp)
+        if encrypted:
+            encrypt(fp, path)
 
 
 if __name__ == "__main__":
