@@ -6,17 +6,19 @@ import sys
 jira_matcher = r"([A-Z]+-[0-9]+)"
 regex = re.compile(jira_matcher)
 
+
 def main():
-  print('Enter lines:')
-  lines = [line.rstrip() for line in sys.stdin.readlines(0)]
+    print("Enter lines:")
+    lines = [line.rstrip() for line in sys.stdin.readlines(0)]
 
-  jira_tickets = set()
-  for line in lines:
-      output = regex.search(line)
-      if output:
-          jira_tickets.add(output[0])
+    jira_tickets = set()
+    for line in lines:
+        output = regex.search(line)
+        if output:
+            jira_tickets.add(output[0])
 
-  print(f"key in ({','.join(jira_tickets)})")
+    print(f"key in ({','.join(jira_tickets)})")
 
-if __name__ == '__main__':
-  main()
+
+if __name__ == "__main__":
+    main()

@@ -3,7 +3,8 @@
 
 import os
 
-WIKI = os.path.expanduser("~/Dropbox/Notes/")
+WIKI = os.path.expanduser("~/Notes/")
+
 
 def main():
     """
