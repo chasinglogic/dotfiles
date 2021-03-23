@@ -1,11 +1,5 @@
 let s:file_path = expand('%:p')
 
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-
-set shiftwidth=4
-
 if match(s:file_path, 'Work') == -1
     set textwidth=120
 else
@@ -23,3 +17,9 @@ endif
 
 """ Automatically strip trailing whitespace on save
 autocmd BufWritePre * %s/\s\+$//e
+
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+
+let b:neoformat_run_all_formatters = 1
