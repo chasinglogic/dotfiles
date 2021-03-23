@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-import sys
-import requests
 import os
+import sys
 
+import requests
 
 BASE_URL = "https://mpbphotographic.atlassian.net/"
 TOKEN = os.getenv("JIRA_TOKEN", None)
@@ -33,7 +33,7 @@ def main():
     if not TOKEN or not USERNAME:
         print(
             "Could not find JIRA token or username. "
-            "Set the environment variables JIRA_USERNAME and JIRA_TOKEN"
+            "Set the environment variables JIRA_USERNAME and JIRA_TOKEN",
         )
         sys.exit(1)
 

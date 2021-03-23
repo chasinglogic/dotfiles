@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-import requests
 import os
+
+import requests
 
 TOKEN = os.getenv("GITLAB_TOKEN")
 BASE_URL = "https://gitlab.com/api/v4/"

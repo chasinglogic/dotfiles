@@ -9,7 +9,7 @@ def main():
     for line in job_output.decode("utf-8").split("\n"):
         columns = line.split()
         if not columns:
-          continue
+            continue
 
         name, completions = columns[0], columns[1]
         if name.startswith("regression-") and completions == "1/1":

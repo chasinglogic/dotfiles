@@ -4,15 +4,21 @@
 Create, edit, search, and list notes.
 """
 
+import argparse
 import os
 import re
-import sys
 import subprocess
-import argparse
+import sys
 import tempfile
 
-NOTE_DIR = os.getenv("NOTE_DIR", os.path.expanduser("~/Notes"),)
-DEFAULT_SUFFIX = os.getenv("NOTE_DEFAULT_SUFFIX", ".md",)
+NOTE_DIR = os.getenv(
+    "NOTE_DIR",
+    os.path.expanduser("~/Notes"),
+)
+DEFAULT_SUFFIX = os.getenv(
+    "NOTE_DEFAULT_SUFFIX",
+    ".md",
+)
 
 
 def find_file(filename, search_dir=NOTE_DIR):
@@ -55,9 +61,7 @@ def encrypt(filename, target_file):
     """
     Encrypt file at filename to target_file, remove filename
     """
-    subprocess.run(
-        ["gpg", "--yes", "--output", target_file, "--encrypt", filename]
-    )
+    subprocess.run(["gpg", "--yes", "--output", target_file, "--encrypt", filename])
     os.remove(filename)
     return None
 
@@ -69,7 +73,14 @@ def decrypt(filename, silent=False):
     _, real_suffix = os.path.splitext(filename[: -len(".gpg")])
     _, tmpfile = tempfile.mkstemp(suffix=real_suffix if real_suffix else None)
     args = {
-        "args": ["gpg", "--yes", "--output", tmpfile, "--decrypt", filename,],
+        "args": [
+            "gpg",
+            "--yes",
+            "--output",
+            tmpfile,
+            "--decrypt",
+            filename,
+        ],
     }
     if silent:
         args["stdout"] = subprocess.DEVNULL
