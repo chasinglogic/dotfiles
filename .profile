@@ -94,13 +94,6 @@ source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
 # source_if_exists $HOME/.local/bin/virtualenvwrapper.sh
 source_if_exists $NVM_DIR/nvm.sh  # This loads nvm
 source_if_exists $NVM_DIR/bash_completion  # This loads nvm bash_completion
-if [[ -f $NVM_DIR/nvm.sh ]]; then
-    if [[ ! -f $(nvm which 'lts/*') ]]; then
-        nvm install --lts
-    fi
-
-    nvm use --lts
-fi
 
 add_to_path /usr/bin
 add_to_path /snap/bin
@@ -113,7 +106,7 @@ add_to_path $HOME/.cargo/bin
 add_to_path $HOME/.local/bin
 add_to_path $HOME/.cask/bin
 add_to_path $HOME/.cask/bin
-add_to_path $HOME/Library/Python/3.8/bin
+add_to_path $HOME/Library/Python/3.9/bin
 add_to_path $HOME/.pyenv/bin
 add_to_path $HOME/.mpb/common-be-scripts
 
