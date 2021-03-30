@@ -80,7 +80,11 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 " disable autocompletion, because we use deoplete for completion
 let g:jedi#completions_enabled = 0
 let g:deoplete#sources#jedi#extra_path = ['src']
+let g:deoplete#sources#jedi#ignore_errors = 1
 if has('macunix')
     let g:deoplete#sources#jedi#python_path = "/usr/local/bin/python3"
 endif
 " }}} 
+" ALE {{{
+
+" }}}
