@@ -90,6 +90,10 @@ function nv() {
 
 function t() {
   SESS_NAME=${PWD##*/}
+  if [[ -n "$1" ]]; then
+    SESS_NAME="$1"
+  fi
+
   tmux has-session -t $SESS_NAME
   if [ $? -ne 0 ]; then
     tmux new-session -s $SESS_NAME -d
