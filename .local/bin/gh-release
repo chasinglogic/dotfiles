@@ -172,6 +172,13 @@ def get_commit_for_tag(tag):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        '--version',
+        '-v',
+        type=str,
+        default='',
+        help='Specify the version to go to',
+    )
+    parser.add_argument(
         "--pre-release",
         "-l",
         action="store_true",
@@ -218,8 +225,8 @@ def main():
     )
     args = parser.parse_args()
 
-    if not any((args.patch, args.minor, args.major)):
-        print("Must provide one of --major, --minor, or --patch.")
+    if not any((args.patch, args.minor, args.major, args.version)):
+        print("Must provide one of --version, --major, --minor, or --patch.")
         sys.exit(1)
 
     token = os.getenv("GITHUB_TOKEN")
@@ -229,20 +236,24 @@ def main():
 
     last_version = get_last_version()
     if last_version == Version(0, 0, 0):
-        commits = git("log", "--reverse", "--format='%H'").split("\n")
+        commits = git("log", "--reverse", "--format=%H").split("\n")
         # Initial commit to the branch / repository
         last_version_commit = commits[0]
     else:
         last_version_commit = get_commit_for_tag(str(last_version))
 
-    version = deepcopy(last_version)
     version_commit = get_commit_for_tag("HEAD")
-    if args.patch:
-        version.increment_patch()
-    if args.minor:
-        version.increment_minor()
-    if args.major:
-        version.increment_major()
+
+    if args.version:
+        version = Version.from_str(args.version)
+    else:
+        version = deepcopy(last_version)
+        if args.patch:
+            version.increment_patch()
+        if args.minor:
+            version.increment_minor()
+        if args.major:
+            version.increment_major()
 
     messages = check_output(
         [

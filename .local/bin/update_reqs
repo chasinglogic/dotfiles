@@ -3,12 +3,6 @@
 import argparse
 import subprocess
 
-IGNORE_LIST = [
-    "pynvim",
-    "msgpack",
-    "greenlet",
-]
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -21,15 +15,11 @@ def main():
     with open(requirements_file) as req_file:
         lines = req_file.read().splitlines()
 
-    ignore_list = [
-        req for req in IGNORE_LIST
-        if all(
-            map(
-                lambda x: not x.startswith(req),
-                lines,
-            ),
-        )
+    existing = [
+        req.split('==')[0] for req in lines
+        if req
     ]
+
     subprocess.run(["pip", "install", "-U", "-r", requirements_file], check=True)
     freeze = subprocess.run(["pip", "freeze"], check=True, capture_output=True)
     new_reqs = freeze.stdout.decode("utf-8").split("\n")
@@ -38,10 +28,10 @@ def main():
             "\n".join(
                 sorted(
                     filter(
-                        lambda req: not any(
+                        lambda req: any(
                             map(
-                                lambda banned_req: req.startswith(banned_req),
-                                ignore_list,
+                                lambda existing_req: req.startswith(existing_req),
+                                existing,
                             ),
                         ),
                         new_reqs,
