@@ -7,12 +7,11 @@ nmap <Leader>fq :wq<CR>
 " }}}
 " Project level ops {{{
 if isdirectory('.git')
-  nmap <Leader>pf :Telescope git_files<CR>
+  nmap <Leader>pf :Telescope git_files previewer=false<CR>
 else
-  nmap <Leader>pf :Telescope find_files<CR>
+  nmap <Leader>pf :Telescope find_files previewer=false<CR>
 endif
 nmap <Leader>ps :Telescope live_grep<CR>
-nmap <Leader>pg :Grep<Space>
 nmap <Leader>pc :make 
 " }}}
 " Lists {{{
@@ -27,10 +26,8 @@ nmap [l  :lprev<CR>
 nmap <Leader>j=  gg=G<C-o>:echo "Indented buffer"<CR>
 nmap <Leader>jp  <C-o>
 nmap <Leader>jn  <C-i>
-nmap <Leader>ji  :Tags<CR>
 " }}}
 " Buffers {{{
-" Interactively search open buffers with FZF
 nmap <Leader>bb :Telescope buffers<CR>
 " Switch to the last buffer and delete this one.
 nmap <Leader>bd :bprevious\|bdelete #<CR>
@@ -43,7 +40,7 @@ nmap <C-w>m <C-w>o
 map <M-o> <C-w>w
 " }}}
 " Terminal {{{
-nmap <Leader>'  :ToggleTerminal<CR>
+nmap <Leader>'  :terminal<CR>
 tnoremap fd     <C-\><C-n>
 tmap <C-o> <C-\><C-n>
 " }}}
@@ -66,7 +63,8 @@ nmap <Leader>t5 :tabn 5<CR>
 " Git {{{
 nmap <Leader>gg  :Git
 nmap <Leader>gs  :Git<CR>
-nmap <Leader>gl  :GBrowse<CR>
+nmap <Leader>gl  :Git log<CR>
+nmap <Leader>gb  :Git blame<CR>
 " }}}
 " Utility {{{
 imap fd <ESC>
@@ -89,11 +87,4 @@ nmap ga <Plug>(EasyAlign)
 " }}}
 " Testing {{{
 noremap <Leader>mt :RunTest<CR>
-" }}}
-" Tab completion {{{
-" disabled in favour of COC
-" inoremap <expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-" }}}
-" Notes {{{
-nmap <Leader>no :NV<CR>
 " }}}
