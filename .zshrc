@@ -48,3 +48,6 @@ function kdesrc-run
   source "$HOME/kde/build/$1/prefix.sh" && "$HOME/kde/usr/bin/$@"
 }
 #################################################################
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh" || true
+

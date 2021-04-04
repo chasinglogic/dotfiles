@@ -17,7 +17,7 @@ source $HOME/.config/nvim/config/plugins.vim
 source $HOME/.config/nvim/config/autocmds.vim
 source $HOME/.config/nvim/config/utils.vim
 source $HOME/.config/nvim/config/my_statusline.vim
-source $HOME/.config/nvim/config/abbrevs.vim
+lua require('tools')
 
 """ Load Theme
 " Make Dracula more freindly on the eyes
@@ -35,5 +35,9 @@ let g:neosolarized_contrast = "high"
 " solarized vertSplitBar style more, set this value to 0.
 let g:neosolarized_vertSplitBgTrans = 1
 
-set background=light
+if luaeval("require('theme_sync').theme_mode()") == "dark"
+    set background=dark
+else
+    set background=light
+endif
 colorscheme NeoSolarized

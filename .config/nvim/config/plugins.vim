@@ -3,6 +3,9 @@ let g:UltiSnipsExpandTrigger = "<c-j>"
 let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
 " }}}
+
+let g:completion_confirm_key = "<c-l>"
+
 " Plugins {{{
 call plug#begin('~/.local/share/vim/plugins')
 " External Tool Integration {{{
@@ -17,7 +20,6 @@ Plug 'tpope/vim-commentary' " Commenting code
 Plug 'tpope/vim-surround'   " Surrounding of text
 Plug 'tpope/vim-sleuth'     " Set tabwidth etc based on filetype
 Plug 'tpope/vim-eunuch'     " Useful commands like Rename, Delete, Move, SudoWrite
-Plug 'tpope/vim-abolish'    " Better abbreviations and Subvert is like fancy %s
 Plug 'tpope/vim-fugitive'   " Git integration
 Plug 'tpope/vim-rhubarb'    " Github integration
 Plug 'tpope/vim-endwise'    " Automatically add 'end' and similar language constructs
@@ -37,7 +39,7 @@ Plug 'junegunn/vim-easy-align'   " Align stuff.
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-Plug 'steelsojka/completion-buffers'
+" Plug 'steelsojka/completion-buffers'
 
 Plug 'dense-analysis/ale'    " Code linting
 " }}}
@@ -68,10 +70,7 @@ set completeopt=menuone,noinsert,noselect
 
 " Avoid showing message extra message when using completion
 set shortmess+=c
-autocmd BufEnter * lua require'completion'.on_attach()
 
-lua require('settings.completion')
-" }}}
-" Auto Pairs {{{
-inoremap <buffer> <silent> <CR> <C-R>=AutoPairsReturn()<CR>
+autocmd BufEnter * lua require'completion'.on_attach()
+" lua require('settings.completion')
 " }}}
