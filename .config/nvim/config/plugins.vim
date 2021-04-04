@@ -7,8 +7,9 @@ let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
 call plug#begin('~/.local/share/vim/plugins')
 " External Tool Integration {{{
 """ Fuzzy finding
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 " }}}
 " Tpope general improvements {{{
 Plug 'tpope/vim-vinegar'    " Netrw improvements
@@ -34,12 +35,16 @@ Plug 'SirVer/UltiSnips'          " Snippets in vim
 Plug 'junegunn/vim-easy-align'   " Align stuff.
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'deoplete-plugins/deoplete-jedi'
-Plug 'dense-analysis/ale'    " Code linting and LSP client
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
-Plug 'caenrique/nvim-toggle-terminal'
-Plug 'davidhalter/jedi-vim'  " Provides go-to-definition for Python
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
+Plug 'steelsojka/completion-buffers'
+
+Plug 'dense-analysis/ale'    " Code linting
+
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'deoplete-plugins/deoplete-jedi'
+" Plug 'davidhalter/jedi-vim'  " Provides go-to-definition for Python
 " }}}
 " Themes {{{
 Plug 'dracula/vim', { 'as': 'dracula' }
@@ -71,21 +76,23 @@ command! -nargs=* -bang Rg call RipgrepFzf(<q-args>, <bang>0)
 " Notational Velocity (Notes) {{{
 let g:nv_search_paths = ['~/Notes']
 " }}}
-" Deoplete {{{
-let g:deoplete#enable_at_startup = 1
-" Use tab for auto complete
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-" Auto close method doc window when completion done.
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-" disable autocompletion, because we use deoplete for completion
-let g:jedi#completions_enabled = 0
-let g:jedi#goto_command = 'gd'
-let g:deoplete#sources#jedi#extra_path = ['src']
-let g:deoplete#sources#jedi#ignore_errors = 1
-if has('macunix')
-    let g:deoplete#sources#jedi#python_path = "/usr/local/bin/python3"
-endif
-" }}} 
-" ALE {{{
+" LSP {{{
+lua require('settings.telescope')
+lua require('settings.lsp')
 
+"" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" Set completeopt to have a better completion experience
+set completeopt=menuone,noinsert,noselect
+
+" Avoid showing message extra message when using completion
+set shortmess+=c
+autocmd BufEnter * lua require'completion'.on_attach()
+
+lua require('settings.completion')
+" }}}
+" Auto Pairs {{{
+inoremap <buffer> <silent> <CR> <C-R>=AutoPairsReturn()<CR>
 " }}}

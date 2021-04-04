@@ -6,9 +6,12 @@ nmap <Leader>fs :w<CR>
 nmap <Leader>fq :wq<CR>
 " }}}
 " Project level ops {{{
-nmap <Leader>pf :FZF<CR>
-nmap <Leader>ps :Rg<CR>
-nmap <Leader>pt :Tags<CR>
+if isdirectory('.git')
+  nmap <Leader>pf :Telescope git_files<CR>
+else
+  nmap <Leader>pf :Telescope find_files<CR>
+endif
+nmap <Leader>ps :Telescope live_grep<CR>
 nmap <Leader>pg :Grep<Space>
 nmap <Leader>pc :make 
 " }}}
@@ -28,7 +31,7 @@ nmap <Leader>ji  :Tags<CR>
 " }}}
 " Buffers {{{
 " Interactively search open buffers with FZF
-nmap <Leader>bb :Buffers<CR>
+nmap <Leader>bb :Telescope buffers<CR>
 " Switch to the last buffer and delete this one.
 nmap <Leader>bd :bprevious\|bdelete #<CR>
 nmap <Leader>bs :Scratch<CR>
