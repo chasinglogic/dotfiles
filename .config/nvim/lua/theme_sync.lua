@@ -5,10 +5,10 @@ M.timer = vim.loop.new_timer()
 
 function M.theme_mode()
     local output = io.popen('defaults read -g AppleInterfaceStyle'):read()
-    if output == "Light" then
-        return 'light'
-    else
+    if output == "Dark" then
         return 'dark'
+    else
+        return 'light'
     end
 end
 
