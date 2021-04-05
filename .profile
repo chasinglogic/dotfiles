@@ -20,10 +20,6 @@ function add_to_path() {
     fi
 }
 
-function it2prof() { 
-    echo -e "\033]50;SetProfile=$1\a" 
-}
-
 set -o emacs
 
 # Node version manager storage location
@@ -86,14 +82,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
     export CLICOLOR=1
     export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=1
     export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1
-    
-    theme_mode=$(defaults read -g AppleInterfaceStyle)
-    if [[ "$theme_mode" == "Dark" ]]; then
-        it2prof "Dark Mode"
-    else
-        it2prof "Default"
-    fi
-
 else
     # Inform Emacs and other programs they can use truecolor
     export COLORTERM=truecolor
@@ -108,7 +96,6 @@ source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
 # source_if_exists $HOME/.local/bin/virtualenvwrapper.sh
 source_if_exists $NVM_DIR/nvm.sh  # This loads nvm
 source_if_exists $NVM_DIR/bash_completion  # This loads nvm bash_completion
-source_if_exists $HOME/.iterm2_shell_integration.bash
 
 add_to_path /usr/bin
 add_to_path /snap/bin
