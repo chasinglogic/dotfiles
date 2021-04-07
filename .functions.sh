@@ -71,7 +71,7 @@ function v() {
   if [[ ! -d $ENVDIR ]]; then
     python3 -m venv --prompt $NAME $ENVDIR
     source $ENVDIR/bin/activate
-    pip install pynvim
+    pip install pynvim wheel
     return 0
   fi
 
