@@ -44,7 +44,8 @@ Plug 'nvim-lua/completion-nvim'
 Plug 'dense-analysis/ale'    " Code linting
 " }}}
 " Themes {{{
-Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'cormacrelf/vim-colors-github'
+Plug 'dracula/vim', {'as': 'dracula'}
 Plug 'overcache/NeoSolarized'
 " }}}
 call plug#end()

@@ -20,7 +20,7 @@ function! OpenScratchBuffer(new_win)
 
     " Check whether the scratch buffer is already created
     let scr_bufnum = bufnr(g:ScratchBufferName)
- 
+
     " open a new scratch buffer
     if scr_bufnum == -1
         if split_win
@@ -59,5 +59,5 @@ function! s:ScratchMarkBuffer()
 endfunction
 
 autocmd BufNewFile g:ScratchBufferName call s:ScratchMarkBuffer()
-command! Scratch :call OpenScratchBuffer(0)
-command! Sscratch :call OpenScratchBuffer(1)
+command! SC :call OpenScratchBuffer(0)
+command! SSC :call OpenScratchBuffer(1)
