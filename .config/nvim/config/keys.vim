@@ -12,7 +12,7 @@ else
   nmap <Leader>pf :Telescope find_files previewer=false<CR>
 endif
 nmap <Leader>ps :Telescope live_grep<CR>
-nmap <Leader>pc :make 
+nmap <Leader>pc :make
 " }}}
 " Lists {{{
 nmap ]q  :cnext<CR>
@@ -31,7 +31,7 @@ nmap <Leader>jn  <C-i>
 nmap <Leader>bb :Telescope buffers<CR>
 " Switch to the last buffer and delete this one.
 nmap <Leader>bd :bprevious\|bdelete #<CR>
-nmap <Leader>bs :Scratch<CR>
+nmap <Leader>bs :SC<CR>
 nmap <Leader>br :e %<CR>
 " }}}
 " Windows {{{
@@ -64,6 +64,9 @@ nmap <Leader>t5 :tabn 5<CR>
 nmap <Leader>gg  :Git
 nmap <Leader>gs  :Git<CR>
 nmap <Leader>gl  :Git log<CR>
+nmap <Leader>gp  :Git push<CR>
+nmap <Leader>gP  :Git pull --rebase<CR>
+nmap <Leader>gri :Git rebase -i origin/master
 nmap <Leader>gb  :Git blame<CR>
 " }}}
 " Utility {{{
