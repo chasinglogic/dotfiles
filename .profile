@@ -20,8 +20,6 @@ function add_to_path() {
     fi
 }
 
-function it2prof() { echo -e "\033]50;SetProfile=$1\a" }
-
 set -o emacs
 
 # Node version manager storage location
@@ -84,13 +82,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
     export CLICOLOR=1
     export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=1
     export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1
-
-    theme_mode="$(defaults read -g AppleInterfaceStyle 2>/dev/null)"
-    if [[ $theme_mode == "Dark" ]]; then
-        it2prof Dark
-    else
-        it2prof Default
-    fi
 else
     # Inform Emacs and other programs they can use truecolor
     export COLORTERM=truecolor
