@@ -24,6 +24,9 @@ set background=dark
 colorscheme dracula
 
 highlight! LineNr guifg=white guibg='#424450' ctermfg=white ctermbg=238
+highlight! SignColumn guifg=white guibg='#424450' ctermfg=white ctermbg=238
+
+
 highlight! link LspReferenceText DraculaSelection
 highlight! link LspReferenceRead DraculaSelection
 highlight! link LspReferenceWrite DraculaSelection
