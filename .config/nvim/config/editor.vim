@@ -1,5 +1,6 @@
 " Tab size {{{
 set tabstop=4     " A tab is 4 spaces
+set smarttab      " Expand the tab to match indentation of line before
 set expandtab     " Always uses spaces instead of tabs
 set softtabstop=4 " Insert 4 spaces when tab is pressed
 set shiftwidth=4  " An indent is 4 spaces
@@ -7,7 +8,6 @@ set shiftround    " Round indent to nearest shiftwidth multiple
 " }}}
 " Formatting options {{{
 set textwidth=80       " 80 Column text width by default
-set formatoptions-=ro  " Auto insert comment character when making a new line
 set formatoptions+=q   " Allow formatting of comments with gq
 set formatoptions+=n   " recognize numbered lists
 set formatoptions+=j   " Remove comment char when joining lines

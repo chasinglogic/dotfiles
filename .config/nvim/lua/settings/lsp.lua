@@ -1,4 +1,5 @@
 local nvim_lsp = require('lspconfig')
+
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -44,4 +45,31 @@ end
 local servers = { "jedi_language_server", "rust_analyzer", "tsserver" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
+end
+
+local nlua = require('nlua.lsp.nvim')
+local lua_lsp_directory = nlua.base_directory
+if 1 == vim.fn.isdirectory(lua_lsp_directory) then
+    local bin = nil
+    if vim.fn.has('macunix') then
+        bin = {
+            lua_lsp_directory .. '/bin/macOS/lua-language-server',
+            "-E",
+            string.format(
+                "%s/main.lua",
+                lua_lsp_directory
+            ),
+        }
+    end
+
+    nlua.setup(nvim_lsp, {
+      cmd = bin, 
+      on_attach = on_attach,
+    
+      -- Include globals you want to tell the LSP are real :)
+      globals = {
+        -- Colorbuddy
+        "Color", "c", "Group", "g", "s",
+      }
+    })
 end
