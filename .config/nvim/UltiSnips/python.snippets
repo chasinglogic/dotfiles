@@ -1,0 +1,23 @@
+snippet script "basic python script / tool boilerplate"
+#!/usr/bin/env python3
+
+import argparse
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument($0)
+    args = parser.parse_args()
+
+if __name__ == "__main__":
+    main()
+endsnippet
+
+snippet _main "if __name__ == '__main__'"
+if __name__ == "__main__":
+    $0
+endsnippet
+
+snippet bkp "breakpoint"
+import ipdb; ipdb.set_trace()
+endsnippet
