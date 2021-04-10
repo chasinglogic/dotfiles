@@ -1,6 +1,8 @@
 ---
 prompt_for_commit_message: true
 mappings:
+  - match: '.config/nvim/UltiSnips'
+    link_as_dir: true
   - match: ".*gpg-agent.conf.darwin"
     dest: ~/.gnupg/gpg-agent.conf
     target_os:
