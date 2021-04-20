@@ -16,6 +16,7 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 " }}}
 " Tpope general improvements {{{
+Plug 'tpope/vim-abolish'    " Better subst
 Plug 'tpope/vim-vinegar'    " Netrw improvements
 Plug 'tpope/vim-commentary' " Commenting code
 Plug 'tpope/vim-surround'   " Surrounding of text
@@ -28,6 +29,7 @@ Plug 'tpope/vim-rsi'        " Readline bindings in the vim command line
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'tjdevries/nlua.nvim'
+Plug 'pangloss/vim-javascript'
 " }}}
 " Editor improvements {{{
 Plug 'jiangmiao/auto-pairs'         " Auto pair things
@@ -46,13 +48,14 @@ Plug 'dense-analysis/ale'    " Code linting
 " }}}
 " Themes {{{
 Plug 'dracula/vim', {'as': 'dracula'}
-Plug 'sainnhe/sonokai'
+Plug 'overcache/NeoSolarized'
 " }}}
 call plug#end()
 " }}}
 " Neoformat {{{
 let g:neoformat_enabled_python = ['black', 'isort', 'docformatter']
 let g:neoformat_enabled_python3 = ['black',  'isort', 'docformatter']
+let g:neoformat_try_formatprg = 1
 " }}}
 " LSP {{{
 "" Use <Tab> and <S-Tab> to navigate through popup menu
@@ -64,4 +67,7 @@ set completeopt=menuone,noinsert,noselect
 
 " Avoid showing message extra message when using completion
 set shortmess+=c
+" }}}
+" Javascript {{{
+let g:javascript_plugin_jsdoc = 1
 " }}}

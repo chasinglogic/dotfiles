@@ -43,6 +43,7 @@ map <M-o> <C-w>w
 nmap <Leader>'  :terminal<CR>
 tnoremap fd     <C-\><C-n>
 tmap <C-o> <C-\><C-n>
+nmap <Leader>1 :!
 " }}}
 " Tabs {{{
 nmap ]t :tabnext<CR>

@@ -11,4 +11,9 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 
+augroup fmt
+  autocmd!
+  autocmd BufWritePre *.py Neoformat
+augroup END
+
 let b:neoformat_run_all_formatters = 1
