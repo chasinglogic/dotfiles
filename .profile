@@ -92,8 +92,6 @@ source_if_exists $HOME/.env.bash
 # Enable nix if I've installed it on this system
 source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
 # Set up virtualenvwrapper
-# source_if_exists /usr/local/bin/virtualenvwrapper.sh
-# source_if_exists $HOME/.local/bin/virtualenvwrapper.sh
 source_if_exists $NVM_DIR/nvm.sh  # This loads nvm
 source_if_exists $NVM_DIR/bash_completion  # This loads nvm bash_completion
 
@@ -108,6 +106,7 @@ add_to_path $HOME/.cargo/bin
 add_to_path $HOME/.local/bin
 add_to_path $HOME/.cask/bin
 add_to_path $HOME/.cask/bin
+add_to_path /Library/Python/3.9/bin
 add_to_path $HOME/Library/Python/3.9/bin
 add_to_path $HOME/.pyenv/bin
 add_to_path $HOME/.mpb/common-be-scripts
