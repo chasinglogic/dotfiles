@@ -27,6 +27,7 @@ Plug 'tpope/vim-rsi'        " Readline bindings in the vim command line
 " }}}
 " Language Support {{{
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'acro5piano/vim-jsx-replace-tag'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'tjdevries/nlua.nvim'
 Plug 'pangloss/vim-javascript'
@@ -70,4 +71,5 @@ set shortmess+=c
 " }}}
 " Javascript {{{
 let g:javascript_plugin_jsdoc = 1
+nnoremap <Leader>rt :JSXReplaceTag<CR>
 " }}}
