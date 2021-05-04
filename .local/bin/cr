@@ -38,6 +38,8 @@ REVIEWERS = {
         "environments",
         "KubernetesConfig",
         "Helm-Cloudbuiler",
+        "cluster",
+        "infrastructure",
     ],
 }
 
