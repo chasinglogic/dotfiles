@@ -36,3 +36,8 @@ source $HOME/.prompt.zsh
 source $HOME/.functions.sh
 source_if_exists $HOME/.env.sh
 source_if_exists $HOME/.aliases.sh
+
+# >>>> Vagrant command completion (start)
+fpath=(/opt/vagrant/embedded/gems/2.2.16/gems/vagrant-2.2.16/contrib/zsh $fpath)
+compinit
+# <<<<  Vagrant command completion (end)

@@ -34,6 +34,7 @@ REVIEWERS = {
         "Allure-Reports",
     ],
     "mpb-com/operations": [
+        "Partials",
         "k8s-letsencrypt",
         "environments",
         "KubernetesConfig",

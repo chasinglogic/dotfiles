@@ -1,116 +1,12 @@
 #!/usr/bin/env python3
 
 import argparse
-import glob
-import json
 import os
 import re
 import sys
-from copy import deepcopy
 from subprocess import check_output
 
 import requests
-
-
-class VersionFile:
-    """
-    Represents a file which would contain the version.
-    """
-
-    filename = ""
-    pattern = re.compile("")
-    replace_pattern = "{new_version}"
-
-    @classmethod
-    def from_file(cls):
-        if os.path.exists(cls.filename):
-            return cls()
-
-        return None
-
-    def update(self, version: str):
-        if not self.pattern:
-            raise Exception("Tried to update a file without a pattern!")
-
-        with open(self.filename, encoding="utf-8") as existing:
-            content = existing.read()
-
-        if self.pattern.search(content) is None:
-            return False
-
-        content = self.pattern.sub(
-            self.replace_pattern.format(new_version=version),
-            content,
-        )
-
-        with open(self.filename, "w", encoding="utf-8") as new:
-            new.write(content)
-
-        return True
-
-
-class SetupPy(VersionFile):
-    filename = "setup.py"
-    pattern = re.compile(r'(version=)"[0-9]*.[0-9]*.[0-9]*"')
-    replace_pattern = r'\1"{new_version}"'
-
-    def update(self, version):
-        super().update(version)
-        git('add', self.filename)
-        return True
-
-
-class DunderVersion(VersionFile):
-    pattern = re.compile(r'__version__ = ["\'][0-9]*.[0-9]*.[0-9]*["\']')
-    replace_pattern = '__version__ = "{new_version}"'
-
-    @classmethod
-    def from_file(cls):
-        for pattern in [
-            "src/*/version.py",
-            "*/version.py",
-            "src/*/__init__.py",
-            "*/__init__.py",
-        ]:
-            files = glob.glob(pattern)
-            if not files:
-                continue
-
-            obj = cls()
-            obj.filename = files[0]
-            return obj
-
-        return None
-
-    def update(self, version):
-        super().update(version)
-        git('add', self.filename)
-        return True
-
-
-class CargoTOML(VersionFile):
-    filename = "Cargo.toml"
-    pattern = re.compile(r'version = "[0-9]*.[0-9]*.[0-9]*"')
-    replace_pattern = 'version = "{new_version}"'
-
-
-class PackageJSON(VersionFile):
-    filename = "package.json"
-
-    def update(self, version: str):
-        with open("package.json") as pkg_json_file:
-            pkg_json = json.loads(pkg_json_file.read())
-            pkg_json["version"] = version
-
-        with open("package.json", "w") as pkg_json_file:
-            json.dump(
-                pkg_json,
-                pkg_json_file,
-                indent=2,
-            )
-
-        git('add', self.filename)
-        return True
 
 
 class Version:
@@ -238,8 +134,9 @@ def get_repo():
             return "/".join(url.split("/")[-2:])
 
 
-def get_last_version():
-    versions = [
+
+def get_versions():
+    return sorted([
         Version.from_str(ver)
         for ver in map(
                 lambda x: x[len("refs/tags/") :],
@@ -257,16 +154,12 @@ def get_last_version():
                 .split("\n"),
         )
         if ver and Version.is_version_string(ver)
-    ]
-    if not versions:
-        return Version(0, 0, 0)
-
-    return sorted(versions)[-1]
+    ])
 
 
 def get_commit_for_tag(tag):
     return (
-        check_output(["git", "show", "--no-patch", "--pretty=%H", tag])
+        check_output(["git", "rev-list", "-n", "1", tag])
         .decode("utf-8")
         .strip()
     )
@@ -308,36 +201,15 @@ def main():
         help="If given use the release name as the markdown title, otherwise title "
         "is omitted for Github style formatting",
     )
-    parser.add_argument(
-        "--minor",
-        "-m",
-        action="store_true",
-        help="Bump by minor",
-    )
-    parser.add_argument(
-        "--major",
-        "-j",
-        action="store_true",
-        help="Bump by major",
-    )
-    parser.add_argument(
-        "--patch",
-        "-p",
-        action="store_true",
-        help="Bump by patch",
-    )
     args = parser.parse_args()
-
-    if not any((args.patch, args.minor, args.major, args.version)):
-        print("Must provide one of --version, --major, --minor, or --patch.")
-        sys.exit(1)
 
     token = os.getenv("GITHUB_TOKEN")
     if not token:
         print("$GITHUB_TOKEN must be set.")
         sys.exit(1)
 
-    last_version = get_last_version()
+    versions = get_versions()
+    current_version, last_version = versions[-1], versions[-2]
     if last_version == Version(0, 0, 0):
         commits = git("log", "--reverse", "--format=%H").split("\n")
         # Initial commit to the branch / repository
@@ -345,18 +217,7 @@ def main():
     else:
         last_version_commit = get_commit_for_tag(str(last_version))
 
-    version_commit = get_commit_for_tag("HEAD")
-
-    if args.version:
-        version = Version.from_str(args.version)
-    else:
-        version = deepcopy(last_version)
-        if args.patch:
-            version.increment_patch()
-        if args.minor:
-            version.increment_minor()
-        if args.major:
-            version.increment_major()
+    version_commit = get_commit_for_tag(str(current_version))
 
     messages = check_output(
         [
@@ -366,12 +227,14 @@ def main():
             f"{last_version_commit}...{version_commit}",
         ],
     ).decode("utf-8")
+
     changelog = "\n".join(
         [
             f"- {message}"
             for message in messages.split("\n")
             if message
             and "release: " not in message
+            and str(current_version) not in message
             and "Merge pull request" not in message
         ],
     )
@@ -387,7 +250,7 @@ def main():
     contributors = "\n".join({f"- {email}" for email in emails.split("\n") if email})
 
     if args.title:
-        release_notes = f"# Release {version}\n\n"
+        release_notes = f"# Release {current_version}\n\n"
     else:
         release_notes = ""
 
@@ -396,8 +259,8 @@ def main():
     )
 
     body = {
-        "tag_name": str(version),
-        "name": str(version),
+        "tag_name": str(current_version),
+        "name": str(current_version),
         "body": release_notes,
         "draft": args.draft,
         "prerelease": args.pre_release,
@@ -408,7 +271,7 @@ def main():
         "Accept": "application/vnd.github.v3+json",
     }
 
-    print("Creating release", version, version_commit)
+    print("Creating release", current_version, version_commit)
     print("Previous version", last_version, last_version_commit)
     print("Pre-release?", args.pre_release)
     print("Draft release?", args.draft)
@@ -420,27 +283,6 @@ def main():
     if not ans.startswith("y"):
         return
 
-    version_file_updated = False
-    for version_file in [
-        PackageJSON,
-        SetupPy,
-        DunderVersion,
-        CargoTOML,
-    ]:
-        vf = version_file.from_file()
-        if not vf:
-            continue
-
-        version_file_updated = vf.update(str(version))
-        if version_file_updated:
-            print("Updated version in:", vf.filename)
-
-    if version_file_updated:
-        git("commit", "-m", f"release: {version}")
-        git("push")
-
-    git("tag", str(version))
-    git("push", "--tags")
     response = requests.post(
         f"https://api.github.com/repos/{args.repo}/releases",
         headers=headers,
