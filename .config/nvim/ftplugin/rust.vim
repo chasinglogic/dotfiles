@@ -4,3 +4,6 @@ autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . 
 
 """ Auto format rust on save
 autocmd BufWritePre *.rs Neoformat
+
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
