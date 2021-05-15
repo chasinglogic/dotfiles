@@ -35,6 +35,8 @@ REVIEWERS = {
     ],
     "mpb-com/operations": [
         "Partials",
+        "Postfix-Docker",
+        "NFS-Docker",
         "k8s-letsencrypt",
         "environments",
         "KubernetesConfig",
