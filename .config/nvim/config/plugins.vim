@@ -27,16 +27,14 @@ Plug 'tpope/vim-rsi'        " Readline bindings in the vim command line
 " }}}
 " Language Support {{{
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'acro5piano/vim-jsx-replace-tag'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'tjdevries/nlua.nvim'
+Plug 'hashivim/vim-terraform'
 Plug 'pangloss/vim-javascript'
 " }}}
 " Editor improvements {{{
-Plug 'jiangmiao/auto-pairs'         " Auto pair things
-Plug 'alvan/vim-closetag'        " Close (X)HTML tags
+Plug 'steelsojka/pears.nvim'     " Auto pair things
 Plug 'SirVer/UltiSnips'          " Snippets in vim
-Plug 'junegunn/vim-easy-align'   " Align stuff.
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
@@ -72,4 +70,7 @@ set shortmess+=c
 " Javascript {{{
 let g:javascript_plugin_jsdoc = 1
 nnoremap <Leader>rt :JSXReplaceTag<CR>
+" }}}
+" Terraform {{{
+let g:terraform_fmt_on_save=1
 " }}}
