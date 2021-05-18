@@ -27,27 +27,21 @@ Plug 'tpope/vim-rsi'        " Readline bindings in the vim command line
 " }}}
 " Language Support {{{
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'tjdevries/nlua.nvim'
 Plug 'hashivim/vim-terraform'
-Plug 'pangloss/vim-javascript'
 " }}}
 " Editor improvements {{{
-Plug 'steelsojka/pears.nvim'     " Auto pair things
 Plug 'SirVer/UltiSnips'          " Snippets in vim
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
+Plug 'steelsojka/pears.nvim'     " Auto pair things
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'steelsojka/completion-buffers'
-" TODO: Find a way to enable this when LSP doesn't work
-Plug 'dense-analysis/ale'    " Code linting
-
 " }}}
 " Themes {{{
-Plug 'dracula/vim', {'as': 'dracula'}
-Plug 'overcache/NeoSolarized'
+Plug 'ishan9299/nvim-solarized-lua'
 " }}}
 call plug#end()
 " }}}
