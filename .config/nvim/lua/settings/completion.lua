@@ -7,5 +7,3 @@ vim.g.completion_chain_complete_list = {
     { mode = { '<c-n>' } }
   },
 }
-
-vim.cmd 'autocmd BufEnter * lua require\'completion\'.on_attach()'
