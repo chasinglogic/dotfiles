@@ -9,6 +9,7 @@ import webbrowser
 REVIEWERS = {
     "mpb-com/python": [
         "RoadRunner",
+        "pdf-service",
         "MPBX",
         "common-be-scripts",
         "TransactionService",
