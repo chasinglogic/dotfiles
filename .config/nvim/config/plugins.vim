@@ -50,10 +50,6 @@ let g:neoformat_try_formatprg = 1
 " }}}
 " LSP & Completion {{{
 
-" Use <Tab> and <S-Tab> to navigate through popup menu
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-
 " Set completeopt to have a better completion experience
 set completeopt=menuone,noselect
 
