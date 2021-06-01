@@ -25,6 +25,11 @@ function venv_name {
     fi
 }
 
+function kube_context {
+    current_context=$(kubectl config get-contexts | grep '*' | awk '{ print $2 }')
+    echo "(kube: $current_context) "
+}
+
 COMMAND_STATUS="%(?..%B%F{red}!! %b%f)"
 HOSTNAME="%F{13}%n%F{3}@%F{2}%m%f"
 PWD_PROMPT="%F{6}%~%f"
@@ -39,4 +44,4 @@ unset PS1
 # ourselves
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-PROMPT="$COMMAND_STATUS\$(venv_name)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{3}\$(lambda_or_delta)%f "
+PROMPT="$COMMAND_STATUS\$(venv_name)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{3}\$(lambda_or_delta)%f "
