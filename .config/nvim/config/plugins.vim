@@ -4,8 +4,6 @@ let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
 " }}}
 
-let g:completion_confirm_key = "<c-l>"
-
 " Plugins {{{
 call plug#begin(stdpath('data'))
 " Basic Lua Libs {{{
@@ -37,11 +35,11 @@ Plug 'SirVer/UltiSnips'          " Snippets in vim
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
 Plug 'steelsojka/pears.nvim'     " Auto pair things
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
-Plug 'steelsojka/completion-buffers'
+Plug 'hrsh7th/nvim-compe'
 " }}}
 " Themes {{{
 Plug 'ishan9299/nvim-solarized-lua'
+Plug 'sainnhe/sonokai'
 " }}}
 call plug#end()
 " }}}
@@ -50,13 +48,14 @@ let g:neoformat_enabled_python = ['black', 'isort', 'docformatter']
 let g:neoformat_enabled_python3 = ['black',  'isort', 'docformatter']
 let g:neoformat_try_formatprg = 1
 " }}}
-" LSP {{{
-"" Use <Tab> and <S-Tab> to navigate through popup menu
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" LSP & Completion {{{
+
+" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
 
 " Set completeopt to have a better completion experience
-set completeopt=menuone,noinsert,noselect
+set completeopt=menuone,noselect
 
 " Avoid showing message extra message when using completion
 set shortmess+=c
@@ -67,14 +66,4 @@ nnoremap <Leader>rt :JSXReplaceTag<CR>
 " }}}
 " Terraform {{{
 let g:terraform_fmt_on_save=1
-" }}}
-" Completion {{{
-" Use <Tab> and <S-Tab> to navigate through popup menu
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-" Avoid showing message extra message when using completion
-set shortmess+=c
-
-autocmd BufEnter * lua require'completion'.on_attach()
 " }}}
