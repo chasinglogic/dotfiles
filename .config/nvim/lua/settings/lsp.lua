@@ -48,7 +48,6 @@ local servers = {
     "jedi_language_server",
     "rust_analyzer",
     "tsserver",
-    "terraformls",
     "clangd",
 }
 
