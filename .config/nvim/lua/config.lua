@@ -7,6 +7,8 @@ require('settings.telescope')
 require('settings.completion')
 require "pears".setup(
     function(conf)
+        -- TODO: re-enable this thing
+        -- conf.preset "tags"
         conf.disabled_filetypes {"gitcommit", "fugitive", "telescope", "prompt"}
     end
 )
