@@ -95,18 +95,14 @@ def main():
             reviewer = team
             break
 
+    if not reviewer and "Work" in pwd:
+        print(f"Unable to auto-detect reviewer for {repo_name}!")
+        print("\nDoes your directory name differ from the repository name?")
+        print("\nUsing the SRE team as default.")
+        reviewer = "mpb-com/sre"
+
     if reviewer:
         args.add_flag("--reviewer", reviewer)
-    elif not reviewer and "Work" in pwd:
-        print(f"Unable to auto-detect reviewer for {repo_name}!")
-        print()
-        print("Does your directory name differ from the repository name?")
-        print()
-        print(
-            "If not please submit a PR to add it to the list "
-            "of known repositories in common-be-scripts.",
-        )
-        sys.exit(1)
     else:
         print("Not a Work repository, reviewer not required.")
 
