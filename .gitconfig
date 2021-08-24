@@ -1,7 +1,7 @@
 [user]
     email = mathew@chasinglogic.io
     name = Mathew Robinson
-    signingkey = A7EF5FA959A720BC4AA5283831EF77EDCD61A0C9
+    signingkey = FAB14B9262DC06CDE4791C1E98306CA986E8394D 
 
 [include]
     path = ~/.gitconfig_local
