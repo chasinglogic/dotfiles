@@ -1,7 +1,6 @@
 [user]
     email = mathew@chasinglogic.io
     name = Mathew Robinson
-    signingkey = FAB14B9262DC06CDE4791C1E98306CA986E8394D 
 
 [include]
     path = ~/.gitconfig_local
@@ -9,6 +8,9 @@
 [pull]
     default = current
     ff = only
+
+[includeIf "gitdir:~/Work/"]
+  path = ~/.work.gitconfig
 
 [magit]
     hideCampaign = true
