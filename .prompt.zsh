@@ -26,8 +26,10 @@ function venv_name {
 }
 
 function kube_context {
-    current_context=$(kubectl config get-contexts | grep '*' | awk '{ print $2 }')
-    echo "(kube: $current_context) "
+    if [[ -x $(which kubectl 2>/dev/null) ]]; then
+        current_context=$(kubectl config get-contexts | grep '*' | awk '{ print $2 }')
+        echo "(kube: $current_context) "
+    fi
 }
 
 COMMAND_STATUS="%(?..%B%F{red}!! %b%f)"
