@@ -1,6 +1,25 @@
-#!/bin/bash
+#!/usr/bin/env python3
 
-DATA=$(curl -u $USER:$GITHUB_TOKEN -s https://api.github.com/orgs/$1/repos?per_page=200) 
-echo "Retrieved: $DATA"
+import os
+import subprocess
+import sys
 
-echo $DATA | ruby -e 'require "json"; JSON.load(STDIN.read).each { |repo| %x[git clone #{repo["ssh_url"]} ]}'
+import requests
+
+
+def main():
+    token = os.getenv("GITHUB_TOKEN")
+    user = os.getenv("USER")
+    org = sys.argv[1]
+    res = requests.get(
+        f"https://api.github.com/orgs/{org}/repos?per_page=200", auth=(user, token)
+    )
+    data = res.json()
+    for repo in data:
+        if os.path.isdir(repo['name']):
+            continue
+        subprocess.run(["git", "clone", repo["ssh_url"]])
+
+
+if __name__ == "__main__":
+    main()

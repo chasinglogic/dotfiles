@@ -39,7 +39,7 @@ Plug 'hrsh7th/nvim-compe'
 " }}}
 " Themes {{{
 Plug 'ishan9299/nvim-solarized-lua'
-Plug 'sainnhe/sonokai'
+Plug 'dracula/vim', { 'as': 'dracula' }
 " }}}
 call plug#end()
 " }}}

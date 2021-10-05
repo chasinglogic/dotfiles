@@ -119,7 +119,6 @@ add_to_path /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
 
-
 # This has to be after the $PATH is set up.
 # FZF default find command
 if [[ -n $(find_executable fd) ]]; then
@@ -131,3 +130,5 @@ fi
 if [[ -n $(find_executable dfm) ]]; then
     export DOTFILES=$(dfm where)
 fi
+
+ssh-add $HOME/.ssh/id_rsa >/dev/null 2>/dev/null
