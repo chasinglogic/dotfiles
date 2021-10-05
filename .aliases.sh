@@ -18,3 +18,5 @@ alias k='kubectl'
 alias logs='kubectl logs'
 
 alias zyp='sudo zypper'
+
+alias tf='terraform'

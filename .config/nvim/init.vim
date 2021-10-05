@@ -11,4 +11,4 @@ lua require('config')
 
 """ Load Theme
 set background=light
-colorscheme solarized-high
+colorscheme dracula
