@@ -104,17 +104,6 @@ shopt -s autocd
 
 source $HOME/.profile
 source $HOME/.functions.sh
-source_if_exists $HOME/.env.sh
+
 source_if_exists $HOME/.aliases.sh
-source_if_exists $HOME/.prompt.sh
-# Setup rustup, cargo path
-[[ -f /home/chasinglogic/.rustrc ]] && source /home/chasinglogic/.rustrc
-source "$HOME/.cargo/env"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# >>>> Vagrant command completion (start)
-. /opt/vagrant/embedded/gems/2.2.16/gems/vagrant-2.2.16/contrib/bash/completion.sh
-# <<<<  Vagrant command completion (end)
+source_if_exists $HOME/.prompt.bash
