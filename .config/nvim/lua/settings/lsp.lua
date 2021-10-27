@@ -49,10 +49,16 @@ local servers = {
     "rust_analyzer",
     "tsserver",
     "clangd",
+    "terraformls",
 }
 
 for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup { on_attach = on_attach }
+  nvim_lsp[lsp].setup { 
+      on_attach = on_attach,
+      capabilities = require('cmp_nvim_lsp').update_capabilities(
+        vim.lsp.protocol.make_client_capabilities()
+      ),
+  }
 end
 
 local nlua = require('nlua.lsp.nvim')
@@ -73,6 +79,9 @@ if 1 == vim.fn.isdirectory(lua_lsp_directory) then
     nlua.setup(nvim_lsp, {
       cmd = bin, 
       on_attach = on_attach,
+      capabilities = require('cmp_nvim_lsp').update_capabilities(
+        vim.lsp.protocol.make_client_capabilities()
+      ),
     
       -- Include globals you want to tell the LSP are real :)
       globals = {
