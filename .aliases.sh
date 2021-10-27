@@ -16,6 +16,7 @@ fi
 
 alias k='kubectl'
 alias logs='kubectl logs'
+alias kctx='kubectl config use-context'
 
 alias zyp='sudo zypper'
 
