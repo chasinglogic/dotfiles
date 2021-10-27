@@ -12,3 +12,7 @@ lua require('config')
 """ Load Theme
 set background=light
 colorscheme dracula
+
+highlight! link CmpItemAbbr Pmenu
+highlight! link CmpItemKind Pmenu
+highlight! link CmpItemMenu Pmenu

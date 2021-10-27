@@ -35,7 +35,9 @@ Plug 'SirVer/UltiSnips'          " Snippets in vim
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
 Plug 'steelsojka/pears.nvim'     " Auto pair things
 Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/nvim-compe'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/nvim-cmp'
 " }}}
 " Themes {{{
 Plug 'ishan9299/nvim-solarized-lua'
