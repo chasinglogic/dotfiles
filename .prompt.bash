@@ -35,4 +35,12 @@ function last_command_status {
     echo "!! "
 }
 
-PS1="\[$COMMAND_STATUS_COLOR\]\$(last_command_status)\[$USERNAME_COLOR\]\u\[$LAMBDA_COLOR\]@\[$HOSTNAME_COLOR\]\H\[$PWD_COLOR\] \w \[$GIT_BRANCH_COLOR\]\$(parse_git_branch)\[$LAMBDA_COLOR\]\$(lambda_or_delta) \[$NO_COLOR\]"
+
+function kube_context {
+    if [[ -x $(which kubectl 2>/dev/null) ]]; then
+        current_context=$(kubectl config get-contexts | grep '*' | awk '{ print $2 }')
+        echo "(kube: $current_context) "
+    fi
+}
+
+PS1="\[$COMMAND_STATUS_COLOR\]\$(last_command_status)\$(kube_context)\[$USERNAME_COLOR\]\u\[$LAMBDA_COLOR\]@\[$HOSTNAME_COLOR\]\H\[$PWD_COLOR\] \w \[$GIT_BRANCH_COLOR\]\$(parse_git_branch)\[$LAMBDA_COLOR\]\$(lambda_or_delta) \[$NO_COLOR\]"
