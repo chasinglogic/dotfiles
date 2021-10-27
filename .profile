@@ -116,8 +116,6 @@ add_to_path $HOME/.pyenv/bin
 add_to_path $HOME/.mpb/common-be-scripts
 add_to_path /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/
 
-source_if_exists $HOME/.mpb/common-be-scripts/mpb-completion.bash
-
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
 
