@@ -43,4 +43,4 @@ function kube_context {
     fi
 }
 
-PS1="\[$COMMAND_STATUS_COLOR\]\$(last_command_status)\$(kube_context)\[$USERNAME_COLOR\]\u\[$LAMBDA_COLOR\]@\[$HOSTNAME_COLOR\]\H\[$PWD_COLOR\] \w \[$GIT_BRANCH_COLOR\]\$(parse_git_branch)\[$LAMBDA_COLOR\]\$(lambda_or_delta) \[$NO_COLOR\]"
+PS1="\[$COMMAND_STATUS_COLOR\]\[$NO_COLOR\]\$(last_command_status)\$(kube_context)\[$USERNAME_COLOR\]\u\[$LAMBDA_COLOR\]@\[$HOSTNAME_COLOR\]\H\[$PWD_COLOR\] \w \[$GIT_BRANCH_COLOR\]\$(parse_git_branch)\[$LAMBDA_COLOR\]\$(lambda_or_delta) \[$NO_COLOR\]"
