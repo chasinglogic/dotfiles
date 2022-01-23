@@ -95,9 +95,6 @@ fi
 source_if_exists $HOME/.env.bash
 # Enable nix if I've installed it on this system
 source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
-# Set up NVM
-source_if_exists $NVM_DIR/nvm.sh  # This loads nvm
-source_if_exists $NVM_DIR/bash_completion  # This loads nvm bash_completion
 # Setup rustup, cargo path
 source_if_exists /home/chasinglogic/.rustrc
 source_if_exists "$HOME/.cargo/env"
