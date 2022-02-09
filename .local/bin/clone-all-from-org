@@ -8,6 +8,7 @@ import requests
 
 
 def main():
+    curdir = os.getcwd()
     token = os.getenv("GITHUB_TOKEN")
     user = os.getenv("USER")
     org = sys.argv[1]
@@ -16,9 +17,13 @@ def main():
     )
     data = res.json()
     for repo in data:
-        if os.path.isdir(repo['name']):
-            continue
-        subprocess.run(["git", "clone", repo["ssh_url"]])
+        if os.path.isdir(repo["name"]):
+            subprocess.run(
+                ["git", "remote", "update"],
+                cwd=os.path.join(curdir, repo["name"]),
+            )
+        else:
+            subprocess.run(["git", "clone", repo["ssh_url"]])
 
 
 if __name__ == "__main__":

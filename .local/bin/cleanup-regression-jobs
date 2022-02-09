@@ -30,8 +30,10 @@ def main():
     pod_output = subprocess.check_output(["kubectl", "get", "pods"])
     pods_to_cleanup = []
     for line in pod_output.decode("utf-8").split("\n"):
-        if line.startswith("regression-"):
-            pods_to_cleanup.append(line.split()[0])
+        if line.startswith("regression-") and "Running" not in line:
+            columns = line.split()
+            name, status = columns[0], columns[2]
+            pods_to_cleanup.append((name, status))
 
     if pods_to_cleanup:
         print("Will delete these pods:")
@@ -41,7 +43,8 @@ def main():
             return
 
         for pod in pods_to_cleanup:
-            subprocess.run(["kubectl", "delete", "pod", pod])
+            name = pod[0]
+            subprocess.run(["kubectl", "delete", "pod", name])
     else:
         print("No leftover regression pods.")
 
