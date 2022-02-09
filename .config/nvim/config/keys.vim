@@ -75,6 +75,11 @@ imap fd <ESC>
 " Copy file name to clipboard
 nmap ,cs :let @*=expand("%")<CR>
 nmap ,cl :let @*=expand("%:p")<CR>
+" On MacOS I tell my keyboard to use alt as meta as the Lord intended but that
+" means I can't type the hash symbol on my UK keyboards. This fixes that.
+if has("macunix")
+    imap <M-3> #
+endif
 " }}}
 " System / Vim management {{{
 nmap <Leader>spi :PlugInstall<CR>
