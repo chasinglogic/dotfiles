@@ -4,6 +4,6 @@ install.ensure_installed('maintained')
 require'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,
-    disable = {"yaml"},
+    disable = {"yaml", "vim"},
   }
 }
