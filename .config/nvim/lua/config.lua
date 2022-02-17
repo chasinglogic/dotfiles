@@ -12,7 +12,3 @@ require "pears".setup(
         conf.disabled_filetypes {"gitcommit", "fugitive", "telescope", "prompt"}
     end
 )
-
-if vim.fn.has('macunix') then
-    vim.g.python3_host_prog = '/usr/local/bin/python3'
-end
