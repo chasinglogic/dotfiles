@@ -1,6 +1,12 @@
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set termguicolors
 
+if has('macunix')
+	let g:python3_host_prog='/usr/local/bin/python3'
+else
+	let g:python3_host_prog='/usr/bin/python3'
+endif
+
 source $HOME/.config/nvim/config/editor.vim
 source $HOME/.config/nvim/config/keys.vim
 source $HOME/.config/nvim/config/plugins.vim
