@@ -16,6 +16,7 @@ def main():
         f"https://api.github.com/orgs/{org}/repos?per_page=200", auth=(user, token)
     )
     data = res.json()
+    res.raise_for_status()
     for repo in data:
         if os.path.isdir(repo["name"]):
             subprocess.run(
