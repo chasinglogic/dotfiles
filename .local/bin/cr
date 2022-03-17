@@ -87,8 +87,16 @@ def main():
         )
     args.add_flag("--assignee", assignee_name)
 
-    pwd = os.getcwd()
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"], capture_output=True
+        )
+        pwd = proc.stdout.decode("utf-8").strip()
+    except subprocess.CalledProcessError:
+        pwd = os.getcwd()
+
     repo_name = os.path.basename(pwd)
+
     reviewer = ""
     for team, repositories in REVIEWERS.items():
         if repo_name.lower() in [r.lower() for r in repositories]:
