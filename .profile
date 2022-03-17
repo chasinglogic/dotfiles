@@ -63,6 +63,8 @@ export HELM_HOST=localhost:44134
 # Make Firefox use Wayland
 export MOZ_ENABLE_WAYLAND=1
 
+export VAULT_ADDR="https://vault.internal-services.mpb.com"
+
 # Find the vim to use.
 if [[ -n $(find_executable nvim) ]]; then
     export VIM_PROG=nvim
