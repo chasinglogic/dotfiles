@@ -27,6 +27,7 @@ Plug 'tpope/vim-rsi'        " Readline bindings in the vim command line
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tjdevries/nlua.nvim'
 Plug 'hashivim/vim-terraform'
+Plug 'martinda/Jenkinsfile-vim-syntax'
 " }}}
 " Editor improvements {{{
 Plug 'SirVer/UltiSnips'          " Snippets in vim
