@@ -114,7 +114,6 @@ add_to_path $HOME/.cask/bin
 add_to_path /Library/Python/3.9/bin
 add_to_path /opt/homebrew/bin
 add_to_path $HOME/Library/Python/3.9/bin
-add_to_path $HOME/.pyenv/bin
 add_to_path $HOME/.mpb/common-be-scripts
 add_to_path /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/
 add_to_path /opt/homebrew/Cellar/go@1.16/1.16.8/libexec/bin
