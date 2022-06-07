@@ -1,0 +1,74 @@
+#!/usr/bin/env node
+
+const Reset = "\x1b[0m"
+
+const FgRed = "\x1b[31m"
+const FgYellow = "\x1b[33m"
+const FgMagenta = "\x1b[35m"
+const FgCyan = "\x1b[36m"
+
+const EventEmitter = require('events');
+
+function formatLevel(level) {
+  if (level.toLowerCase() === 'info') {
+    return `${FgCyan}INFO${Reset}`
+  }
+
+  if (level.toLowerCase() === 'warning') {
+    return `${FgYellow}WARNING${Reset}`
+  }
+
+  if (level.toLowerCase() === 'error') {
+    return `${FgRed}ERROR${Reset}`
+  }
+
+  return level.toUpperCase()
+}
+
+function stdinLineByLine() {
+  const stdin = new EventEmitter();
+  let buff = '';
+
+  process.stdin
+    .on('data', data => {
+      buff += data;
+      lines = buff.split(/\r\n|\n/);
+      buff = lines.pop();
+      lines.forEach(line => stdin.emit('line', line));
+    })
+    .on('end', () => {
+      if (buff.length > 0) stdin.emit('line', buff);
+    });
+
+  return stdin;
+}
+
+const stdin = stdinLineByLine();
+stdin.on('line', (line) => {
+  if (!line.startsWith('{')) {
+    console.log(`${FgRed}NON-JSON LINE:${Reset}`, line);
+    return;
+  }
+
+  const data = JSON.parse(line);
+  const message = data.message;
+  const timestamp = data['@timestamp']
+  const level = data['log.level']
+  console.log(`${timestamp} ${formatLevel(level)} ${message}`)
+});
+
+if (process.argv.filter((arg) => arg.includes('help')).length > 0) {
+  console.log(`pretty-logs
+
+pretty-logs is a tool which will take a stdin stream of JSON structured logs and print
+them in a prettier human-friendly format. It is tested for Elastic format structured
+logs.
+
+It is not useful to run on it's own it needs a stream of JSON logs.
+
+USAGE:
+    kubectl logs <pod> | pretty-logs
+    pretty-logs < logfile.txt
+`)
+  process.exit(0)
+}
