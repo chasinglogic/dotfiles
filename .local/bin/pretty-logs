@@ -45,7 +45,7 @@ function stdinLineByLine() {
 
 const stdin = stdinLineByLine();
 stdin.on('line', (line) => {
-  if (!line.startsWith('{')) {
+  if (!line.startsWith('{') || !line.endsWith('}')) {
     console.log(`${FgRed}NON-JSON LINE:${Reset}`, line);
     return;
   }
