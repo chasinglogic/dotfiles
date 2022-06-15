@@ -41,3 +41,7 @@ echo "Sourcing .env.sh..."
 source_if_exists $HOME/.env.sh
 echo "Sourcing aliases..."
 source_if_exists $HOME/.aliases.sh
+
+# Some Oh-my-zsh thing aliases this to a git command
+unalias gam
+function gam() { "/Users/chasinglogic/bin/gam/gam" "$@" ; }
