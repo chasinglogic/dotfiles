@@ -80,6 +80,8 @@ nmap ,cl :let @*=expand("%:p")<CR>
 if has("macunix")
     imap <M-3> #
 endif
+" Easily run commands
+nmap ! :!
 " }}}
 " System / Vim management {{{
 nmap <Leader>spi :PlugInstall<CR>

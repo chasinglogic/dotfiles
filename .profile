@@ -134,3 +134,5 @@ if [[ -n $(find_executable dfm) ]]; then
 fi
 
 ssh-add $HOME/.ssh/id_rsa >/dev/null 2>/dev/null
+
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
