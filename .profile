@@ -84,6 +84,8 @@ if [[ "$(uname)" == "Darwin" ]]; then
     export CLICOLOR=1
     export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=1
     export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1
+    export LDFLAGS="-L/opt/homebrew/opt/openssl@3/lib"
+    export CPPFLAGS="-I/opt/homebrew/opt/openssl@3/include"
 else
     # Inform Emacs and other programs they can use truecolor
     export COLORTERM=truecolor
