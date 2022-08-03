@@ -7,7 +7,7 @@
 
 [pull]
     default = current
-    ff = only
+	ff = only
 
 [includeIf "gitdir:~/Work/"]
   path = ~/.work.gitconfig
@@ -75,3 +75,5 @@
     insteadOf = kde:
 [url "ssh://git@invent.kde.org/"]
     pushInsteadOf = kde:
+[merge]
+	ff = only
