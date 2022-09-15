@@ -13,6 +13,7 @@ else
 endif
 nmap <Leader>ps :Telescope live_grep<CR>
 nmap <Leader>pc :make
+nmap <Leader>h :lua require("replacer").run()<cr>
 " }}}
 " Lists {{{
 nmap ]q  :cnext<CR>
