@@ -91,6 +91,12 @@ def main():
         help="Organization ID to scan for feature environments. Should take the form organizations/1234 where 1234 is the ID.",
         default="organizations/1003133169753",
     )
+    parser.add_argument(
+        "--reaper-behaviour",
+        "-r",
+        help="If provided only environments with the corresponding reaper behaviour will be displayed.",
+        default=None,
+    )
     args = parser.parse_args()
 
     credentials, _ = google.auth.default()
@@ -103,6 +109,12 @@ def main():
         ],
         key=lambda p: p.display_name,
     )
+
+    if args.reaper_behaviour:
+        projects = [
+            project for project in projects
+            if project.labels.get("reaper_behaviour") == args.reaper_behaviour.lower()
+        ]
 
     rows = [to_row(project) for project in projects]
 
