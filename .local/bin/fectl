@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+
+import sys
+from argparse import ArgumentParser
+from datetime import datetime
+
+try:
+    import google.auth
+    from google.cloud.resourcemanager_v3 import ProjectsClient
+    from tabulate import tabulate
+except ImportError:
+    print(
+        "ERROR: You must install tabulate and google-cloud-resource-manager to use this tool."
+    )
+    print("pip3 install --user google-cloud-resource-manager tabulate")
+    sys.exit(1)
+
+
+def is_feature_env(project):
+    has_reaper_labels = (
+        project.labels.get("reaper_behaviour", None) is not None
+        and project.labels.get("modified_date", None) is not None
+    )
+    return has_reaper_labels
+
+
+def delta_to_human_readable_string(delta):
+    days = delta.days
+    # Use int here because we always want to round down. Otherwise the maths
+    # goes weird and 40 seconds gets rounded up to counting as 1 minute.
+    hours = int(delta.seconds / 60 / 60)
+    minutes = int(delta.seconds / 60) - (hours * 60)
+    seconds = int(delta.seconds - (hours * 60 * 60) - (minutes * 60))
+
+    if not all(
+        [
+            days,
+            hours,
+            minutes,
+        ]
+    ):
+        return f"{seconds}s"
+
+    elif not all([days, hours]):
+        return f"{minutes}m{seconds}s"
+
+    elif not days and hours < 2:
+        return f"{minutes + (hours * 60)}m"
+
+    elif not days:
+        if minutes:
+            return f"{hours}h{minutes}m"
+        return f"{hours}h"
+
+    elif days < 3:
+        if hours:
+            return f"{days}d{hours}h"
+        return f"{days}d"
+
+    return f"{days}d"
+
+
+def to_row(project):
+    created_date = project.labels.get("created_date", None)
+    if created_date is None:
+        age = "null"
+    else:
+        parsed = datetime.strptime(created_date, "%Y-%m-%d")
+        age = datetime.now() - parsed
+
+    modified_date = project.labels.get("modified_date", None)
+    if modified_date is None:
+        deployed_to = "Never"
+    else:
+        parsed = datetime.strptime(modified_date, "%Y-%m-%d")
+        deployed_to = datetime.now() - parsed
+
+    return [
+        project.display_name,
+        delta_to_human_readable_string(age),
+        delta_to_human_readable_string(deployed_to),
+    ]
+
+
+def main():
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--google-cloud-org",
+        "-o",
+        help="Organization ID to scan for feature environments. Should take the form organizations/1234 where 1234 is the ID.",
+        default="organizations/1003133169753",
+    )
+    args = parser.parse_args()
+
+    credentials, _ = google.auth.default()
+    projects_client = ProjectsClient(credentials=credentials)
+    projects = sorted(
+        [
+            project
+            for project in projects_client.list_projects(parent=args.google_cloud_org)
+            if is_feature_env(project)
+        ],
+        key=lambda p: p.display_name,
+    )
+
+    rows = [to_row(project) for project in projects]
+
+    table = tabulate(
+        rows,
+        headers=[
+            "Name",
+            "Age",
+            "Last Deployed To",
+        ],
+    )
+
+    print(table)
+
+
+if __name__ == "__main__":
+    main()
