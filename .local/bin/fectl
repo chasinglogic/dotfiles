@@ -2,7 +2,7 @@
 
 import sys
 from argparse import ArgumentParser
-from datetime import datetime
+from datetime import datetime, timedelta
 
 try:
     import google.auth
@@ -60,26 +60,39 @@ def delta_to_human_readable_string(delta):
     return f"{days}d"
 
 
+def anticipated_reap_date(modified_date):
+    reap_date = modified_date + timedelta(days=2)
+    while reap_date.weekday() in (5, 6):
+        reap_date += timedelta(days=1)
+    return reap_date.strftime("%Y-%m-%d")
+
+
 def to_row(project):
     created_date = project.labels.get("created_date", None)
     if created_date is None:
         age = "null"
     else:
-        parsed = datetime.strptime(created_date, "%Y-%m-%d")
-        age = datetime.now() - parsed
+        parsed_created_date = datetime.strptime(created_date, "%Y-%m-%d")
+        age = datetime.now() - parsed_created_date
 
     modified_date = project.labels.get("modified_date", None)
     if modified_date is None:
         deployed_to = "Never"
     else:
-        parsed = datetime.strptime(modified_date, "%Y-%m-%d")
-        deployed_to = datetime.now() - parsed
+        parsed_modified_date = datetime.strptime(modified_date, "%Y-%m-%d")
+        deployed_to = datetime.now() - parsed_modified_date
+
+    stage = project.labels.get("stage", None)
+    if stage not in ("prod", "stage", "staging"):
+        stage = "dev"
 
     return [
         project.display_name,
         delta_to_human_readable_string(age),
         delta_to_human_readable_string(deployed_to),
         project.labels.get("reaper_behaviour", None),
+        stage,
+        anticipated_reap_date(parsed_modified_date) if modified_date is not None else None,
     ]
 
 
@@ -125,6 +138,8 @@ def main():
             "Age",
             "Last Deployed To",
             "Reaper Behaviour",
+            "Stage",
+            "Anticipated Reap Date",
         ],
     )
 
