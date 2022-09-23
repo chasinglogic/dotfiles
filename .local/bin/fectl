@@ -79,6 +79,7 @@ def to_row(project):
         project.display_name,
         delta_to_human_readable_string(age),
         delta_to_human_readable_string(deployed_to),
+        project.labels.get("reaper_behaviour", None),
     ]
 
 
@@ -111,6 +112,7 @@ def main():
             "Name",
             "Age",
             "Last Deployed To",
+            "Reaper Behaviour",
         ],
     )
 
