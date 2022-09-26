@@ -24,7 +24,7 @@ def is_feature_env(project):
     return has_reaper_labels
 
 
-def delta_to_human_readable_string(delta):
+def delta_to_human_readable_string(delta, show_today=False):
     days = delta.days
     # Use int here because we always want to round down. Otherwise the maths
     # goes weird and 40 seconds gets rounded up to counting as 1 minute.
@@ -32,7 +32,9 @@ def delta_to_human_readable_string(delta):
     minutes = int(delta.seconds / 60) - (hours * 60)
     seconds = int(delta.seconds - (hours * 60 * 60) - (minutes * 60))
 
-    if not all(
+    if not all([days, hours, minutes]) or not all([days, hours]) or not days:
+        return "Today"
+    elif not all(
         [
             days,
             hours,
@@ -73,33 +75,39 @@ def to_row(project):
     if created_date is None:
         age = "null"
     else:
-        parsed_created_date = datetime.strptime(created_date, "%Y-%m-%d")
-        age = datetime.now() - parsed_created_date
+        parsed_created_date = datetime.strptime(created_date, "%Y-%m-%d").date()
+        age = datetime.now().date() - parsed_created_date
 
     modified_date = project.labels.get("modified_date", None)
     if modified_date is None:
         deployed_to = "Never"
     else:
-        parsed_modified_date = datetime.strptime(modified_date, "%Y-%m-%d")
-        deployed_to = datetime.now() - parsed_modified_date
+        parsed_modified_date = datetime.strptime(modified_date, "%Y-%m-%d").date()
+        deployed_to = datetime.now().date() - parsed_modified_date
 
     stage = project.labels.get("stage", None)
     if stage not in ("prod", "stage", "staging"):
         stage = "dev"
 
-    reap_date = anticipated_reap_date(parsed_modified_date) if modified_date is not None else None
+    reap_date = (
+        anticipated_reap_date(parsed_modified_date)
+        if modified_date is not None
+        else None
+    )
     if reap_date:
         reap_date_str = reap_date.strftime("%Y-%m-%d")
-        if reap_date < datetime.now() and project.labels.get("reaper_behaviour", None) != "ignore":
+        if (
+            reap_date < datetime.now().date()
+            and project.labels.get("reaper_behaviour", None) != "ignore"
+        ):
             reap_date_str = f"{reap_date_str} (SHOULD HAVE REAPED!)"
     else:
         reap_date_str = "None"
 
-
     return [
         project.display_name,
         delta_to_human_readable_string(age),
-        delta_to_human_readable_string(deployed_to),
+        delta_to_human_readable_string(deployed_to, show_today=True),
         project.labels.get("reaper_behaviour", None),
         stage,
         reap_date_str,
@@ -135,7 +143,8 @@ def main():
 
     if args.reaper_behaviour:
         projects = [
-            project for project in projects
+            project
+            for project in projects
             if project.labels.get("reaper_behaviour") == args.reaper_behaviour.lower()
         ]
 
