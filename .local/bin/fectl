@@ -26,38 +26,8 @@ def is_feature_env(project):
 
 def delta_to_human_readable_string(delta, show_today=False):
     days = delta.days
-    # Use int here because we always want to round down. Otherwise the maths
-    # goes weird and 40 seconds gets rounded up to counting as 1 minute.
-    hours = int(delta.seconds / 60 / 60)
-    minutes = int(delta.seconds / 60) - (hours * 60)
-    seconds = int(delta.seconds - (hours * 60 * 60) - (minutes * 60))
-
-    if not all([days, hours, minutes]) or not all([days, hours]) or not days:
+    if not days and show_today:
         return "Today"
-    elif not all(
-        [
-            days,
-            hours,
-            minutes,
-        ]
-    ):
-        return f"{seconds}s"
-
-    elif not all([days, hours]):
-        return f"{minutes}m{seconds}s"
-
-    elif not days and hours < 2:
-        return f"{minutes + (hours * 60)}m"
-
-    elif not days:
-        if minutes:
-            return f"{hours}h{minutes}m"
-        return f"{hours}h"
-
-    elif days < 3:
-        if hours:
-            return f"{days}d{hours}h"
-        return f"{days}d"
 
     return f"{days}d"
 
@@ -70,13 +40,20 @@ def anticipated_reap_date(modified_date):
     return reap_date
 
 
+def get_stage(project):
+    stage = project.labels.get("stage", None)
+    if stage not in ("prod", "stage", "staging"):
+        stage = "dev"
+    return stage
+
+
 def to_row(project):
     created_date = project.labels.get("created_date", None)
     if created_date is None:
         age = "null"
     else:
-        parsed_created_date = datetime.strptime(created_date, "%Y-%m-%d").date()
-        age = datetime.now().date() - parsed_created_date
+        parsed_created_date = datetime.strptime(created_date, "%Y-%m-%d")
+        age = datetime.now() - parsed_created_date
 
     modified_date = project.labels.get("modified_date", None)
     if modified_date is None:
@@ -85,20 +62,17 @@ def to_row(project):
         parsed_modified_date = datetime.strptime(modified_date, "%Y-%m-%d").date()
         deployed_to = datetime.now().date() - parsed_modified_date
 
-    stage = project.labels.get("stage", None)
-    if stage not in ("prod", "stage", "staging"):
-        stage = "dev"
-
+    stage = get_stage(project)
+    reaper_behavior = project.labels.get("reaper_behaviour", None)
     reap_date = (
         anticipated_reap_date(parsed_modified_date)
-        if modified_date is not None
+        if modified_date is not None and reaper_behavior != "ignore"
         else None
     )
     if reap_date:
         reap_date_str = reap_date.strftime("%Y-%m-%d")
         if (
             reap_date < datetime.now().date()
-            and project.labels.get("reaper_behaviour", None) != "ignore"
         ):
             reap_date_str = f"{reap_date_str} (SHOULD HAVE REAPED!)"
     else:
@@ -112,6 +86,30 @@ def to_row(project):
         stage,
         reap_date_str,
     ]
+
+
+def sort_by_name(project):
+    return project.display_name
+
+
+def sort_by_created_date(project):
+    created_date = project.labels.get("created_date", None)
+    if not created_date:
+        return None
+    return datetime.strptime(created_date, "%Y-%m-%d")
+
+
+def sort_by_modified_date(project):
+    modified_date = project.labels.get("modified_date", None)
+    if not modified_date:
+        return None
+    return datetime.strptime(modified_date, "%Y-%m-%d")
+
+def sort_by_label(label):
+    def __inner(project):
+        return project.labels.get(label, None)
+
+    return __inner
 
 
 def main():
@@ -128,7 +126,34 @@ def main():
         help="If provided only environments with the corresponding reaper behaviour will be displayed.",
         default=None,
     )
+    parser.add_argument(
+        "--sort",
+        "-s",
+        help="If provided sort by the given column",
+        default="name",
+    )
     args = parser.parse_args()
+
+    sort_functions = {
+        "name": sort_by_name,
+        "age": sort_by_created_date,
+        "deployed": sort_by_modified_date,
+        "last-deployed": sort_by_modified_date,
+        "stage": get_stage,
+        "reaper-behaviour": sort_by_label("reaper_behaviour"),
+        "reaper-behavior": sort_by_label("reaper_behaviour"),
+        "reaper_behaviour": sort_by_label("reaper_behaviour"),
+        "reaper_behavior": sort_by_label("reaper_behaviour"),
+        "reaper": sort_by_label("reaper_behaviour"),
+    }
+
+    try:
+        sort_func = sort_functions[args.sort]
+    except KeyError:
+        print(f"{args.sort} is not a valid sort option, valid options are:")
+        for key in sort_functions.keys():
+            print(f"\t{key}")
+        sys.exit(1)
 
     credentials, _ = google.auth.default()
     projects_client = ProjectsClient(credentials=credentials)
@@ -138,7 +163,7 @@ def main():
             for project in projects_client.list_projects(parent=args.google_cloud_org)
             if is_feature_env(project)
         ],
-        key=lambda p: p.display_name,
+        key=sort_func,
     )
 
     if args.reaper_behaviour:
