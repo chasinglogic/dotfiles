@@ -65,11 +65,7 @@ def anticipated_reap_date(modified_date):
     while reap_date.weekday() in (5, 6):
         reap_date += timedelta(days=1)
 
-    reap_date_str = reap_date.strftime("%Y-%m-%d")
-    if reap_date < datetime.now():
-        return f"{reap_date_str} (SHOULD HAVE REAPED!)"
-
-    return reap_date_str
+    return reap_date
 
 
 def to_row(project):
@@ -91,13 +87,22 @@ def to_row(project):
     if stage not in ("prod", "stage", "staging"):
         stage = "dev"
 
+    reap_date = anticipated_reap_date(parsed_modified_date) if modified_date is not None else None
+    if reap_date:
+        reap_date_str = reap_date.strftime("%Y-%m-%d")
+        if reap_date < datetime.now() and project.labels.get("reaper_behaviour", None) != "ignore":
+            reap_date_str = f"{reap_date_str} (SHOULD HAVE REAPED!)"
+    else:
+        reap_date_str = "None"
+
+
     return [
         project.display_name,
         delta_to_human_readable_string(age),
         delta_to_human_readable_string(deployed_to),
         project.labels.get("reaper_behaviour", None),
         stage,
-        anticipated_reap_date(parsed_modified_date) if modified_date is not None else None,
+        reap_date_str,
     ]
 
 
