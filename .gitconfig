@@ -30,6 +30,7 @@
     olcolor = %Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>
 
 [alias]
+    su = submodule update --init --recursive
     unstage = reset HEAD --
     amend = commit --amend --no-edit
     vader = push --force-with-lease
