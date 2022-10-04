@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import os
+import json
+import csv
 import sys
 from argparse import ArgumentParser
 from datetime import datetime, timedelta
@@ -154,7 +156,6 @@ def main():
     parser = ArgumentParser()
     parser.add_argument(
         "--google-cloud-org",
-        "-o",
         help="Organization ID to scan for feature environments. Should take the form organizations/1234 where 1234 is the ID.",
         default="organizations/1003133169753",
     )
@@ -175,6 +176,12 @@ def main():
         "-i",
         action="store_true",
         help="If provided JIRA ticket info will be fetched and added to the table",
+    )
+    parser.add_argument(
+        "--output",
+        "-o",
+        default="ascii",
+        help="Select the output format for the data from: ascii, json, or csv",
     )
     args = parser.parse_args()
 
@@ -221,6 +228,7 @@ def main():
         to_row(project, include_ticket_info=args.include_ticket_info)
         for project in projects
     ]
+
     headers = [
         "Name",
         "Age",
@@ -232,12 +240,27 @@ def main():
     if args.include_ticket_info:
         headers.extend(["JIRA Ticket Summary", "JIRA Ticket Status"])
 
-    table = tabulate(
-        rows,
-        headers=headers,
-    )
+    if args.output == "csv":
+        c_writer = csv.writer(sys.stdout)
+        c_writer.writerow(headers)
+        c_writer.writerows(rows)
+    elif args.output == "json":
+        data = [
+            {
+                headers[i]: row[i]
+                for i in range(len(row))
+            }
+            for row in rows
+        ]
 
-    print(table)
+        json.dump(data, sys.stdout, indent=4)
+    else:
+        table = tabulate(
+            rows,
+            headers=headers,
+        )
+
+        print(table)
 
 
 if __name__ == "__main__":
