@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
 
+import os
 import sys
 from argparse import ArgumentParser
 from datetime import datetime, timedelta
 
 try:
     import google.auth
+    import requests
     from google.cloud.resourcemanager_v3 import ProjectsClient
     from tabulate import tabulate
 except ImportError:
     print(
-        "ERROR: You must install tabulate and google-cloud-resource-manager to use this tool."
+        "ERROR: You must install request, tabulate, and google-cloud-resource-manager to use this tool."
     )
-    print("pip3 install --user google-cloud-resource-manager tabulate")
+    print("pip3 install --user google-cloud-resource-manager tabulate requests")
     sys.exit(1)
+
+
+JIRA_DOMAIN = os.getenv("JIRA_DOMAIN", "mpbphotographic.atlassian.net")
+JIRA_USERNAME = os.getenv("JIRA_USERNAME")
+JIRA_TOKEN = os.getenv("JIRA_TOKEN")
 
 
 def is_feature_env(project):
@@ -22,6 +29,15 @@ def is_feature_env(project):
         and project.labels.get("modified_date", None) is not None
     )
     return has_reaper_labels
+
+
+def get_ticket_number(project):
+    if isinstance(project, str):
+        name = project
+    else:
+        name = project.display_name
+
+    return name.replace("mpb-platform-", "")
 
 
 def delta_to_human_readable_string(delta, show_today=False):
@@ -47,7 +63,26 @@ def get_stage(project):
     return stage
 
 
-def to_row(project):
+def get_ticket_info(project):
+    ticket_number = get_ticket_number(project)
+    response = requests.get(
+        f"https://{JIRA_DOMAIN}/rest/api/3/issue/{ticket_number}",
+        auth=(JIRA_USERNAME, JIRA_TOKEN),
+    )
+    if response.status_code == 404:
+        return [None, None]
+
+    response.raise_for_status()
+
+    data = response.json()
+    fields = data.get("fields", {})
+    return [
+        fields.get("summary"),
+        fields.get("status", {}).get("name"),
+    ]
+
+
+def to_row(project, include_ticket_info=False):
     created_date = project.labels.get("created_date", None)
     if created_date is None:
         age = "null"
@@ -71,14 +106,12 @@ def to_row(project):
     )
     if reap_date:
         reap_date_str = reap_date.strftime("%Y-%m-%d")
-        if (
-            reap_date < datetime.now().date()
-        ):
+        if reap_date < datetime.now().date():
             reap_date_str = f"{reap_date_str} (SHOULD HAVE REAPED!)"
     else:
         reap_date_str = "None"
 
-    return [
+    row = [
         project.display_name,
         delta_to_human_readable_string(age),
         delta_to_human_readable_string(deployed_to, show_today=True),
@@ -86,6 +119,10 @@ def to_row(project):
         stage,
         reap_date_str,
     ]
+    if include_ticket_info:
+        row.extend(get_ticket_info(project))
+
+    return row
 
 
 def sort_by_name(project):
@@ -104,6 +141,7 @@ def sort_by_modified_date(project):
     if not modified_date:
         return None
     return datetime.strptime(modified_date, "%Y-%m-%d")
+
 
 def sort_by_label(label):
     def __inner(project):
@@ -131,6 +169,12 @@ def main():
         "-s",
         help="If provided sort by the given column",
         default="name",
+    )
+    parser.add_argument(
+        "--include-ticket-info",
+        "-i",
+        action="store_true",
+        help="If provided JIRA ticket info will be fetched and added to the table",
     )
     args = parser.parse_args()
 
@@ -173,18 +217,24 @@ def main():
             if project.labels.get("reaper_behaviour") == args.reaper_behaviour.lower()
         ]
 
-    rows = [to_row(project) for project in projects]
+    rows = [
+        to_row(project, include_ticket_info=args.include_ticket_info)
+        for project in projects
+    ]
+    headers = [
+        "Name",
+        "Age",
+        "Last Deployed To",
+        "Reaper Behaviour",
+        "Stage",
+        "Anticipated Reap Date",
+    ]
+    if args.include_ticket_info:
+        headers.extend(["JIRA Ticket Summary", "JIRA Ticket Status"])
 
     table = tabulate(
         rows,
-        headers=[
-            "Name",
-            "Age",
-            "Last Deployed To",
-            "Reaper Behaviour",
-            "Stage",
-            "Anticipated Reap Date",
-        ],
+        headers=headers,
     )
 
     print(table)
