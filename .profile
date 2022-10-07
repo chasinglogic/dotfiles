@@ -116,6 +116,7 @@ add_to_path $HOME/Library/Python/3.9/bin
 add_to_path $HOME/.mpb/common-be-scripts
 add_to_path /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/
 add_to_path /opt/homebrew/Cellar/go@1.16/1.16.8/libexec/bin
+add_to_path $HOME/.rbenv/bin
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
