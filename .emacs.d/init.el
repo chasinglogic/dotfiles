@@ -91,6 +91,11 @@
                '("elpa" . "https://elpa.gnu.org/packages/")
                '("melpa" . "https://melpa.org/packages/")))
 
+;; To compile elc files as needed, in a deferred/async manner.
+(when (fboundp 'native-compile-async)
+  (setq comp-deferred-compilation t
+        comp-deferred-compilation-black-list '("/mu4e.*\\.el$")))
+
 ;; Next we setup the amazing `use-package' package. Every package,
 ;; other than `use-package' itself, is installed with
 ;; `use-package'. It's a macro that makes configuration clear,
@@ -235,13 +240,7 @@
   :config
   (setq lsp-signature-auto-activate nil))
 
-(use-package company-lsp
-  :init
-  (defun chasinglogic-setup-lsp-completion ()
-    (setq-local company-backends company-backends)
-    (add-to-list 'company-backends 'company-lsp))
-
-  (add-hook 'lsp-mode-hook 'chasinglogic-setup-lsp-completion))
+(use-package lsp-ui :commands lsp-ui-mode)
 
 ;; Increase the amount of data which Emacs reads from the
 ;; process. Again the emacs default is too low 4k considering that the
