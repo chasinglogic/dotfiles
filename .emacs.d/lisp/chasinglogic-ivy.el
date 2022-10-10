@@ -67,6 +67,10 @@
          (:map minibuffer-local-map
                ("M-r" . 'counsel-minibuffer-history))))
 
+;; LSP integration
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
 (provide 'chasinglogic-ivy)
 
 ;;; chasinglogic-ivy.el ends here
