@@ -110,7 +110,7 @@ add_to_path $HOME/.cargo/bin
 add_to_path $HOME/.local/bin
 add_to_path $HOME/.cask/bin
 add_to_path $HOME/.cask/bin
-add_to_path /Library/Python/3.9/bin
+add_to_path $HOME/Library/Python/3.10/bin
 add_to_path /opt/homebrew/bin
 add_to_path $HOME/Library/Python/3.9/bin
 add_to_path $HOME/.mpb/common-be-scripts
