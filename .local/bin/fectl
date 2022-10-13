@@ -4,6 +4,7 @@ import os
 import json
 import csv
 import sys
+import shutil
 from argparse import ArgumentParser
 from datetime import datetime, timedelta
 
@@ -79,8 +80,8 @@ def get_ticket_info(project):
     data = response.json()
     fields = data.get("fields", {})
     return [
-        fields.get("summary"),
         fields.get("status", {}).get("name"),
+        fields.get("summary"),
     ]
 
 
@@ -234,13 +235,13 @@ def main():
     headers = [
         "Name",
         "Age",
-        "Last Deployed To",
-        "Reaper Behaviour",
+        "Deployed",
+        "Reaper",
         "Stage",
-        "Anticipated Reap Date",
+        "Expected Reap Date",
     ]
     if args.include_ticket_info:
-        headers.extend(["JIRA Ticket Summary", "JIRA Ticket Status"])
+        headers.extend(["JIRA Ticket Status", "JIRA Ticket Summary"])
 
     if args.output == "csv":
         c_writer = csv.writer(sys.stdout)
@@ -257,9 +258,21 @@ def main():
 
         json.dump(data, sys.stdout, indent=4)
     else:
+        width, _ = shutil.get_terminal_size((80, 20))
+        if width < 200:
+            maxcolwidths = max(
+                [
+                    len(row[0])
+                    for row in rows
+                ]
+            )
+        else:
+            maxcolwidths = 100
+
         table = tabulate(
             rows,
             headers=headers,
+            maxcolwidths=maxcolwidths,
         )
 
         print(table)
