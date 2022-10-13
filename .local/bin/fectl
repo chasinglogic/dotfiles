@@ -153,9 +153,15 @@ def main():
         default="organizations/1003133169753",
     )
     parser.add_argument(
-        "--reaper-behaviour",
-        "-r",
-        help="If provided only environments with the corresponding reaper behaviour will be displayed.",
+        "--filter-on",
+        "-f",
+        help="If provided filter this column where value matches --filter-value.",
+        default=None,
+    )
+    parser.add_argument(
+        "--filter-value",
+        "-v",
+        help="If provided filter the --filter-on column where value matches this value.",
         default=None,
     )
     parser.add_argument(
@@ -177,6 +183,14 @@ def main():
         help="Select the output format for the data from: ascii, json, or csv",
     )
     args = parser.parse_args()
+
+    if (args.filter_on is None and args.filter_value is not None) or (
+        args.filter_on is not None and args.filter_value is None
+    ):
+        print(
+            "If --filter-on is provided --filter-value must always be provided and vice versa."
+        )
+        sys.exit(1)
 
     credentials, _ = google.auth.default()
     projects_client = ProjectsClient(credentials=credentials)
@@ -224,8 +238,9 @@ def main():
         key=sort_func,
     )
 
-    if args.reaper_behaviour:
-        rows = filter(rows, lambda row: row[3] == args.reaper_behaviour)
+    if args.filter_on and args.filter_value:
+        idx = [h.lower() for h in headers].index(args.filter_on)
+        rows = filter(lambda row: row[idx] == args.filter_value, rows)
 
     if args.output == "csv":
         c_writer = csv.writer(sys.stdout)
