@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import re
 import json
 import csv
 import sys
@@ -11,7 +12,7 @@ from datetime import datetime, timedelta
 try:
     import google.auth
     import requests
-    from google.cloud.resourcemanager_v3 import ProjectsClient
+    from google.cloud.resourcemanager_v3 import ProjectsClient, SearchProjectsRequest
     from tabulate import tabulate
 except ImportError:
     print(
@@ -24,14 +25,6 @@ except ImportError:
 JIRA_DOMAIN = os.getenv("JIRA_DOMAIN", "mpbphotographic.atlassian.net")
 JIRA_USERNAME = os.getenv("JIRA_USERNAME")
 JIRA_TOKEN = os.getenv("JIRA_TOKEN")
-
-
-def is_feature_env(project):
-    has_reaper_labels = (
-        project.labels.get("reaper_behaviour", None) is not None
-        and project.labels.get("modified_date", None) is not None
-    )
-    return has_reaper_labels
 
 
 def get_ticket_number(project):
@@ -66,8 +59,14 @@ def get_stage(project):
     return stage
 
 
+TICKET_VALIDATOR = re.compile("[A-z]{3,}-[0-9]{1,}")
+
+
 def get_ticket_info(project):
     ticket_number = get_ticket_number(project)
+    if not TICKET_VALIDATOR.match(ticket_number):
+        return ["Unknown", "Unknown"]
+
     response = requests.get(
         f"https://{JIRA_DOMAIN}/rest/api/3/issue/{ticket_number}",
         auth=(JIRA_USERNAME, JIRA_TOKEN),
@@ -146,13 +145,6 @@ def sort_by_modified_date(project):
     return datetime.strptime(modified_date, "%Y-%m-%d")
 
 
-def sort_by_label(label):
-    def __inner(project):
-        return project.labels.get(label, None)
-
-    return __inner
-
-
 def main():
     parser = ArgumentParser()
     parser.add_argument(
@@ -186,51 +178,8 @@ def main():
     )
     args = parser.parse_args()
 
-    sort_functions = {
-        "name": sort_by_name,
-        "age": sort_by_created_date,
-        "deployed": sort_by_modified_date,
-        "last-deployed": sort_by_modified_date,
-        "stage": get_stage,
-        "reaper-behaviour": sort_by_label("reaper_behaviour"),
-        "reaper-behavior": sort_by_label("reaper_behaviour"),
-        "reaper_behaviour": sort_by_label("reaper_behaviour"),
-        "reaper_behavior": sort_by_label("reaper_behaviour"),
-        "reaper": sort_by_label("reaper_behaviour"),
-    }
-
-    try:
-        sort_func = sort_functions[args.sort if args.sort != "status" else "name"]
-    except KeyError:
-        print(f"{args.sort} is not a valid sort option, valid options are:")
-        for key in sort_functions.keys():
-            print(f"\t{key}")
-        sys.exit(1)
-
     credentials, _ = google.auth.default()
     projects_client = ProjectsClient(credentials=credentials)
-    projects = sorted(
-        [
-            project
-            for project in projects_client.list_projects(parent=args.google_cloud_org)
-            if is_feature_env(project)
-        ],
-        key=sort_func,
-    )
-
-    if args.reaper_behaviour:
-        projects = [
-            project
-            for project in projects
-            if project.labels.get("reaper_behaviour") == args.reaper_behaviour.lower()
-        ]
-
-    rows = [
-        to_row(project, include_ticket_info=args.include_ticket_info)
-        for project in projects
-    ]
-    if args.sort == "status":
-        rows = sorted(rows, key=lambda row: row[7])
 
     headers = [
         "Name",
@@ -241,31 +190,55 @@ def main():
         "Expected Reap Date",
     ]
     if args.include_ticket_info:
-        headers.extend(["JIRA Ticket Status", "JIRA Ticket Summary"])
+        headers.extend(["JIRA Status", "JIRA Summary"])
+
+    sort_functions = {
+        k.lower().replace(" ", "-"): lambda row: row[i] for i, k in enumerate(headers)
+    }
+    try:
+        sort_func = sort_functions[args.sort]
+    except KeyError:
+        print(f"{args.sort} is not a valid sort option, valid options are:")
+        for key in sort_functions.keys():
+            print(f"\t{key}")
+        sys.exit(1)
+
+    sort_functions = {
+        k.lower().replace(" ", "-"): lambda row: row[i] for i, k in enumerate(headers)
+    }
+    try:
+        sort_func = sort_functions[args.sort]
+    except KeyError:
+        print(f"{args.sort} is not a valid sort option, valid options are:")
+        for key in sort_functions.keys():
+            print(f"\t{key}")
+        sys.exit(1)
+
+    rows = sorted(
+        [
+            to_row(project, include_ticket_info=args.include_ticket_info)
+            for project in projects_client.search_projects(
+                query=f"displayName:mpb-platform-* labels:reaper_behaviour lifecycleState:ACTIVE",
+            )
+        ],
+        key=sort_func,
+    )
+
+    if args.reaper_behaviour:
+        rows = filter(rows, lambda row: row[3] == args.reaper_behaviour)
 
     if args.output == "csv":
         c_writer = csv.writer(sys.stdout)
         c_writer.writerow(headers)
         c_writer.writerows(rows)
     elif args.output == "json":
-        data = [
-            {
-                headers[i]: row[i]
-                for i in range(len(row))
-            }
-            for row in rows
-        ]
+        data = [{headers[i]: row[i] for i in range(len(row))} for row in rows]
 
         json.dump(data, sys.stdout, indent=4)
     else:
         width, _ = shutil.get_terminal_size((80, 20))
         if width < 200:
-            maxcolwidths = max(
-                [
-                    len(row[0])
-                    for row in rows
-                ]
-            )
+            maxcolwidths = max([len(row[0]) for row in rows])
         else:
             maxcolwidths = 100
 
