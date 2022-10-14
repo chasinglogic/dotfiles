@@ -33,7 +33,7 @@ def get_ticket_number(project):
     else:
         name = project.display_name
 
-    return "-".join(name.split("-")[2:4])
+    return "-".join(name.split("-")[2:4]).upper()
 
 
 def delta_to_human_readable_string(delta, show_today=False):
@@ -62,29 +62,36 @@ def get_stage(project):
 TICKET_VALIDATOR = re.compile("[A-z]{3,}-[0-9]{1,}")
 
 
-def get_ticket_info(project):
-    ticket_number = get_ticket_number(project)
-    if not TICKET_VALIDATOR.match(ticket_number):
-        return ["Unknown", "Unknown"]
-
-    response = requests.get(
-        f"https://{JIRA_DOMAIN}/rest/api/3/issue/{ticket_number}",
-        auth=(JIRA_USERNAME, JIRA_TOKEN),
-    )
-    if response.status_code == 404:
-        return ["Unknown", "Unknown"]
-
-    response.raise_for_status()
-
-    data = response.json()
-    fields = data.get("fields", {})
-    return [
-        fields.get("status", {}).get("name"),
-        fields.get("summary"),
+def collect_ticket_info(projects):
+    ticket_numbers = [
+        get_ticket_number(project)
+        for project in projects
+    ]
+    ticket_numbers = [
+        ticket_number for ticket_number in ticket_numbers
+        if TICKET_VALIDATOR.match(ticket_number)
     ]
 
+    jql = f"key in ({', '.join(ticket_numbers)})"
+    response = requests.get(
+        f"https://{JIRA_DOMAIN}/rest/api/2/search",
+        params={"jql": jql},
+        auth=(JIRA_USERNAME, JIRA_TOKEN),
+    )
 
-def to_row(project, include_ticket_info=False):
+    data = response.json()
+    issues = data["issues"]
+
+    return {
+        issue["key"]: (
+            issue.get("fields", {}).get("status", {}).get("name"),
+            issue.get("fields", {}).get("summary"),
+        )
+        for issue in issues
+    }
+
+
+def to_row(project, include_ticket_info=False, ticket_info=None):
     created_date = project.labels.get("created_date", None)
     if created_date is None:
         age = "null"
@@ -122,7 +129,12 @@ def to_row(project, include_ticket_info=False):
         reap_date_str,
     ]
     if include_ticket_info:
-        row.extend(get_ticket_info(project))
+        row.extend(
+            ticket_info.get(
+                get_ticket_number(project),
+                ("Unknown", "Unknown"),
+            )
+        )
 
     return row
 
@@ -228,12 +240,22 @@ def main():
             print(f"\t{key}")
         sys.exit(1)
 
+    projects = projects_client.search_projects(
+        query=f"displayName:mpb-platform-* labels:reaper_behaviour lifecycleState:ACTIVE",
+    )
+
+    ticket_info = {}
+    if args.include_ticket_info:
+        ticket_info = collect_ticket_info(projects)
+
     rows = sorted(
         [
-            to_row(project, include_ticket_info=args.include_ticket_info)
-            for project in projects_client.search_projects(
-                query=f"displayName:mpb-platform-* labels:reaper_behaviour lifecycleState:ACTIVE",
+            to_row(
+                project,
+                include_ticket_info=args.include_ticket_info,
+                ticket_info=ticket_info,
             )
+            for project in projects
         ],
         key=sort_func,
     )
