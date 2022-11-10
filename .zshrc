@@ -27,6 +27,7 @@ plugins=(
     helm
 )
 
+echo "Sourcing oh-my-zsh..."
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
