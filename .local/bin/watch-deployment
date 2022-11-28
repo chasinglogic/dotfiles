@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
 ENV=${1:-prod}
-NAMESPACE="production"
 
-watch "kubectl --context=$ENV get pods -n $NAMESPACE | grep -v Running | grep -v Completed | grep -v OOMKilled | grep -v Evicted"
+watch "kubectl --context=$ENV get pods -A | grep -v Running | grep -v Completed | grep -v OOMKilled | grep -v Evicted"
