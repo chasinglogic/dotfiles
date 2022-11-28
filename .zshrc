@@ -42,6 +42,8 @@ echo "Sourcing .env.sh..."
 source_if_exists $HOME/.env.sh
 echo "Sourcing aliases..."
 source_if_exists $HOME/.aliases.sh
+echo "Sourcing local environment..."
+source_if_exists $HOME/.local.sh
 
 # Some Oh-my-zsh thing aliases this to a git command
 unalias gam

@@ -110,7 +110,7 @@ def to_row(project, include_ticket_info=False, ticket_info=None):
     reaper_behavior = project.labels.get("reaper_behaviour", None)
     reap_date = (
         anticipated_reap_date(parsed_modified_date)
-        if modified_date is not None and reaper_behavior != "ignore"
+        if modified_date is not None and reaper_behavior not in ("ignore", "no-reap")
         else None
     )
     if reap_date:
