@@ -45,20 +45,8 @@
          ("C-x v c" . magit-commit)
          ("C-x v s" . magit-status))
   :config
-  (when (bound-and-true-p evil-mode)
-    (use-package evil-magit
-      :config
-      (require 'evil-magit))
-
-    (general-nmap
-      :keymaps '(magit-mode-map magit-status-mode-map)
-      "="     'magit-section-toggle
-      "TAB"   'magit-section-toggle
-      "<tab>" 'magit-section-toggle))
-
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   (setq magit-prefer-push-default t)
-
   :commands 'magit-status)
 
 ;; Git Link

@@ -156,8 +156,7 @@
 
 ;;;; Color Theme
 
-(use-package modus-vivendi-theme)
-(use-package modus-operandi-theme)
+(use-package modus-themes)
 
 (defvar chasinglogic-dark-theme 'modus-vivendi)
 (defvar chasinglogic-light-theme 'modus-operandi)
