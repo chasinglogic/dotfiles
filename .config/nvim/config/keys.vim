@@ -14,6 +14,8 @@ endif
 nmap <Leader>ps :Telescope live_grep<CR>
 nmap <Leader>pc :make
 nmap <Leader>h :lua require("replacer").run({ rename_files = false })<cr>
+nmap <Leader>pa :args `rg --files --hidden --ignore-vcs -g '!{**/node_modules/*,**/.git/*}'`<cr>
+nmap <Leader>pg :grep  
 " }}}
 " Lists {{{
 nmap ]q  :cnext<CR>
