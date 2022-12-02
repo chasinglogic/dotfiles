@@ -19,7 +19,7 @@ filetype plugin indent on
 " }}}
 " Tab completion settings for command line {{{
 " Ignore these kinds of files when pressing <TAB> to complete a command.
-set wildignore+=*.o,*.git,*.svn,*.pyc,env/*
+set wildignore+=*.o,*.git,*.svn,*.pyc,env/*,.git/*
 " }}}
 " Line numbers {{{
 set number
