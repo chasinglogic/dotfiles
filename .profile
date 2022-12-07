@@ -121,6 +121,9 @@ add_to_path $HOME/.rbenv/bin
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
 
+[ -d "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -d "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
 # This has to be after the $PATH is set up.
 # FZF default find command
 if [[ -n $(find_executable fd) ]]; then
