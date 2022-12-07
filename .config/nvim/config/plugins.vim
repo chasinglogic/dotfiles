@@ -28,6 +28,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tjdevries/nlua.nvim'
 Plug 'hashivim/vim-terraform'
 Plug 'martinda/Jenkinsfile-vim-syntax'
+Plug 'towolf/vim-helm'
 " }}}
 " Editor improvements {{{
 Plug 'SirVer/UltiSnips'          " Snippets in vim

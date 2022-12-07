@@ -19,18 +19,18 @@ function redact() {
 }
 
 function st() {
-  sess=""
   if [[ -n $1 ]]; then
     sess=$(tmux list-session -F "#S" | grep -i $1)
+    tmux attach-session -t $1
   else
-    sess=$(tmux list-session -F "#S" | fzf)
+    if [[ -n $TMUX ]]; then
+        tmux choose-tree -s
+    else
+        sess=$(tmux list-session -F "#S" | head -n1)
+        tmux attach-session -t $sess \; choose-tree -s
+    fi
   fi
 
-  if [[ -n $TMUX ]]; then
-    tmux switch-client -t $sess
-  else
-    tmux attach-session -t $sess
-  fi
 }
 
 function sp() {
