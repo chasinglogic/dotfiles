@@ -11,7 +11,8 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/popup.nvim'
 " }}}
 " Fuzzy finding {{{
-Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'rev': '0.1.x' }
+Plug 'nvim-telescope/telescope-fzy-native.nvim'  " Stricly a speed improvement for Telescope
 " }}}
 " Tpope general improvements {{{
 Plug 'tpope/vim-abolish'    " Better subst
@@ -32,13 +33,16 @@ Plug 'towolf/vim-helm'
 " }}}
 " Editor improvements {{{
 Plug 'SirVer/UltiSnips'          " Snippets in vim
+Plug 'quangnguyen30192/cmp-nvim-ultisnips' " Autocompletion for snippets
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
-Plug 'steelsojka/pears.nvim'     " Auto pair things
+Plug 'windwp/nvim-autopairs'  " Auto pair things
+Plug 'windwp/nvim-ts-autotag' " Auto close and rename JSX/html tags
 Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-nvim-lsp'   " Autocomplete LSP suggestions
+Plug 'hrsh7th/cmp-buffer'     " Autocomplete based on words in buffer
+Plug 'hrsh7th/cmp-path'       " Autocomplete filepaths
 Plug 'hrsh7th/nvim-cmp'
 Plug 'gabrielpoca/replacer.nvim' " Allows you to edit the quickfix window
 " }}}

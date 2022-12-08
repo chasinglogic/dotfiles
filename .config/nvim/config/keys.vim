@@ -6,14 +6,11 @@ nmap <Leader>fs :w<CR>
 nmap <Leader>fq :wq<CR>
 " }}}
 " Project level ops {{{
-if isdirectory('.git')
-  nmap <Leader>pf :Telescope git_files previewer=false<CR>
-else
-  nmap <Leader>pf :Telescope find_files previewer=false<CR>
-endif
+nmap <Leader>pf :Telescope find_files previewer=false<CR>
 nmap <Leader>ps :Telescope live_grep<CR>
 nmap <Leader>pc :make
 nmap <Leader>h :lua require("replacer").run({ rename_files = false })<cr>
+nmap <Leader>H :lua require("replacer").run({ rename_files = true })<cr>
 nmap <Leader>pa :args `rg --files --hidden --ignore-vcs -g '!{**/node_modules/*,**/.git/*}'`<cr>
 nmap <Leader>pg :grep  
 " }}}
