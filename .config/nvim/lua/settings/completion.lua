@@ -11,7 +11,13 @@ cmp.setup({
         end,
     },
     mapping = {
-        ['<Tab>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 's' }),
+        ["<Tab>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.confirm({ select = true})
+          else
+            fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+          end
+        end, { "i", "s" }),
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
@@ -20,13 +26,14 @@ cmp.setup({
     },
     sources = {
         { name = 'nvim_lsp' },
-
-        -- For luasnip user.
-        -- { name = 'luasnip' },
-
-        -- For ultisnips user.
-        -- { name = 'ultisnips' },
-
+        { name = 'ultisnips' },
         { name = 'buffer' },
+        { name = 'path' },
     }
 })
+
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
