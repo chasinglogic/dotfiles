@@ -32,7 +32,8 @@ Plug 'martinda/Jenkinsfile-vim-syntax'
 Plug 'towolf/vim-helm'
 " }}}
 " Editor improvements {{{
-Plug 'SirVer/UltiSnips'          " Snippets in vim
+Plug 'gbprod/yanky.nvim'                   " Emacs-like kill ring.
+Plug 'SirVer/UltiSnips'                    " Snippets in vim
 Plug 'quangnguyen30192/cmp-nvim-ultisnips' " Autocompletion for snippets
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{

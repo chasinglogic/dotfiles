@@ -6,7 +6,7 @@ nmap <Leader>fs :w<CR>
 nmap <Leader>fq :wq<CR>
 " }}}
 " Project level ops {{{
-nmap <Leader>pf :Telescope find_files previewer=false<CR>
+nmap <Leader>pf :Telescope find_files previewer=false hidden=true<CR>
 nmap <Leader>ps :Telescope live_grep<CR>
 nmap <Leader>pc :make
 nmap <Leader>h :lua require("replacer").run({ rename_files = false })<cr>
