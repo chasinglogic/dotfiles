@@ -81,8 +81,9 @@
 ;; On MacOS there's a new feature to have title bars match the window
 ;; they belong to. This makes Emacs do that so the title bar looks
 ;; like it's part of the buffer.
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-(add-to-list 'default-frame-alist '(ns-appearance . dark))
+(when (eq system-type 'darwin)
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+  (add-to-list 'default-frame-alist '(ns-appearance . dark)))
 
 
 ;;;; Advices
