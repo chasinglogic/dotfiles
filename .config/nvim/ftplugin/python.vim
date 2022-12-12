@@ -12,9 +12,9 @@ setlocal softtabstop=4
 setlocal shiftwidth=4
 
 
-" augroup fmt
-"   autocmd!
-"   autocmd BufWritePre *.py Neoformat
-" augroup END
+augroup fmt
+  autocmd!
+  autocmd BufWritePre *.py Neoformat
+augroup END
 
 let b:neoformat_run_all_formatters = 1
