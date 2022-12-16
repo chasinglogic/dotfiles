@@ -9,7 +9,7 @@ for stage in $STAGES; do
     cd $ROOT_DIR/stages/$stage
     echo "Running init -upgrade for stage: $stage"
     terraform init -upgrade > /dev/null
-    printf '# Plan for %s\n\n```' $stage > /tmp/plan.txt
+    printf '# Plan for %s in stage %s\n\n```' $TIER $stage > /tmp/plan.txt
     echo "Running plan for stage: $stage"
     MPB_DISABLE_PROMPTS=1 mpb tf -e mpb-platform -t $TIER plan -no-color -compact-warnings | grep -v Refreshing | awk '/Warnings/ {exit} {print}' >> /tmp/plan.txt
     printf '```\n' >> /tmp/plan.txt
