@@ -46,4 +46,12 @@ unset PS1
 # ourselves
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-PROMPT="$COMMAND_STATUS\$(venv_name)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{3}\$(lambda_or_delta)%f "
+if [[ $COLUMNS -lt 150 && "$SHORT_PROMPT" == "" ]]; then
+    export SHORT_PROMPT=1
+fi
+
+if [[ -n $SHORT_PROMPT ]]; then
+    PROMPT="> "
+else
+    PROMPT="$COMMAND_STATUS\$(venv_name)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{3}\$(lambda_or_delta)%f "
+fi
