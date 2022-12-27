@@ -51,7 +51,7 @@ if [[ $COLUMNS -lt 150 && "$SHORT_PROMPT" == "" ]]; then
 fi
 
 if [[ -n $SHORT_PROMPT ]]; then
-    PROMPT="> "
+    PROMPT="$PWD_PROMPT > "
 else
     PROMPT="$COMMAND_STATUS\$(venv_name)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{3}\$(lambda_or_delta)%f "
 fi
