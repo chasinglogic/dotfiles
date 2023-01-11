@@ -46,12 +46,19 @@ unset PS1
 # ourselves
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-if [[ $COLUMNS -lt 150 && "$SHORT_PROMPT" == "" ]]; then
-    export SHORT_PROMPT=1
-fi
+function set_prompt {
+    SHORT_PROMPT=0
+    if [[ $COLUMNS -lt 150 ]]; then
+        SHORT_PROMPT=1
+    fi
 
-if [[ -n $SHORT_PROMPT ]]; then
-    PROMPT="$PWD_PROMPT > "
-else
-    PROMPT="$COMMAND_STATUS\$(venv_name)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{3}\$(lambda_or_delta)%f "
-fi
+    if [[ $SHORT_PROMPT -ne 0 ]]; then
+        export PROMPT="$PWD_PROMPT > "
+    else
+        export PROMPT="$COMMAND_STATUS\$(venv_name)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{3}\$(lambda_or_delta)%f "
+    fi
+}
+
+set_prompt
+
+trap 'set_prompt' SIGWINCH
