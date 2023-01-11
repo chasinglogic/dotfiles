@@ -248,6 +248,7 @@ def main():
     if args.include_ticket_info:
         ticket_info = collect_ticket_info(projects)
 
+    feature_envs = [p for p in projects if get_stage(p) == "dev"]
     rows = sorted(
         [
             to_row(
@@ -286,6 +287,8 @@ def main():
         )
 
         print(table)
+        print("--------------------------------------------------------------------------------")
+        print(f"In total there are {len(feature_envs)} feature environments running.")
 
 
 if __name__ == "__main__":
