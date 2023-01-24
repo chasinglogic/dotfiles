@@ -34,18 +34,21 @@ rsync \
     --exclude $USER/.nuget \
     --exclude $USER/.nvm \
     --exclude $USER/.pyenv \
-    --exclude $USER/.redhat \
     --exclude $USER/.rbenv \
+    --exclude $USER/.redhat \
     --exclude $USER/.runelite \
     --exclude $USER/.rustup \
-    --exclude $USER/.vscode \
     --exclude $USER/.vs-kubernetes \
+    --exclude $USER/.vscode \
+    --exclude $USER/Code/go \
     --exclude $USER/Desktop \
     --exclude $USER/Downloads \
     --exclude $USER/Dropbox \
     --exclude $USER/Library \
-    --exclude $USER/Library/Application\ Support \
+    --exclude $USER/Movies/iMovie\ Library.imovielibrary \
+    --exclude $USER/Movies/iMovie\ Theater.theater \
     --exclude $USER/Pictures \
+    --exclude $USER/Work \
     -avz $USER $@
 echo "Backup complete with code: $?"
 exit $?
