@@ -35,6 +35,7 @@ rsync \
     --exclude $USER/.nvm \
     --exclude $USER/.pyenv \
     --exclude $USER/.redhat \
+    --exclude $USER/.rbenv \
     --exclude $USER/.runelite \
     --exclude $USER/.rustup \
     --exclude $USER/.vscode \
