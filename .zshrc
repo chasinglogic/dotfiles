@@ -45,6 +45,12 @@ source_if_exists $HOME/.aliases.sh
 echo "Sourcing local environment..."
 source_if_exists $HOME/.local.sh
 
+export PYENV_ROOT="$HOME/.pyenv"
+if [[ -d "$PYENV_ROOT" ]]; then
+    command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+fi
+
 # Some Oh-my-zsh thing aliases this to a git command
 unalias gam
 function gam() { "/Users/chasinglogic/bin/gam/gam" "$@" ; }
