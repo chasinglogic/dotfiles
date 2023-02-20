@@ -229,17 +229,6 @@ def main():
             print(f"\t{key}")
         sys.exit(1)
 
-    sort_functions = {
-        k.lower().replace(" ", "-"): lambda row: row[i] for i, k in enumerate(headers)
-    }
-    try:
-        sort_func = sort_functions[args.sort]
-    except KeyError:
-        print(f"{args.sort} is not a valid sort option, valid options are:")
-        for key in sort_functions.keys():
-            print(f"\t{key}")
-        sys.exit(1)
-
     projects = projects_client.search_projects(
         query=f"displayName:mpb-platform-* labels:reaper_behaviour lifecycleState:ACTIVE",
     )

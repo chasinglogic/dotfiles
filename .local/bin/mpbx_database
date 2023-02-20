@@ -1,6 +1,11 @@
-#!/usr/bin/sh
+#!/usr/bin/env bash
 
-NAME="mpbx-$1-db"
+INSTANCE=$1
+if [[ -z "$INSTANCE" ]]; then
+    INSTANCE="default"
+fi
+
+NAME="mpbx-$INSTANCE-db"
 
 if [[ -n $(docker container list -a | grep $NAME) ]]; then
     docker container start $NAME
