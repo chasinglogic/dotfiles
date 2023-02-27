@@ -34,7 +34,6 @@ Plug 'towolf/vim-helm'
 " Editor improvements {{{
 Plug 'gbprod/yanky.nvim'                   " Emacs-like kill ring.
 Plug 'SirVer/UltiSnips'                    " Snippets in vim
-Plug 'quangnguyen30192/cmp-nvim-ultisnips' " Autocompletion for snippets
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
