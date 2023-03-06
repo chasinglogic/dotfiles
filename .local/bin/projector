@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+# vi: ft=python
+
+import argparse
+import configparser
+import os
+import re
+
+parser = argparse.ArgumentParser()
+subparsers = parser.add_subparsers(dest="subcommand")
+
+config_file = os.path.join(os.getenv("HOME"), ".projector.ini")
+config = configparser.ConfigParser(allow_no_value=True)
+config.optionxform = lambda optionstr: optionstr
+
+try:
+    config.read(config_file)
+except FileNotFoundError:
+    print("Unable to load config")
+    pass
+
+if config["excludes"]:
+    excludes = re.compile("|".join(config["excludes"]))
+else:
+    excludes = re.compile("$^")
+
+if config["includes"]:
+    includes = re.compile("|".join(config["includes"]))
+else:
+    includes = re.compile("$^")
+
+
+def subcommand(args=[], parent=subparsers):
+    def decorator(func):
+        parser = parent.add_parser(func.__name__, description=func.__doc__)
+        for arg in args:
+            parser.add_argument(*arg[0], **arg[1])
+        parser.set_defaults(func=func)
+
+    return decorator
+
+
+def argument(*name_or_flags, **kwargs):
+    return ([*name_or_flags], kwargs)
+
+
+def find_projects(code_dir, cb=None):
+    code_dir = os.path.expanduser(code_dir)
+    if cb is None:
+        cb = print
+
+    for dirpath, dirnames, _ in os.walk(code_dir, followlinks=True):
+        if excludes.match(dirpath) and not includes.match(dirpath):
+            dirnames.clear()
+            continue
+
+        if ".git" in dirnames and callable(cb):
+            dirnames.clear()
+            stop = cb(dirpath)
+            if stop:
+                break
+
+
+@subcommand(
+    [
+        argument("command", nargs=argparse.REMAINDER, default=None),
+        argument(
+            "-f",
+            "--filter",
+            default="",
+            type=str,
+            help="If provided filter the list of projects using the given search term.",
+            dest="regex",
+        ),
+    ]
+)
+def run(args):
+    import subprocess
+    import sys
+
+    if args.regex:
+        rgx = re.compile(args.regex, flags=re.I)
+    else:
+        rgx = None
+
+    def execute(path):
+        if rgx is not None:
+            if not rgx.match(path):
+                return
+
+        subprocess.run(args.command, cwd=path, stdout=sys.stdout, stdin=sys.stdin)
+
+    for d in config["code_dirs"]:
+        find_projects(d, cb=execute)
+
+
+@subcommand(
+    [
+        argument("regex", nargs=1, default=None),
+    ]
+)
+def find(args):
+    rgx = re.compile(args.regex[0], flags=re.I)
+    matches = {}
+
+    def collect_matches(path):
+        for match in rgx.finditer(path):
+            last_match_percent = match.end() / len(path)
+            matches[last_match_percent] = path
+
+    for d in config["code_dirs"]:
+        find_projects(d, cb=collect_matches)
+
+    print(matches[max(matches)])
+
+
+@subcommand(
+    [
+        argument("regex", nargs="?", default=None),
+    ]
+)
+def list(args):
+    if args.regex:
+        rgx = re.compile(args.regex, flags=re.I)
+    else:
+        rgx = None
+
+    def if_match_print(path):
+        if rgx is None:
+            print(path)
+        elif rgx.search(path):
+            print(path)
+
+    for d in config["code_dirs"]:
+        find_projects(d, cb=if_match_print)
+
+
+if __name__ == "__main__":
+    args = parser.parse_args()
+    if args.subcommand is None:
+        parser.print_help()
+    else:
+        args.func(args)
