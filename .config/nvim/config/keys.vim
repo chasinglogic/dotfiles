@@ -33,6 +33,7 @@ nmap <Leader>bb :Telescope buffers<CR>
 nmap <Leader>bd :bprevious\|bdelete #<CR>
 nmap <Leader>bs :SC<CR>
 nmap <Leader>br :e %<CR>
+nmap <Leader>bf :Neoformat<CR>
 " }}}
 " Windows {{{
 nmap <Leader>w <C-w>

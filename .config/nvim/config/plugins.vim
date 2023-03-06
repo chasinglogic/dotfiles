@@ -30,6 +30,7 @@ Plug 'tjdevries/nlua.nvim'
 Plug 'hashivim/vim-terraform'
 Plug 'martinda/Jenkinsfile-vim-syntax'
 Plug 'towolf/vim-helm'
+Plug 'vim-scripts/django.vim'
 " }}}
 " Editor improvements {{{
 Plug 'gbprod/yanky.nvim'                   " Emacs-like kill ring.
