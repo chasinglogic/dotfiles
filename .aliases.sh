@@ -20,3 +20,8 @@ alias logs='kubectl logs'
 alias zyp='sudo zypper'
 
 alias tf='terraform'
+
+
+if [[ "$TERM" == "xterm-24bit" ]]; then
+    alias ssh='TERM=xterm-256color ssh'
+fi
