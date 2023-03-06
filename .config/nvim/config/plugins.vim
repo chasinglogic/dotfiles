@@ -13,6 +13,7 @@ Plug 'nvim-lua/popup.nvim'
 " Fuzzy finding {{{
 Plug 'nvim-telescope/telescope.nvim', { 'rev': '0.1.x' }
 Plug 'nvim-telescope/telescope-fzy-native.nvim'  " Stricly a speed improvement for Telescope
+Plug 'nvim-telescope/telescope-live-grep-args.nvim'
 " }}}
 " Tpope general improvements {{{
 Plug 'tpope/vim-abolish'    " Better subst
