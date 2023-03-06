@@ -144,6 +144,4 @@ ssh-add $HOME/.ssh/id_rsa >/dev/null 2>/dev/null
 
 export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 
-if [[ -n $(find_executable rbenv) ]]; then
-    eval "$(rbenv init - zsh)"
-fi
+. "$HOME/.cargo/env"
