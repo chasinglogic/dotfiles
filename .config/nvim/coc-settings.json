@@ -1,7 +1,0 @@
-{
-    "suggest.autoTrigger": true,
-    "suggest.floatEnable": true,
-
-    "diagnostic.refreshOnInsertMode": true
-
-}
