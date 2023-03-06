@@ -1,5 +1,6 @@
 ---
 prompt_for_commit_message: true
+
 mappings:
   - match: '.config/nvim/UltiSnips'
     link_as_dir: true

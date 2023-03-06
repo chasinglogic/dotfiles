@@ -157,11 +157,15 @@
 ;;;; Color Theme
 
 (use-package modus-themes)
+(use-package dracula-theme)
 
-(defvar chasinglogic-dark-theme 'modus-vivendi)
+(defvar chasinglogic-dark-theme 'dracula)
 (defvar chasinglogic-light-theme 'modus-operandi)
 
-(load-theme chasinglogic-light-theme t)
+(if (display-graphic-p)
+    (load-theme chasinglogic-light-theme t)
+  (load-theme chasinglogic-dark-theme t))
+
 
 (defun chasinglogic-toggle-theme ()
   "Toggle between light and dark theme."

@@ -8,6 +8,7 @@ nmap <Leader>fq :wq<CR>
 " Project level ops {{{
 nmap <Leader>pf :Telescope find_files previewer=false hidden=true<CR>
 nmap <Leader>ps :Telescope live_grep<CR>
+nmap <Leader>pS :lua require("telescope").extensions.live_grep_args.live_grep_args()<CR>
 nmap <Leader>pc :make
 nmap <Leader>h :lua require("replacer").run({ rename_files = false })<cr>
 nmap <Leader>H :lua require("replacer").run({ rename_files = true })<cr>
