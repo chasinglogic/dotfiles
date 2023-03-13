@@ -1,21 +1,23 @@
-local cmp = require'cmp'
+local cmp = require('cmp')
+local luasnip = require('luasnip')
 
 cmp.setup({
     completion = {
         keyword_length = 3,
     },
     snippet = {
-        expand = function(args)
-            -- For `ultisnips` user.
-            vim.fn["UltiSnips#Anon"](args.body)
-        end,
+      expand = function(args)
+        vim.fn["UltiSnips#Anon"](args.body)
+      end,
     },
     mapping = {
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
-            cmp.confirm({ select = true})
+            cmp.confirm({ select = true })
+          elseif luasnip.expand_or_jumpable() then
+            luasnip.expand_or_jump()
           else
-            fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+            fallback()
           end
         end, { "i", "s" }),
         ['<C-n>'] = cmp.mapping(function (fallback)
@@ -25,7 +27,7 @@ cmp.setup({
             fallback()
           end
         end, {"i", "s"}),
-        ['<C-n>'] = cmp.mapping(function (fallback)
+        ['<C-p>'] = cmp.mapping(function (fallback)
           if cmp.visible() then
             cmp.select_prev_item()
           else
@@ -39,9 +41,10 @@ cmp.setup({
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
     },
     sources = {
-        { name = 'nvim_lsp' },
-        { name = 'buffer' },
-        { name = 'path' },
+        { name = "nvim_lsp", priority = 1000 },
+        { name = "buffer", priority = 500 },
+        { name = "path", priority = 250 },
+        { name = "ultisnips", priority = 100 },
     }
 })
 
