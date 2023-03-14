@@ -28,8 +28,9 @@ Plug 'towolf/vim-helm'
 Plug 'vim-scripts/django.vim'
 " }}}
 " Editor improvements {{{
-Plug 'gbprod/yanky.nvim' " Emacs-like kill ring.
-Plug 'SirVer/UltiSnips'  " Snippets in vim
+Plug 'gbprod/yanky.nvim'  "  Emacs-like kill ring.
+Plug 'SirVer/UltiSnips'   " Snippets in vim
+Plug 'honza/vim-snippets' " Pre-made ultisnip snippets
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
@@ -69,4 +70,9 @@ nnoremap <Leader>rt :JSXReplaceTag<CR>
 " }}}
 " Terraform {{{
 let g:terraform_fmt_on_save=1
+" }}}
+" Ultisnips {{{
+let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 " }}}
