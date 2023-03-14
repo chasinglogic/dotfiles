@@ -9,6 +9,7 @@ cmp.setup({
         vim.fn["UltiSnips#Anon"](args.body)
       end,
     },
+    preselect = cmp.PreselectMode.None,
     mapping = {
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
@@ -35,7 +36,7 @@ cmp.setup({
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.close(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        ['<CR>'] = cmp.mapping.confirm({ select = false }),
     },
     sources = {
         { name = "nvim_lsp", priority = 1000 },
@@ -44,6 +45,25 @@ cmp.setup({
         { name = "ultisnips", priority = 100 },
     }
 })
+
+-- These filetypes have broken completion with the cmp.confirm binding above. So
+-- this uses a more "simple" binding which just selects completions instead.
+-- Leaving the default behaviour above tho because most LSPs will auto populate
+-- imports with cmp.confirm but not cmp.select_next_item
+local busted_languages = {"go"}
+for _, filetype in ipairs(busted_languages) do
+    cmp.setup.filetype(filetype, {
+        mapping = {
+            ["<Tab>"] = cmp.mapping(function(fallback)
+              if cmp.visible() then
+                cmp.select_next_item()
+              else
+                fallback()
+              end
+            end, { "i", "s" }),
+        }
+    })
+end
 
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 cmp.event:on(
