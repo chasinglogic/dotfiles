@@ -33,3 +33,8 @@ modules:
     location: ~/.nvm
   - repository: git@github.com:chasinglogic/secrets.git
     name: secrets
+  # Multiple runtime version manager
+  - repo: https://github.com/asdf-vm/asdf.git 
+    link: none
+    location: ~/.asdf
+    pull_only: true
