@@ -86,6 +86,10 @@ if [[ "$(uname)" == "Darwin" ]]; then
     export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1
     export LDFLAGS="-L/opt/homebrew/opt/openssl@3/lib"
     export CPPFLAGS="-I/opt/homebrew/opt/openssl@3/include"
+
+    for dir in $(find "$HOME/Library/Python" -maxdepth 1 -type d); do
+        export PATH="$PATH:$dir/bin"
+    done
 else
     # Inform Emacs and other programs they can use truecolor
     export COLORTERM=truecolor
