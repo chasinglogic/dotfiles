@@ -23,7 +23,6 @@ function add_to_path() {
 set -o emacs
 
 # Node version manager storage location
-export NVM_DIR="$HOME/.nvm"
 export NOTES_DIR="$HOME/Dropbox/Notes"
 # Use Python3 for Virtualenvwrapper
 export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
@@ -118,18 +117,8 @@ add_to_path $HOME/.mpb/common-be-scripts
 add_to_path /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/
 add_to_path $HOME/.rbenv/bin
 
-# Add homebrew ruby to path and set compiler flags
-add_to_path /usr/local/opt/ruby/bin
-if [[ -d "/usr/local/opt/ruby" ]]; then
-  export LDFLAGS="-L/usr/local/opt/ruby/lib $LDFLAGS"
-  export CPPFLAGS="-I/usr/local/opt/ruby/include $CPPFLAGS"
-fi
-
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
-
-[ -d "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -d "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # This has to be after the $PATH is set up.
 # FZF default find command
