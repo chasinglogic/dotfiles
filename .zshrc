@@ -54,6 +54,3 @@ fi
 # Some Oh-my-zsh thing aliases this to a git command
 unalias gam
 function gam() { "/Users/chasinglogic/bin/gam/gam" "$@" ; }
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
