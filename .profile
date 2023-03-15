@@ -15,7 +15,7 @@ function add_to_path() {
         return 0;
     fi
 
-    if [[ -d $1 ]]; then
+    if [[ -d "$1" ]]; then
         export PATH="$1:$PATH"
     fi
 }
@@ -109,14 +109,17 @@ add_to_path $GOPATH/bin
 add_to_path $HOME/.cargo/bin
 add_to_path $HOME/.local/bin
 add_to_path $HOME/.cask/bin
-add_to_path $HOME/.cask/bin
-add_to_path $HOME/Library/Python/3.10/bin
 add_to_path /opt/homebrew/bin
-add_to_path $HOME/Library/Python/3.9/bin
 add_to_path $HOME/.mpb/common-be-scripts
 add_to_path /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/
-add_to_path /opt/homebrew/Cellar/go@1.16/1.16.8/libexec/bin
 add_to_path $HOME/.rbenv/bin
+
+# Add homebrew ruby to path and set compiler flags
+add_to_path /usr/local/opt/ruby/bin
+if [[ -d "/usr/local/opt/ruby" ]]; then
+  export LDFLAGS="-L/usr/local/opt/ruby/lib $LDFLAGS"
+  export CPPFLAGS="-I/usr/local/opt/ruby/include $CPPFLAGS"
+fi
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
