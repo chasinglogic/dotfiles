@@ -107,3 +107,6 @@ source $HOME/.functions.sh
 
 source_if_exists $HOME/.aliases.sh
 source_if_exists $HOME/.prompt.bash
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
