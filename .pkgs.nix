@@ -6,4 +6,6 @@ with import <nixpkgs> {}; [
     tree-sitter
     jq
     tmux
+    ripgrep
+    fd
 ]
