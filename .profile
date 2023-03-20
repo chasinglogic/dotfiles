@@ -134,9 +134,11 @@ add_to_path $HOME/.rbenv/bin
 
 # Enable nix if I've installed it on this system
 # Comes after the add_to_path so that nix beats these in the $PATH race.
-source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
+source_if_exists "$HOME/.nix-profile/etc/profile.d/nix.sh"
 source_if_exists /etc/profile.d/nix.sh
 source_if_exists /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+# Enable asdf
+source_if_exists "$HOME/.asdf/asdf.sh"
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
