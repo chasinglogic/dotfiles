@@ -1,22 +1,38 @@
+export CL_DEBUG=1
+function debug() {
+    if [[ -n $CL_DEBUG ]]; then
+        echo $@ 1>&2
+    fi
+}
+
 function find_executable() {
     X=$(which $1 2>/dev/null)
+    debug "Searching for $1 found: $X"
     echo $X
 }
 
 function source_if_exists() {
     if [[ -f $1 ]]; then
+        debug "Sourcing $1 because it exists."
         source $1
+    else
+        debug "Not source $1 because it could not be found."
     fi
 }
 
 # Idempotently add directories to the path if they exist.
 function add_to_path() {
-    if [[ "$PATH" != "${PATH/$1;/}" ]]; then
+    debug "Adding $1 to PATH."
+    if [[ "$PATH" == *"$1"* ]]; then
+        debug "$1 is already in PATH doing nothing."
         return 0;
     fi
 
     if [[ -d "$1" ]]; then
+        debug "$1 exists adding to beginning of PATH."
         export PATH="$1:$PATH"
+    else
+        debug "$1 does not exist."
     fi
 }
 
@@ -98,8 +114,6 @@ fi
 
 # Storage for miscellaneous or system specific environment variables
 source_if_exists $HOME/.env.bash
-# Enable nix if I've installed it on this system
-source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
 # Setup rustup, cargo path
 source_if_exists /home/chasinglogic/.rustrc
 source_if_exists "$HOME/.cargo/env"
@@ -118,6 +132,12 @@ add_to_path /opt/homebrew/bin
 add_to_path $HOME/.mpb/common-be-scripts
 add_to_path /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/
 add_to_path $HOME/.rbenv/bin
+
+# Enable nix if I've installed it on this system
+# Comes after the add_to_path so that nix beats these in the $PATH race.
+source_if_exists $HOME/.nix-profile/etc/profile.d/nix.sh
+source_if_exists /etc/profile.d/nix.sh
+source_if_exists /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
