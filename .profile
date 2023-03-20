@@ -22,6 +22,8 @@ function add_to_path() {
 
 set -o emacs
 
+# Google should just make this default since it is required...
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 # Node version manager storage location
 export NOTES_DIR="$HOME/Dropbox/Notes"
 # Use Python3 for Virtualenvwrapper
@@ -133,7 +135,3 @@ if [[ -n $(find_executable dfm) ]]; then
 fi
 
 ssh-add $HOME/.ssh/id_rsa >/dev/null 2>/dev/null
-
-export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-
-. "$HOME/.cargo/env"
