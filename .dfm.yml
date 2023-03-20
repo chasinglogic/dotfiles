@@ -16,7 +16,7 @@ mappings:
 
 hooks:
   after_sync:
-    - interpreter: bash
+    - interpreter: bash -c
       script: |
         if [[ -f /nix/var/nix/profiles/default/bin/nix ]]; then
           nix-env -irf "$HOME/.pkgs.nix"
