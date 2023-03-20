@@ -1,4 +1,3 @@
-export CL_DEBUG=1
 function debug() {
     if [[ -n $CL_DEBUG ]]; then
         echo $@ 1>&2
