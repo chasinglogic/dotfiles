@@ -1,0 +1,1 @@
+inoremap fd <ESC>
