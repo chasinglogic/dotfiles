@@ -14,6 +14,12 @@ mappings:
   - match: "README.md"
     skip: true
 
+hooks:
+  after_sync:
+    - |
+      if [[ -f /nix/var/nix/profiles/default/bin/nix ]]; then
+        nix-env -irf ~/.pkgs.nix
+      fi
 
 modules:
   # Tmux plugin manager
