@@ -16,10 +16,11 @@ mappings:
 
 hooks:
   after_sync:
-    - |
-      if [[ -f /nix/var/nix/profiles/default/bin/nix ]]; then
-        nix-env -irf ~/.pkgs.nix
-      fi
+    - interpreter: bash
+      script: |
+        if [[ -f /nix/var/nix/profiles/default/bin/nix ]]; then
+          nix-env -irf ~/.pkgs.nix
+        fi
 
 modules:
   # Tmux plugin manager
