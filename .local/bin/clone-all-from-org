@@ -12,11 +12,19 @@ def main():
     token = os.getenv("GITHUB_TOKEN")
     user = os.getenv("USER")
     org = sys.argv[1]
-    res = requests.get(
-        f"https://api.github.com/orgs/{org}/repos?per_page=200", auth=(user, token)
-    )
+
+    try:
+        res = requests.get(
+            f"https://api.github.com/orgs/{org}/repos?per_page=200", auth=(user, token)
+        )
+        res.raise_for_status()
+    except requests.exceptions.HTTPError:
+        res = requests.get(
+            f"https://api.github.com/users/{org}/repos?per_page=200", auth=(user, token)
+        )
+        res.raise_for_status()
+
     data = res.json()
-    res.raise_for_status()
     for repo in data:
         if os.path.isdir(repo["name"]):
             subprocess.run(
