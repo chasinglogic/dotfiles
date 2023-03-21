@@ -6,7 +6,7 @@ cmp.setup({
     },
     snippet = {
       expand = function(args)
-        vim.fn["UltiSnips#Anon"](args.body)
+        require('snippy').expand_snippet(args.body)
       end,
     },
     preselect = cmp.PreselectMode.None,
