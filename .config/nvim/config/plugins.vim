@@ -28,9 +28,9 @@ Plug 'towolf/vim-helm'
 Plug 'vim-scripts/django.vim'
 " }}}
 " Editor improvements {{{
-Plug 'gbprod/yanky.nvim'  "  Emacs-like kill ring.
-Plug 'SirVer/UltiSnips'   " Snippets in vim
-Plug 'honza/vim-snippets' " Pre-made ultisnip snippets
+Plug 'gbprod/yanky.nvim'   "  Emacs-like kill ring.
+Plug 'dcampos/nvim-snippy' " Snippets in neovim using lua
+Plug 'honza/vim-snippets'  " Pre-made snippets
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
@@ -38,7 +38,7 @@ Plug 'windwp/nvim-autopairs'  " Auto pair things
 Plug 'windwp/nvim-ts-autotag' " Auto close and rename JSX/html tags
 Plug 'neovim/nvim-lspconfig'
 Plug 'folke/trouble.nvim'     " Add LSP diagnostics to the location list and other useful integration
-Plug 'quangnguyen30192/cmp-nvim-ultisnips' " Autcomplete ultisnip snippets
+Plug 'dcampos/cmp-snippy'     " Autocomplete snippets
 Plug 'hrsh7th/cmp-nvim-lsp'   " Autocomplete LSP suggestions
 Plug 'hrsh7th/cmp-buffer'     " Autocomplete based on words in buffer
 Plug 'hrsh7th/cmp-path'       " Autocomplete filepaths

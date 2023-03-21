@@ -43,8 +43,8 @@ export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 export NOTES_DIR="$HOME/Dropbox/Notes"
 # Use Python3 for Virtualenvwrapper
 export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
-# Always add src to PYTHONPATH
-export PYTHONPATH=src
+# Store gems in home directory
+export GEM_HOME="$HOME/.gem"
 # Plasma scale with HIDPI
 export PLASMA_USE_QT_SCALING=1
 # Packer's colorized output messes with terminals and other programs I use.
