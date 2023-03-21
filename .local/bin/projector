@@ -6,6 +6,8 @@ import configparser
 import os
 import re
 
+DEBUG_MODE = os.getenv('PROJECTOR_DEBUG')
+
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers(dest="subcommand")
 
@@ -29,6 +31,26 @@ if config["includes"]:
 else:
     includes = re.compile("$^")
 
+def debug(string, variables=None, **kwargs):
+    import sys
+
+    if DEBUG_MODE:
+        if variables is None and not kwargs:
+            variables = []
+        elif variables is None and kwargs:
+            variables = kwargs
+        elif variables is None:
+            variables = []
+
+        if type(variables) is list:
+            formatted = string.format(*variables)
+        elif type(variables) is dict:
+            formatted = string.format(**variables)
+        else:
+            formatted = string.format(variables)
+        print(formatted, file=sys.stderr)
+
+
 
 def subcommand(args=[], parent=subparsers):
     def decorator(func):
@@ -45,20 +67,26 @@ def argument(*name_or_flags, **kwargs):
 
 
 def find_projects(code_dir, cb=None):
+    debug('Starting search in: {}', code_dir)
     code_dir = os.path.expanduser(code_dir)
     if cb is None:
         cb = print
 
     for dirpath, dirnames, _ in os.walk(code_dir, followlinks=True):
+        debug('Searching: {}', dirpath)
         if excludes.match(dirpath) and not includes.match(dirpath):
+            debug('{} is excluded, skipping', dirpath)
             dirnames.clear()
             continue
 
         if ".git" in dirnames and callable(cb):
+            debug('{} is a project directory', dirpath)
             dirnames.clear()
             stop = cb(dirpath)
             if stop:
                 break
+        else:
+            debug('{} is not a project directory', dirpath)
 
 
 @subcommand(
@@ -104,6 +132,7 @@ def find(args):
     matches = {}
 
     def collect_matches(path):
+        debug('checking if {path} matches {rgx}', path=path, rgx=rgx)
         for match in rgx.finditer(path):
             last_match_percent = match.end() / len(path)
             matches[last_match_percent] = path
@@ -111,7 +140,10 @@ def find(args):
     for d in config["code_dirs"]:
         find_projects(d, cb=collect_matches)
 
-    print(matches[max(matches)])
+    if not matches:
+        print("")
+    else:
+        print(matches[max(matches)])
 
 
 @subcommand(
