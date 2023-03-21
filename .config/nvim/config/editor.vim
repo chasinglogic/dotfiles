@@ -40,8 +40,7 @@ else
 endif
 " }}}
 " Use system clipboard {{{
-" This is broken on neovim 0.8.3 and Ubuntu with wayland for some reason.
-" set clipboard+=unnamedplus
+set clipboard+=unnamedplus
 " }}}
 " Let find search from pwd {{{
 set path=$PWD/**
