@@ -56,6 +56,3 @@ source $HOME/.asdf/asdf.sh
 fpath=(${ASDF_DIR}/completions $fpath)
 # initialise completions with ZSH's compinit
 autoload -Uz compinit && compinit
-
-
-if [ -e /home/chasinglogic/.nix-profile/etc/profile.d/nix.sh ]; then . /home/chasinglogic/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
