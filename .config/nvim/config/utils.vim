@@ -15,19 +15,14 @@ endfunction
 command! RunTest :call RunTest()
 
 let g:ScratchBufferName = "__scratch__"
-function! OpenScratchBuffer(new_win)
-  let split_win = a:new_win
-
+function! OpenScratchBuffer()
     " Check whether the scratch buffer is already created
     let scr_bufnum = bufnr(g:ScratchBufferName)
 
     " open a new scratch buffer
     if scr_bufnum == -1
-        if split_win
-            execute "new " . g:ScratchBufferName
-        else
-            execute "edit " . g:ScratchBufferName
-        endif
+        execute "edit " . g:ScratchBufferName
+        call s:ScratchMarkBuffer()
     else
         " Scratch buffer is already created. Check whether it is open
         " in one of the windows
@@ -39,12 +34,7 @@ function! OpenScratchBuffer(new_win)
                 exe scr_winnum . "wincmd w"
             endif
         else
-            " Create a new scratch window
-            if split_win
-                exe "split +buffer" . scr_bufnum
-            else
-                exe "buffer " . scr_bufnum
-            endif
+            exe "buffer " . scr_bufnum
         endif
     endif
 endfunction
@@ -59,5 +49,4 @@ function! s:ScratchMarkBuffer()
 endfunction
 
 autocmd BufNewFile g:ScratchBufferName call s:ScratchMarkBuffer()
-command! SC :call OpenScratchBuffer(0)
-command! SSC :call OpenScratchBuffer(1)
+command! SC :call OpenScratchBuffer()
