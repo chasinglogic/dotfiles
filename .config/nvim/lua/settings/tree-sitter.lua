@@ -4,6 +4,7 @@ require'nvim-treesitter.configs'.setup {
       "bash", 
       "c", 
       "cpp",
+      "css",
       "dockerfile",
       "go",
       "html",
