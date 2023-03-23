@@ -5,6 +5,7 @@ import argparse
 import configparser
 import os
 import re
+import sys
 
 DEBUG_MODE = os.getenv('PROJECTOR_DEBUG')
 
@@ -62,6 +63,11 @@ def subcommand(args=[], parent=subparsers):
     return decorator
 
 
+def debug(*args, **kwargs):
+    if os.getenv('PROJECTOR_DEBUG'):
+        print(*args, file=sys.stderr, **kwargs)
+
+
 def argument(*name_or_flags, **kwargs):
     return ([*name_or_flags], kwargs)
 
@@ -104,7 +110,6 @@ def find_projects(code_dir, cb=None):
 )
 def run(args):
     import subprocess
-    import sys
 
     if args.regex:
         rgx = re.compile(args.regex, flags=re.I)
@@ -140,10 +145,10 @@ def find(args):
     for d in config["code_dirs"]:
         find_projects(d, cb=collect_matches)
 
-    if not matches:
-        print("")
-    else:
+    if matches:
         print(matches[max(matches)])
+    else:
+        print("")
 
 
 @subcommand(
