@@ -8,4 +8,5 @@ with import <nixpkgs> {}; [
     tmux
     ripgrep
     fd
+    terraform
 ]
