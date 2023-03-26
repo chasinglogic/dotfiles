@@ -28,7 +28,6 @@ Plug 'towolf/vim-helm'
 Plug 'vim-scripts/django.vim'
 " }}}
 " Editor improvements {{{
-Plug 'gbprod/yanky.nvim'   "  Emacs-like kill ring.
 Plug 'dcampos/nvim-snippy' " Snippets in neovim using lua
 Plug 'honza/vim-snippets'  " Pre-made snippets
 " }}}

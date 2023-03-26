@@ -40,7 +40,14 @@ else
 endif
 " }}}
 " Use system clipboard {{{
-set clipboard+=unnamedplus
+
+" For whatever reason outside of tmux wl-clipboard and unnamedplus cause
+" Neovrim to break gnome-terminal. So just disable the defaul usage of system
+" clipboard outside of tmux.
+if empty($WAYLAND_DISPLAY) || !empty($TMUX)
+    set clipboard+=unnamedplus
+endif
+
 " }}}
 " Let find search from pwd {{{
 set path=$PWD/**
