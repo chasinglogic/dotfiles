@@ -17,7 +17,7 @@ lua require('config')
 
 """ Load Theme
 set background=light
-colorscheme dracula
+colorscheme solarized-high
 
 highlight! link CmpItemAbbr Pmenu
 highlight! link CmpItemKind Pmenu
