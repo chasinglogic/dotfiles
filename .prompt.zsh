@@ -37,8 +37,8 @@ function kube_context {
 }
 
 COMMAND_STATUS="%(?..%B%F{red}!! %b%f)"
-HOSTNAME="%F{13}%n%F{3}@%F{2}%m%f"
-PWD_PROMPT="%F{6}%~%f"
+HOSTNAME="%F{13}%n%F{4}@%F{4}%m%f"
+PWD_PROMPT="%F{7}%~%f"
 GIT_BRANCH_COLOR="\%1"
 
 setopt prompt_subst
@@ -56,10 +56,10 @@ function set_prompt {
         SHORT_PROMPT=1
     fi
 
-    if [[ $SHORT_PROMPT -ne 0 ]]; then
+    if [[ $SHORT_PROMPT -ne 0 && "$DISABLE_SHORT_PROMPT" == "" ]]; then
         export PROMPT="$PWD_PROMPT > "
     else
-        export PROMPT="$COMMAND_STATUS\$(venv_name)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{3}\$(lambda_or_delta)%f "
+        export PROMPT="$COMMAND_STATUS\$(venv_name)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{4}\$(lambda_or_delta)%f "
     fi
 }
 
