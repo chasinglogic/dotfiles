@@ -65,6 +65,18 @@ class Args:
             self.args.append(flag)
 
 
+def get_base():
+    branches = (
+        subprocess.run(['git', 'branch', '-a'], capture_output=True)
+            .stdout
+            .decode('utf-8')
+            .split('\n')
+    )
+    if any('master' in name for name in branches):
+        return "master"
+    return "main"
+
+
 def main():
     hub_cli = shutil.which("gh")
     if not hub_cli:
@@ -77,7 +89,7 @@ def main():
         sys.exit(1)
 
     args = Args()
-    args.add_flag("--base", "master")
+    args.add_flag("--base", get_base())
     args.add_flag("--fill")
     assignee_name = os.getenv("GITHUB_USERNAME", "")
     if not assignee_name:
