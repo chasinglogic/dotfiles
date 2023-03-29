@@ -22,9 +22,11 @@ function source_if_exists() {
 # Idempotently add directories to the path if they exist.
 function add_to_path() {
     debug "Adding $1 to PATH."
-    if [[ "$PATH" == *"$1"* ]]; then
+    if [[ "$PATH" == *"$1"* && "$2" == "" ]]; then
         debug "$1 is already in PATH doing nothing."
         return 0;
+    elif [[ "$PATH" == *"$1"* ]]; then
+        debug "$1 is already in PATH but force flag was provided to adding again."
     fi
 
     if [[ -d "$1" ]]; then
@@ -115,28 +117,29 @@ source_if_exists $HOME/.env.bash
 source_if_exists /home/chasinglogic/.rustrc
 source_if_exists "$HOME/.cargo/env"
 
-add_to_path /usr/bin
-add_to_path /snap/bin
-add_to_path /opt/local/bin
-add_to_path /usr/local/bin
-add_to_path /usr/local/sbin
-add_to_path /usr/lib/icecream/bin
-add_to_path $GOPATH/bin
-add_to_path $HOME/.cargo/bin
-add_to_path $HOME/.local/bin
-add_to_path $HOME/.cask/bin
-add_to_path /opt/homebrew/bin
-add_to_path $HOME/.mpb/common-be-scripts
-add_to_path /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/
+add_to_path "$GOPATH/bin"
+add_to_path "$HOME/.cargo/bin"
+add_to_path "$HOME/.local/bin"
+add_to_path "$HOME/.cask/bin"
+add_to_path "$HOME/.mpb/common-be-scripts"
 add_to_path $HOME/.rbenv/bin
+add_to_path /opt/homebrew/bin
+add_to_path /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/
 
 # Enable nix if I've installed it on this system
 # Comes after the add_to_path so that nix beats these in the $PATH race.
 source_if_exists "$HOME/.nix-profile/etc/profile.d/nix.sh"
 source_if_exists /etc/profile.d/nix.sh
 source_if_exists /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
 # Enable asdf
 source_if_exists "$HOME/.asdf/asdf.sh"
+# asdf is a little too clever for it's own good and so somehow the shims / bin
+# won't always end up at the beginning of PATH so this forces that to be true.
+add_to_path "$ASDF_DIR/bin" true
+add_to_path "${ASDF_DATA_DIR:-$HOME/.asdf}/shims" true
+
+
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"

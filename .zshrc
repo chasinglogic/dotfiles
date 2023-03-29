@@ -1,8 +1,3 @@
-export PATH="/usr/local/opt/helm@2/bin:$PATH"
-
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -32,17 +27,11 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
-echo "Sourcing profile..."
-source $HOME/.profile
-echo "Sourcing prompt..."
-source $HOME/.prompt.zsh
-echo "Sourcing functions..."
-source $HOME/.functions.sh
-echo "Sourcing .env.sh..."
-source_if_exists $HOME/.env.sh
-echo "Sourcing aliases..."
+source "$HOME/.profile"
+source_if_exists "$HOME/.prompt.zsh"
+source_if_exists "$HOME/.functions.sh"
+source_if_exists "$HOME/.env.sh"
 source_if_exists $HOME/.aliases.sh
-echo "Sourcing local environment..."
 source_if_exists $HOME/.local.sh
 
 export PYENV_ROOT="$HOME/.pyenv"
@@ -51,7 +40,6 @@ if [[ -d "$PYENV_ROOT" ]]; then
     eval "$(pyenv init -)"
 fi
 
-source $HOME/.asdf/asdf.sh
 # append completions to fpath
 fpath=(${ASDF_DIR}/completions $fpath)
 # initialise completions with ZSH's compinit
