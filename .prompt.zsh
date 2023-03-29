@@ -38,7 +38,7 @@ function kube_context {
 
 COMMAND_STATUS="%(?..%B%F{red}!! %b%f)"
 HOSTNAME="%F{13}%n%F{4}@%F{4}%m%f"
-PWD_PROMPT="%F{7}%~%f"
+PWD_PROMPT="%f%~%f"
 GIT_BRANCH_COLOR="\%1"
 
 setopt prompt_subst
