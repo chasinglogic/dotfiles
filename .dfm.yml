@@ -18,6 +18,11 @@ hooks:
   after_sync:
     - interpreter: bash -c
       script: |
+        if [[ ! -f "$HOME/.fzf.zsh" ]]; then
+          bash "$HOME/.fzf/install"
+        fi
+    - interpreter: bash -c
+      script: |
         if [[ -f /nix/var/nix/profiles/default/bin/nix ]]; then
           nix-env -irf "$HOME/.pkgs.nix"
         fi
@@ -44,4 +49,9 @@ modules:
   - repo: https://github.com/asdf-vm/asdf.git 
     link: none
     location: ~/.asdf
+    pull_only: true
+  # FZF
+  - repo: https://github.com/junegunn/fzf
+    link: none
+    location: ~/.fzf
     pull_only: true
