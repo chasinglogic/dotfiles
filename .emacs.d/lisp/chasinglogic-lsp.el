@@ -26,6 +26,28 @@
 
 ;;; Code:
 
+;; LSP Mode
+(use-package lsp-mode
+  :init (setq-default lsp-auto-guess-root t)
+  :commands 'lsp
+  :config
+  (setq lsp-signature-auto-activate nil))
+
+(use-package lsp-ui :commands lsp-ui-mode)
+
+;; Increase the amount of data which Emacs reads from the
+;; process. Again the emacs default is too low 4k considering that the
+;; some of the language server responses are in 800k - 3M range.
+(setq read-process-output-max (* (* 1024 1024) 3)) ;; 3mb
+;; Garbage collect less often
+(setq gc-cons-threshold 100000000)
+
+;; Enable LSP hook
+(defun chasinglogic-enable-lsp ()
+  "Enable LSP mode."
+  (lsp)
+  (eldoc-mode 1))
+
 (use-package lsp-ivy
   :after (lsp-mode ivy)
   :commands (lsp-ivy-workspace-symbol lsp-ivy-global-workspace-symbol)

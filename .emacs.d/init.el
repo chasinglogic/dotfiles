@@ -69,9 +69,6 @@
 ;; the load path.
 (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lisp"))
 
-;; Garbage collect less often
-(setq gc-cons-threshold 100000000)
-
 ;; Package initialization
 ;;    Before we can set up our configuration for third party packages we
 ;;    have to initialize the built-in Emacs package for fetching and
@@ -154,18 +151,50 @@
   :config
   (evil-collection-init))
 
+;; Default / built-in Emacs feature settings
+(require 'chasinglogic-editor)
+
 ;;;; Color Theme
 
 (use-package modus-themes)
 (use-package dracula-theme)
+(use-package solarized-theme)
 
-(defvar chasinglogic-dark-theme 'dracula)
-(defvar chasinglogic-light-theme 'modus-operandi)
+(defvar chasinglogic-dark-theme 'solarized-dark)
+(defvar chasinglogic-light-theme 'solarized-light)
 
-(if (display-graphic-p)
-    (load-theme chasinglogic-light-theme t)
-  (load-theme chasinglogic-dark-theme t))
+;; make the fringe stand out from the background
+(setq solarized-distinct-fringe-background t)
 
+;; Don't change the font for some headings and titles
+(setq solarized-use-variable-pitch nil)
+
+;; make the modeline high contrast
+(setq solarized-high-contrast-mode-line t)
+
+;; Use less bolding
+(setq solarized-use-less-bold t)
+
+;; Use more italics
+(setq solarized-use-more-italic t)
+
+;; Use less colors for indicators such as git:gutter, flycheck and similar
+(setq solarized-emphasize-indicators nil)
+
+;; Don't change size of org-mode headlines (but keep other size-changes)
+(setq solarized-scale-org-headlines nil)
+
+;; Change the size of markdown-mode headlines (off by default)
+(setq solarized-scale-markdown-headlines t)
+
+;; Avoid all font-size changes
+(setq solarized-height-minus-1 1.0)
+(setq solarized-height-plus-1 1.0)
+(setq solarized-height-plus-2 1.0)
+(setq solarized-height-plus-3 1.0)
+(setq solarized-height-plus-4 1.0)
+
+(load-theme chasinglogic-light-theme t)
 
 (defun chasinglogic-toggle-theme ()
   "Toggle between light and dark theme."
@@ -178,8 +207,6 @@
       (disable-theme chasinglogic-dark-theme)
       (load-theme chasinglogic-dark-theme t))))
 
-;; Default / built-in Emacs feature settings
-(require 'chasinglogic-editor)
 ;; Work specific commands or settings
 (require 'chasinglogic-work)
 
@@ -236,26 +263,7 @@
   :init
   (add-hook 'prog-mode-hook (lambda () (format-all-mode 1))))
 
-;; LSP Mode
-(use-package lsp-mode
-  :init (setq-default lsp-auto-guess-root t)
-  :commands 'lsp
-  :config
-  (setq lsp-signature-auto-activate nil))
-
-(use-package lsp-ui :commands lsp-ui-mode)
-
-;; Increase the amount of data which Emacs reads from the
-;; process. Again the emacs default is too low 4k considering that the
-;; some of the language server responses are in 800k - 3M range.
-(setq read-process-output-max (* (* 1024 1024) 3)) ;; 3mb
-
-;; Enable LSP hook
-(defun chasinglogic-enable-lsp ()
-  "Enable LSP mode."
-  (lsp)
-  (eldoc-mode 1))
-
+(require 'chasinglogic-lsp)
 (require 'chasinglogic-ivy)
 (require 'chasinglogic-minor-modes)
 (require 'chasinglogic-lint)
@@ -270,6 +278,7 @@
 (require 'chasinglogic-minor-modes)
 (require 'chasinglogic-projectile)
 (require 'chasinglogic-python)
+(require 'chasinglogic-ruby)
 (require 'chasinglogic-rust)
 (require 'chasinglogic-typescript)
 (require 'chasinglogic-web)
