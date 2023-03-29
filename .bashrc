@@ -107,3 +107,5 @@ source $HOME/.functions.sh
 
 source_if_exists $HOME/.aliases.sh
 source_if_exists $HOME/.prompt.bash
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
