@@ -22,10 +22,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap('n', '<space>bf', 
-    function()
-        vim.lsp.buf.format { async = true }
-    end, opts)
+  buf_set_keymap('n', '<space>bf', '<cmd>lua.vim.lap.buf.format { async = true }<CR>', opts)
 
   -- Set autocommands conditional on server_capabilities
   if client.server_capabilities.document_highlight then
