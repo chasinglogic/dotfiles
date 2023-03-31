@@ -20,8 +20,10 @@ augroup END
 """ Map non-standard files to filetypes
 augroup file_type_mappings
   """ Highlight SCons files
-  autocmd BufNewFile,BufRead SConscript set filetype=python
-  autocmd BufNewFile,BufRead SConstruct set filetype=python
+  autocmd BufNewFile,BufRead SConscript setfiletype python
+  autocmd BufNewFile,BufRead SConstruct setfiletype python
+  """ Highlight jbuilder files as they are a ruby DSL
+  autocmd BufNewFile,BufRead *.json.jbuilder setfiletype ruby
 augroup END
 
 """ Vimscript doesn't seem to load ftplugins
