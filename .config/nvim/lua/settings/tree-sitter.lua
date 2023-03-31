@@ -28,7 +28,7 @@ require'nvim-treesitter.configs'.setup {
 
   highlight = {
     enable = true,
-    disable = {"eruby"},
+    disable = {"embedded_template"},
   },
 
   autotag = {
