@@ -79,8 +79,6 @@ export HELM_HOST=localhost:44134
 # Make Firefox use Wayland
 export MOZ_ENABLE_WAYLAND=1
 
-export VAULT_ADDR="https://vault.internal-services.mpb.com"
-
 # Find the vim to use.
 if [[ -n $(find_executable nvim) ]]; then
     export VIM_PROG=nvim
@@ -139,7 +137,7 @@ source_if_exists "$HOME/.asdf/asdf.sh"
 add_to_path "$ASDF_DIR/bin" true
 add_to_path "${ASDF_DATA_DIR:-$HOME/.asdf}/shims" true
 
-
+source_if_exists "$HOME/.env.local"
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
