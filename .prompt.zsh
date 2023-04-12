@@ -57,7 +57,7 @@ function set_prompt {
     fi
 
     if [[ $SHORT_PROMPT -ne 0 && "$DISABLE_SHORT_PROMPT" == "" ]]; then
-        export PROMPT="$PWD_PROMPT > "
+        export PROMPT="$PWD_PROMPT %F{1}\$(parse_git_branch)%f%F{4}\$(lambda_or_delta)%f "
     else
         export PROMPT="$COMMAND_STATUS\$(venv_name)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{4}\$(lambda_or_delta)%f "
     fi
