@@ -55,3 +55,7 @@ modules:
     link: none
     location: ~/.fzf
     pull_only: true
+  # My notes
+  - repo: git@github.com:chasinglogic/Notes.git
+    link: none
+    location: ~/Notes
