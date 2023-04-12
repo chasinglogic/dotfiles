@@ -53,6 +53,7 @@
     rhi = rebase -i origin/HEAD
     b = branch
     update = !git add . && git commit --amend --no-edit && git push --force-with-lease
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 
 [pager]
     branch = false
