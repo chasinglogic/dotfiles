@@ -26,6 +26,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'martinda/Jenkinsfile-vim-syntax'
 Plug 'towolf/vim-helm'
 Plug 'vim-scripts/django.vim'
+Plug 'NoahTheDuke/vim-just'
 " }}}
 " Editor improvements {{{
 Plug 'dcampos/nvim-snippy' " Snippets in neovim using lua
