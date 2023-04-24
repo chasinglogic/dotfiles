@@ -46,7 +46,8 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'gabrielpoca/replacer.nvim' " Allows you to edit the quickfix window
 " }}}
 " Themes {{{
-Plug 'ishan9299/nvim-solarized-lua'
+Plug 'morhetz/gruvbox'
+Plug 'overcache/NeoSolarized'
 Plug 'dracula/vim', { 'as': 'dracula' }
 " }}}
 call plug#end()
