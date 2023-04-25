@@ -71,6 +71,7 @@ nmap <Leader>gp  :Git push<CR>
 nmap <Leader>gP  :Git pull --rebase<CR>
 nmap <Leader>gri :Git rebase -i origin/master
 nmap <Leader>gb  :Git blame<CR>
+nmap <Leader>gv  :Git vader<CR>
 " }}}
 " Utility {{{
 imap fd <ESC>
