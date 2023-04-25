@@ -102,3 +102,10 @@ nmap ga <Plug>(EasyAlign)
 " Testing {{{
 noremap <Leader>mt :RunTest<CR>
 " }}}
+" Wiki {{{
+nmap <Leader>ww :VimwikiIndex<CR>
+nmap <Leader>wt :VimwikiTabIndex<CR>
+nmap <Leader>ws :VimwikiUISelect<CR>
+nmap <Leader>wd :VimwikiDeleteFile<CR>
+nmap <Leader>wr :VimwikiRenameFile<CR>
+" }}}
