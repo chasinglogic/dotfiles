@@ -105,3 +105,29 @@ function t() {
     tmux attach-session -t $SESS_NAME
   fi
 }
+
+function plan() {
+    env_name=$1
+    if [[ "$env_name" == "" ]]; then
+        echo "Usage: plan <env-name>"
+        echo ""
+        echo "Must provide env-name."
+        return 1
+    fi
+
+    stage_name=$(basename $(pwd))
+    just plan $env_name $stage_name
+}
+
+function apply() {
+    env_name=$1
+    if [[ "$env_name" == "" ]]; then
+        echo "Usage: apply <env-name>"
+        echo ""
+        echo "Must provide env-name."
+        return 1
+    fi
+
+    stage_name=$(basename $(pwd))
+    just apply $env_name $stage_name
+}
