@@ -46,7 +46,7 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'gabrielpoca/replacer.nvim' " Allows you to edit the quickfix window
 " }}}
 " Themes {{{
-Plug 'morhetz/gruvbox'
+Plug 'projekt0n/github-nvim-theme', { 'branch': '0.0.x' }
 Plug 'overcache/NeoSolarized'
 Plug 'dracula/vim', { 'as': 'dracula' }
 " }}}
