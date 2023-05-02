@@ -36,6 +36,14 @@ function kube_context {
     fi
 }
 
+function aws_profile {
+    if [[ "${AWS_PROFILE:-}" != "" ]]; then
+        echo "(aws: $AWS_PROFILE) "
+    else
+        echo ""
+    fi
+}
+
 COMMAND_STATUS="%(?..%B%F{red}!! %b%f)"
 HOSTNAME="%F{13}%n%F{4}@%F{4}%m%f"
 PWD_PROMPT="%f%~%f"
@@ -59,7 +67,7 @@ function set_prompt {
     if [[ $SHORT_PROMPT -ne 0 && "$DISABLE_SHORT_PROMPT" == "" ]]; then
         export PROMPT="$PWD_PROMPT %F{1}\$(parse_git_branch)%f%F{4}\$(lambda_or_delta)%f "
     else
-        export PROMPT="$COMMAND_STATUS\$(venv_name)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{4}\$(lambda_or_delta)%f "
+        export PROMPT="$COMMAND_STATUS\$(venv_name)\$(aws_profile)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{4}\$(lambda_or_delta)%f "
     fi
 }
 

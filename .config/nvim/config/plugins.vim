@@ -31,7 +31,6 @@ Plug 'NoahTheDuke/vim-just'
 " Editor improvements {{{
 Plug 'dcampos/nvim-snippy' " Snippets in neovim using lua
 Plug 'honza/vim-snippets'  " Pre-made snippets
-Plug 'vimwiki/vimwiki' " Note taking in vim.
 " }}}
 " IDE-like Features (Linting, Formatting, completion etc.) {{{
 Plug 'sbdchd/neoformat' " Format various sources which have a supported formatter
@@ -77,17 +76,4 @@ let g:terraform_fmt_on_save=1
 let g:UltiSnipsExpandTrigger="<c-j>"
 let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-" }}}
-" VimWiki {{{
-let g:vimwiki_list = [
-            \ {
-                \'path': '~/Notes',
-                \'syntax': 'markdown', 
-                \'ext': '.md',
-                \'exclude_files': ['**/.git/**/*', '**/.git/*']
-            \ }
-\]
-
-
-  " let g:vimwiki_list = [{'path': '~/my_site/', 'exclude_files': ['**/README.md']}]
 " }}}

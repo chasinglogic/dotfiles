@@ -131,3 +131,7 @@ function apply() {
     stage_name=$(basename $(pwd))
     just apply $env_name $stage_name
 }
+
+function profile() {
+    export AWS_PROFILE=$1
+}
