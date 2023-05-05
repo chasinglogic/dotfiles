@@ -23,9 +23,7 @@ set background=light
 " expand or compress the tonal range displayed.
 let g:neosolarized_contrast = "high"
 
-let g:github_comment_style = 'NONE'
-
-colorscheme github_light
+colorscheme github_light_default
 
 highlight! link CmpItemAbbr Pmenu
 highlight! link CmpItemKind Pmenu

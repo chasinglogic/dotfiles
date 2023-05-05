@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+
+import difflib
+import argparse
+
+try:
+    import yaml
+except ImportError:
+    import sys
+
+    print("You need to install pyyaml.")
+    sys.exit(1)
+
+
+def find_key(name, dictionary):
+    cursor = dictionary
+    for part in name.split("."):
+        try:
+            cursor = cursor[part]
+        except KeyError:
+            return None
+
+    return cursor
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-f",
+        "--file",
+        action="append",
+        help="The YAML file or files to load.",
+    )
+    parser.add_argument(
+        "-k1",
+        "--key1",
+        help="The first key to find, may be dot-separated to get nested keys.",
+    )
+    parser.add_argument(
+        "-k2",
+        "--key2",
+        help="The key to diff with key1, may be dot-separated to get nested keys.",
+    )
+    args = parser.parse_args()
+
+    dictionaries = []
+    for file in args.file:
+        with open(file) as fh:
+            dictionaries.append(yaml.safe_load(fh))
+
+    data = {
+        "key1": "",
+        "key2": "",
+    }
+
+    for dictionary in dictionaries:
+        found = find_key(args.key1, dictionary)
+        if found is not None:
+            data["key1"] = yaml.dump(found, default_flow_style=False)
+
+    for dictionary in dictionaries:
+        found = find_key(args.key2, dictionary)
+        if found is not None:
+            data["key2"] = yaml.dump(found, default_flow_style=False)
+
+    diff = difflib.ndiff(
+        data["key1"].splitlines(keepends=True),
+        data["key2"].splitlines(keepends=True),
+    )
+    print("".join(diff))
+
+
+if __name__ == "__main__":
+    main()
