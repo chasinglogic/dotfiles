@@ -75,6 +75,8 @@ nmap <Leader>gv  :Git vader<CR>
 " }}}
 " Utility {{{
 imap fd <ESC>
+vmap <C-]> >>
+vmap <C-[> <<
 " Copy file name to clipboard
 nmap ,cs :let @*=expand("%")<CR>
 nmap ,cl :let @*=expand("%:p")<CR>

@@ -34,6 +34,7 @@
     unstage = reset HEAD --
     amend = commit --amend --no-edit
     vader = push --force-with-lease
+    cont = rebase --continue
     contains = branch -a --contains
     where = branch -a --contains
     whereis = branch -a --contains
