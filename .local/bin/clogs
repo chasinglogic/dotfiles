@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import asyncio
 import sys
 import argparse
 import os
@@ -161,7 +162,11 @@ async def print_logs(
     printed = []
     while live_stream and job["status"] in IN_PROGRESS_STATUSES:
         printed.extend(await print_all_step_logs(job, job_name, skip_list=printed))
+        await asyncio.sleep(3)
         job = await get_job(job["job_number"])
+
+    # Print any left over logs since the last time we polled.
+    await print_all_step_logs(job, job_name, skip_list=printed)
 
 
 async def main():
@@ -220,7 +225,5 @@ async def main():
 
 
 if __name__ == "__main__":
-    import asyncio
-
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
