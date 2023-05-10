@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 
-import pprint
 import sys
 import argparse
 import os
 import itertools
-
-from enum import Enum
 
 try:
     import httpx
@@ -15,43 +12,19 @@ except ImportError:
     sys.exit(1)
 
 
-class JobStatus(Enum):
-    SUCCESS = "success"
-    RUNNING = "running"
-    NOT_RUN = "not_run"
-    FAILED = "failed"
-    RETRIED = "retried"
-    QUEUED = "queued"
-    NOT_RUNNING = "not_running"
-    INFRASTRUCTURE_FAIL = "infrastructure_fail"
-    TIMEDOUT = "timedout"
-    ON_HOLD = "on_hold"
-    TERMINATED_UNKNOWN = "terminated-unknown"
-    BLOCKED = "blocked"
-    CANCELED = "canceled"
-    UNAUTHORIZED = "unauthorized"
-
-
+# List of possible values here:
+# https://circleci.com/docs/api/v2/index.html#operation/getJobDetails
 IN_PROGRESS_STATUSES = [
-    JobStatus.QUEUED.value,
-    JobStatus.RUNNING.value,
+    "queued",
+    "running",
 ]
 
 TOKEN = os.getenv("CIRCLECI_TOKEN", "")
 NO_COLOR = os.getenv("NO_COLOR")
 CLIENT = httpx.AsyncClient(follow_redirects=True, auth=(TOKEN, ""))
+PROJECT_SLUG = None
 
-
-class Foreground(Enum):
-    black = "\u001b[30m"
-    red = "\u001b[31m"
-    green = "\u001b[32m"
-    yellow = "\u001b[33m"
-    blue = "\u001b[34m"
-    magenta = "\u001b[35m"
-    cyan = "\u001b[36m"
-
-
+RESET_COLOR = "\u001b[0m"
 JOB_COLORS = itertools.cycle(
     # Generate all 231 color escape codes excluding the hard to read ones
     #
@@ -81,16 +54,12 @@ JOB_COLORS = itertools.cycle(
     ]
 )
 
-RESET_COLOR = "\u001b[0m"
-PROJECT_SLUG = None
-
 
 async def get_pipeline(pipeline_number):
     res = await CLIENT.get(
         f"https://circleci.com/api/v2/project/{PROJECT_SLUG}/pipeline/{pipeline_number}",
     )
     res.raise_for_status()
-
     return res.json()
 
 
@@ -100,7 +69,6 @@ async def get_workflows(pipeline):
         f"https://circleci.com/api/v2/pipeline/{pipeline_id}/workflow",
     )
     res.raise_for_status()
-
     return res.json()["items"]
 
 
