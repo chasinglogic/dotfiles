@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mat-debug
+spec:
+  automountServiceAccountToken: true
+  containers:
+  - command:
+      - cat 
+      - "-"
+    tty: true
+    image: ubuntu:latest
+    imagePullPolicy: IfNotPresent
+    name: ubuntu
+    resources: {}
+
