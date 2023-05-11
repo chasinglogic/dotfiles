@@ -132,6 +132,6 @@ function apply() {
     just apply $env_name $stage_name
 }
 
-function profile() {
+function aws_prof() {
     export AWS_PROFILE=$1
 }
