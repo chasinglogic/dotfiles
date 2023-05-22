@@ -32,12 +32,16 @@
 ;; use Emacs in and of itself. Here we only rebind some keys from
 ;; `vc-mode' based defaults to `magit' commands.
 (use-package magit
-  :general (leader!
-             "g" '(:which-key "git")
-             "gs" 'magit-status
-             "gb" 'magit-blame
-             "ga" 'magit-stage-file
-             "gc" 'magit-commit)
+  :general
+  (leader!
+    "g" '(:which-key "git")
+    "gs" 'magit-status
+    "gb" 'magit-blame
+    "ga" 'magit-stage-file
+    "gc" 'magit-commit)
+  (general-nmap
+    :keymaps 'magit-mode-map
+    "=" 'magit-section-toggle)
   :bind (("C-x v d" . magit-diff)
          ("C-x v b" . magit-blame)
          ("C-x v l" . magit-log-current)

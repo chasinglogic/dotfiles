@@ -156,45 +156,15 @@
 
 ;;;; Color Theme
 
-(use-package modus-themes)
 (use-package dracula-theme)
-(use-package solarized-theme)
+(use-package modus-themes)
 
-(defvar chasinglogic-dark-theme 'solarized-dark)
-(defvar chasinglogic-light-theme 'solarized-light)
+(defvar chasinglogic-dark-theme 'modus-vivendi)
+(defvar chasinglogic-light-theme 'modus-operandi)
 
-;; make the fringe stand out from the background
-(setq solarized-distinct-fringe-background t)
-
-;; Don't change the font for some headings and titles
-(setq solarized-use-variable-pitch nil)
-
-;; make the modeline high contrast
-(setq solarized-high-contrast-mode-line t)
-
-;; Use less bolding
-(setq solarized-use-less-bold t)
-
-;; Use more italics
-(setq solarized-use-more-italic t)
-
-;; Use less colors for indicators such as git:gutter, flycheck and similar
-(setq solarized-emphasize-indicators nil)
-
-;; Don't change size of org-mode headlines (but keep other size-changes)
-(setq solarized-scale-org-headlines nil)
-
-;; Change the size of markdown-mode headlines (off by default)
-(setq solarized-scale-markdown-headlines t)
-
-;; Avoid all font-size changes
-(setq solarized-height-minus-1 1.0)
-(setq solarized-height-plus-1 1.0)
-(setq solarized-height-plus-2 1.0)
-(setq solarized-height-plus-3 1.0)
-(setq solarized-height-plus-4 1.0)
-
-(load-theme chasinglogic-light-theme t)
+(if (display-graphic-p)
+    (load-theme chasinglogic-light-theme t)
+  (load-theme 'dracula t))
 
 (defun chasinglogic-toggle-theme ()
   "Toggle between light and dark theme."
@@ -227,12 +197,10 @@
                 company-minimum-prefix-length 2
                 company-tooltip-limit 14
                 company-tooltip-align-annotations t
-                company-require-match 'never
-                company-global-modes
-                '(not erc-mode message-mode help-mode gud-mode eshell-mode)
-                company-frontends '(company-pseudo-tooltip-frontend
-                                    company-tng-frontend
-                                    company-echo-metadata-frontend)
+                company-global-modes '(not erc-mode message-mode help-mode gud-mode eshell-mode)
+                ;; company-frontends '(company-pseudo-tooltip-frontend
+                ;;                     company-tng-frontend
+                ;;                     company-echo-metadata-frontend)
 
                 ;; Buffer-local backends will be computed when loading a major mode, so
                 ;; only specify a global default here.
@@ -240,12 +208,13 @@
 
                 ;; Company overrides `company-active-map' based on
                 ;; `company-auto-complete-chars'; no magic please!
-                company-auto-complete-chars nil
+                ;; company-auto-complete-chars nil
 
                 ;; Only search the current buffer for `company-dabbrev' (a backend that
                 ;; suggests text your open buffers). This prevents Company from causing
                 ;; lag once you have a lot of buffers open.
                 company-dabbrev-other-buffers nil
+
                 ;; Make `company-dabbrev' fully case-sensitive, to improve UX with
                 ;; domain-specific words with particular casing.
                 company-dabbrev-ignore-case nil

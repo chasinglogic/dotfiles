@@ -37,8 +37,8 @@
  indent-tabs-mode nil
  ;; default tab size to 4 spaces
  tab-width 4
- chasinglogic-font-size (if (eq system-type 'darwin) "15" "11")
- chasinglogic-font (format "Dejavu Sans Mono-%s" chasinglogic-font-size)
+ chasinglogic-font-size (if (eq system-type 'darwin) "18" "15")
+ chasinglogic-font (format (if (eq system-type 'darwin) "Menlo-%s" "Source Code Pro-%s") chasinglogic-font-size)
  ;; Just save buffers before compiling
  compilation-ask-about-save nil
  ;; Always kill old compilation without prompting
@@ -75,16 +75,8 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
-;; (use-package doom-modeline :config (doom-modeline-mode))
 
 (add-to-list 'default-frame-alist (cons 'font chasinglogic-font))
-;; On MacOS there's a new feature to have title bars match the window
-;; they belong to. This makes Emacs do that so the title bar looks
-;; like it's part of the buffer.
-(when (eq system-type 'darwin)
-  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-  (add-to-list 'default-frame-alist '(ns-appearance . dark)))
-
 
 ;;;; Advices
 
