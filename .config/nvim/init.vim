@@ -23,7 +23,7 @@ set background=light
 " expand or compress the tonal range displayed.
 let g:neosolarized_contrast = "high"
 
-colorscheme github_light_default
+colorscheme dracula
 
 highlight! link CmpItemAbbr Pmenu
 highlight! link CmpItemKind Pmenu
