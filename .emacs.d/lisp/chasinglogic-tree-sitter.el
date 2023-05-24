@@ -1,9 +1,9 @@
-;;; chasinglogic-email.el --- Configuration for using Emacs as my mail client.
+;;; chasinglogic-tree-sitter.el --- Configuration for using Emacs as my mail client.
 
-;; Copyright (C) 2019 Mathew Robinson
+;; Copyright (C) 2023 Mathew Robinson
 
 ;; Author: Mathew Robinson <mathew@chasinglogic.io>
-;; Created: 25 Aug 2019
+;; Created: 24 May 2023
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
