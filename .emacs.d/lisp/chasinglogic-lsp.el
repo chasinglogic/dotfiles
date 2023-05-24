@@ -26,14 +26,12 @@
 
 ;;; Code:
 
-;; LSP Mode
-(use-package lsp-mode
-  :init (setq-default lsp-auto-guess-root t)
-  :commands 'lsp
-  :config
-  (setq lsp-signature-auto-activate nil))
+;; https://github.com/emacs-lsp/lsp-mode/issues/4054#issuecomment-1558173037
+(add-to-list 'image-types 'svg)
 
-(use-package lsp-ui :commands lsp-ui-mode)
+;; LSP Mode
+(use-package eglot
+  :commands 'eglot)
 
 ;; Increase the amount of data which Emacs reads from the
 ;; process. Again the emacs default is too low 4k considering that the
@@ -45,14 +43,9 @@
 ;; Enable LSP hook
 (defun chasinglogic-enable-lsp ()
   "Enable LSP mode."
-  (lsp)
+  (eglot)
+  (flymake-mode 1)
   (eldoc-mode 1))
-
-(use-package lsp-ivy
-  :after (lsp-mode ivy)
-  :commands (lsp-ivy-workspace-symbol lsp-ivy-global-workspace-symbol)
-  :general (leader!
-             "jw" 'lsp-ivy-workspace-symbol))
 
 (provide 'chasinglogic-lsp)
 
