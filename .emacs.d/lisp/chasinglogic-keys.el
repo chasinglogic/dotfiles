@@ -166,15 +166,13 @@ If COPY is provided copy the value to kill ring instead of returning."
   (general-evil-setup t)
   (general-nmap
     "-" #'(lambda () (interactive) (dired "."))
-    "gcc" 'comment-actually-dwim
-    "<tab>" 'indent-according-to-mode)
+    "gcc" 'comment-actually-dwim)
 
   ;; Some of the bindings are not setup correctly in Emacs terminal
   ;; mode. It uses a different kbd identifier for some reason.
   (unless (display-graphic-p)
     (general-nmap
-      "ESC" '(lambda () (interactive) (evil-escape-func))
-      "TAB" 'indent-according-to-mode))
+      "ESC" '(lambda () (interactive) (evil-escape-func))))
 
   (general-vmap "gc" 'comment-or-uncomment-region)
 
