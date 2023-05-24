@@ -31,7 +31,12 @@
 ;; Writeroom Mode is a simple but great package that provides a
 ;; focused editing experience. It removes all chrome and centers the
 ;; buffer on the window so you can focus only on the prose.
-(use-package writeroom-mode :commands (writeroom-mode))
+(use-package writeroom-mode
+  :commands (writeroom-mode)
+  :init
+  (defun chasinglogic-writeroom-mode-hook ()
+    (display-line-numbers-mode -1))
+  (add-hook 'writeroom-mode-hook 'chasinglogic-writeroom-mode-hook))
 
 ;; Spell Checking (Flyspell)
 
