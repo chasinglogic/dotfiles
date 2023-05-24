@@ -253,6 +253,8 @@
 (require 'chasinglogic-web)
 (require 'chasinglogic-go)
 (require 'chasinglogic-javascript)
+(require 'chasinglogic-terraform)
+(require 'chasinglogic-elixir)
 
 ;; Miscellaneous Major Modes
 ;;
