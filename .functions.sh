@@ -116,7 +116,7 @@ function plan() {
     fi
 
     stage_name=$(basename $(pwd))
-    just plan $env_name $stage_name
+    just plan $@ $stage_name
 }
 
 function apply() {
@@ -129,7 +129,7 @@ function apply() {
     fi
 
     stage_name=$(basename $(pwd))
-    just apply $env_name $stage_name
+    just apply $@ $stage_name
 }
 
 function aws_prof() {

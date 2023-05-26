@@ -55,7 +55,13 @@ modules:
     link: none
     location: ~/.fzf
     pull_only: true
-  # My notes
-  - repo: git@github.com:chasinglogic/Notes.git
+  # Doom Emacs
+  - repo: https://github.com/doomemacs/doomemacs
     link: none
-    location: ~/Notes
+    location: ~/.emacs.d
+    pull_only: true
+    # hooks:
+    #   after_sync:
+    #     - ~/.emacs.d/bin/doom clean
+    #     - ~/.emacs.d/bin/doom sync
+    #     - ~/.emacs.d/bin/doom update

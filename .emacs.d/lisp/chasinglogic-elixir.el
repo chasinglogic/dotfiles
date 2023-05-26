@@ -27,7 +27,7 @@
 ;;; Code:
 
 (use-package elixir-mode
-  :mode ("\\.exs\\'" "\\.ex\\'"))
+  :mode ("\\.exs\\'" "\\.ex\\'" "\\.heex\\'"))
 
 (provide 'chasinglogic-elixir)
 
