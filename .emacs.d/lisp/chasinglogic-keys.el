@@ -166,7 +166,9 @@ If COPY is provided copy the value to kill ring instead of returning."
   (general-evil-setup t)
   (general-nmap
     "-" #'(lambda () (interactive) (dired "."))
-    "gcc" 'comment-actually-dwim)
+    "gc" 'chasinglogic-evil-comment-dwim)
+
+  (general-vmap "gc" 'chasinglogic-evil-comment-dwim)
 
   ;; Some of the bindings are not setup correctly in Emacs terminal
   ;; mode. It uses a different kbd identifier for some reason.
@@ -174,7 +176,6 @@ If COPY is provided copy the value to kill ring instead of returning."
     (general-nmap
       "ESC" '(lambda () (interactive) (evil-escape-func))))
 
-  (general-vmap "gc" 'comment-or-uncomment-region)
 
   (general-create-definer leader!
     :states '(normal visual)
@@ -242,6 +243,14 @@ If COPY is provided copy the value to kill ring instead of returning."
       "tc" 'tab-bar-close-tab
       "tp" 'tab-bar-switch-to-prev-tab
       "tn" 'tab-bar-switch-to-next-tab))
+
+  (leader!
+    "p" '(:which-key "projects")
+    "ps" 'counsel-rg
+    "pp" 'project-switch-project
+    "pb" 'project-switch-to-buffer
+    "pd" 'project-dired
+    "pf" 'project-find-file)
 
   (leader!
     "f" '(:which-key "files")

@@ -65,7 +65,13 @@
          ("C-c s o h" . counsel-org-goto)
          ("C-c o o"   . counsel-org-goto)
          (:map minibuffer-local-map
-               ("M-r" . 'counsel-minibuffer-history))))
+               ("M-r" . 'counsel-minibuffer-history)))
+  :config
+  (setq counsel-rg-base-command
+          (split-string
+           (if (memq system-type '(ms-dos windows-nt))
+               "rg -M 240 --with-filename --no-heading --line-number --hidden --color never %s --path-separator / ."
+             "rg -M 240 --with-filename --no-heading --line-number --color never --hidden %s"))))
 
 ;; LSP integration
 (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)

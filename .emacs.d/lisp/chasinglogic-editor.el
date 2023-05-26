@@ -37,7 +37,7 @@
  indent-tabs-mode nil
  ;; default tab size to 4 spaces
  tab-width 4
- chasinglogic-font-size (if (eq system-type 'darwin) "18" "15")
+ chasinglogic-font-size (if (eq system-type 'darwin) "17" "15")
  chasinglogic-font (format (if (eq system-type 'darwin) "Menlo-%s" "Source Code Pro-%s") chasinglogic-font-size)
  ;; Just save buffers before compiling
  compilation-ask-about-save nil
@@ -133,19 +133,25 @@
 ;; current line if no region is selected so I wrote
 ;; `comment-actually-dwim' that does this and overwrite the default
 ;; `comment-dwim' keybinding with my version.
-(defun comment-actually-dwim (arg)
+(defun comment-actually-dwim (&optional beg end arg)
   "A simpler and more functional version of `comment-dwim'. It
 simply calls `comment-or-uncomment-region' with the current line
 or the active region.
 
 The complexity in the original `comment-dwim' comes from trying
-to manage comments at the end of lines. I rarely do on line
+to manage comments at the end of lines. I rarely do one line
 comments so this function better suits my needs."
   (interactive "*P")
   (comment-normalize-vars)
-  (if (use-region-p)
-      (comment-or-uncomment-region (region-beginning) (region-end) arg)
-    (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
+  (if (and beg end)
+      (comment-or-uncomment-region beg end arg)
+    (if (use-region-p)
+        (comment-or-uncomment-region (region-beginning) (region-end) arg)
+      (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
+
+(evil-define-operator chasinglogic-evil-comment-dwim (beg end)
+  (message "%s %s" beg end)
+  (comment-actually-dwim beg end nil))
 
 ;; As I discover commands that have the "new user warnings" when I use
 ;; them I disable them here.
