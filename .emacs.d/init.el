@@ -71,6 +71,9 @@
 ;; Add the lisp directory where all other files are required from to
 ;; the load path.
 (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lisp"))
+(add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lisp/languages"))
+(add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lisp/emacs"))
+(add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/lisp/packages"))
 
 ;; Package initialization
 ;;    Before we can set up our configuration for third party packages we
@@ -235,29 +238,29 @@
   :init
   (add-hook 'prog-mode-hook (lambda () (format-all-mode 1))))
 
-(require 'chasinglogic-lsp)
 (require 'chasinglogic-ivy)
-(require 'chasinglogic-minor-modes)
 (require 'chasinglogic-lint)
+(require 'chasinglogic-lsp)
+(require 'chasinglogic-minor-modes)
+(require 'chasinglogic-projects)
 (require 'chasinglogic-vc)
-(require 'chasinglogic-prose)
 
 ;; Applications
 (require 'chasinglogic-org)
 
 ;; Programming languages
+(require 'chasinglogic-elixir)
+(require 'chasinglogic-go)
+(require 'chasinglogic-javascript)
 (require 'chasinglogic-markdown)
 (require 'chasinglogic-minor-modes)
-(require 'chasinglogic-projectile)
+(require 'chasinglogic-prose)
 (require 'chasinglogic-python)
 (require 'chasinglogic-ruby)
 (require 'chasinglogic-rust)
+(require 'chasinglogic-terraform)
 (require 'chasinglogic-typescript)
 (require 'chasinglogic-web)
-(require 'chasinglogic-go)
-(require 'chasinglogic-javascript)
-(require 'chasinglogic-terraform)
-(require 'chasinglogic-elixir)
 
 ;; Miscellaneous Major Modes
 ;;
