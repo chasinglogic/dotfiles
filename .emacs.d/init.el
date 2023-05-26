@@ -63,7 +63,10 @@
 ;; key so we make Emacs treat it as such instead of as super.
 (when (eq system-type 'darwin)
   (setq mac-option-modifier 'alt
-        mac-command-modifier 'meta))
+        mac-command-modifier 'meta)
+
+  ;; Use right alt as proper alt so special chars work on uk keyboards
+  (setq ns-right-alternate-modifier 'none))
 
 ;; Add the lisp directory where all other files are required from to
 ;; the load path.

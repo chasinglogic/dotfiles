@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;;
+;; This is all the base level emacs settings. Plugins are elsewhere.
 
 ;;; Code:
 
@@ -191,14 +191,6 @@ comments so this function better suits my needs."
 ;; Various dired settings
 (setq dired-auto-revert-buffer t ; Just revert on changes, don't ask me
       dired-clean-confirm-killing-deleted-buffers nil) ; Just kill buffers when I delete the file in dired. Don't ask.
-
-;; operators: =(=, ={=, ="=, ='=, etc. I find this behavior annoying
-;; in prose modes so I use a custom hook to only enable it for
-;; programming modes.
-(defun enable-electric-pair-local-mode ()
-  "Enable eletric pair mode locally."
-  (electric-pair-local-mode 1))
-(add-hook 'prog-mode-hook 'enable-electric-pair-local-mode)
 
 ;; Show Paren Mode I'm just going to steal the description of this
 ;; straight from the documentation: Toggle visualization of matching

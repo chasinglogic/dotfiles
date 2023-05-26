@@ -25,6 +25,11 @@
 ;; 
 
 ;;; Code:
+
+(use-package smartparens
+  :init
+  (add-hook 'prog-mode-hook #'smartparens-mode))
+
 (provide 'chasinglogic-minor-modes)
 
 ;;; chasinglogic-minor-modes.el ends here
