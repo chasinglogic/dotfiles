@@ -29,7 +29,10 @@
 
 (use-package tree-sitter)
 (use-package tree-sitter-langs
-  :config
+  :init
+  (defun chasinglogic-use-tree-sitter-hl ()
+    (tree-sitter-hl-mode 1))
+
   (global-tree-sitter-mode))
 
 (provide 'chasinglogic-tree-sitter)

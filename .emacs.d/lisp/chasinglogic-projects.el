@@ -50,7 +50,15 @@
     #'(lambda (a b) (< (length a) (length b))))))
   (project--write-project-list))
 
-(chasinglogic-add-projector-projects-to-projectel)
+(setq project-switch-commands 'project-dired)
+
+(defadvice project-switch-project
+    (before load-projector-projects-for-switch-project activate)
+  (when (or
+         (eq project--list 'unset)
+         (= (length project--list) 0))
+    (message "project.el list is empty loading projector projects...")
+    (chasinglogic-add-projector-projects-to-projectel)))
 
 (provide 'chasinglogic-projects)
 

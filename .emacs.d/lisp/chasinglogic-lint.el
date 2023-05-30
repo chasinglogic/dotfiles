@@ -48,37 +48,37 @@
 ;; shell syntax.
 ;;
 ;; I enable Flycheck for all text modes.
-(use-package flycheck
-  :diminish ""
-  :commands flycheck-mode
-  :init
-  (use-package flycheck-pycheckers)
-  (use-package flycheck-rust)
+;; (use-package flycheck
+;;   :diminish ""
+;;   :commands flycheck-mode
+;;   :init
+;;   (use-package flycheck-pycheckers)
+;;   (use-package flycheck-rust)
 
-  (defun chasinglogic-setup-flycheck-hook ()
-    (flycheck-rust-setup)
-    (flycheck-pycheckers-setup))
+;;   (defun chasinglogic-setup-flycheck-hook ()
+;;     (flycheck-rust-setup)
+;;     (flycheck-pycheckers-setup))
 
-  (add-hook 'flycheck-mode-hook 'chasinglogic-setup-flycheck-hook)
+;;   (add-hook 'flycheck-mode-hook 'chasinglogic-setup-flycheck-hook)
 
-  (defun chasinglogic-enable-flycheck ()
-    (flycheck-mode 1))
+;;   (defun chasinglogic-enable-flycheck ()
+;;     (flycheck-mode 1))
 
-  (add-hook 'text-mode-hook 'chasinglogic-enable-flycheck)
-  (add-hook 'prog-mode-hook 'chasinglogic-enable-flycheck)
-  :general (leader!
-             "el" 'flycheck-list-errors
-             "ev" 'flycheck-verify-setup
-             "ep" 'flycheck-previous-error
-             "en" 'flycheck-next-error)
-  :bind (("C-c e l" . flycheck-list-errors)
-         ("C-c e v" . flycheck-verify-setup)
-         ("C-c e n" . flycheck-next-error)
-         ("C-c e p" . flycheck-previous-error))
-  :config
-  ;; this trys to run the dash shell which I don't use but instead
-  ;; opens the Dash.app program which I do use.
-  (setq flycheck-sh-posix-dash-executable ""))
+;;   (add-hook 'text-mode-hook 'chasinglogic-enable-flycheck)
+;;   (add-hook 'prog-mode-hook 'chasinglogic-enable-flycheck)
+;;   :general (leader!
+;;              "el" 'flycheck-list-errors
+;;              "ev" 'flycheck-verify-setup
+;;              "ep" 'flycheck-previous-error
+;;              "en" 'flycheck-next-error)
+;;   :bind (("C-c e l" . flycheck-list-errors)
+;;          ("C-c e v" . flycheck-verify-setup)
+;;          ("C-c e n" . flycheck-next-error)
+;;          ("C-c e p" . flycheck-previous-error))
+;;   :config
+;;   ;; this trys to run the dash shell which I don't use but instead
+;;   ;; opens the Dash.app program which I do use.
+;;   (setq flycheck-sh-posix-dash-executable ""))
 
 (provide 'chasinglogic-lint)
 
