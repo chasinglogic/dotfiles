@@ -4,6 +4,7 @@ let mapleader = " "
 " Files {{{
 nmap <Leader>fs :w<CR>
 nmap <Leader>fq :wq<CR>
+nmap <Leader>fa :wa<CR>
 " }}}
 " Project level ops {{{
 nmap <Leader>pf :Telescope find_files previewer=false hidden=true<CR>
@@ -90,14 +91,6 @@ nmap ! :!
 nmap <Leader>spi :PlugInstall<CR>
 nmap <Leader>spu :PlugUpdate<CR>
 nmap <Leader>spg :PlugUpgrade<CR>
-" }}}
-" Linting {{{
-nmap [a <Plug>(ale_previous_wrap)
-nmap ]a <Plug>(ale_next_wrap)
-" }}}
-" Easy alignment {{{
-vmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
 " }}}
 " Testing {{{
 noremap <Leader>mt :RunTest<CR>

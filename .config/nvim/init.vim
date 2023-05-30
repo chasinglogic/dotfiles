@@ -13,6 +13,7 @@ source $HOME/.config/nvim/config/plugins.vim
 source $HOME/.config/nvim/config/autocmds.vim
 source $HOME/.config/nvim/config/utils.vim
 source $HOME/.config/nvim/config/my_statusline.vim
+source $HOME/.config/nvim/config/abbrevs.vim
 lua require('config')
 
 """ Load Theme
