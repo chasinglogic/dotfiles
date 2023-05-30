@@ -42,19 +42,21 @@
   :commands (web-mode)
   :mode ("\\.html?\\'" "\\.tmpl\\'" "\\.css\\'"
          "\\.scss\\'" "\\.erb\\'" "\\.djhtml\\'"
-         "\\.tsx\\'")
+         "\\.tsx\\'" "\\.[lh]?eex\\'")
   :config
   (setq-default js-ident-level 2
                 javascript-ident-level 2
                 js2-basic-offset 2)
   (defun chasinglogic-web-mode-hook ()
-    (lsp)
     ;; indent case statements
     (c-set-offset 'case-label '+))
+
+  (add-hook 'web-mode-hook 'chasinglogic-enable-lsp)
   (add-hook 'web-mode-hook 'chasinglogic-web-mode-hook)
-  (add-hook 'web-mode-hook 'lsp)
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)
+  ;; (add-hook 'web-mode-hook 'lsp)
+
+  ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
+  ;; (flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)
 
   (setq-default web-mode-markup-indent-offset 2
                 web-mode-style-indent-offset 2

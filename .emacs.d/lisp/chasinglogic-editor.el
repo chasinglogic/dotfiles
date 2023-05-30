@@ -27,6 +27,8 @@
 ;;; Code:
 
 (setq-default
+ ;; No bells please.
+ ring-bell-function 'ignore
  ;; Lockfiles trip up auto reloading compilers like react-scripts
  create-lockfiles nil
  ;; By default when Emacs tries to open a symlink that points to a git

@@ -27,7 +27,9 @@
 ;;; Code:
 
 (use-package elixir-mode
-  :mode ("\\.exs\\'" "\\.ex\\'" "\\.heex\\'"))
+  :mode ("\\.exs\\'" "\\.ex\\'")
+  :config
+  (add-hook 'elixir-mode-hook 'chasinglogic-use-tree-sitter-hl))
 
 (provide 'chasinglogic-elixir)
 
