@@ -15,3 +15,5 @@ function! s:align()
     call setpos('.', curpos)
   endif
 endfunction
+
+set wrap
