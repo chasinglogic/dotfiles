@@ -62,6 +62,6 @@ modules:
     pull_only: true
     hooks:
       after_sync:
-        - mix deps.get
-        - MIX_ENV=prod mix compile
-        - MIX_ENV=prod mix elixir_ls.release -o .
+        - "mix deps.get"
+        - "MIX_ENV=prod mix compile"
+        - "MIX_ENV=prod mix elixir_ls.release -o ."
