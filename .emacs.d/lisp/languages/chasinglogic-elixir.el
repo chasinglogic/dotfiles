@@ -29,6 +29,7 @@
 (use-package elixir-mode
   :mode ("\\.exs\\'" "\\.ex\\'")
   :config
+  (add-hook 'elixir-mode-hook 'chasinglogic-enable-lsp)
   (add-hook 'elixir-mode-hook 'chasinglogic-use-tree-sitter-hl))
 
 (provide 'chasinglogic-elixir)
