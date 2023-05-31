@@ -164,13 +164,12 @@
 
 (use-package dracula-theme)
 (use-package modus-themes)
+(use-package solarized-theme)
 
-(defvar chasinglogic-dark-theme 'modus-vivendi)
-(defvar chasinglogic-light-theme 'modus-operandi)
+(defvar chasinglogic-dark-theme (if (display-graphic-p) 'modus-vivendi 'solarized-dark))
+(defvar chasinglogic-light-theme (if (display-graphic-p) 'modus-operandi 'solarized-light))
 
-(if (display-graphic-p)
-    (load-theme chasinglogic-light-theme t)
-  (load-theme 'dracula t))
+(load-theme chasinglogic-light-theme t)
 
 (defun chasinglogic-toggle-theme ()
   "Toggle between light and dark theme."
