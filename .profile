@@ -115,7 +115,7 @@ source_if_exists $HOME/.env.bash
 source_if_exists /home/chasinglogic/.rustrc
 source_if_exists "$HOME/.cargo/env"
 
-add_to_path "$HOME/.elixir-ls"
+add_to_path "$HOME/.elixir-ls/dist"
 add_to_path "$GOPATH/bin"
 add_to_path "$HOME/.cargo/bin"
 add_to_path "$HOME/.local/bin"
