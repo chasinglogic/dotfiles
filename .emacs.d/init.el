@@ -305,6 +305,3 @@
 ;; `make-frame-init-functions'.
 (toggle-frame-maximized)
 (put 'narrow-to-region 'disabled nil)
-
-(unless (server-running-p)
-  (server-start))

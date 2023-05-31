@@ -89,7 +89,7 @@ else
 fi
 
 if [[ "$EDITOR" != "code --wait" ]]; then
-    export EDITOR="emacsclient -c -nw"
+    export EDITOR="emacsclient -c -nw -a 'emacs -nw'"
 fi
 
 # Mac specific fixes
