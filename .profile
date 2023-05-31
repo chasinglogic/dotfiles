@@ -89,7 +89,7 @@ else
 fi
 
 if [[ "$EDITOR" != "code --wait" ]]; then
-    export EDITOR="$VIM_PROG"
+    export EDITOR="emacsclient -c -nw"
 fi
 
 # Mac specific fixes
