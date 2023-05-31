@@ -61,7 +61,7 @@
 ;; On MacOS make the command key meta. Self-explanatory, all of my
 ;; muscle memory puts meta at the same location as the MacOS command
 ;; key so we make Emacs treat it as such instead of as super.
-(when (eq system-type 'darwin)
+(when (and (display-graphic-p) (eq system-type 'darwin))
   (setq mac-option-modifier 'alt
         mac-command-modifier 'meta)
 
