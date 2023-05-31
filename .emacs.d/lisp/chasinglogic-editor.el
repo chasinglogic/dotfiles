@@ -105,7 +105,7 @@
 
 (add-hook 'text-mode-hook 'enable-display-line-numbers-mode)
 (add-hook 'prog-mode-hook 'enable-display-line-numbers-mode)
-(add-hook 'org-mode-hook '(lambda () (display-line-numbers-mode -1)))
+(add-hook 'org-mode-hook #'(lambda () (display-line-numbers-mode -1)))
 
 ;; Automatically maximize Emacs frames when they are created
 ;;     This is a custom function I wrote that maximizes the frame it's
@@ -120,7 +120,7 @@
 ;; Attempt to display ANSI colors in compilation buffer, at the very
 ;; least sanitize them out.
 (add-hook 'compilation-filter-hook
-          (lambda () (ansi-color-apply-on-region (point-min) (point-max))))
+          #'(lambda () (ansi-color-apply-on-region (point-min) (point-max))))
 
 ;;;; Misc
 
