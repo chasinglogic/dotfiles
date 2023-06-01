@@ -62,3 +62,9 @@ for _, lsp in ipairs(servers) do
       capabilities = capabilities,
   }
 end
+
+nvim_lsp['elixirls'].setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+    cmd = { "language_server.sh" },
+}
