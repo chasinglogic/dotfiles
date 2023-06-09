@@ -25,3 +25,7 @@ alias tf='terraform'
 if [[ "$TERM" == "xterm-24bit" ]]; then
     alias ssh='TERM=xterm-256color ssh'
 fi
+
+
+alias pm="podman"
+alias dr="docker"

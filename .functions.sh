@@ -33,6 +33,11 @@ function st() {
 
 }
 
+function krestart() {
+    DEPLOYMENT=$(kubectl get deployments $@ | fzf | awk '{ print $1 }')
+    kubectl rollout restart $@ deployment/$DEPLOYMENT
+}
+
 function sp() {
   PROJECT=""
   if [[ $1 == "" ]]; then
@@ -107,29 +112,31 @@ function t() {
 }
 
 function plan() {
-    env_name=$1
-    if [[ "$env_name" == "" ]]; then
-        echo "Usage: plan <env-name>"
+    tier=$1
+    if [[ "$tier" == "" ]]; then
+        echo "Usage: plan <tier>"
         echo ""
-        echo "Must provide env-name."
+        echo "Must provide tier."
         return 1
     fi
 
+    export AWS_PROFILE=$tier
     stage_name=$(basename $(pwd))
-    just plan $@ $stage_name
+    just plan $@ "$stage_name"
 }
 
 function apply() {
-    env_name=$1
-    if [[ "$env_name" == "" ]]; then
+    tier=$1
+    if [[ "$tier" == "" ]]; then
         echo "Usage: apply <env-name>"
         echo ""
         echo "Must provide env-name."
         return 1
     fi
 
+    export AWS_PROFILE=$tier
     stage_name=$(basename $(pwd))
-    just apply $@ $stage_name
+    just apply $@ "$stage_name"
 }
 
 function aws_prof() {
