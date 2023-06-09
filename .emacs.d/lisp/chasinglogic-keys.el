@@ -211,6 +211,7 @@ If COPY is provided copy the value to kill ring instead of returning."
     "w"  '(:which-key "windows")
     "wr" 'window-configuration-to-register
     "wf" 'make-frame
+    "wo" 'other-frame
     "wh" 'evil-window-left
     "wH" 'evil-window-move-far-left
     "wj" 'evil-window-down

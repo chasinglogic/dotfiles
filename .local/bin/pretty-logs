@@ -4,7 +4,6 @@ const Reset = "\x1b[0m"
 
 const FgRed = "\x1b[31m"
 const FgYellow = "\x1b[33m"
-const FgMagenta = "\x1b[35m"
 const FgCyan = "\x1b[36m"
 
 const EventEmitter = require('events');
@@ -45,16 +44,17 @@ function stdinLineByLine() {
 
 const stdin = stdinLineByLine();
 stdin.on('line', (line) => {
-  if (!line.startsWith('{') || !line.endsWith('}')) {
+  if (!line.startsWith('{') || !line.trim().endsWith('}')) {
     console.log(`${FgRed}NON-JSON LINE:${Reset}`, line);
     return;
   }
 
   const data = JSON.parse(line);
   const message = data.message;
-  const timestamp = data['@timestamp']
-  const level = data['log.level']
-  console.log(`${timestamp} ${formatLevel(level)} ${message}`)
+  const context = Object.keys(data).filter(key => key !== 'message' && key != 'timestamp' && key != 'level').map(key => `${key}=${data['key']}`)
+  const timestamp = data['timestamp'] || data['context']['asctime'];
+  const level = data['level'] || data['context']['levelname'];
+  console.log(`${timestamp} ${formatLevel(level)} ${message} ${context}`)
 });
 
 if (process.argv.filter((arg) => arg.includes('help')).length > 0) {
