@@ -16,14 +16,14 @@ source $HOME/.config/nvim/config/my_statusline.vim
 lua require('config')
 
 """ Load Theme
-set background=light
+set background=dark
 
 " Default value is "normal", Setting this option to "high" or "low" does use the
 " same Solarized palette but simply shifts some values up or down in order to
 " expand or compress the tonal range displayed.
 let g:neosolarized_contrast = "high"
 
-colorscheme github_light
+colorscheme dracula
 
 highlight! link CmpItemAbbr Pmenu
 highlight! link CmpItemKind Pmenu
