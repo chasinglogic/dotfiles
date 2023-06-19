@@ -9,6 +9,10 @@ const FgCyan = "\x1b[36m"
 const EventEmitter = require('events');
 
 function formatLevel(level) {
+  if (!level || (typeof level !== 'string' && !(level instanceof String))) {
+    return level.toString()
+  }
+
   if (level.toLowerCase() === 'info') {
     return `${FgCyan}INFO${Reset}`
   }
