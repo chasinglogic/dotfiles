@@ -39,6 +39,8 @@ function add_to_path() {
 
 set -o emacs
 
+debug "PATH=$PATH"
+
 # Google should just make this default since it is required...
 export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 # Node version manager storage location
@@ -113,17 +115,14 @@ fi
 source_if_exists $HOME/.env.bash
 # Setup rustup, cargo path
 source_if_exists /home/chasinglogic/.rustrc
-source_if_exists "$HOME/.cargo/env"
 
+add_to_path /opt/homebrew/bin
+add_to_path "$HOME/.local/bin"
 add_to_path "$HOME/.elixir-ls/dist"
 add_to_path "$GOPATH/bin"
 add_to_path "$HOME/.cargo/bin"
-add_to_path "$HOME/.local/bin"
-add_to_path "$HOME/.cask/bin"
-add_to_path "$HOME/.mpb/common-be-scripts"
-add_to_path $HOME/.rbenv/bin
-add_to_path /opt/homebrew/bin
-add_to_path /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/
+
+source_if_exists "$HOME/.cargo/env"
 
 # Enable nix if I've installed it on this system
 # Comes after the add_to_path so that nix beats these in the $PATH race.
