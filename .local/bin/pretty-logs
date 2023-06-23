@@ -55,8 +55,14 @@ stdin.on('line', (line) => {
 
   const data = JSON.parse(line);
   const message = data.message;
-  const context = Object.keys(data).filter(key => key !== 'message' && key != 'timestamp' && key != 'level').map(key => `${key}=${data['key']}`)
-  const timestamp = data['timestamp'] || data['context']['asctime'];
+  const context = Object.keys(data).filter(key =>
+    key !== 'message' &&
+    key !== 'time' &&
+    key !== 'timestamp' &&
+    key !== 'level'
+  ).map(key => `\n\t${key} = ${data[key]}`)
+
+  const timestamp = data['timestamp'] || data['time'] || data['context']['asctime'];
   const level = data['level'] || data['context']['levelname'];
   console.log(`${timestamp} ${formatLevel(level)} ${message} ${context}`)
 });
