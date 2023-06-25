@@ -101,9 +101,6 @@ set completeopt=noinsert,menuone,noselect
 set autoread
 au CursorHold * checktime
 " }}}
-" Open big split for file with V in netrw {{{
-let g:netrw_altv=1
-" }}}
 " Tagfiles {{{
 set tags=TAGS,.tags,tags
 " }}}
