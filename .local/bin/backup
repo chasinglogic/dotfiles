@@ -50,6 +50,8 @@ rsync \
     --exclude $USER/Movies/iMovie\ Library.imovielibrary \
     --exclude $USER/Movies/iMovie\ Theater.theater \
     --exclude $USER/Pictures \
+    --exclude $USER/Code/neovim/.deps \
+    --exclude $USER/Code/neovim/build \
     --exclude $USER/Work \
     -avz $USER $@
 echo "Backup complete with code: $?"
