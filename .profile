@@ -153,5 +153,3 @@ fi
 if [[ -n $(find_executable dfm) ]]; then
     export DOTFILES=$(dfm where)
 fi
-
-ssh-add $HOME/.ssh/id_rsa >/dev/null 2>/dev/null
