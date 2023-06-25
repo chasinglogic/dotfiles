@@ -15,3 +15,6 @@ LATEST_ELIXIR=$(asdf latest elixir)
 
 asdf install erlang "$LATEST_ERLANG"
 asdf install elixir "$LATEST_ELIXIR"
+
+asdf global erlang "$LATEST_ERLANG"
+asdf global elixir "$LATEST_ELIXIR"
