@@ -32,6 +32,8 @@ rsync \
     --exclude $USER/.mysql_history \
     --exclude $USER/.npm \
     --exclude $USER/.nuget \
+    --exclude $USER/.asdf \
+    --exclude $USER/.elixir-ls \
     --exclude $USER/.nvm \
     --exclude $USER/.pyenv \
     --exclude $USER/.rbenv \
