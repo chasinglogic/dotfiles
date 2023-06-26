@@ -53,6 +53,7 @@ rsync \
     --exclude $USER/Pictures \
     --exclude $USER/Code/neovim/.deps \
     --exclude $USER/Code/neovim/build \
+    --exclude '*/tmp/cache/' \
     --exclude $USER/Work \
     -avz $USER $@
 echo "Backup complete with code: $?"
