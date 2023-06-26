@@ -55,13 +55,3 @@ modules:
     link: none
     location: ~/.fzf
     pull_only: true
-  # Elixir Language Server
-  - repo: https://github.com/elixir-lsp/elixir-ls.git
-    link: none
-    location: ~/.elixir-ls
-    pull_only: true
-    hooks:
-      after_sync:
-        - "mix deps.get"
-        - "MIX_ENV=prod mix compile"
-        - "MIX_ENV=prod mix elixir_ls.release -o dist"
