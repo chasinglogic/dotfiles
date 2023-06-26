@@ -54,6 +54,7 @@ EXCLUDED_DIRS=(
     "*/$USER/Code/neovim/build"
     "*/$USER/Work"
     '*/tmp/cache'
+    "*/$USER/snap/firefox/common/.cache"
 )
 
 for dir in "${EXCLUDED_DIRS[@]}"; do

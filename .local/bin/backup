@@ -10,6 +10,7 @@ rsync \
     --exclude $USER/.battlescribe \
     --exclude $USER/.bundle \
     --exclude $USER/.cache \
+    --exclude $USER/snap/firefox/common/.cache \
     --exclude $USER/.cargo \
     --exclude $USER/.chef \
     --exclude $USER/.cookiecutter_replay \
