@@ -22,11 +22,7 @@ Plug 'tpope/vim-rsi'        " Readline bindings in the vim command line
 " Language Support {{{
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tjdevries/nlua.nvim'
-Plug 'hashivim/vim-terraform'
-Plug 'martinda/Jenkinsfile-vim-syntax'
-Plug 'towolf/vim-helm'
-Plug 'NoahTheDuke/vim-just'
-Plug 'elixir-editors/vim-elixir'
+Plug 'sheerun/vim-polyglot' " All the syntax highlighting a man could dream of.
 " }}}
 " Editor improvements {{{
 Plug 'dcampos/nvim-snippy' " Snippets in neovim using lua
