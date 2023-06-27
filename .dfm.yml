@@ -29,7 +29,7 @@ hooks:
     - interpreter: bash -c
       script: |
         curl -Lo ~/.local/bin/phpactor https://github.com/phpactor/phpactor/releases/latest/download/phpactor.phar
-        chmod +ax ~/.local/bin/phpactor
+        chmod +x ~/.local/bin/phpactor
 
 modules:
   # Tmux plugin manager
