@@ -26,6 +26,10 @@ hooks:
         if [[ -f /nix/var/nix/profiles/default/bin/nix ]]; then
           nix-env -irf "$HOME/.pkgs.nix"
         fi
+    - interpreter: bash -c
+      script: |
+        curl -Lo ~/.local/bin/phpactor https://github.com/phpactor/phpactor/releases/latest/download/phpactor.phar
+        chmod +ax ~/.local/bin/phpactor
 
 modules:
   # Tmux plugin manager
@@ -46,7 +50,7 @@ modules:
   - repository: git@github.com:chasinglogic/secrets.git
     name: secrets
   # Multiple runtime version manager
-  - repo: https://github.com/asdf-vm/asdf.git 
+  - repo: https://github.com/asdf-vm/asdf.git
     link: none
     location: ~/.asdf
     pull_only: true

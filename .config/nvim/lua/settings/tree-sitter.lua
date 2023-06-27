@@ -1,32 +1,33 @@
 require'nvim-treesitter.configs'.setup {
     auto_install = true,
-    ensure_installed = { 
-      "bash", 
-      "c", 
+    ensure_installed = {
+      "bash",
+      "c",
       "cpp",
       "css",
       "dockerfile",
-      "elixir",
-      "heex",
       "eex",
+      "elixir",
       "go",
+      "heex",
       "html",
       "javascript",
       "jsdoc",
       "json",
       "jsonc",
-      "lua", 
+      "lua",
+      "php",
       "python",
       "r",
       "ruby",
-      "rust", 
+      "rust",
       "swift",
-      "typescript",
       "toml",
+      "typescript",
       "vala",
       "vim",
-      "yaml",
-      "vue"
+      "vue",
+      "yaml"
   },
 
   highlight = {
