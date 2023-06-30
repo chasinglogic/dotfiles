@@ -59,3 +59,7 @@ modules:
     link: none
     location: ~/.fzf
     pull_only: true
+  - repo: https://github.com/dracula/alacritty.git
+    link: none
+    pull_only: true
+    locatoin: ~/.draculacritty
