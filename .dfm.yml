@@ -21,22 +21,8 @@ hooks:
         if [[ ! -f "$HOME/.fzf.zsh" ]]; then
           bash "$HOME/.fzf/install"
         fi
-    - interpreter: bash -c
-      script: |
-        if [[ -f /nix/var/nix/profiles/default/bin/nix ]]; then
-          nix-env -irf "$HOME/.pkgs.nix"
-        fi
-    - interpreter: bash -c
-      script: |
-        curl -Lo ~/.local/bin/phpactor https://github.com/phpactor/phpactor/releases/latest/download/phpactor.phar
-        chmod +x ~/.local/bin/phpactor
 
 modules:
-  # Tmux plugin manager
-  - repo: https://github.com/tmux-plugins/tpm
-    pull_only: true
-    link: none
-    location: ~/.tmux/plugins/tpm
   # Oh My ZSH
   - repo: https://github.com/ohmyzsh/ohmyzsh
     pull_only: true
