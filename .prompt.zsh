@@ -45,9 +45,8 @@ function aws_profile {
 }
 
 COMMAND_STATUS="%(?..%B%F{red}!! %b%f)"
-HOSTNAME="%F{13}%n%F{4}@%F{4}%m%f"
-PWD_PROMPT="%f%~%f"
-GIT_BRANCH_COLOR="\%1"
+HOSTNAME="%F{blue}%n@%m%f"
+PWD_PROMPT="%f%~"
 
 setopt prompt_subst
 
@@ -65,9 +64,9 @@ function set_prompt {
     fi
 
     if [[ $SHORT_PROMPT -ne 0 && "$DISABLE_SHORT_PROMPT" == "" ]]; then
-        export PROMPT="$PWD_PROMPT %F{1}\$(parse_git_branch)%f%F{4}\$(lambda_or_delta)%f "
+        export PROMPT="$PWD_PROMPT %F{green}\$(parse_git_branch)%f%F{4}\$(lambda_or_delta)%f "
     else
-        export PROMPT="$COMMAND_STATUS\$(venv_name)\$(aws_profile)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{1}\$(parse_git_branch)%F{4}\$(lambda_or_delta)%f "
+        export PROMPT="$COMMAND_STATUS\$(venv_name)\$(aws_profile)\$(kube_context)$HOSTNAME $PWD_PROMPT %F{green}\$(parse_git_branch)%F{yellow}\$(lambda_or_delta)%f "
     fi
 }
 
