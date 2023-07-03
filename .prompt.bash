@@ -2,13 +2,21 @@
 # PROMPT #
 ##########
 
-COMMAND_STATUS_COLOR="$(tput bold)$(tput setaf 5)"
-HOSTNAME_COLOR="$(tput setaf 2)"
-PWD_COLOR="$(tput setaf 6)"
-GIT_BRANCH_COLOR="$(tput setaf 34)"
-LAMBDA_COLOR="$(tput setaf 3)"
-DELTA_COLOR="$(tput setaf 3)"
-USERNAME_COLOR="$(tput setaf 13)"
+BLACK="$(tput setaf 0)"
+RED="$(tput setaf 1)"
+GREEN="$(tput setaf 2)"
+YELLOW="$(tput setaf 3)"
+MAGENTA="$(tput setaf 4)"
+PINK="$(tput setaf 5)"
+CYAN="$(tput setaf 6)"
+WHITE="$(tput setaf 7)"
+GREY="$(tput setaf 8)"
+
+COMMAND_STATUS_COLOR="$(tput bold)$RED"
+HOSTNAME_COLOR="$MAGENTA"
+GIT_BRANCH_COLOR="$GREEN"
+LAMBDA_COLOR="$YELLOW"
+DELTA_COLOR="$YELLOW"
 NO_COLOR="\e[0m"
 
 function __prompt_command {
@@ -22,7 +30,7 @@ function __prompt_command {
 
     kube_context=""
     if [[ -x $(which kubectl 2>/dev/null) ]]; then
-        kube_context="(kube: $(kubectl config get-contexts | grep '*' | awk '{ print $2 }'))"
+        kube_context="$WHITE(kube: $(kubectl config get-contexts | grep '*' | awk '{ print $2 }'))"
     fi
 
     lambda_or_delta="${LAMBDA_COLOR}λ"
