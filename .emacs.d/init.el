@@ -169,7 +169,9 @@
 (defvar chasinglogic-dark-theme (if (display-graphic-p) 'modus-vivendi 'solarized-dark))
 (defvar chasinglogic-light-theme (if (display-graphic-p) 'modus-operandi 'solarized-light))
 
-(load-theme chasinglogic-light-theme t)
+(if (display-graphic-p)
+    (load-theme chasinglogic-light-theme t)
+  (load-theme 'dracula t))
 
 (defun chasinglogic-toggle-theme ()
   "Toggle between light and dark theme."

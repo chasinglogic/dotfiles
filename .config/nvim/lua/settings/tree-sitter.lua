@@ -16,8 +16,8 @@ require'nvim-treesitter.configs'.setup {
       "json",
       "jsonc",
       "lua",
-      "php",
       "python",
+      "php",
       "r",
       "ruby",
       "rust",
@@ -33,6 +33,10 @@ require'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,
     disable = {"embedded_template"},
+  },
+
+  indent = {
+    enable = true,
   },
 
   autotag = {

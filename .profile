@@ -41,6 +41,8 @@ set -o emacs
 
 debug "PATH=$PATH"
 
+# Just show me the output please....
+export AWS_PAGER=""
 # Google should just make this default since it is required...
 export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 # Node version manager storage location
