@@ -9,7 +9,7 @@ YELLOW="$(tput setaf 3)"
 MAGENTA="$(tput setaf 4)"
 PINK="$(tput setaf 5)"
 CYAN="$(tput setaf 6)"
-WHITE="$(tput setaf 7)"
+WHITE="$(tput setaf 15)"
 GREY="$(tput setaf 8)"
 
 COMMAND_STATUS_COLOR="$(tput bold)$RED"
@@ -23,28 +23,37 @@ function __prompt_command {
     RET="$?"
     PS1=""
 
-    last_command_status=""
     if [[ "$RET" != "0" ]]; then
-        last_command_status="$COMMAND_STATUS_COLOR!! "
+        PS1+="\[$COMMAND_STATUS_COLOR\]!!\[$NO_COLOR\] "
     fi
 
-    kube_context=""
-    if [[ -x $(which kubectl 2>/dev/null) ]]; then
-        kube_context="$WHITE(kube: $(kubectl config get-contexts | grep '*' | awk '{ print $2 }'))"
+    if [[ $(tput cols) -gt 149 ]]; then
+      active_context=$(kubectl config current-context 2>/dev/null)
+      if [[ "$active_context" != "" ]]; then
+        PS1+="\[$WHITE\](kube: $active_context) "
+      fi
+
+      if [[ "$AWS_PROFILE" != "" ]]; then
+          PS1+="$WHITE(aws: $AWS_PROFILE) "
+      fi
+
+      PS1+="\[$HOSTNAME_COLOR\]\u@\H "
     fi
 
-    lambda_or_delta="${LAMBDA_COLOR}λ"
-    if [[ "$(git diff --shortstat 2> /dev/null | tail -n1)" != "" ]]; then
-        lambda_or_delta="${DELTA_COLOR}Δ"
-    fi
+    PS1+="\[$WHITE\]\w "
 
-    git_branch=""
     ref=$(git symbolic-ref HEAD 2> /dev/null) || ""
     if [[ "$ref" != "" ]]; then
-        git_branch="${GIT_BRANCH_COLOR}${ref#refs/heads/}"
+        PS1+="\[$GIT_BRANCH_COLOR\]${ref#refs/heads/} "
     fi
 
-    PS1="${last_command_status}${kube_context}\[$HOSTNAME_COLOR\]\u@\H\[$NO_COLOR\] \w ${git_branch} ${lambda_or_delta}\[$NO_COLOR\] "
+    if [[ "$(git diff --shortstat 2> /dev/null | tail -n1)" != "" ]]; then
+        PS1+="\[$DELTA_COLOR\]Δ "
+    else
+        PS1+="\[$LAMBDA_COLOR\]λ "
+    fi
+
+    PS1+="\[$NO_COLOR\]"
 }
 
 PROMPT_COMMAND=__prompt_command
