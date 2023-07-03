@@ -28,6 +28,6 @@ fi
 
 
 alias pm="podman"
-alias dr="docker"
+alias dk="docker"
 
 alias circleci="NO_COLOR=1 circleci"
