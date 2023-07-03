@@ -30,11 +30,11 @@ function __prompt_command {
     if [[ $(tput cols) -gt 149 ]]; then
       active_context=$(kubectl config current-context 2>/dev/null)
       if [[ "$active_context" != "" ]]; then
-        PS1+="\[$WHITE\](kube: $active_context) "
+        PS1+="\[$WHITE\](kube: ${active_context}) "
       fi
 
       if [[ "$AWS_PROFILE" != "" ]]; then
-          PS1+="$WHITE(aws: $AWS_PROFILE) "
+          PS1+="\[$WHITE\](aws: ${AWS_PROFILE}) "
       fi
 
       PS1+="\[$HOSTNAME_COLOR\]\u@\H "
@@ -42,7 +42,7 @@ function __prompt_command {
 
     PS1+="\[$WHITE\]\w "
 
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || ""
+    ref="$(git symbolic-ref HEAD 2> /dev/null)"
     if [[ "$ref" != "" ]]; then
         PS1+="\[$GIT_BRANCH_COLOR\]${ref#refs/heads/} "
     fi
