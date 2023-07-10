@@ -1,0 +1,33 @@
+snippet sub-opts
+  pulumi.ResourceOptions(provider=subaccount)
+
+snippet component-resource
+  from typing import Optional
+  from pulumi import ComponentResource, ResourceOptions
+
+  class $1(ComponentResource):
+      """
+      $2
+      """
+
+      def __init__(
+          self,
+          name: str,
+          opts: Optional[ResourceOptions] = None,
+          $3
+      ):
+          super().__init__("tillo:index:$4", name, None, opts)
+
+          child_opts = ResourceOptions(
+              parent=self,
+          )
+          if opts is not None:
+              child_opts = ResourceOptions.merge(opts, child_opts)
+
+          $5
+
+snippet stack
+  pulumi.get_stack()
+
+snippet stk
+  pulumi.get_stack()

@@ -1,4 +1,5 @@
 local cmp = require('cmp')
+local snippy = require('snippy')
 
 cmp.setup({
     completion = {
@@ -11,9 +12,26 @@ cmp.setup({
     },
     preselect = cmp.PreselectMode.None,
     mapping = {
+        -- ["<Tab>"] = cmp.mapping(function(fallback)
+        --   if cmp.visible() then
+        --     cmp.confirm({ select = true })
+        --   else
+        --     fallback()
+        --   end
+        -- end, { "i", "s" }),
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.confirm({ select = true })
+          elseif snippy.can_expand_or_advance() then
+            snippy.expand_or_advance()
+          else
+            fallback()
+          end
+        end, { "i", "s" }),
+
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
+          if snippy.can_jump(-1) then
+            snippy.previous()
           else
             fallback()
           end
@@ -42,7 +60,7 @@ cmp.setup({
         { name = "nvim_lsp", priority = 1000 },
         { name = "buffer", priority = 500 },
         { name = "path", priority = 250 },
-        { name = "ultisnips", priority = 100 },
+        { name = "snippy", priority = 100 },
     }
 })
 

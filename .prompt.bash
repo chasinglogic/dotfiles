@@ -24,7 +24,11 @@ function __prompt_command {
     PS1=""
 
     if [[ "$RET" != "0" ]]; then
-        PS1+="\[$COMMAND_STATUS_COLOR\]!!\[$NO_COLOR\] "
+      PS1+="\[$COMMAND_STATUS_COLOR\]!!\[$NO_COLOR\] "
+    fi
+
+    if [[ "$VIRTUAL_ENV_PROMPT" != "" ]]; then
+      PS1+="\[$WHITE\]$VIRTUAL_ENV_PROMPT"
     fi
 
     if [[ $(tput cols) -gt 149 ]]; then
@@ -54,6 +58,7 @@ function __prompt_command {
     fi
 
     PS1+="\[$NO_COLOR\]"
+    _bash_history_sync
 }
 
 PROMPT_COMMAND=__prompt_command

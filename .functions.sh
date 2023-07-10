@@ -72,7 +72,16 @@ function v() {
   fi
 
   NAME=$(basename $TOP_LEVEL)
-  ENVDIR="$TOP_LEVEL/env"
+  ENVDIR=""
+  for envdir in "$TOP_LEVEL/env" "$TOP_LEVEL/venv"; do
+    if [[ -d $envdir ]]; then
+      ENVDIR="$envdir"
+      break
+    else
+      ENVDIR="$envdir"
+    fi
+  done
+
   if [[ ! -d $ENVDIR ]]; then
     python3 -m venv --prompt $NAME $ENVDIR
     source $ENVDIR/bin/activate

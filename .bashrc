@@ -10,7 +10,7 @@
 # list, subject to the value of HISTIGNORE.  The second and subsequent lines of
 # a multi-line compound command are not tested, and are added to the history
 # regardless of the  value of HISTCONTROL.
-export HISTCONTROL=ignorespace:ignoredups:erasedups
+export HISTCONTROL=ignoredups:erasedups
 
 # The number of commands to remember in the command  history  (see
 # HISTORY  below).   If  the value is 0, commands are not saved in
@@ -46,8 +46,6 @@ _bash_history_sync() {
     builtin history -c
     builtin history -r
 }
-
-PROMPT_COMMAND=_bash_history_sync
 
 # The history() function overrides the builtin history to make sure that
 # the history is synchronised before it is displayed. This is necessary

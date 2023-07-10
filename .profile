@@ -123,6 +123,8 @@ add_to_path "$HOME/.local/bin"
 add_to_path "$HOME/.elixir-ls/dist"
 add_to_path "$GOPATH/bin"
 add_to_path "$HOME/.cargo/bin"
+add_to_path "/Applications/PyCharm CE.app/Contents/MacOS"
+add_to_path "/Applications/PyCharm.app/Contents/MacOS"
 
 source_if_exists "$HOME/.cargo/env"
 
