@@ -2,32 +2,35 @@ snippet sub-opts
   pulumi.ResourceOptions(provider=subaccount)
 
 snippet component-resource
+  from dataclasses import dataclass
   from typing import Optional
-  from pulumi import ComponentResource, ResourceOptions
+  from devops.components.base import BaseComponentResource
+  from pulumi import ResourceOptions
 
-  class $1(ComponentResource):
-      """
-      $2
-      """
+  @dataclass
+  class $1Args:
+    ${2:pass}
 
-      def __init__(
-          self,
-          name: str,
-          opts: Optional[ResourceOptions] = None,
-          $3
-      ):
-          super().__init__("tillo:index:$4", name, None, opts)
+  class $1(BaseComponentResource[$1Args]):
+     """
+     $3
+     """
 
-          child_opts = ResourceOptions(
-              parent=self,
-          )
-          if opts is not None:
-              child_opts = ResourceOptions.merge(opts, child_opts)
+     def __init__(
+         self,
+         name: str,
+         args: $1Args,
+         opts: Optional[ResourceOptions] = None,
+     ):
+         super().__init__(name, args, opts)
 
-          $5
+         $4
 
 snippet stack
   pulumi.get_stack()
 
 snippet stk
   pulumi.get_stack()
+
+snippet iaws
+  import pulumi_aws as aws
