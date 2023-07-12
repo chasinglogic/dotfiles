@@ -2,7 +2,7 @@
 prompt_for_commit_message: true
 
 mappings:
-  - match: '.config/nvim/UltiSnips'
+  - match: '.config/nvim/snippets'
     link_as_dir: true
   - match: ".*gpg-agent.conf.darwin"
     dest: ~/.gnupg/gpg-agent.conf
@@ -15,13 +15,6 @@ mappings:
     skip: true
 
 modules:
-  # Node version manager
-  - repo: https://github.com/nvm-sh/nvm
-    pull_only: true
-    link: none
-    location: ~/.nvm
-  - repository: git@github.com:chasinglogic/secrets.git
-    name: secrets
   # Multiple runtime version manager
   - repo: https://github.com/asdf-vm/asdf.git
     link: none
@@ -39,3 +32,5 @@ modules:
   - repo: https://github.com/cykerway/complete-alias.git
     link: none
     pull_only: true
+  - repository: git@github.com:chasinglogic/secrets.git
+    name: secrets
