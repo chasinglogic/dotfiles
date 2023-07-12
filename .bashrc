@@ -103,9 +103,13 @@ shopt -s autocd
 source $HOME/.profile
 source $HOME/.functions.sh
 
-source_if_exists $HOME/.aliases.sh
-source_if_exists $HOME/.prompt.bash
 # MacOS sucks.
 source_if_exists /opt/homebrew/etc/profile.d/bash_completion.sh
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+source_if_exists $HOME/.aliases.sh
+source_if_exists $HOME/.config/dfm/modules/complete-alias/complete_alias
+complete -F _complete_alias "${!BASH_ALIASES[@]}"
+
+source_if_exists $HOME/.prompt.bash
+
+source_if_exists $HOME/.config/fzf/fzf.bash
