@@ -1,0 +1,3 @@
+# vi: ft=bash
+# MacOS specific completion
+source_if_exists /Applications/Docker.app/Contents/Resources/etc/docker.bash-completion
