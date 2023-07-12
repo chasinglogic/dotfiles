@@ -33,6 +33,7 @@ Plug 'sbdchd/neoformat' " Format various sources which have a supported formatte
 Plug 'windwp/nvim-autopairs'  " Auto pair things
 Plug 'windwp/nvim-ts-autotag' " Auto close and rename JSX/html tags
 Plug 'neovim/nvim-lspconfig'
+Plug 'mfussenegger/nvim-lint' " Integrate standalone linters with lsp to cover the gaps
 Plug 'folke/trouble.nvim'     " Add LSP diagnostics to the location list and other useful integration
 Plug 'dcampos/cmp-snippy'     " Autocomplete snippets
 Plug 'hrsh7th/cmp-nvim-lsp'   " Autocomplete LSP suggestions
