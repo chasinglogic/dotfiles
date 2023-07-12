@@ -65,8 +65,13 @@ for _, lsp in ipairs(servers) do
   }
 end
 
-nvim_lsp['elixirls'].setup{
-    on_attach = on_attach,
+local ruff_on_attach = function(client, bufnr)
+  -- Disable hover in favor of Pyright
+  client.server_capabilities.hoverProvider = false
+  on_attach(client, bufnr)
+end
+
+nvim_lsp['ruff_lsp'].setup{
+    on_attach = ruff_on_attach,
     capabilities = capabilities,
-    cmd = { "language_server.sh" },
 }
