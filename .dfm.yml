@@ -30,11 +30,11 @@ modules:
   # FZF
   - repo: https://github.com/junegunn/fzf
     link: none
-    location: ~/.fzf
+    location: ~/.config/fzf
     pull_only: true
     hooks:
       after_sync:
-        - bash install
+        - ./install --xdg --key-bindings --no-zsh --no-fish --no-update-rc --completion
   # Make bash-completion work for aliases
   - repo: https://github.com/cykerway/complete-alias.git
     link: none
