@@ -14,20 +14,7 @@ mappings:
   - match: "README.md"
     skip: true
 
-hooks:
-  after_sync:
-    - interpreter: bash -c
-      script: |
-        if [[ ! -f "$HOME/.fzf.zsh" ]]; then
-          bash "$HOME/.fzf/install"
-        fi
-
 modules:
-  # Oh My ZSH
-  - repo: https://github.com/ohmyzsh/ohmyzsh
-    pull_only: true
-    link: none
-    location: ~/.oh-my-zsh
   # Node version manager
   - repo: https://github.com/nvm-sh/nvm
     pull_only: true
@@ -44,4 +31,11 @@ modules:
   - repo: https://github.com/junegunn/fzf
     link: none
     location: ~/.fzf
+    pull_only: true
+    hooks:
+      after_sync:
+        - bash install
+  # Make bash-completion work for aliases
+  - repo: https://github.com/cykerway/complete-alias.git
+    link: none
     pull_only: true

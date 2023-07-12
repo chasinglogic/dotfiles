@@ -105,5 +105,7 @@ source $HOME/.functions.sh
 
 source_if_exists $HOME/.aliases.sh
 source_if_exists $HOME/.prompt.bash
+# MacOS sucks.
+source_if_exists /opt/homebrew/etc/profile.d/bash_completion.sh
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
