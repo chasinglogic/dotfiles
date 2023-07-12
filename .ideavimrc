@@ -1,0 +1,22 @@
+set hlsearch
+set ignorecase
+set smartcase
+set wrapscan
+
+set clipboard=unnamedplus,unnamed,ideaput " integrate with system clipboard
+
+" Enable various ideavim plugins which emulate real vim plugins.
+set commentary
+set surround
+set ideajoin
+
+" Keybindings
+nmap ga <Action>(ShowErrorDescription)
+imap fd <ESC>
+
+" Use <space> as leader key
+let mapleader = " "
+
+nnoremap <Leader>w <C-w>
+nnoremap <Leader>fs :w<CR>
+nnoremap <Leader>fq :wq<CR>
