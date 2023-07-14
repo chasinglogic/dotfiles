@@ -42,3 +42,8 @@ mat.py
 .vscode/*
 
 /.git/*
+
+.idea/*
+
+__pycache__/*
+*/__pycache__/*

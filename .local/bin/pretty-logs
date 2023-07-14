@@ -1,84 +1,82 @@
-#!/usr/bin/env node
+#!/usr/bin/env python3
 
-const Reset = "\x1b[0m"
+import fileinput
+import json
+from datetime import datetime
 
-const FgRed = "\x1b[31m"
-const FgYellow = "\x1b[33m"
-const FgCyan = "\x1b[36m"
 
-const EventEmitter = require('events');
+class Colors:
+    RESET = "\033[0m"
 
-function formatLevel(level) {
-  if (!level || (typeof level !== 'string' && !(level instanceof String))) {
-    return level.toString()
-  }
+    RED = "\033[31m"
+    YELLOW = "\033[33m"
+    CYAN = "\033[36m"
 
-  if (level.toLowerCase() === 'info') {
-    return `${FgCyan}INFO${Reset}`
-  }
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
 
-  if (level.toLowerCase() === 'warning') {
-    return `${FgYellow}WARNING${Reset}`
-  }
+    @staticmethod
+    def color_for_level(level: str) -> str:
+        if level == 'INFO':
+            return Colors.CYAN
+        if level.startswith('WARN'):
+            return Colors.YELLOW
+        if level.startswith('ERR'):
+            return Colors.RED
+        return Colors.RESET
 
-  if (level.toLowerCase() === 'error') {
-    return `${FgRed}ERROR${Reset}`
-  }
 
-  return level.toUpperCase()
-}
+def build_field_message(data, exclude_list=None):
+    if exclude_list is None:
+        exclude_list = []
 
-function stdinLineByLine() {
-  const stdin = new EventEmitter();
-  let buff = '';
+    return "\n\t" + "\n\t".join(
+        [f"{key} = {value}" for key, value in data.items() if key not in exclude_list]
+    )
 
-  process.stdin
-    .on('data', data => {
-      buff += data;
-      lines = buff.split(/\r\n|\n/);
-      buff = lines.pop();
-      lines.forEach(line => stdin.emit('line', line));
-    })
-    .on('end', () => {
-      if (buff.length > 0) stdin.emit('line', buff);
-    });
 
-  return stdin;
-}
+def get_timestamp(data):
+    for field in (
+        "time",
+        "timestamp",
+    ):
+        value = data.get(field)
+        if value is not None:
+            return field, value
 
-const stdin = stdinLineByLine();
-stdin.on('line', (line) => {
-  if (!line.startsWith('{') || !line.trim().endsWith('}')) {
-    console.log(`${FgRed}NON-JSON LINE:${Reset}`, line);
-    return;
-  }
+    context = data.get("context")
+    if "asctime" in context:
+        return "", context["asctime"]
 
-  const data = JSON.parse(line);
-  const message = data.message;
-  const context = Object.keys(data).filter(key =>
-    key !== 'message' &&
-    key !== 'time' &&
-    key !== 'timestamp' &&
-    key !== 'level'
-  ).map(key => `\n\t${key} = ${data[key]}`)
+    return "", datetime.now().isoformat()
 
-  const timestamp = data['timestamp'] || data['time'] || data['context']['asctime'];
-  const level = data['level'] || data['context']['levelname'];
-  console.log(`${timestamp} ${formatLevel(level)} ${message} ${context}`)
-});
 
-if (process.argv.filter((arg) => arg.includes('help')).length > 0) {
-  console.log(`pretty-logs
+def pretty_print(line):
+    data = json.loads(line)
+    timestamp_field, timestamp = get_timestamp(data)
+    level = data.get("level", data.get("context", {}).get("levelname", "INFO")).upper()
+    msg = data.get("message", "")
+    msg = f"{Colors.color_for_level(level)}{level}{Colors.RESET} {timestamp} {msg}"
+    msg += build_field_message(
+        data,
+        exclude_list=(
+            "message",
+            timestamp_field,
+            "level",
+            "context",
+        ),
+    )
+    msg += build_field_message(data.get("context", {}))
+    print(msg)
 
-pretty-logs is a tool which will take a stdin stream of JSON structured logs and print
-them in a prettier human-friendly format. It is tested for Elastic format structured
-logs.
 
-It is not useful to run on it's own it needs a stream of JSON logs.
+def main():
+    for line in fileinput.input(encoding="utf-8"):
+        try:
+            pretty_print(line)
+        except json.JSONDecodeError:
+            print("NON-JSON LINE:", line)
 
-USAGE:
-    kubectl logs <pod> | pretty-logs
-    pretty-logs < logfile.txt
-`)
-  process.exit(0)
-}
+
+if __name__ == "__main__":
+    main()
