@@ -83,19 +83,6 @@ export HELM_HOST=localhost:44134
 # Make Firefox use Wayland
 export MOZ_ENABLE_WAYLAND=1
 
-# Find the vim to use.
-if [[ -n $(find_executable nvim) ]]; then
-    export VIM_PROG=nvim
-elif [[ -n $(find_executable vim) ]]; then
-    export VIM_PROG=vim
-else
-    export VIM_PROG=vi
-fi
-
-if [[ "$EDITOR" != "code --wait" ]]; then
-    export EDITOR="$VIM_PROG"
-fi
-
 # Mac specific fixes
 if [[ "$(uname)" == "Darwin" ]]; then
     export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
@@ -157,3 +144,17 @@ fi
 if [[ -n $(find_executable dfm) ]]; then
     export DOTFILES=$(dfm where)
 fi
+
+# Find the vim to use.
+if [[ -n $(find_executable nvim) ]]; then
+    export VIM_PROG=nvim
+elif [[ -n $(find_executable vim) ]]; then
+    export VIM_PROG=vim
+else
+    export VIM_PROG=vi
+fi
+
+if [[ "$EDITOR" != "code --wait" ]]; then
+    export EDITOR="$VIM_PROG"
+fi
+
