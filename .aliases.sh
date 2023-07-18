@@ -31,3 +31,5 @@ alias pm="podman"
 alias dk="docker"
 
 alias circleci="NO_COLOR=1 circleci"
+
+alias mypy="dmypy check"
