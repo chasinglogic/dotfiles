@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+AWS_PROFILE="default" aws codeartifact login --tool pip --repository tillo-python --domain tillo --domain-owner 411597267491 --region eu-west-1
