@@ -29,7 +29,7 @@ function add_to_path() {
         debug "$1 is already in PATH but force flag was provided to adding again."
     fi
 
-    if [[ -d "$1" ]]; then
+    if [ -d "$1" ]; then
         debug "$1 exists adding to beginning of PATH."
         export PATH="$1:$PATH"
     else
@@ -127,6 +127,10 @@ source_if_exists "$HOME/.asdf/asdf.sh"
 # won't always end up at the beginning of PATH so this forces that to be true.
 add_to_path "$ASDF_DIR/bin" true
 add_to_path "${ASDF_DATA_DIR:-$HOME/.asdf}/shims" true
+
+for python_install in "$HOME/.asdf/installs/python/"*; do
+  add_to_path "$python_install/bin"
+done
 
 source_if_exists "$HOME/.env.local"
 
