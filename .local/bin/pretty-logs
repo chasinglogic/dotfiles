@@ -17,6 +17,10 @@ class Colors:
 
     @staticmethod
     def color_for_level(level: str) -> str:
+        if not isinstance(level, str):
+            return Colors.CYAN
+
+        level = level.upper()
         if level == 'INFO':
             return Colors.CYAN
         if level.startswith('WARN'):
@@ -34,6 +38,20 @@ def build_field_message(data, exclude_list=None):
         [f"{key} = {value}" for key, value in data.items() if key not in exclude_list]
     )
 
+
+def get_level(data):
+    print(data)
+    possible_keys = ['levelname', 'level_name', 'level']
+    for key in possible_keys:
+        if key in data:
+            return data[key]
+
+    context = data.get('context', {})
+    for key in possible_keys:
+        if key in context:
+            return context[key]
+
+    return 'INFO'
 
 def get_timestamp(data):
     for field in (
@@ -54,8 +72,8 @@ def get_timestamp(data):
 def pretty_print(line):
     data = json.loads(line)
     timestamp_field, timestamp = get_timestamp(data)
-    level = data.get("level", data.get("context", {}).get("levelname", "INFO")).upper()
     msg = data.get("message", "")
+    level = get_level(data)
     msg = f"{Colors.color_for_level(level)}{level}{Colors.RESET} {timestamp} {msg}"
     msg += build_field_message(
         data,
