@@ -47,3 +47,5 @@ mat.py
 
 __pycache__/*
 */__pycache__/*
+
+.phpactor.json
