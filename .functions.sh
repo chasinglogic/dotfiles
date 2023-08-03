@@ -141,6 +141,6 @@ function pulumi() {
     STACK_CACHE=""
   fi
 
-  exec "$PULUMI_BIN" $@
+  "$PULUMI_BIN" $@
 }
 
