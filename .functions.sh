@@ -120,36 +120,18 @@ function t() {
   fi
 }
 
-function plan() {
-    tier=$1
-    if [[ "$tier" == "" ]]; then
-        echo "Usage: plan <tier>"
-        echo ""
-        echo "Must provide tier."
-        return 1
+function awsprof() {
+    if [ $1 == "-h" ] || [ $1 == "--help" ]; then
+        echo "AWS Profile Switcher:"
+        echo "This tool is used for quickly switching between AWS profiles."
+        echo "Usage:"
+        echo "    awsprof [profilename]"
+        exit 0
     fi
 
-    export AWS_PROFILE=$tier
-    stage_name=$(basename $(pwd))
-    just plan $@ "$stage_name"
-}
-
-function apply() {
-    tier=$1
-    if [[ "$tier" == "" ]]; then
-        echo "Usage: apply <env-name>"
-        echo ""
-        echo "Must provide env-name."
-        return 1
-    fi
-
-    export AWS_PROFILE=$tier
-    stage_name=$(basename $(pwd))
-    just apply $@ "$stage_name"
-}
-
-function aws_prof() {
-    export AWS_PROFILE=$1
+    export AWS_DEFAULT_PROFILE="$1"
+    export AWS_EB_PROFILE="$1"
+    export AWS_PROFILE="$1"
 }
 
 
