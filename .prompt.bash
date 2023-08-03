@@ -25,16 +25,11 @@ STACK_CACHE=""
 function get_stack {
   if [[ "$STACK_DIR" == $(pwd) ]]; then
     if [[ -z "$STACK_CACHE" ]]; then
-      echo "Cache not populated, populating..."
       STACK_CACHE=$(pulumi stack --show-name)
     fi
-
-    echo "$STACK_CACHE"
   else
-    echo "Busting cache."
     STACK_DIR=$(pwd)
     STACK_CACHE=$(pulumi stack --show-name)
-    echo "$STACK_CACHE"
   fi
 }
 
@@ -61,7 +56,8 @@ function __prompt_command {
       fi
 
       if [[ -f "Pulumi.yaml" ]]; then
-        PS1+="\[$WHITE\](stack: $(get_stack)) "
+        get_stack
+        PS1+="\[$WHITE\](stack: ${STACK_CACHE}) "
       fi
     fi
 
