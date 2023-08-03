@@ -33,3 +33,5 @@ alias dk="docker"
 alias circleci="NO_COLOR=1 circleci"
 
 alias mypy="dmypy check"
+
+alias pup="pulumi up --suppress-outputs"

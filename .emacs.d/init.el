@@ -166,12 +166,12 @@
 (use-package modus-themes)
 (use-package solarized-theme)
 
-(defvar chasinglogic-dark-theme (if (display-graphic-p) 'modus-vivendi 'solarized-dark))
-(defvar chasinglogic-light-theme (if (display-graphic-p) 'modus-operandi 'solarized-light))
+(defvar chasinglogic-dark-theme 'dracula)
+(defvar chasinglogic-light-theme 'modus-operandi)
 
 (if (display-graphic-p)
     (load-theme chasinglogic-light-theme t)
-  (load-theme 'dracula t))
+  (load-theme chasinglogic-dark-theme t))
 
 (defun chasinglogic-toggle-theme ()
   "Toggle between light and dark theme."
@@ -245,6 +245,7 @@
 (require 'chasinglogic-minor-modes)
 (require 'chasinglogic-projects)
 (require 'chasinglogic-vc)
+(require 'chasinglogic-tree-sitter)
 
 ;; Applications
 (require 'chasinglogic-org)
