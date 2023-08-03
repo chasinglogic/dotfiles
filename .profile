@@ -95,10 +95,13 @@ if [[ "$(uname)" == "Darwin" ]]; then
     for dir in $(find "$HOME/Library/Python" -maxdepth 1 -type d); do
         export PATH="$PATH:$dir/bin"
     done
-else
-    # Inform Emacs and other programs they can use truecolor
-    export COLORTERM=truecolor
 fi
+
+if [[ -f "$HOME/.terminfo/78/xterm-24bit" ]]; then
+    export TERM="xterm-24bit"
+fi
+
+export COLORTERM=truecolor
 
 # Storage for miscellaneous or system specific environment variables
 source_if_exists $HOME/.env.bash
@@ -145,17 +148,14 @@ else
     export FZF_DEFAULT_COMMAND="find . -path './.git' -prune -o -type f -print"
 fi
 
-if [[ -n $(find_executable dfm) ]]; then
-    export DOTFILES=$(dfm where)
+if [[ -n $(find_executable nvim) ]]; then
+  export VIM_PROG="nvim"
+else
+  export VIM_PROG="vim"
 fi
 
-# Find the vim to use.
-if [[ -n $(find_executable nvim) ]]; then
-    export VIM_PROG=nvim
-elif [[ -n $(find_executable vim) ]]; then
-    export VIM_PROG=vim
-else
-    export VIM_PROG=vi
+if [[ -n $(find_executable dfm) ]]; then
+    export DOTFILES=$(dfm where)
 fi
 
 if [[ "$EDITOR" != "code --wait" ]]; then

@@ -19,6 +19,23 @@ LAMBDA_COLOR="$YELLOW"
 DELTA_COLOR="$YELLOW"
 NO_COLOR="\e[0m"
 
+STACK_DIR=""
+STACK_CACHE=""
+
+function get_stack {
+  if [[ "$STACK_DIR" == $(pwd) ]]; then
+    if [[ -z "$STACK_CACHE" ]]; then
+      STACK_CACHE=$(pulumi stack --show-name)
+    fi
+
+    echo "$STACK_CACHE"
+  else
+    STACK_DIR=$(pwd)
+    STACK_CACHE=$(pulumi stack --show-name)
+    echo "$STACK_CACHE"
+  fi
+}
+
 function __prompt_command {
     RET="$?"
     PS1=""
@@ -41,7 +58,9 @@ function __prompt_command {
           PS1+="\[$WHITE\](aws: ${AWS_PROFILE}) "
       fi
 
-      PS1+="\[$HOSTNAME_COLOR\]\u@\H "
+      if [[ -f "Pulumi.yaml" ]]; then
+        PS1+="\[$WHITE\](stack: $(get_stack))"
+      fi
     fi
 
     PS1+="\[$WHITE\]\w "

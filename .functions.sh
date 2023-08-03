@@ -151,3 +151,14 @@ function apply() {
 function aws_prof() {
     export AWS_PROFILE=$1
 }
+
+
+PULUMI_BIN=$(which pulumi)
+function pulumi() {
+  if [[ $@ =~ "stack select" ]]; then
+    STACK_CACHE=""
+  fi
+
+  exec "$PULUMI_BIN" $@
+}
+
