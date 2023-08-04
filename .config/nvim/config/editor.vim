@@ -44,7 +44,7 @@ endif
 " For whatever reason outside of tmux wl-clipboard and unnamedplus cause
 " Neovrim to break gnome-terminal. So just disable the defaul usage of system
 " clipboard outside of tmux.
-if empty($WAYLAND_DISPLAY) || !empty($TMUX)
+if empty($WAYLAND_DISPLAY)
     set clipboard+=unnamedplus
 endif
 
