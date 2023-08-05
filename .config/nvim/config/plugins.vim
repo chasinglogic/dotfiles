@@ -22,7 +22,7 @@ Plug 'tpope/vim-rsi'        " Readline bindings in the vim command line
 " Language Support {{{
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tjdevries/nlua.nvim'
-Plug 'sheerun/vim-polyglot' " All the syntax highlighting a man could dream of.
+" Plug 'sheerun/vim-polyglot' " All the syntax highlighting a man could dream of.
 " }}}
 " Editor improvements {{{
 Plug 'dcampos/nvim-snippy' " Snippets in neovim using lua
@@ -43,7 +43,8 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'gabrielpoca/replacer.nvim' " Allows you to edit the quickfix window
 " }}}
 " Themes {{{
-Plug 'overcache/NeoSolarized'
+Plug 'morhetz/gruvbox'
+Plug 'tanvirtin/monokai.nvim'
 Plug 'dracula/vim', { 'as': 'dracula' }
 " }}}
 call plug#end()

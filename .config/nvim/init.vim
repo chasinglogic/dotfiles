@@ -1,4 +1,3 @@
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set termguicolors
 
 if has('macunix')
@@ -18,13 +17,9 @@ lua require('config')
 
 """ Load Theme
 set background=dark
-
-" Default value is "normal", Setting this option to "high" or "low" does use the
-" same Solarized palette but simply shifts some values up or down in order to
-" expand or compress the tonal range displayed.
-let g:neosolarized_contrast = "high"
-
-colorscheme dracula
+let g:gruvbox_contrast_dark='hard'
+let g:gruvbox_contrast_light='hard'
+colorscheme monokai
 
 highlight! link CmpItemAbbr Pmenu
 highlight! link CmpItemKind Pmenu
