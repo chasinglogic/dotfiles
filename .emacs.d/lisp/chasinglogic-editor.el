@@ -40,7 +40,7 @@
  ;; default tab size to 4 spaces
  tab-width 4
  chasinglogic-font-size (if (eq system-type 'darwin) "17" "15")
- chasinglogic-font (format (if (eq system-type 'darwin) "Menlo-%s" "Source Code Pro-%s") chasinglogic-font-size)
+ chasinglogic-font (format (if (eq system-type 'darwin) "Menlo-%s" "DejaVu Sans Mono-%s") chasinglogic-font-size)
  ;; Just save buffers before compiling
  compilation-ask-about-save nil
  ;; Always kill old compilation without prompting

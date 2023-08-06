@@ -26,30 +26,16 @@
 
 ;;; Code:
 
-
-(defvar +vertico-company-completion-styles '(basic partial-completion orderless)
-  "Completion styles for company to use.
-
-The completion/vertico module uses the orderless completion style by default,
-but this returns too broad a candidate set for company completion. This variable
-overrides `completion-styles' during company completion sessions.")
-
-(defvar +vertico-consult-fd-args nil
-  "Shell command and arguments the vertico module uses for fd.")
-
-;;
-;;; Packages
-
 (use-package vertico
   :init
   (vertico-mode)
   :bind 
   (:map vertico-map
-        ( "M-RET" . vertico-exit-input )
-        ( "C-j"   . vertico-next )
-        ( "C-M-j" . vertico-next-group )
-        ( "C-k"   . vertico-previous )
-        ( "C-M-k" . vertico-previous-group ))
+        ("M-RET" . vertico-exit-input)
+        ("C-j"   . vertico-next)
+        ("C-M-j" . vertico-next-group)
+        ("C-k"   . vertico-previous)
+        ("C-M-k" . vertico-previous-group))
   :config
   (setq vertico-resize nil
         vertico-count 17
@@ -69,15 +55,7 @@ overrides `completion-styles' during company completion sessions.")
 
 
 (use-package orderless
-  :config
-;;   (defadvice! +vertico--company-capf--candidates-a (fn &rest args)
-;;     "Highlight company matches correctly, and try default completion styles before
-;; orderless."
-;;     :around #'company-capf--candidates
-;;     (let ((orderless-match-faces [completions-common-part])
-;;           (completion-styles +vertico-company-completion-styles))
-;;       (apply fn args)))
-
+  :init
   (defun chasinglogic-vertico-orderless-dispatch (pattern _index _total)
     (cond
      ;; Ensure $ works with Consult commands, which add disambiguation suffixes
@@ -100,18 +78,11 @@ overrides `completion-styles' during company completion sessions.")
      ((string-prefix-p "~" pattern) `(orderless-flex . ,(substring pattern 1)))
      ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1)))))
 
-  (add-to-list
-   'completion-styles-alist
-   '(+vertico-basic-remote
-     +vertico-basic-remote-try-completion
-     +vertico-basic-remote-all-completions
-     "Use basic completion on remote files only"))
-
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
         ;; note that despite override in the name orderless can still be used in
         ;; find-file etc.
-        completion-category-overrides '((file (styles +vertico-basic-remote orderless partial-completion)))
+        completion-category-overrides '((file (styles orderless partial-completion)))
         orderless-style-dispatchers '(chasinglogic-vertico-orderless-dispatch)
         orderless-component-separator "[ &]")
 
@@ -154,10 +125,10 @@ overrides `completion-styles' during company completion sessions.")
 (use-package embark
   :bind
   (:map minibuffer-local-map
-        ( "C-;"     . embark-act )
-        ( "C-c C-;" . embark-export )
-        ( "C-c C-l" . embark-collect)
-        ( "C-c C-e" . chasinglogic-embark-export-write))
+        ("C-;"     . embark-act)
+        ("C-c C-;" . embark-export)
+        ("C-c C-l" . embark-collect)
+        ("C-c C-e" . chasinglogic-embark-export-write))
   :init
   (setq which-key-use-C-h-commands nil
         prefix-help-command #'embark-prefix-help-command)
@@ -184,14 +155,17 @@ overrides `completion-styles' during company completion sessions.")
 (use-package embark-consult
   :after (embark consult))
 
-
 (use-package marginalia
+  :after vertico
+  :ensure t
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
   :init
-  (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  (marginalia-mode)
-  :bind (:map minibuffer-local-map
-  ("M-A" . #'marginalia-cycle)))
+  (marginalia-mode))
 
+(use-package savehist
+  :init
+  (savehist-mode))
 
 (use-package wgrep
   :commands wgrep-change-to-wgrep-mode

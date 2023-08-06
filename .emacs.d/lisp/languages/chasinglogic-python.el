@@ -31,13 +31,7 @@
               flycheck-python-pycompile-executable python-shell-interpreter)
 
 (use-package pyvenv
-  :config
-  (defun chasinglogic-auto-activate-venv ()
-    (let ((venv-dir (concat (projectile-project-root) "env")))
-      (when (file-exists-p venv-dir)
-        (pyvenv-activate venv-dir))))
-  (add-hook 'projectile-after-switch-project-hook 'chasinglogic-auto-activate-venv)
-  (pyvenv-mode))
+  :commands (pyvenv-mode pyvenv-activate))
 
 ;; Sort imports
 (use-package py-isort
@@ -51,24 +45,29 @@
 ;; projects do not use this formatter so define a "black list" for
 ;; Black and only add the hook if we aren't in one of those projects.
 (use-package blacken
-  :commands 'blacken-buffer
-  :init
-  (setq-default chasinglogic-blacken-black-list
-                '("scons"
-                  "Work"))
+  :hook (python-mode . blacken-mode)
+  :commands 'blacken-buffer)
 
-  (defun chasinglogic-python-format-hook ()
-    "Set up blacken-buffer on save if appropriate."
-    (unless (or
-             (member (projectile-project-name) chasinglogic-blacken-black-list)
-             (seq-some '(lambda (item)
-                          (string-match-p (regexp-quote item) (buffer-file-name)))
-                       chasinglogic-blacken-black-list))
-      (message "Not in a blacklisted project, enabling format on save.")
-      (add-hook 'before-save-hook 'blacken-buffer nil t)))
-  (add-hook 'python-mode-hook 'chasinglogic-python-format-hook))
+(use-package pipenv
+  :commands (pipenv-mode pipenv-activate)
+  :hook (python-mode . pipenv-mode))
 
 (add-hook 'python-mode-hook 'chasinglogic-enable-lsp)
+
+(defun chasinglogic-auto-activate-venv ()
+    (let ((venv-dir (concat (projectile-project-root) "env")))
+      (cond
+       ((file-exists-p venv-dir)
+        (progn
+          (pyvenv-mode 1)
+          (pyvenv-activate venv-dir)))
+       ((file-exists-p "Pipfile")
+        (progn
+          (pipenv-mode 1)
+          (pipenv-activate))))))
+
+(use-package flymake-ruff
+  :hook (eglot-managed-mode . flymake-ruff-load))
 
 (provide 'chasinglogic-python)
 

@@ -34,28 +34,6 @@
       (save-buffers-kill-emacs)
     (save-buffers-kill-terminal)))
 
-(defun chasinglogic-get-compilation-command (dirname)
-  (cond
-   ((string-match-p (regexp-quote "/Work/MPBX") dirname)
-    (progn
-      (chasinglogic-copy-mpbx-test-path-for-here t)
-      (concat "cd mpb && python ./manage.py test " (current-kill 0))))
-   ((string-match-p (regexp-quote "Work") dirname)
-    (progn
-      (chasinglogic-copy-test-path-for-here t)
-      (concat "./common/scripts/tests " (current-kill 0))))
-
-   ((string-match-p ".*\\.go" (buffer-file-name))
-    (chasinglogic-go-run-test-command))))
-
-(defun chasinglogic-run-test ()
-  "Dispatch to the correct test runner based on file type and project."
-  (interactive)
-  (let* ((default-directory (projectile-project-root))
-         (compilation-command (chasinglogic-get-compilation-command default-directory)))
-    (puthash default-directory compilation-command projectile-compilation-cmd-map)
-    (compile compilation-command)))
-
 ;; Indent the buffer
 ;;
 ;;     This function uses Emacs built in indent facilities to indent the
@@ -120,6 +98,7 @@ If COPY is provided copy the value to kill ring instead of returning."
        (find-file (if (file-exists-p (concat file-name ".gpg"))
                       (concat file-name ".gpg")
                     file-name)))))
+
 (chasinglogic-find-org-file notes)
 (chasinglogic-find-org-file ideas)
 (chasinglogic-find-org-file todo)
@@ -146,11 +125,8 @@ If COPY is provided copy the value to kill ring instead of returning."
 (use-package general
   :config
   (general-def "C-c j b" 'chasinglogic-copy-breakpoint-for-here)
-  (general-def "C-c j t" 'chasinglogic-copy-test-path-for-here)
-  (general-def "C-c j =" 'chasinglogic-indent-buffer)
   (general-def "C-c f r" 'chasinglogic-rename-file-and-buffer)
   (general-def "C-c f D" 'chasinglogic-delete-current-buffer-file)
-  (general-def "C-x C-b" 'ibuffer)
   (general-def "M-;" 'comment-actually-dwim)
   (general-def "M-/" 'hippie-expand)
   (general-def "M-t" 'switch-to-buffer)
@@ -183,6 +159,9 @@ If COPY is provided copy the value to kill ring instead of returning."
     :prefix "<SPC>")
 
   (leader!
+    "yy" 'yank-pop)
+
+  (leader!
     "<SPC>" 'execute-extended-command
     "h" `(,(general-simulate-key "C-h") :wk "help")
     "q" '(:which-key "quit")
@@ -197,6 +176,7 @@ If COPY is provided copy the value to kill ring instead of returning."
 
   (leader!
     "b" '(:which-key "buffers")
+    "bb" 'switch-to-buffer
     "bd" #'(lambda ()
              (interactive)
              (kill-buffer (current-buffer)))

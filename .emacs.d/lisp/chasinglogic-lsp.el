@@ -31,7 +31,7 @@
 
 ;; LSP Mode
 (use-package eglot
-  :commands 'eglot)
+  :commands (eglot eglot-ensure))
 
 ;; Increase the amount of data which Emacs reads from the
 ;; process. Again the emacs default is too low 4k considering that the
@@ -43,7 +43,7 @@
 ;; Enable LSP hook
 (defun chasinglogic-enable-lsp ()
   "Enable LSP mode."
-  (eglot)
+  (eglot-ensure)
   (flymake-mode 1)
   (eldoc-mode 1))
 
