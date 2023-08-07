@@ -36,8 +36,8 @@
 ;; Sort imports
 (use-package py-isort
   :commands 'py-isort-buffer
-  :init
-  (add-hook 'python-mode-hook 'py-isort-before-save))
+  :hook ((python-mode-hook . py-isort-before-save)
+         (python-ts-mode-hook . py-isort-before-save)))
 
 ;; Next I use the Black Python formatter for my code. This package
 ;; integrates it into Emacs and lets me run it as an after save
@@ -45,14 +45,17 @@
 ;; projects do not use this formatter so define a "black list" for
 ;; Black and only add the hook if we aren't in one of those projects.
 (use-package blacken
-  :hook (python-mode . blacken-mode)
+  :hook ((python-mode . blacken-mode)
+         (python-ts-mode . blacken-mode))
   :commands 'blacken-buffer)
 
 (use-package pipenv
   :commands (pipenv-mode pipenv-activate)
-  :hook (python-mode . pipenv-mode))
+  :hook ((python-mode . pipenv-mode)
+         (python-ts-mode . pipenv-mode)))
 
 (add-hook 'python-mode-hook 'chasinglogic-enable-lsp)
+(add-hook 'python-ts-mode-hook 'chasinglogic-enable-lsp)
 
 (defun chasinglogic-auto-activate-venv ()
     (let ((venv-dir (concat (projectile-project-root) "env")))
