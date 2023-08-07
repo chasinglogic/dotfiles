@@ -142,6 +142,7 @@ If COPY is provided copy the value to kill ring instead of returning."
   (general-evil-setup t)
   (general-nmap
     "-" #'(lambda () (interactive) (dired "."))
+    "!"  'shell-command
     "gc" 'chasinglogic-evil-comment-dwim)
 
   (general-vmap "gc" 'chasinglogic-evil-comment-dwim)

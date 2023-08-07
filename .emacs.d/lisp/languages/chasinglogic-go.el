@@ -28,12 +28,14 @@
 
 (use-package go-mode
   :mode ("\\.go\\'")
-  :init
-  (add-hook 'go-mode-hook 'chasinglogic-enable-lsp)
+  :hook ((go-mode-hook . chasinglogic-enable-lsp)
+         (go-ts-mode-hook . chasinglogic-enable-lsp))
   :config
   (setq gofmt-command "goimports")
   (defun chasinglogic-go-hook ()
     (add-hook 'before-save-hook 'gofmt-before-save))
+
+  (add-hook 'go-ts-mode-hook 'chasinglogic-go-hook)
   (add-hook 'go-mode-hook 'chasinglogic-go-hook))
 
 (defun chasinglogic-go-run-test-command (&optional full-file)
