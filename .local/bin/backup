@@ -44,6 +44,7 @@ rsync \
     --exclude $USER/.vs-kubernetes \
     --exclude $USER/.vscode \
     --exclude $USER/.config/Code \
+    --exclude $USER/.config/dfm \
     --exclude $USER/Code/go \
     --exclude $USER/Desktop \
     --exclude $USER/Downloads \
