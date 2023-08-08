@@ -7,7 +7,7 @@ import os
 import re
 import sys
 
-DEBUG_MODE = os.getenv('PROJECTOR_DEBUG')
+DEBUG_MODE = os.getenv("PROJECTOR_DEBUG")
 
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers(dest="subcommand")
@@ -27,10 +27,12 @@ if config["excludes"]:
 else:
     excludes = re.compile("$^")
 
+print(excludes)
 if config["includes"]:
     includes = re.compile("|".join(config["includes"]))
 else:
     includes = re.compile("$^")
+
 
 def debug(string, variables=None, **kwargs):
     import sys
@@ -52,7 +54,6 @@ def debug(string, variables=None, **kwargs):
         print(formatted, file=sys.stderr)
 
 
-
 def subcommand(args=[], parent=subparsers):
     def decorator(func):
         parser = parent.add_parser(func.__name__, description=func.__doc__)
@@ -64,7 +65,7 @@ def subcommand(args=[], parent=subparsers):
 
 
 def debug(*args, **kwargs):
-    if os.getenv('PROJECTOR_DEBUG'):
+    if os.getenv("PROJECTOR_DEBUG"):
         print(*args, file=sys.stderr, **kwargs)
 
 
@@ -73,26 +74,26 @@ def argument(*name_or_flags, **kwargs):
 
 
 def find_projects(code_dir, cb=None):
-    debug('Starting search in: {}', code_dir)
+    debug("Starting search in: {}", code_dir)
     code_dir = os.path.expanduser(code_dir)
     if cb is None:
         cb = print
 
     for dirpath, dirnames, _ in os.walk(code_dir, followlinks=True):
-        debug('Searching: {}', dirpath)
-        if excludes.match(dirpath) and not includes.match(dirpath):
-            debug('{} is excluded, skipping', dirpath)
+        debug("Searching: {}", dirpath)
+        if excludes.search(dirpath) and not includes.search(dirpath):
+            debug("{} is excluded, skipping", dirpath)
             dirnames.clear()
             continue
 
-        if ".git" in dirnames and callable(cb):
-            debug('{} is a project directory', dirpath)
+        if ".git" in dirnames:
+            debug("{} is a project directory", dirpath)
             dirnames.clear()
             stop = cb(dirpath)
             if stop:
                 break
         else:
-            debug('{} is not a project directory', dirpath)
+            debug("{} is not a project directory", dirpath)
 
 
 @subcommand(
@@ -137,7 +138,7 @@ def find(args):
     matches = {}
 
     def collect_matches(path):
-        debug('checking if {path} matches {rgx}', path=path, rgx=rgx)
+        debug("checking if {path} matches {rgx}", path=path, rgx=rgx)
         for match in rgx.finditer(path):
             last_match_percent = match.end() / len(path)
             matches[last_match_percent] = path
