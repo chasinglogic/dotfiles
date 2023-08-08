@@ -219,6 +219,7 @@ comments so this function better suits my needs."
 ;; the variable `electric-indent-chars'. This mode is invaluable and
 ;; saves me a lot of formatting time.
 (electric-indent-mode 1)
+(electric-pair-mode 1)
 
 (provide 'chasinglogic-editor)
 
