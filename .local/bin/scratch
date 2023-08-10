@@ -11,6 +11,6 @@ esac
 tmpd=$(mktemp -d)
 filename="${tmpd}/scratch.${filetype}"
 
-"$EDITOR" "$filename"
+$EDITOR "$filename"
 
 rm -rf "$tmpd"
