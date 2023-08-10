@@ -17,9 +17,7 @@ lua require('config')
 
 """ Load Theme
 set background=dark
-let g:gruvbox_contrast_dark='hard'
-let g:gruvbox_contrast_light='hard'
-colorscheme monokai
+colorscheme dracula
 
 highlight! link CmpItemAbbr Pmenu
 highlight! link CmpItemKind Pmenu
