@@ -50,6 +50,7 @@ local servers = {
     "pyright", -- requires npm i -g pyright to work
     "rust_analyzer",
     "tsserver",
+    "svelte", -- requires npm i -g svelte-language-server
     "clangd",
     "terraformls",
     "gopls",
