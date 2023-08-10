@@ -256,6 +256,7 @@
 (require 'chasinglogic-javascript)
 (require 'chasinglogic-markdown)
 (require 'chasinglogic-minor-modes)
+(require 'chasinglogic-php)
 (require 'chasinglogic-prose)
 (require 'chasinglogic-python)
 (require 'chasinglogic-ruby)
