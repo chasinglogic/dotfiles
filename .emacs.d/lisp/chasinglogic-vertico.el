@@ -122,7 +122,10 @@
 (use-package consult-flycheck
   :after (consult flycheck))
 
+(use-package embark-consult)
+
 (use-package embark
+  :after 'embark-consult
   :bind
   (:map minibuffer-local-map
         ("C-;"     . embark-act)
@@ -152,8 +155,7 @@
 
   (require 'consult))
 
-(use-package embark-consult
-  :after (embark consult))
+
 
 (use-package marginalia
   :after vertico
