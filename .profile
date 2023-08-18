@@ -66,11 +66,9 @@ export LC_ALL="en_US.UTF-8"
 # See bash(1) for more options
 export HISTCONTROL=ignoreboth
 # number of commands to save in history file
-export HISTSIZE=1000
+export HISTSIZE=1000000
 # number of lines to save in history file
-export HISTFILESIZE=2000
-# Tell my update script where to find my dotfile repository
-export DOTFILES_REPOSITORY="$HOME/Code/dotfiles"
+export HISTFILESIZE=$HISTSIZE
 # Set CCACHE directory
 if [ -d /data/ccache ]; then
     export CCACHE_DIR=/data/ccache
