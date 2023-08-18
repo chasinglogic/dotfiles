@@ -162,13 +162,10 @@
 
 ;;;; Color Theme
 
-(use-package dracula-theme)
-(use-package modus-themes)
-(use-package solarized-theme)
-(use-package monokai-theme)
+(use-package doom-themes)
 
-(defvar chasinglogic-dark-theme 'monokai)
-(defvar chasinglogic-light-theme 'modus-operandi)
+(defvar chasinglogic-dark-theme 'doom-one)
+(defvar chasinglogic-light-theme 'doom-one-light)
 
 (load-theme chasinglogic-dark-theme t)
 
