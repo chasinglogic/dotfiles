@@ -20,3 +20,8 @@ let mapleader = " "
 nnoremap <Leader>w <C-w>
 nnoremap <Leader>fs :w<CR>
 nnoremap <Leader>fq :wq<CR>
+
+nnoremap <Leader>tn :tabnext<CR>
+nnoremap <Leader>tp :tabprev<CR>
+
+nnoremap <Leader>pf <Action>(FindFiles)
