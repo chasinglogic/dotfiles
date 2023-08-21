@@ -89,7 +89,9 @@
             (julia-mode . julia-ts-mode) 
             (lua-mode . lua-ts-mode) 
             (make-mode . make-ts-mode) 
-            (markdown-mode . markdown-ts-mode) 
+            ;; Commented out until I figure out why markdown-ts-mode
+            ;; doesn't exist.
+            ;; (markdown-mode . markdown-ts-mode) 
             (meson-mode . meson-ts-mode) 
             (python-mode . python-ts-mode) 
             (ruby-mode . ruby-ts-mode) 
