@@ -34,3 +34,15 @@ modules:
     pull_only: true
   - repository: git@github.com:chasinglogic/secrets.git
     name: secrets
+  # Pre and post exec commands for bash like ZSH has. Required for atuin.
+  - repository: https://github.com/rcaloras/bash-preexec
+    link: none
+    pull_only: true
+  # Eternal shell history
+  - repository: https://github.com/atuinsh/atuin
+    link: none
+    pull_only: true
+    hooks:
+      after_sync:
+        - bash ./install.sh
+
