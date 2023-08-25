@@ -44,5 +44,6 @@ modules:
     pull_only: true
     hooks:
       after_sync:
+        - echo "it works"
         - "if [[ ! -x $(which atuin 2>/dev/null) ]]; then bash ./install.sh; fi"
 
