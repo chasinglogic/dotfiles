@@ -46,3 +46,5 @@ fpath=(${ASDF_DIR}/completions $fpath)
 autoload -Uz compinit && compinit
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+eval "$(atuin init zsh)"
