@@ -21,11 +21,11 @@ class Colors:
             return Colors.CYAN
 
         level = level.upper()
-        if level == 'INFO':
+        if level == "INFO":
             return Colors.CYAN
-        if level.startswith('WARN'):
+        if level.startswith("WARN"):
             return Colors.YELLOW
-        if level.startswith('ERR'):
+        if level.startswith("ERR"):
             return Colors.RED
         return Colors.RESET
 
@@ -34,24 +34,38 @@ def build_field_message(data, exclude_list=None):
     if exclude_list is None:
         exclude_list = []
 
-    return "\n\t" + "\n\t".join(
-        [f"{key} = {value}" for key, value in data.items() if key not in exclude_list]
-    )
+    if isinstance(data, list):
+        data = {index: value for index, value in enumerate(data)}
+
+    lines = []
+    for key, value in data.items():
+        if key in exclude_list:
+            continue
+
+        if isinstance(value, dict) and value:
+            lines.append(f"{key} = {{")
+            for nested_key, nested_value in value.items():
+                lines.append(f"\t{nested_key} = {nested_value}")
+            lines.append("}")
+        else:
+            lines.append(f"{key} = {value}")
+
+    return "\n\t" + "\n\t".join(lines)
 
 
 def get_level(data):
-    print(data)
-    possible_keys = ['levelname', 'level_name', 'level']
+    possible_keys = ["levelname", "level_name", "level"]
     for key in possible_keys:
         if key in data:
             return data[key]
 
-    context = data.get('context', {})
+    context = data.get("context", {})
     for key in possible_keys:
         if key in context:
             return context[key]
 
-    return 'INFO'
+    return "INFO"
+
 
 def get_timestamp(data):
     for field in (
