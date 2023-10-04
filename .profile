@@ -92,9 +92,11 @@ if [[ "$(uname)" == "Darwin" ]]; then
     export LDFLAGS="-L/opt/homebrew/opt/openssl@3/lib"
     export CPPFLAGS="-I/opt/homebrew/opt/openssl@3/include"
 
-    for dir in $(find "$HOME/Library/Python" -maxdepth 1 -type d); do
-        export PATH="$PATH:$dir/bin"
-    done
+    if [[ -d "$HOME/Library/Python" ]]; then
+        for dir in $(find "$HOME/Library/Python" -maxdepth 1 -type d); do
+            export PATH="$PATH:$dir/bin"
+        done
+    fi
 fi
 
 if [[ -f "$HOME/.terminfo/78/xterm-24bit" ]]; then
