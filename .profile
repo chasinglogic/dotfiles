@@ -37,8 +37,6 @@ function add_to_path() {
     fi
 }
 
-set -o emacs
-
 debug "PATH=$PATH"
 
 # Just show me the output please....

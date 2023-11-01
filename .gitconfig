@@ -17,7 +17,6 @@
 
 [core]
     excludesfile = ~/.gitignore_global
-    hooksPath = ~/.githooks
 
 [add]
     verbose = true
