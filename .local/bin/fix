@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-
-git commit -m "fix: $@"
+git commit --no-gpg-sign -m "fix: $(echo $@)"
