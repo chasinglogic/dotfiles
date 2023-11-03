@@ -49,7 +49,7 @@
 
 (setq org-default-todo-file  (expand-file-name "inbox.org"  org-directory)
       org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
-      org-default-ideas-file (expand-file-name "inbox.org" org-directory)
+      org-default-ideas-file (expand-file-name "inbox.org" org-directory))
 
 (setq-default org-refile-targets '((nil :maxlevel . 1)
                                    (org-agenda-files :maxlevel . 2))
