@@ -164,7 +164,7 @@
 
 (use-package doom-themes)
 
-(defvar chasinglogic-dark-theme 'modus-vivendi)
+(defvar chasinglogic-dark-theme 'doom-dracula)
 (defvar chasinglogic-light-theme 'modus-operandi)
 
 (load-theme chasinglogic-dark-theme t)
