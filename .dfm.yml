@@ -15,10 +15,6 @@ mappings:
     skip: true
 
 modules:
-  - repo: https://github.com/doomemacs/doomemacs 
-    link: none
-    location: ~/.config/emacs
-    pull_only: true
   # Multiple runtime version manager
   - repo: https://github.com/asdf-vm/asdf.git
     link: none
