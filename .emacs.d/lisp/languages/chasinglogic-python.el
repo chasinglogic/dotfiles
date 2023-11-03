@@ -58,16 +58,32 @@
 (add-hook 'python-ts-mode-hook 'chasinglogic-enable-lsp)
 
 (defun chasinglogic-auto-activate-venv ()
-    (let ((venv-dir (concat (projectile-project-root) "env")))
+  (interactive)
+  (let* ((root-dir (project-root (project-current)))
+        (env-dir (concat root-dir "env"))
+        (venv-dir (concat root-dir "venv"))
+        (pipfile-path (concat root-dir "Pipfile")))
       (cond
+       ((file-exists-p env-dir)
+        (progn
+          (message "activating %s" env-dir)
+          (pyvenv-mode 1)
+          (pyvenv-activate env-dir)))
        ((file-exists-p venv-dir)
         (progn
+          (message "activating %s" venv-dir)
           (pyvenv-mode 1)
           (pyvenv-activate venv-dir)))
-       ((file-exists-p "Pipfile")
+       ((file-exists-p pipfile-path)
         (progn
+          (message "activating Pipenv virtualenv")
           (pipenv-mode 1)
           (pipenv-activate))))))
+
+(defadvice project-switch-project
+    (after auto-activate-virtualenv-after-switch-project activate)
+  (message "activating virtualenv if found...")
+  (chasinglogic-auto-activate-venv))
 
 (use-package flymake-ruff
   :hook (eglot-managed-mode . flymake-ruff-load))
