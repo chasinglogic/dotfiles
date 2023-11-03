@@ -29,12 +29,7 @@ function add_to_path() {
         debug "$1 is already in PATH but force flag was provided to adding again."
     fi
 
-    if [ -d "$1" ]; then
-        debug "$1 exists adding to beginning of PATH."
-        export PATH="$1:$PATH"
-    else
-        debug "$1 does not exist."
-    fi
+    export PATH="$1:$PATH"
 }
 
 debug "PATH=$PATH"
