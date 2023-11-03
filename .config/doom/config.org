@@ -56,7 +56,6 @@ Make fd escape insert mode as I always have.
   (setq evil-escape-key-sequence "fd"))
 #+END_SRC
 
-
 * TODO Org Settings
 If you use `org' and don't want your org files in the default location below,
 change `org-directory'. It must be set before org loads!
@@ -165,11 +164,13 @@ quickly switch to them.
 Most of the Doom keybinds are great but some muscle memory refuses to die.
 
 #+BEGIN_SRC emacs-lisp
-(map! :leader "SPC" #'execute-extended-command)
-;; (map! :n "-" #'(lambda () (interactive) (dired ".")))
+(map! :leader
+      "SPC" #'execute-extended-command
+      "w m" #'doom/window-maximize-buffer
+      "g s" #'magit-status)
+
+(map! :n "-" #'(lambda () (interactive) (dired ".")))
 #+END_SRC
-
-
 * Dead Code
 
 A place for me to put dead code until I decide what to do with it. It's dead
