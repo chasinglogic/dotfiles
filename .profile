@@ -99,9 +99,10 @@ fi
 export COLORTERM=truecolor
 
 # Storage for miscellaneous or system specific environment variables
-source_if_exists $HOME/.env.bash
+source_if_exists "$HOME/.env.bash"
 # Setup rustup, cargo path
 source_if_exists /home/chasinglogic/.rustrc
+source_if_exists "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
 add_to_path /opt/homebrew/bin
 add_to_path "$HOME/.local/bin"
