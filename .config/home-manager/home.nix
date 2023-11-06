@@ -1,10 +1,26 @@
 { config, pkgs, ... }:
 
-{
+let
+  osSpecificPackages = if pkgs.stdenv.isLinux then
+    with pkgs; [
+      pkgs.thunderbird
+      pkgs.strace
+      pkgs.ltrace
+      pkgs.firefox
+      pkgs.xclip
+      pkgs.wl-clipboard
+      pkgs.gnome.gnome-boxes
+      pkgs.gnome.gnome-calendar
+      pkgs.gnome.gnome-weather
+      pkgs.gnome.gnome-clocks
+    ]
+  else
+    [ ];
+in {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  home.username = "mathewrobinson";
-  home.homeDirectory = "/Users/mathewrobinson";
+  home.username = if pkgs.stdenv.isLinux then "chasinglogic" else "mathewrobinson";
+  home.homeDirectory = if pkgs.stdenv.isLinux then "/home/chasinglogic" else "/Users/mathewrobinson";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -17,24 +33,50 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
+  home.packages = with pkgs;
+    [
+      ansible
+      aspell
+      aspellDicts.en
+      cmake
+      curl
+      docker
+      emacs
+      gcc
+      git
+      gnumake
+      htop
+      hugo
+      indent
+      libtool
+      nodejs
+      ninja
+      pandoc
+      podman
+      (python3.withPackages (ps: with ps; [ requests ]))
+      ripgrep
+      rustup
+      tree-sitter
+      twine
+      yamllint
 
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+      # # Adds the 'hello' command to your environment. It prints a friendly
+      # # "Hello, world!" when run.
+      # pkgs.hello
 
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
-  ];
+      # # It is sometimes useful to fine-tune packages, for example, by applying
+      # # overrides. You can do that directly here, just don't forget the
+      # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
+      # # fonts?
+      # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+
+      # # You can also create simple shell scripts directly inside your
+      # # configuration. For example, this adds a command 'my-hello' to your
+      # # environment:
+      # (pkgs.writeShellScriptBin "my-hello" ''
+      #   echo "Hello, ${config.home.username}!"
+      # '')
+    ] ++ osSpecificPackages;
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
