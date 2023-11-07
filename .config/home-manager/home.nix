@@ -19,8 +19,12 @@ let
 in {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  home.username = if pkgs.stdenv.isLinux then "chasinglogic" else "mathewrobinson";
-  home.homeDirectory = if pkgs.stdenv.isLinux then "/home/chasinglogic" else "/Users/mathewrobinson";
+  home.username =
+    if pkgs.stdenv.isLinux then "chasinglogic" else "mathewrobinson";
+  home.homeDirectory = if pkgs.stdenv.isLinux then
+    "/home/chasinglogic"
+  else
+    "/Users/mathewrobinson";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -38,6 +42,7 @@ in {
       ansible
       aspell
       aspellDicts.en
+      atuin
       cmake
       curl
       docker
@@ -49,7 +54,7 @@ in {
       hugo
       indent
       libtool
-      nerdFonts
+      nerdfonts
       ninja
       nodejs
       pandoc
