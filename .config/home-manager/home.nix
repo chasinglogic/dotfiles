@@ -45,6 +45,7 @@ in {
       atuin
       cmake
       curl
+      clojure-lsp
       docker
       emacs
       gcc
@@ -66,7 +67,7 @@ in {
       twine
       yamllint
 
-      (python3.withPackages (ps: with ps; [ requests ]))
+      (python3.withPackages (ps: with ps; [ requests python-lsp-server ]))
     ] ++ osSpecificPackages;
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
