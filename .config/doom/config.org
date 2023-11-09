@@ -56,6 +56,15 @@ Make fd escape insert mode as I always have.
   (setq evil-escape-key-sequence "fd"))
 #+END_SRC
 
+* Projectile Settings
+I prefer to see dired when I switch to a project. Set
+=+workspaces-switch-project-function= here instead of
+=projectile-switch-project-action= because I use the Doom workspaces module.
+
+#+BEGIN_SRC emacs-lisp
+(setq +workspaces-switch-project-function #'dired)
+#+END_SRC
+
 * TODO Org Settings
 If you use `org' and don't want your org files in the default location below,
 change `org-directory'. It must be set before org loads!
