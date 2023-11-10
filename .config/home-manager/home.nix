@@ -43,18 +43,22 @@ in {
       aspell
       aspellDicts.en
       atuin
+      clojure
+      clojure-lsp
       cmake
       curl
-      clojure-lsp
       docker
       emacs
       gcc
       git
       gnumake
+      graalvm-ce
       htop
       hugo
       indent
       libtool
+      mktemp
+      neil
       nerdfonts
       ninja
       nodejs
