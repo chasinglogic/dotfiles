@@ -70,6 +70,7 @@ in {
       tree-sitter
       twine
       yamllint
+      pulumi
 
       (python3.withPackages (ps: with ps; [ requests python-lsp-server ]))
     ] ++ osSpecificPackages;

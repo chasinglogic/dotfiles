@@ -159,13 +159,11 @@ quickly switch to them.
   (interactive)
   (setq
     projectile-known-projects
-    (mapcar
-     #'list
      (sort
-    (delete ""
+      (delete ""
             (split-string
               (shell-command-to-string "projector list") "\n"))
-    #'(lambda (a b) (< (length a) (length b)))))))
+      #'(lambda (a b) (< (length a) (length b))))))
 #+END_SRC
 
 * Additional Packages
