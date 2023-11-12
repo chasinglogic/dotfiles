@@ -6,13 +6,16 @@ mappings:
     link_as_dir: true
   - match: ".*gpg-agent.conf.darwin"
     dest: ~/.gnupg/gpg-agent.conf
-    target_os:
-      - "Darwin"
+    target_os: Darwin
   - match: "Library"
     target_os:
       - "Darwin"
   - match: "README.md"
     skip: true
+  - match: ".config/nixos/configuration.nix"
+    dest: /etc/nixos/configuration.nix
+    target_os:
+      - "Linux"
 
 modules:
   # Multiple runtime version manager
