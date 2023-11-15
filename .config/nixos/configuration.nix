@@ -5,14 +5,13 @@
 { config, pkgs, ... }:
 
 let
-  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
-in
-{
-  imports =
-    [ # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix
-      (import "${home-manager}/nixos")
-    ];
+  home-manager = builtins.fetchTarball
+    "https://github.com/nix-community/home-manager/archive/master.tar.gz";
+in {
+  imports = [ # Include the results of the hardware scan.
+    /etc/nixos/hardware-configuration.nix
+    (import "${home-manager}/nixos")
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -24,6 +23,8 @@ in
 
   # Enable networking
   networking.networkmanager.enable = true;
+
+  services.tailscale.enable = true;
 
   # Set your time zone.
   time.timeZone = "Europe/London";
@@ -93,9 +94,7 @@ in
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    vim 
-  ];
+  environment.systemPackages = with pkgs; [ vim tailscale ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -124,5 +123,5 @@ in
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
 
-  nix.settings.allowed-users = ["chasinglogic"];
+  nix.settings.allowed-users = [ "chasinglogic" ];
 }
