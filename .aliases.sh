@@ -35,3 +35,5 @@ alias circleci="NO_COLOR=1 circleci"
 alias mypy="dmypy check"
 
 alias pup="pulumi up --suppress-outputs"
+alias aws-login-pip="aws --profile default codeartifact login --tool pip --repository tillo-python --domain tillo --domain-owner 411597267491 --region eu-west-1"
+alias sync_branches="git fetch origin --prune && git branch --merged | grep -v master | xargs git branch -D"

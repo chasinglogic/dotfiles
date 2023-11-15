@@ -1,4 +1,0 @@
-#!/bin/bash
-# vi: ft=sh
-
-python ./buildscripts/scons.py --ssl -j$(sysctl -n hw.logicalcpu) --opt=off --dbg=on --libc++ CCFLAGS="-mmacosx-version-min=10.11" LINKFLAGS="-mmacosx-version-min=10.11" --detect-odr-violations $@
