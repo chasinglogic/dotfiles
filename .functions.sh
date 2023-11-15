@@ -144,3 +144,10 @@ function pulumi() {
   "$PULUMI_BIN" $@
 }
 
+function kctx() {
+  if [[ -n "$1" ]]; then
+    kubectl config use-context $@
+  else
+    kubectl config get-contexts
+  fi
+}

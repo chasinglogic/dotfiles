@@ -102,7 +102,6 @@ export COLORTERM=truecolor
 source_if_exists "$HOME/.env.bash"
 # Setup rustup, cargo path
 source_if_exists /home/chasinglogic/.rustrc
-source_if_exists "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
 add_to_path /opt/homebrew/bin
 add_to_path "$HOME/.local/bin"
@@ -117,6 +116,7 @@ source_if_exists "$HOME/.cargo/env"
 
 # Enable nix if I've installed it on this system
 # Comes after the add_to_path so that nix beats these in the $PATH race.
+source_if_exists "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 source_if_exists "$HOME/.nix-profile/etc/profile.d/nix.sh"
 source_if_exists /etc/profile.d/nix.sh
 source_if_exists /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
@@ -158,4 +158,3 @@ fi
 if [[ "$EDITOR" != "code --wait" ]]; then
     export EDITOR="emacsclient -nw -a 'vim'"
 fi
-
