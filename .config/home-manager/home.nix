@@ -65,6 +65,7 @@ in {
       pandoc
       podman
       ripgrep
+      ruby
       rustup
       tmux
       tree-sitter
