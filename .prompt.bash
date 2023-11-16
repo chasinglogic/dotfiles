@@ -23,6 +23,10 @@ STACK_DIR=""
 STACK_CACHE=""
 
 function get_stack {
+  if [[ ! -f "Pulumi.yaml" && -z "$STACK_DIR" ]]; then
+     return
+  fi
+
   if [[ "$STACK_DIR" == $(pwd) ]]; then
     if [[ -z "$STACK_CACHE" ]]; then
       STACK_CACHE=$(pulumi stack --show-name)

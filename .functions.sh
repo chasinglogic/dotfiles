@@ -135,7 +135,7 @@ function awsprof() {
 }
 
 
-PULUMI_BIN=$(which pulumi)
+PULUMI_BIN=$(which pulumi 2>/dev/null)
 function pulumi() {
   if [[ $@ =~ "stack select" ]]; then
     STACK_CACHE=""

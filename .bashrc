@@ -115,6 +115,6 @@ source_if_exists $HOME/.prompt.bash
 source_if_exists $HOME/.config/fzf/fzf.bash
 
 source_if_exists $HOME/.config/dfm/modules/bash-preexec/bash-preexec.sh
-if [[ -x $(which atuin) ]]; then
+if [[ -x $(which atuin 2>/dev/null) ]]; then
     eval "$(atuin init bash --disable-up-arrow)"
 fi
