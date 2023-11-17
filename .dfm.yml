@@ -31,6 +31,11 @@ modules:
     hooks:
       after_sync:
         - ./install --xdg --key-bindings --no-zsh --no-fish --no-update-rc --completion
+  # OH MY ZSH
+  - repository: https://github.com/ohmyzsh/ohmyzsh
+    link: none
+    location: ~/.oh-my-zsh
+    pull_only: true
   - repository: git@github.com:chasinglogic/secrets.git
     name: secrets
   # Pre and post exec commands for bash like ZSH has. Required for atuin.
