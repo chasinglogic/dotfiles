@@ -31,10 +31,6 @@ modules:
     hooks:
       after_sync:
         - ./install --xdg --key-bindings --no-zsh --no-fish --no-update-rc --completion
-  # Make bash-completion work for aliases
-  - repo: https://github.com/cykerway/complete-alias.git
-    link: none
-    pull_only: true
   - repository: git@github.com:chasinglogic/secrets.git
     name: secrets
   # Pre and post exec commands for bash like ZSH has. Required for atuin.
@@ -49,4 +45,7 @@ modules:
       after_sync:
         - echo "it works"
         - "if [[ ! -x $(which atuin 2>/dev/null) ]]; then bash ./install.sh; fi"
-
+  - repository: https://github.com/doomemacs/doomemacs.git
+    link: none
+    pull_only: true
+    location: ~/.config/emacs
