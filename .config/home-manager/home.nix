@@ -61,6 +61,7 @@ in {
       neil
       nerdfonts
       ninja
+      nixops_unstable
       nodejs
       pandoc
       podman
