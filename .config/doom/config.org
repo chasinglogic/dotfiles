@@ -65,6 +65,16 @@ I prefer to see dired when I switch to a project. Set
 (setq +workspaces-switch-project-function #'dired)
 #+END_SRC
 
+Disable projectile caching it often causes frustration.
+
+#+begin_src emacs-lisp
+(if (member system-type '(gnu/linux darwin))
+    (setq projectile-indexing-method 'alien
+          projectile-enable-caching nil)
+  (setq projectile-indexing-method 'hybrid
+        projectile-enable-caching nil))
+#+end_src
+
 * TODO Org Settings
 If you use `org' and don't want your org files in the default location below,
 change `org-directory'. It must be set before org loads!
