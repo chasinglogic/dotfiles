@@ -128,9 +128,11 @@ source_if_exists "$HOME/.asdf/asdf.sh"
 add_to_path "$ASDF_DIR/bin" true
 add_to_path "${ASDF_DATA_DIR:-$HOME/.asdf}/shims" true
 
-for python_install in "$HOME/.asdf/installs/python/"*; do
-  add_to_path "$python_install/bin"
-done
+if [[ -d "$HOME/.asdf/installs/python" ]]; then
+    for python_install in "$HOME/.asdf/installs/python/"*; do
+      add_to_path "$python_install/bin"
+    done
+fi
 
 source_if_exists "$HOME/.env.local"
 
