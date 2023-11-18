@@ -8,7 +8,10 @@ alias g="git"
 
 alias venv="python3 -m venv"
 
-alias vim="$VIM_PROG"
+if [[ -n "$VIM_PROG" ]]; then	
+    alias vim="$VIM_PROG"
+fi
+
 alias e="$EDITOR"
 if [[ "$VIM_PROG" == "nvim" ]]; then
     alias vimdiff="nvim -d"
