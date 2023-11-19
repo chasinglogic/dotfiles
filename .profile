@@ -90,6 +90,12 @@ if [[ "$(uname)" == "Darwin" ]]; then
             export PATH="$PATH:$dir/bin"
         done
     fi
+
+    if [[ -d "/usr/local/opt/postgresql@16" ]]; then
+        export LDFLAGS="$LDFLAGS -L/usr/local/opt/postgresql@16/lib"
+        export CPPFLAGS="$CPPFLAGS -I/usr/local/opt/postgresql@16/include"
+        export PKG_CONFIG_PATH="/usr/local/opt/postgresql@16/lib/pkgconfig"
+    fi
 fi
 
 if [[ -f "$HOME/.terminfo/78/xterm-24bit" ]]; then
