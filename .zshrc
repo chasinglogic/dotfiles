@@ -27,6 +27,7 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
+echo "Sourcing my configs..."
 source "$HOME/.profile"
 source_if_exists "$HOME/.prompt.zsh"
 source_if_exists "$HOME/.functions.sh"
@@ -34,17 +35,10 @@ source_if_exists "$HOME/.env.sh"
 source_if_exists $HOME/.aliases.sh
 source_if_exists $HOME/.local.sh
 
-export PYENV_ROOT="$HOME/.pyenv"
-if [[ -d "$PYENV_ROOT" ]]; then
-    command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-    eval "$(pyenv init -)"
-fi
-
 # append completions to fpath
 fpath=(${ASDF_DIR}/completions $fpath)
 # initialise completions with ZSH's compinit
 autoload -Uz compinit && compinit
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
+echo "Setting up atuin..."
 eval "$(atuin init zsh)"
