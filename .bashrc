@@ -118,3 +118,6 @@ source_if_exists $HOME/.config/dfm/modules/bash-preexec/bash-preexec.sh
 if [[ -x $(which atuin 2>/dev/null) ]]; then
     eval "$(atuin init bash --disable-up-arrow)"
 fi
+
+# add Pulumi to the PATH
+export PATH=$PATH:$HOME/.pulumi/bin
