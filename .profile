@@ -98,10 +98,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
     fi
 fi
 
-if [[ -f "$HOME/.terminfo/78/xterm-24bit" ]]; then
-    export TERM="xterm-24bit"
-fi
-
 export COLORTERM=truecolor
 
 # Storage for miscellaneous or system specific environment variables

@@ -54,12 +54,20 @@ require("lazy").setup({
 
 	-- NOTE: color theme
 	{
-		"dracula/vim",
+		'dracula/vim',
 		priority = 1000,
 		config = function()
 			vim.cmd.colorscheme("dracula")
 		end,
 	},
+	-- This is a good theme, might go back to it
+	-- {
+	-- 	'folke/tokyonight.nvim',
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("tokyonight-storm")
+	-- 	end,
+	-- },
 
 	"windwp/nvim-autopairs", -- Auto pair things
 	"windwp/nvim-ts-autotag", -- Auto close and rename JSX/html tags
