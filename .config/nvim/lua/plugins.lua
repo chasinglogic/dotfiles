@@ -5,11 +5,11 @@ require("lazy").setup({
 	"tpope/vim-vinegar", -- Netrw improvements
 	"tpope/vim-commentary", -- Commenting code
 	"tpope/vim-surround", -- Surrounding of text
-	"tpope/vim-eunuch", -- Useful commands like Rename, Delete, Move, SudoWrite
+	"tpope/vim-eunuch",  -- Useful commands like Rename, Delete, Move, SudoWrite
 	"tpope/vim-fugitive", -- Git integration
 	"tpope/vim-endwise", -- Automatically add end or similar constructs
-	"tpope/vim-rsi", -- Readline bindings in the vim command line
-	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
+	"tpope/vim-rsi",     -- Readline bindings in the vim command line
+	"tpope/vim-sleuth",  -- Detect tabstop and shiftwidth automatically
 
 	-- NOTE: This is where your plugins related to LSP can be installed.
 	{
@@ -50,7 +50,7 @@ require("lazy").setup({
 	},
 
 	-- Useful plugin to show you pending keybinds.
-	{ "folke/which-key.nvim", opts = {} },
+	{ "folke/which-key.nvim",  opts = {} },
 
 	-- NOTE: color theme
 	{
@@ -64,20 +64,19 @@ require("lazy").setup({
 	"windwp/nvim-autopairs", -- Auto pair things
 	"windwp/nvim-ts-autotag", -- Auto close and rename JSX/html tags
 
-	-- NOTE: it is a powerline thing. Maybe one day I'll give it a go.
-	-- {
-	--   -- Set lualine as statusline
-	--   'nvim-lualine/lualine.nvim',
-	--   -- See `:help lualine.txt`
-	--   opts = {
-	--     options = {
-	--       icons_enabled = false,
-	--       theme = 'dracula',
-	--       component_separators = '|',
-	--       section_separators = '',
-	--     },
-	--   },
-	-- },
+	{
+		-- Set lualine as statusline
+		'nvim-lualine/lualine.nvim',
+		-- See `:help lualine.txt`
+		opts = {
+			options = {
+				icons_enabled = false,
+				theme = 'dracula',
+				component_separators = '|',
+				section_separators = '',
+			},
+		},
+	},
 
 	-- "gc" to comment visual regions/lines
 	{ "numToStr/Comment.nvim", opts = {} },
