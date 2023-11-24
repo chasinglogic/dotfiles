@@ -9,8 +9,3 @@ set errorformat=%+A\ %#%f\ %#(%l\\\,%c):\ %m,%C%m
 setlocal tabstop=2
 setlocal softtabstop=2
 setlocal shiftwidth=2
-
-augroup autofmt
-    autocmd!
-    autocmd BufWritePre *.js,*.jsx,*.ts,*.tsx Neoformat
-augroup END
