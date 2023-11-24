@@ -165,5 +165,5 @@ if [[ -n $(find_executable dfm) ]]; then
 fi
 
 if [[ "$EDITOR" != "code --wait" ]]; then
-    export EDITOR="emacsclient -nw -a 'vim'"
+    export EDITOR="$VIM_PROG"
 fi
