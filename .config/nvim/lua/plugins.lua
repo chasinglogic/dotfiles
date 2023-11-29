@@ -1,15 +1,24 @@
 -- Install and Configure plugins
 require("lazy").setup({
 	-- Tpope goodness
-	"tpope/vim-abolish", -- Better subst
-	"tpope/vim-vinegar", -- Netrw improvements
-	"tpope/vim-commentary", -- Commenting code
-	"tpope/vim-surround", -- Surrounding of text
-	"tpope/vim-eunuch",  -- Useful commands like Rename, Delete, Move, SudoWrite
-	"tpope/vim-fugitive", -- Git integration
-	"tpope/vim-endwise", -- Automatically add end or similar constructs
-	"tpope/vim-rsi",     -- Readline bindings in the vim command line
-	"tpope/vim-sleuth",  -- Detect tabstop and shiftwidth automatically
+	"tpope/vim-abolish",      -- Better subst
+	"tpope/vim-vinegar",      -- Netrw improvements
+	"tpope/vim-commentary",   -- Commenting code
+	"tpope/vim-surround",     -- Surrounding of text
+	"tpope/vim-eunuch",       -- Useful commands like Rename, Delete, Move, SudoWrite
+	"tpope/vim-fugitive",     -- Git integration
+	"tpope/vim-endwise",      -- Automatically add end or similar constructs
+	"tpope/vim-rsi",          -- Readline bindings in the vim command line
+	"tpope/vim-sleuth",       -- Detect tabstop and shiftwidth automatically
+
+	"gabrielpoca/replacer.nvim", -- Allows you to edit the quickfix window
+	"folke/which-key.nvim",   -- Help me remember keybinds
+
+	"windwp/nvim-autopairs",  -- Auto pair things
+	"windwp/nvim-ts-autotag", -- Auto close and rename JSX/html tags
+
+	-- "gc" to comment visual regions/lines
+	{ "numToStr/Comment.nvim", opts = {} },
 
 	-- NOTE: This is where your plugins related to LSP can be installed.
 	{
@@ -32,8 +41,6 @@ require("lazy").setup({
 		},
 	},
 
-	"gabrielpoca/replacer.nvim", -- Allows you to edit the quickfix window
-
 	{
 		-- Autocompletion
 		"hrsh7th/nvim-cmp",
@@ -48,9 +55,6 @@ require("lazy").setup({
 			"hrsh7th/cmp-path", -- Autocomplete filepaths
 		},
 	},
-
-	-- Useful plugin to show you pending keybinds.
-	{ "folke/which-key.nvim",  opts = {} },
 
 	-- NOTE: color theme
 	{
@@ -69,9 +73,6 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	"windwp/nvim-autopairs", -- Auto pair things
-	"windwp/nvim-ts-autotag", -- Auto close and rename JSX/html tags
-
 	{
 		-- Set lualine as statusline
 		'nvim-lualine/lualine.nvim',
@@ -86,9 +87,6 @@ require("lazy").setup({
 		},
 	},
 
-	-- "gc" to comment visual regions/lines
-	{ "numToStr/Comment.nvim", opts = {} },
-
 	-- Fuzzy Finder (files, lsp, etc)
 	{
 		"nvim-telescope/telescope.nvim",
@@ -100,8 +98,6 @@ require("lazy").setup({
 			-- Only load if `make` is available.
 			{
 				"nvim-telescope/telescope-fzf-native.nvim",
-				-- NOTE: If you are having trouble with this installation,
-				--       refer to the README for telescope-fzf-native for more instructions.
 				build = "make",
 				cond = function()
 					return vim.fn.executable("make") == 1
