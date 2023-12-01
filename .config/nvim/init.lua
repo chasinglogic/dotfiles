@@ -177,7 +177,7 @@ local on_attach = function(_, bufnr)
   nmap("<leader>sd", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
   nmap("<leader>ss", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
   nmap("ga", vim.lsp.buf.code_action, "Do code action")
-  nmap("<space>sr", vim.lsp.buf.rename(), "[R]ename [S]ymbol")
+  nmap("<space>sr", vim.lsp.buf.rename, "[R]ename [S]ymbol")
 
   -- See `:help K` for why this keymap
   nmap("K", vim.lsp.buf.hover, "Hover Documentation")
