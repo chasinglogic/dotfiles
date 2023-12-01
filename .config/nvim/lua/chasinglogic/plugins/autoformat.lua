@@ -27,9 +27,7 @@ return {
 		end
 
 		-- A list of clients that don't work well with autoformatting
-		local banned_clients = {
-			tsserver = true,
-		}
+		local banned_clients = {}
 
 		-- Whenever an LSP attaches to a buffer, we will run this to setup the
 		-- augroup for autoformatting.
@@ -50,6 +48,7 @@ return {
 
 				-- TODO: fall back to some simpler auto format alternative plugin.
 				if banned_clients[client.name] then
+					print(client.name .. " is a banned LSP, disabled autoformatting")
 					return
 				end
 
