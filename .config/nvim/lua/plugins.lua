@@ -14,8 +14,9 @@ require("lazy").setup({
 	"gabrielpoca/replacer.nvim", -- Allows you to edit the quickfix window
 	"folke/which-key.nvim",   -- Help me remember keybinds
 
-	"windwp/nvim-autopairs",  -- Auto pair things
 	"windwp/nvim-ts-autotag", -- Auto close and rename JSX/html tags
+	-- Auto pair things
+	{ "windwp/nvim-autopairs", event = "InsertEnter", opts = {} },
 
 	-- "gc" to comment visual regions/lines
 	{ "numToStr/Comment.nvim", opts = {} },
