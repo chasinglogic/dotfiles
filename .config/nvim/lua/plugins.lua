@@ -14,7 +14,6 @@ require("lazy").setup({
 	"gabrielpoca/replacer.nvim", -- Allows you to edit the quickfix window
 	"folke/which-key.nvim",   -- Help me remember keybinds
 
-	"windwp/nvim-ts-autotag", -- Auto close and rename JSX/html tags
 	-- Auto pair things
 	{ "windwp/nvim-autopairs", event = "InsertEnter", opts = {} },
 
@@ -115,6 +114,8 @@ require("lazy").setup({
 		"nvim-treesitter/nvim-treesitter",
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter-textobjects",
+			-- Auto close and rename JSX/html tags
+			"windwp/nvim-ts-autotag",
 		},
 		build = ":TSUpdate",
 	},
