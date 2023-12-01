@@ -94,6 +94,7 @@ vim.defer_fn(function()
     auto_install = true,
 
     autotag = { enable = true },
+    endwise = { enable = true },
     highlight = { enable = true },
     indent = { enable = true },
     incremental_selection = {

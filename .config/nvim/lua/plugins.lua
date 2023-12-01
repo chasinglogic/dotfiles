@@ -114,10 +114,14 @@ require("lazy").setup({
 		"nvim-treesitter/nvim-treesitter",
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter-textobjects",
+			-- Autoclose languges which use "end" like Ruby and Elixir.
+			"RRethy/nvim-treesitter-endwise",
+
 			-- Auto close and rename JSX/html tags
 			"windwp/nvim-ts-autotag",
 		},
 		build = ":TSUpdate",
+
 	},
 
 	require("chasinglogic.plugins.autoformat"),
