@@ -107,8 +107,7 @@ source $HOME/.functions.sh
 source_if_exists /opt/homebrew/etc/profile.d/bash_completion.sh
 
 source_if_exists $HOME/.aliases.sh
-source_if_exists $HOME/.config/dfm/modules/complete-alias/complete_alias
-# complete -F _complete_alias "${!BASH_ALIASES[@]}"
+source_if_exists $HOME/.aliases.local.sh
 
 source_if_exists $HOME/.prompt.bash
 
