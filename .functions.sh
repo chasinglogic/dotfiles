@@ -151,3 +151,15 @@ function kctx() {
     kubectl config get-contexts
   fi
 }
+
+
+function bookmark() {
+  name="$1" 
+  if [[ -z "$name" ]]; then
+    name=$(basename $(pwd))
+  fi
+
+  dir=$(pwd);
+  echo "alias c.$name='cd $dir'" >> ~/.aliases.local.sh
+  source ~/.aliases.local.sh
+}
