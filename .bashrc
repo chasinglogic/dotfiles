@@ -118,5 +118,9 @@ if [[ -x $(which atuin 2>/dev/null) ]]; then
     eval "$(atuin init bash --disable-up-arrow)"
 fi
 
+for compfile in ~/.local/share/bash-completions/*; do
+    source $compfile
+done
+
 # add Pulumi to the PATH
 export PATH=$PATH:$HOME/.pulumi/bin
