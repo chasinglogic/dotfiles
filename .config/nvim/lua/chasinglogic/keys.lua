@@ -86,7 +86,6 @@ vim.keymap.set("n", "<leader>gb", ":Git blame<cr>")
 vim.keymap.set("n", "<leader>gv", ":Git vader<cr>")
 --}}}
 --Utility {{{
-vim.keymap.set("i", "fd", "<ESC>")
 --Copy file name to clipboard
 vim.keymap.set("n", ",cs", ':let @*=expand("%")<CR>')
 vim.keymap.set("n", ",cl", ':let @*=expand("%:p")<CR>')

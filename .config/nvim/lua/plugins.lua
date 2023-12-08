@@ -2,7 +2,6 @@
 require("lazy").setup({
 	-- Tpope goodness
 	"tpope/vim-abolish",      -- Better subst
-	"tpope/vim-vinegar",      -- Netrw improvements
 	"tpope/vim-commentary",   -- Commenting code
 	"tpope/vim-surround",     -- Surrounding of text
 	"tpope/vim-eunuch",       -- Useful commands like Rename, Delete, Move, SudoWrite
@@ -14,11 +13,17 @@ require("lazy").setup({
 	"gabrielpoca/replacer.nvim", -- Allows you to edit the quickfix window
 	"folke/which-key.nvim",   -- Help me remember keybinds
 
+	-- Show indentation guides
+	{ "lukas-reineke/indent-blankline.nvim", main = "ibl",          opts = {} },
+
+	-- Better netrw
+	{ "stevearc/oil.nvim",                   opts = {} },
+
 	-- Auto pair things
-	{ "windwp/nvim-autopairs", event = "InsertEnter", opts = {} },
+	{ "windwp/nvim-autopairs",               event = "InsertEnter", opts = {} },
 
 	-- "gc" to comment visual regions/lines
-	{ "numToStr/Comment.nvim", opts = {} },
+	{ "numToStr/Comment.nvim",               opts = {} },
 
 	-- NOTE: This is where your plugins related to LSP can be installed.
 	{
