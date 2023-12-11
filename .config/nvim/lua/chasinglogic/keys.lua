@@ -58,6 +58,7 @@ vim.keymap.set("n", "<leader>'", ":terminal<cr>")
 vim.keymap.set("t", "fd", "<C-\\><C-n>", { remap = false })
 vim.keymap.set("t", "<C-o>", "<C-\\><C-n>")
 vim.keymap.set("n", "<leader>1", ":!<cr>")
+vim.keymap.set("n", "<leader>t'", ":tabnew<cr>:terminal<cr>")
 --}}}
 --Tabs {{{
 vim.keymap.set("n", "]t", ":tabnext<cr>")
