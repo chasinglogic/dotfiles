@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ $(uname) == "Darwin" ]]; then
-    open dash://$1
+    open "dash://$1"
 else
-    zeal $1
+    zeal "$1"
 fi

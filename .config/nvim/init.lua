@@ -230,7 +230,6 @@ local servers = {
   rust_analyzer = {},
   tsserver = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
-  elixirls = {},
 
   lua_ls = {
     Lua = {
@@ -262,6 +261,13 @@ mason_lspconfig.setup_handlers({
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
     })
+  end,
+})
+
+-- Populate loclist with the current buffer diagnostics
+vim.api.nvim_create_autocmd('DiagnosticChanged', {
+  callback = function(args)
+    vim.diagnostic.setloclist({open = false})
   end,
 })
 
@@ -485,5 +491,18 @@ vim.api.nvim_command("autocmd TermOpen * startinsert")
 vim.api.nvim_command("autocmd TermOpen * setlocal listchars= nonumber norelativenumber")
 vim.api.nvim_command("augroup END")
 
+-- [[ Configure nvim-lint ]]
+require('lint').linters_by_ft = {
+  markdown = { 'proselint', },
+  sh = { 'shellcheck', },
+  bash = { 'shellcheck', },
+  nix = { 'nix', },
+}
+
+vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+  callback = function()
+    require("lint").try_lint()
+  end,
+})
 
 -- vim: ts=2 sts=2 sw=2 et
