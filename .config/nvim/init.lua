@@ -479,4 +479,11 @@ oil.setup({
 })
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
+-- [[ Configure terminal ]]
+vim.api.nvim_command("augroup TerminalSettings")
+vim.api.nvim_command("autocmd TermOpen * startinsert")
+vim.api.nvim_command("autocmd TermOpen * setlocal listchars= nonumber norelativenumber")
+vim.api.nvim_command("augroup END")
+
+
 -- vim: ts=2 sts=2 sw=2 et
