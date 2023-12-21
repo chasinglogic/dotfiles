@@ -267,7 +267,7 @@ mason_lspconfig.setup_handlers({
 -- Populate loclist with the current buffer diagnostics
 vim.api.nvim_create_autocmd('DiagnosticChanged', {
   callback = function(args)
-    vim.diagnostic.setloclist({open = false})
+    vim.diagnostic.setloclist({ open = false })
   end,
 })
 
@@ -386,6 +386,7 @@ oil.setup({
     ["<C-p>"] = "actions.preview",
     ["<C-c>"] = "actions.close",
     ["<C-l>"] = "actions.refresh",
+    ["."] = "actions.open_cmdline",
     ["-"] = "actions.parent",
     ["_"] = "actions.open_cwd",
     ["`"] = "actions.cd",
@@ -394,6 +395,7 @@ oil.setup({
     ["gx"] = "actions.open_external",
     ["g."] = "actions.toggle_hidden",
     ["g\\"] = "actions.toggle_trash",
+    ["gq"] = "actions.close",
   },
 
   -- Set to false to disable all of the above keymaps
