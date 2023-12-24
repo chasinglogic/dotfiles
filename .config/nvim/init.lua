@@ -230,6 +230,7 @@ local servers = {
   rust_analyzer = {},
   tsserver = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
+  elixirls = {},
 
   lua_ls = {
     Lua = {
