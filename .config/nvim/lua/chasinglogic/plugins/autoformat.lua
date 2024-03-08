@@ -27,7 +27,9 @@ return {
 		end
 
 		-- A list of clients that don't work well with autoformatting
-		local banned_clients = {}
+		local banned_clients = {
+			["ruff_lsp"] = true,
+		}
 
 		-- Whenever an LSP attaches to a buffer, we will run this to setup the
 		-- augroup for autoformatting.
