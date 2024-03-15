@@ -3,7 +3,21 @@
 
 return {
 	"neovim/nvim-lspconfig",
+	dependencies = {
+		"mhartington/formatter.nvim",
+	},
 	config = function()
+		require("formatter").setup({
+			logging = true,
+			log_level = vim.log.levels.WARN,
+			filetype = {
+				python = {
+					require("formatter.filetypes.python").black,
+					require("formatter.filetypes.python").isort,
+				}
+			}
+		})
+
 		-- Switch for controlling whether you want autoformatting.
 		--  Use :AutoformatToggle to toggle autoformatting on or off
 		local format_is_enabled = true
@@ -42,17 +56,8 @@ return {
 				local client_id = args.data.client_id
 				local client = vim.lsp.get_client_by_id(client_id)
 				local bufnr = args.buf
-
-				-- Only attach to clients that support document formatting
-				if not client.server_capabilities.documentFormattingProvider then
-					return
-				end
-
-				-- TODO: fall back to some simpler auto format alternative plugin.
-				if banned_clients[client.name] then
-					print(client.name .. " is a banned LSP, disabled autoformatting")
-					return
-				end
+				local use_lsp_formatting = client.server_capabilities.documentFormattingProvider and
+					not banned_clients[client.name]
 
 				-- Create an autocmd that will run *before* we save the buffer.
 				--  Run the formatting command for the LSP that has just attached.
@@ -62,6 +67,33 @@ return {
 					callback = function()
 						if not format_is_enabled then
 							return
+						end
+
+						if not use_lsp_formatting then
+							vim.api.nvim_command("FormatWrite")
+							return
+						end
+
+						-- This exists so that you get a 'goimports' like
+						-- autoformat experience. See:
+						-- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#neovim-imports
+						if client.name == 'gopls' then
+							local params = vim.lsp.util.make_range_params()
+							params.context = { only = { "source.organizeImports" } }
+							-- buf_request_sync defaults to a 1000ms timeout. Depending on your
+							-- machine and codebase, you may want longer. Add an additional
+							-- argument after params if you find that you have to write the file
+							-- twice for changes to be saved.
+							-- E.g., vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
+							local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
+							for cid, res in pairs(result or {}) do
+								for _, r in pairs(res.result or {}) do
+									if r.edit then
+										local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
+										vim.lsp.util.apply_workspace_edit(r.edit, enc)
+									end
+								end
+							end
 						end
 
 						vim.lsp.buf.format({

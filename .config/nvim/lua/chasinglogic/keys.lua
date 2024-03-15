@@ -99,9 +99,7 @@ end
 vim.keymap.set("n", "!", ":!")
 --}}}
 --System / Vim management {{{
-vim.keymap.set("n", "<leader>spi", ":PlugInstall<cr>")
-vim.keymap.set("n", "<leader>spu", ":PlugUpdate<cr>")
-vim.keymap.set("n", "<leader>spg", ":PlugUpgrade<cr>")
+vim.keymap.set("n", "<leader>spu", ":Lazy update<cr>")
 --}}}
 --Testing {{{
 vim.keymap.set("n", "<leader>mt", ":RunTest<CR>")
