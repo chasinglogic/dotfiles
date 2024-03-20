@@ -103,21 +103,21 @@ require("lazy").setup({
 	},
 
 	-- NOTE: color theme
-	{
-		'dracula/vim',
-		priority = 1000,
-		config = function()
-			vim.cmd.colorscheme("dracula")
-		end,
-	},
-	-- This is a good theme, might go back to it
 	-- {
-	-- 	'folke/tokyonight.nvim',
+	-- 	'dracula/vim',
 	-- 	priority = 1000,
 	-- 	config = function()
-	-- 		vim.cmd.colorscheme("tokyonight-storm")
+	-- 		vim.cmd.colorscheme("dracula")
 	-- 	end,
 	-- },
+	{
+		"catppuccin/nvim",
+		name = "catppuccin",
+		priority = 1000,
+		config = function()
+			vim.cmd.colorscheme("catppuccin-latte")
+		end,
+	},
 
 	{
 		-- Set lualine as statusline
