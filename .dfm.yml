@@ -51,3 +51,12 @@ modules:
       after_sync:
         - echo "it works"
         - "if [[ ! -x $(which atuin 2>/dev/null) ]]; then bash ./install.sh; fi"
+  # Doom Emacs
+  - repository: https://github.com/doomemacs/doomemacs
+    link: none
+    location: ~/.emacs.d
+    pull_only: true
+    hooks:
+      after_sync:
+        - '"$HOME/.emacs.d/bin/doom" sync'
+
