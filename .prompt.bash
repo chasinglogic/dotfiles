@@ -11,14 +11,13 @@ PINK="$(tput setaf 5)"
 CYAN="$(tput setaf 6)"
 WHITE="$(tput setaf 15)"
 GREY="$(tput setaf 8)"
-NO_COLOR="\e[0m"
 
 COMMAND_STATUS_COLOR="$(tput bold)$RED"
-HOSTNAME_COLOR="$NO_COLOR"
-GIT_BRANCH_COLOR="$NO_COLOR"
+HOSTNAME_COLOR="$MAGENTA"
+GIT_BRANCH_COLOR="$GREEN"
 LAMBDA_COLOR="$YELLOW"
 DELTA_COLOR="$YELLOW"
-DEFAULT_COLOR="$NO_COLOR"
+NO_COLOR="\e[0m"
 
 STACK_DIR=""
 STACK_CACHE=""
@@ -43,30 +42,30 @@ function __prompt_command {
     PS1=""
 
     if [[ "$RET" != "0" ]]; then
-      PS1+="\[$COMMAND_STATUS_COLOR\]!!\[$DEFAULT_COLOR\] "
+      PS1+="\[$COMMAND_STATUS_COLOR\]!!\[$NO_COLOR\] "
     fi
 
     if [[ "$VIRTUAL_ENV_PROMPT" != "" ]]; then
-      PS1+="\[$DEFAULT_COLOR\]$VIRTUAL_ENV_PROMPT"
+      PS1+="\[$WHITE\]$VIRTUAL_ENV_PROMPT"
     fi
 
     if [[ $(tput cols) -gt 149 ]]; then
       active_context=$(kubectl config current-context 2>/dev/null)
       if [[ "$active_context" != "" ]]; then
-        PS1+="\[$DEFAULT_COLOR\](kube: ${active_context}) "
+        PS1+="\[$WHITE\](kube: ${active_context}) "
       fi
 
       if [[ "$AWS_PROFILE" != "" ]]; then
-          PS1+="\[$DEFAULT_COLOR\](aws: ${AWS_PROFILE}) "
+          PS1+="\[$WHITE\](aws: ${AWS_PROFILE}) "
       fi
 
       if [[ -f "Pulumi.yaml" ]]; then
         get_stack
-        PS1+="\[$DEFAULT_COLOR\](stack: ${STACK_CACHE}) "
+        PS1+="\[$WHITE\](stack: ${STACK_CACHE}) "
       fi
     fi
 
-    PS1+="\[$DEFAULT_COLOR\]\w "
+    PS1+="\[$WHITE\]\w "
 
     ref="$(git symbolic-ref HEAD 2> /dev/null)"
     if [[ "$ref" != "" ]]; then
