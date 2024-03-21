@@ -3,16 +3,11 @@
 let
   osSpecificPackages = if pkgs.stdenv.isLinux then
     with pkgs; [
-      pkgs.thunderbird
       pkgs.strace
       pkgs.ltrace
       pkgs.firefox
       pkgs.xclip
       pkgs.wl-clipboard
-      pkgs.gnome.gnome-boxes
-      pkgs.gnome.gnome-calendar
-      pkgs.gnome.gnome-weather
-      pkgs.gnome.gnome-clocks
     ]
   else
     [ ];
@@ -61,7 +56,6 @@ in {
       neil
       nerdfonts
       ninja
-      nixops_unstable
       nodejs
       pandoc
       podman
