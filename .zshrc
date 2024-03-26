@@ -16,8 +16,21 @@ DISABLE_AUTO_UPDATE="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+    aliases
+    aws
     docker
+    fd
     helm
+    gitfast
+    golang
+    helm
+    kubectl
+    mix-fast
+    pip
+    podman
+    ripgrep
+    virtualenv
+    rust
 )
 
 echo "Sourcing oh-my-zsh..."
