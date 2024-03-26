@@ -59,19 +59,20 @@ function __prompt_command {
     if [[ $(tput cols) -gt 149 ]]; then
       active_context=$(kubectl config current-context 2>/dev/null)
       if [[ "$active_context" != "" ]]; then
+        PS1=$(add_sep_if_required "$PS1")
         PS1+="\[$WHITE\][kube: ${active_context}]"
       fi
 
-      PS1=$(add_sep_if_required "$PS1")
 
       if [[ "$AWS_PROFILE" != "" ]]; then
+          PS1=$(add_sep_if_required "$PS1")
           PS1+="\[$WHITE\][aws: ${AWS_PROFILE}]"
       fi
 
-      PS1=$(add_sep_if_required "$PS1")
 
       if [[ -f "Pulumi.yaml" ]]; then
         get_stack
+        PS1=$(add_sep_if_required "$PS1")
         PS1+="\[$WHITE\][stack: ${STACK_CACHE}]"
       fi
     fi
