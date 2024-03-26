@@ -122,7 +122,6 @@ source_if_exists "$HOME/.config/fzf/fzf.bash"
 # fi
 
 for compfile in "$HOME/.local/share/bash-completions"/*; do
-    echo "Loading $compfile"
     source "$compfile"
 done
 
