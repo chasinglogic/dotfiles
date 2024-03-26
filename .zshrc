@@ -16,14 +16,12 @@ DISABLE_AUTO_UPDATE="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-    git
     docker
-    dotenv
     helm
 )
 
 echo "Sourcing oh-my-zsh..."
-source $ZSH/oh-my-zsh.sh
+source "$ZSH/oh-my-zsh.sh"
 
 # User configuration
 
@@ -32,13 +30,16 @@ source "$HOME/.profile"
 source_if_exists "$HOME/.prompt.zsh"
 source_if_exists "$HOME/.functions.sh"
 source_if_exists "$HOME/.env.sh"
-source_if_exists $HOME/.aliases.sh
-source_if_exists $HOME/.local.sh
+source_if_exists "$HOME/.aliases.sh"
+source_if_exists "$HOME/.local.sh"
 
 # append completions to fpath
 fpath=(${ASDF_DIR}/completions $fpath)
 # initialise completions with ZSH's compinit
 autoload -Uz compinit && compinit
 
-echo "Setting up atuin..."
-eval "$(atuin init zsh)"
+if [[ -x $(which atuin 2>/dev/null) ]]; then
+    echo "Setting up atuin..."
+    eval "$(atuin init zsh --disable-up-arrow)"
+fi
+
