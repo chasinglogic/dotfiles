@@ -100,26 +100,30 @@ shopt -s dirspell
 # interactive shells.
 shopt -s autocd
 
-source $HOME/.profile
-source $HOME/.functions.sh
+source "$HOME/.profile"
+source "$HOME/.functions.sh"
 
 # MacOS sucks.
 source_if_exists /opt/homebrew/etc/profile.d/bash_completion.sh
+source_if_exists /usr/share/bash-completion/bash_completion
+source_if_exists /etc/bash_completion
 
-source_if_exists $HOME/.aliases.sh
-source_if_exists $HOME/.aliases.local.sh
+source_if_exists "$HOME/.aliases.sh"
+source_if_exists "$HOME/.aliases.local.sh"
 
-source_if_exists $HOME/.prompt.bash
+source_if_exists "$HOME/.prompt.bash"
 
-source_if_exists $HOME/.config/fzf/fzf.bash
+source_if_exists "$HOME/.config/fzf/fzf.bash"
 
-source_if_exists $HOME/.config/dfm/modules/bash-preexec/bash-preexec.sh
-if [[ -x $(which atuin 2>/dev/null) ]]; then
-    eval "$(atuin init bash --disable-up-arrow)"
-fi
+# Required for atuin
+# source_if_exists "$HOME/.config/dfm/modules/bash-preexec/bash-preexec.sh"
+# if [[ -x $(which atuin 2>/dev/null) ]]; then
+#     eval "$(atuin init bash --disable-up-arrow)"
+# fi
 
-for compfile in ~/.local/share/bash-completions/*; do
-    source $compfile
+for compfile in "$HOME/.local/share/bash-completions"/*; do
+    echo "Loading $compfile"
+    source "$compfile"
 done
 
 # add Pulumi to the PATH
