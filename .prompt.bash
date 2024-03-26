@@ -37,13 +37,20 @@ function get_stack {
   fi
 }
 
+START="┌─("
+SEPARATOR=" "
+
+function add_sep_if_required {
+  if [[ "$1" == "$START" ]]; then
+    echo "$1"
+  else
+    echo "${1}${SEPARATOR}"
+  fi
+}
+
 function __prompt_command {
     RET="$?"
-    PS1=""
-
-    if [[ "$RET" != "0" ]]; then
-      PS1+="\[$COMMAND_STATUS_COLOR\]!!\[$NO_COLOR\] "
-    fi
+    PS1="$START"
 
     if [[ "$VIRTUAL_ENV_PROMPT" != "" ]]; then
       PS1+="\[$WHITE\]$VIRTUAL_ENV_PROMPT"
@@ -52,17 +59,27 @@ function __prompt_command {
     if [[ $(tput cols) -gt 149 ]]; then
       active_context=$(kubectl config current-context 2>/dev/null)
       if [[ "$active_context" != "" ]]; then
-        PS1+="\[$WHITE\](kube: ${active_context}) "
+        PS1+="\[$WHITE\][kube: ${active_context}]"
       fi
 
+      PS1=$(add_sep_if_required "$PS1")
+
       if [[ "$AWS_PROFILE" != "" ]]; then
-          PS1+="\[$WHITE\](aws: ${AWS_PROFILE}) "
+          PS1+="\[$WHITE\][aws: ${AWS_PROFILE}]"
       fi
+
+      PS1=$(add_sep_if_required "$PS1")
 
       if [[ -f "Pulumi.yaml" ]]; then
         get_stack
-        PS1+="\[$WHITE\](stack: ${STACK_CACHE}) "
+        PS1+="\[$WHITE\][stack: ${STACK_CACHE}]"
       fi
+    fi
+
+    PS1+=")\n└─ "
+
+    if [[ "$RET" != "0" ]]; then
+      PS1+="\[$COMMAND_STATUS_COLOR\]!!\[$NO_COLOR\] "
     fi
 
     PS1+="\[$WHITE\]\w "
