@@ -31,32 +31,6 @@ modules:
     hooks:
       after_sync:
         - ./install --xdg --key-bindings --no-zsh --no-fish --no-update-rc --completion
-  # OH MY ZSH
-  - repository: https://github.com/ohmyzsh/ohmyzsh
-    link: none
-    location: ~/.oh-my-zsh
-    pull_only: true
   # My not-so-secret secrets
   - repository: git@github.com:chasinglogic/secrets.git
     name: secrets
-  # Pre and post exec commands for bash like ZSH has. Required for atuin.
-  - repository: https://github.com/rcaloras/bash-preexec
-    link: none
-    pull_only: true
-  # Eternal shell history
-  - repository: https://github.com/atuinsh/atuin
-    link: none
-    pull_only: true
-    hooks:
-      after_sync:
-        - echo "it works"
-        - "if [[ ! -x $(which atuin 2>/dev/null) ]]; then bash ./install.sh; fi"
-  # Doom Emacs
-  - repository: https://github.com/doomemacs/doomemacs
-    link: none
-    location: ~/.emacs.d
-    pull_only: true
-    hooks:
-      after_sync:
-        - '"$HOME/.emacs.d/bin/doom" sync'
-

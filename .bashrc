@@ -116,12 +116,6 @@ source_if_exists "$HOME/.prompt.bash"
 source_if_exists "$HOME/.config/fzf/shell/key-bindings.bash"
 source_if_exists "$HOME/.config/fzf/shell/completion.bash"
 
-# Required for atuin
-# source_if_exists "$HOME/.config/dfm/modules/bash-preexec/bash-preexec.sh"
-# if [[ -x $(which atuin 2>/dev/null) ]]; then
-#     eval "$(atuin init bash --disable-up-arrow)"
-# fi
-
 for compfile in "$HOME/.local/share/bash-completions"/*; do
     source "$compfile"
 done
