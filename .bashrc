@@ -113,7 +113,8 @@ source_if_exists "$HOME/.aliases.local.sh"
 
 source_if_exists "$HOME/.prompt.bash"
 
-source_if_exists "$HOME/.config/fzf/fzf.bash"
+source_if_exists "$HOME/.config/fzf/shell/key-bindings.bash"
+source_if_exists "$HOME/.config/fzf/shell/completion.bash"
 
 # Required for atuin
 # source_if_exists "$HOME/.config/dfm/modules/bash-preexec/bash-preexec.sh"

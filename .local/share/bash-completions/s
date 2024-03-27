@@ -1,3 +1,5 @@
+# bash completion V2 for my script tool                              -*- shell-script -*-
+
 _s_completion() {
     local IFS=$'\n'
     local response
