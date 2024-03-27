@@ -53,7 +53,8 @@ function __prompt_command {
     PS1="$START"
 
     if [[ "$VIRTUAL_ENV_PROMPT" != "" ]]; then
-      PS1+="\[$WHITE\]$VIRTUAL_ENV_PROMPT"
+      VENV_NAME=${VIRTUAL_ENV_PROMPT//[() ]/}
+      PS1+="\[$WHITE\][venv: $VENV_NAME]"
     fi
 
     if [[ $(tput cols) -gt 149 ]]; then
