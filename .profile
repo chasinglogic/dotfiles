@@ -96,6 +96,13 @@ if [[ "$(uname)" == "Darwin" ]]; then
         export CPPFLAGS="$CPPFLAGS -I/usr/local/opt/postgresql@16/include"
         export PKG_CONFIG_PATH="/usr/local/opt/postgresql@16/lib/pkgconfig"
     fi
+
+    if [[ -d "/opt/homebrew/opt/postgresql@16" ]]; then
+        export LDFLAGS="$LDFLAGS -L/opt/homebrew/opt/postgresql@16/lib"
+        export CPPFLAGS="$CPPFLAGS -I/opt/homebrew/opt/postgresql@16/include"
+        export PKG_CONFIG_PATH="/opt/homebrew/opt/postgresql@16/lib/pkgconfig"
+    fi
+
 fi
 
 export COLORTERM=truecolor
