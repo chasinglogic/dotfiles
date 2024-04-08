@@ -82,7 +82,9 @@ function __prompt_command {
       PS1+="\n"
     fi
 
-    # TODO: if ssh'd into a system show hostname
+    if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+      PS1+="\[$HOSTNAME_COLOR\]\u@\h\[$NO_COLOR\] "
+    fi
 
     if [[ "$RET" != "0" ]]; then
       PS1+="\[$COMMAND_STATUS_COLOR\]!!\[$NO_COLOR\] "
