@@ -78,7 +78,9 @@ function __prompt_command {
       fi
     fi
 
-    PS1+="\n "
+    if [[ -n "$PS1" ]]; then
+      PS1+="\n"
+    fi
 
     # TODO: if ssh'd into a system show hostname
 
