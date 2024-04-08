@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 ##########
 # PROMPT #
 ##########
@@ -37,7 +38,6 @@ function get_stack {
   fi
 }
 
-START="┌─("
 SEPARATOR=" "
 
 function add_sep_if_required {
@@ -50,7 +50,7 @@ function add_sep_if_required {
 
 function __prompt_command {
     RET="$?"
-    PS1="$START"
+    PS1=""
 
     if [[ "$VIRTUAL_ENV_PROMPT" != "" ]]; then
       VENV_NAME=${VIRTUAL_ENV_PROMPT//[() ]/}
@@ -78,7 +78,9 @@ function __prompt_command {
       fi
     fi
 
-    PS1+=")\n└─ "
+    PS1+="\n "
+
+    # TODO: if ssh'd into a system show hostname
 
     if [[ "$RET" != "0" ]]; then
       PS1+="\[$COMMAND_STATUS_COLOR\]!!\[$NO_COLOR\] "

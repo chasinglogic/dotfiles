@@ -75,6 +75,8 @@ export HELM_HOST=localhost:44134
 export MOZ_ENABLE_WAYLAND=1
 # Make ripgrep use my config file.
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+# Make XDG_CONFIG_HOME the same on all platforms.
+export XDG_CONFIG_HOME="$HOME/.config"
 
 # Mac specific fixes
 if [[ "$(uname)" == "Darwin" ]]; then
@@ -95,12 +97,14 @@ if [[ "$(uname)" == "Darwin" ]]; then
         export LDFLAGS="$LDFLAGS -L/usr/local/opt/postgresql@16/lib"
         export CPPFLAGS="$CPPFLAGS -I/usr/local/opt/postgresql@16/include"
         export PKG_CONFIG_PATH="/usr/local/opt/postgresql@16/lib/pkgconfig"
+        add_to_path "/usr/local/opt/postgresql@16/bin"
     fi
 
     if [[ -d "/opt/homebrew/opt/postgresql@16" ]]; then
         export LDFLAGS="$LDFLAGS -L/opt/homebrew/opt/postgresql@16/lib"
         export CPPFLAGS="$CPPFLAGS -I/opt/homebrew/opt/postgresql@16/include"
         export PKG_CONFIG_PATH="/opt/homebrew/opt/postgresql@16/lib/pkgconfig"
+        add_to_path "/opt/homebrew/opt/postgresql@16/bin"
     fi
 
 fi
