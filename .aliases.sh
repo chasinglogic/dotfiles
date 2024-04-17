@@ -36,4 +36,6 @@ alias aws-login-pip="aws --profile internal-services codeartifact login --tool p
 alias sync_branches="git fetch origin --prune && git branch --merged | grep -v master | xargs git branch -D"
 alias apt="sudo apt"
 alias dnf="sudo dnf"
+alias zyp="sudo zypper"
+alias zypper="sudo zypper"
 alias aws-login-twine="aws --profile internal-services codeartifact login --tool twine --repository tillo-python --domain tillo --domain-owner 307488140247 --region eu-west-1"
