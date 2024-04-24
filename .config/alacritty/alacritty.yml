@@ -1,7 +1,0 @@
-import:
-  - ~/.config/alacritty/tokyonight_storm.yml
-
-font:
-  size: 17.0
-  normal:
-    family: DejaVu Sans Mono
