@@ -107,4 +107,4 @@ bar {
     font = "Hack 13"
 }
 
-exec mako --default-timeout 5000 --font "Hack 13"
+exec alacritty
