@@ -23,7 +23,7 @@ function st() {
     sess=$(tmux list-session -F "#S" | grep -i $1)
     tmux attach-session -t $1
   else
-    if [[ -n $TMUX ]]; then
+    if [[ -n "$TMUX" ]]; then
         tmux choose-tree -s
     else
         sess=$(tmux list-session -F "#S" | head -n1)
