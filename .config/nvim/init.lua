@@ -496,7 +496,7 @@ vim.api.nvim_command("augroup END")
 
 -- [[ Configure nvim-lint ]]
 require('lint').linters_by_ft = {
-  markdown = { 'proselint', },
+  -- markdown = { 'proselint', },
   sh = { 'shellcheck', },
   bash = { 'shellcheck', },
   nix = { 'nix', },
