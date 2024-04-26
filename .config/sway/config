@@ -1,110 +1,82 @@
+# Default config for sway
+#
+# Copy this to ~/.config/sway/config and edit it to your liking.
+#
+# Read `man 5 sway` for a complete reference.
+
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
 set $mod Mod4
 
+
+# Home row direction keys, like vim
 set $left h
 set $down j
 set $up k
 set $right l
 
-set $term kitty
+set $term alacritty
+set $menu wofi --conf=/etc/wofi/config
 
-set $menu rofi -show drun
+include ~/.config/sway/config.d/*
 
-set $lock swaylock -d -c 000000 --image /home/chasinglogic/Pictures/DSCF0308-4.blurred.jpg
+### Output configuration
+#
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
-set $laptop eDP-1
-bindswitch lid:on output $laptop disable
-bindswitch lid:off output $laptop enable
+#
+# Example configuration:
+#
+#   output HDMI-A-1 resolution 1920x1080 position 1920,0
+#
+# You can get the names of your outputs by running: swaymsg -t get_outputs
 
-set $gap_size 5
-gaps inner $gap_size
-gaps outer $gap_size
+### Idle configuration
+set $screenlock 'swaylock --config /etc/swaylock/openSUSEway.conf'
+exec swayidle -w \
+        timeout 900 $screenlock \
+        timeout 960 'swaymsg "output * power off"' \
+             resume 'swaymsg "output * power on"'  \
+        before-sleep $screenlock
 
-default_border pixel
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
 
-input "*" tap disabled
-input "*" natural_scroll enabled
-input "*" xkb_options ctrl:nocaps
+### Input configuration
 
-mode "resize" {
-    # left will shrink the containers width
-    # right will grow the containers width
-    # up will shrink the containers height
-    # down will grow the containers height
-    bindsym $left resize shrink width 10px
-    bindsym $down resize grow height 10px
-    bindsym $up resize shrink height 10px
-    bindsym $right resize grow width 10px
-
-    # Ditto, with arrow keys
-    bindsym Left resize shrink width 10px
-    bindsym Down resize grow height 10px
-    bindsym Up resize shrink height 10px
-    bindsym Right resize grow width 10px
-
-    # Return to default mode
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
+input "type:keyboard" {
+    xkb_options ctrl:nocaps
 }
 
-bindsym $mod+$down focus down
-bindsym $mod+$left focus left
-bindsym $mod+$right focus right
-bindsym $mod+$up focus up
-bindsym $mod+0 workspace 10
-bindsym $mod+1 workspace 1
-bindsym $mod+2 workspace 2
-bindsym $mod+3 workspace 3
-bindsym $mod+4 workspace 4
-bindsym $mod+5 workspace 5
-bindsym $mod+6 workspace 6
-bindsym $mod+7 workspace 7
-bindsym $mod+8 workspace 8
-bindsym $mod+9 workspace 9
-bindsym $mod+a focus parent
-bindsym $mod+Control+l exec $lock
-bindsym $mod+d exec $menu
-bindsym $mod+e layout toggle split
-bindsym $mod+f fullscreen
-bindsym $mod+minus scratchpad show
-bindsym $mod+r mode resize
-bindsym $mod+Return exec $term
-bindsym $mod+Shift+$down move down
-bindsym $mod+Shift+$left move left
-bindsym $mod+Shift+$right move right
-bindsym $mod+Shift+$up move up
-bindsym $mod+Shift+0 move container to workspace 10
-bindsym $mod+Shift+1 move container to workspace 1
-bindsym $mod+Shift+2 move container to workspace 2
-bindsym $mod+Shift+3 move container to workspace 3
-bindsym $mod+Shift+4 move container to workspace 4
-bindsym $mod+Shift+5 move container to workspace 5
-bindsym $mod+Shift+6 move container to workspace 6
-bindsym $mod+Shift+7 move container to workspace 7
-bindsym $mod+Shift+8 move container to workspace 8
-bindsym $mod+Shift+9 move container to workspace 9
-bindsym $mod+Shift+c reload
-bindsym $mod+Shift+e exit
-bindsym $mod+Shift+minus move scratchpad
-bindsym $mod+Shift+q kill
-bindsym $mod+Shift+space floating toggle
-bindsym $mod+space focus mode_toggle
-bindsym $mod+w layout tabbed
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFUALT_SINK@ -5%
-bindsym XF86AudioMute exec pactl set-sink-volume @DEFAULT_SINK@ toggle
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym XF86MonBrightnessDown exec light -b -U 2
-bindsym XF86MonBrightnessUp exec light -b -A 2
+# Enable common options for generic touchpads
+input "type:touchpad" {
+  tap enabled
+  natural_scroll enabled
+  middle_emulation enabled
+}
 
-floating_modifier $mod normal
+input "type:mouse" {
+    natural_scroll enabled
+}
 
+# You can get the names of your inputs by running: swaymsg -t get_inputs
+# Read `man 5 sway-input` for more information about this section.
+#
+# Status Bar:
+#
+# Read `man 5 sway-bar` for more information about this section.
 bar {
     position top
+    swaybar_command swaybar
 
-    # When the status_command prints a new line to stdout, swaybar updates.
-    # The default just shows the current date and time.
-    status_command i3status
-
-    font = "Hack 13"
+    colors {
+        statusline #ffffff
+        background #323232
+        inactive_workspace #32323200 #32323200 #5c5c5c
+    }
 }
 
-exec alacritty
+
