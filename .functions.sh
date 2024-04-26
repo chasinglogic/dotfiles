@@ -1,6 +1,19 @@
+# shellcheck: shell=bash
+#
 #############
 # FUNCTIONS #
 #############
+
+function aws_account() {
+  data=""
+  if [[ -n "$1" ]]; then
+    data=$(aws sts get-caller-identity --profile "$1")
+  else
+    data=$(aws sts get-caller-identity)
+  fi
+
+  echo "$data" | jq -r '.Account'
+}
 
 function pyenv_activate() {
   eval "$(pyenv init -)"
