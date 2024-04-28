@@ -46,8 +46,6 @@ source_if_exists "$HOME/.env.sh"
 source_if_exists "$HOME/.aliases.sh"
 source_if_exists "$HOME/.local.sh"
 
-# append completions to fpath
-fpath=(${ASDF_DIR}/completions $fpath)
 # initialise completions with ZSH's compinit
 autoload -Uz compinit && compinit
 

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+install-mise
+
+mise use --global python@latest
+eval "$(mise activate bash)"
+pip install --user pipx
+
+mise install

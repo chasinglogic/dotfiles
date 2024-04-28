@@ -1,3 +1,0 @@
-# If asdf plugin supports another version manager file then use it, such as
-# .ruby-version or .python-version
-legacy_version_file = yes

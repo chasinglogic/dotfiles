@@ -1,0 +1,12 @@
+[tools]
+node = "lts"
+python = "latest"
+go = "latest"
+"npm:prettier" = "latest"
+"npm:tree-sitter-cli" = "latest"
+"pipx:black" = "latest"
+"pipx:isort" = "latest"
+"pipx:ruff" = "latest"
+
+[settings]
+experimental = true

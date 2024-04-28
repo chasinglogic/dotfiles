@@ -31,7 +31,6 @@ EXCLUDED_DIRS=(
     "*/$USER/.mysql_history"
     "*/$USER/.npm"
     "*/$USER/.nuget"
-    "*/$USER/.asdf"
     "*/$USER/.elixir-ls"
     "*/$USER/.nvm"
     "*/$USER/.pyenv"
