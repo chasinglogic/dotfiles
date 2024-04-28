@@ -1,7 +1,7 @@
 import = ["~/.config/alacritty/dracula.toml"]
 
 [font]
-size = 15.0
+size = 25.0
 
 [font.normal]
 family = "Hack"
