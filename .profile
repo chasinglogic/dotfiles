@@ -1,19 +1,21 @@
+# shellcheck shell=bash
+#
 function debug() {
     if [[ -n $CL_DEBUG ]]; then
-        echo $@ 1>&2
+        echo "$@" 1>&2
     fi
 }
 
 function find_executable() {
-    X=$(which $1 2>/dev/null)
+    X=$(which "$1" 2>/dev/null)
     debug "Searching for $1 found: $X"
-    echo $X
+    echo "$X"
 }
 
 function source_if_exists() {
     if [[ -f $1 ]]; then
         debug "Sourcing $1 because it exists."
-        source $1
+        source "$1"
     else
         debug "Not source $1 because it could not be found."
     fi
@@ -33,6 +35,15 @@ function add_to_path() {
 }
 
 debug "PATH=$PATH"
+
+
+if test -n "$ZSH_VERSION"; then
+  export PROFILE_SHELL=zsh
+elif test -n "$BASH_VERSION"; then
+  export PROFILE_SHELL=bash
+else
+  export PROFILE_SHELL=sh
+fi
 
 # Just show me the output please....
 export AWS_PAGER=""
@@ -132,19 +143,7 @@ source_if_exists "$HOME/.nix-profile/etc/profile.d/nix.sh"
 source_if_exists /etc/profile.d/nix.sh
 source_if_exists /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
-# Enable asdf
-source_if_exists "$HOME/.asdf/asdf.sh"
-# asdf is a little too clever for it's own good and so somehow the shims / bin
-# won't always end up at the beginning of PATH so this forces that to be true.
-add_to_path "$ASDF_DIR/bin" true
-add_to_path "${ASDF_DATA_DIR:-$HOME/.asdf}/shims" true
-
-if [[ -d "$HOME/.asdf/installs/python" ]]; then
-    for python_install in "$HOME/.asdf/installs/python/"*; do
-      add_to_path "$python_install/bin"
-    done
-fi
-
+# Environment variables that are local to this machine and not synced with dfm.
 source_if_exists "$HOME/.env.local"
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -170,4 +169,9 @@ fi
 
 if [[ "$EDITOR" != "code --wait" ]]; then
     export EDITOR="$VIM_PROG"
+fi
+
+# Activate mise
+if [[ -n $(find_executable mise) ]]; then
+    eval "$(mise activate $PROFILE_SHELL)"
 fi
