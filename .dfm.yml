@@ -26,11 +26,6 @@ hooks:
       fi
 
 modules:
-  # Multiple runtime version manager
-  - repo: https://github.com/asdf-vm/asdf.git
-    link: none
-    location: ~/.asdf
-    pull_only: true
   # FZF
   - repo: https://github.com/junegunn/fzf
     link: none
