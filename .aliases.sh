@@ -41,4 +41,5 @@ alias zypper="sudo zypper"
 
 alias aws-login-pip="aws --profile internal-services codeartifact login --tool pip --repository tillo-python --domain tillo --domain-owner 307488140247 --region eu-west-1"
 alias aws-login-twine="aws --profile internal-services codeartifact login --tool twine --repository tillo-python --domain tillo --domain-owner 307488140247 --region eu-west-1"
-alias aws-login-helm="aws ecr get-login-password --region eu-west-1 --username AWS --password-stdin 307488140247.dkr.ecr.eu-west-1.amazonaws.com"
+alias aws-login-helm="aws --profile internal-services ecr get-login-password | helm registry login --username AWS --password-stdin 307488140247.dkr.ecr.eu-west-1.amazonaws.com"
+alias aws-login-docker="aws --profile internal-services ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 307488140247.dkr.ecr.eu-west-1.amazonaws.com"
