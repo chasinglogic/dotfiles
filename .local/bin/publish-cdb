@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+VERSION="$1"
+if [[ -z "$VERSION" ]]; then
+    echo "Must provide a version number."
+    exit 1
+fi
+
+DOCKER_TAG="registry.home.chasinglogic.io/cdb:$VERSION"
+docker build -t "$DOCKER_TAG" .
+docker push "$DOCKER_TAG"
+
+cd charts/cdb || exit 1
+helm dep build
+helm package .
+helm push "./cdb-$VERSION.tgz" oci://registry.home.chasinglogic.io/charts
