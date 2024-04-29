@@ -1,4 +1,5 @@
 [tools]
+ruby = "latest"
 node = "lts"
 python = "latest"
 go = "latest"
@@ -7,6 +8,7 @@ go = "latest"
 "pipx:black" = "latest"
 "pipx:isort" = "latest"
 "pipx:ruff" = "latest"
+"npm:@dotenvx/dotenvx" = "latest"
 
 [settings]
 experimental = true
