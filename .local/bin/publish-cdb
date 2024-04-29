@@ -12,5 +12,7 @@ docker push "$DOCKER_TAG"
 
 cd charts/cdb || exit 1
 helm dep build
-helm package .
+# Remove old versions they break the new package.
+rm *.tgz
+helm package --version "$VERSION" .
 helm push "./cdb-$VERSION.tgz" oci://registry.home.chasinglogic.io/charts
