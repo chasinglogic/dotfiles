@@ -1,7 +1,0 @@
-import: 
-  - "~/.config/alacritty/dracula.yml"
-
-font:
-  size: 15.0
-  normal:
-    family: "Hack"
