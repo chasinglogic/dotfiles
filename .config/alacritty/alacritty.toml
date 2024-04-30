@@ -1,5 +1,13 @@
 import = ["~/.config/alacritty/dracula.toml"]
 
+[window]
+startup_mode = "Maximized"
+decorations_theme_variant = "Dark"
+option_as_alt = "Both"
+
+[selection]
+save_to_clipboard = true
+
 [font]
 size = 17.0
 
