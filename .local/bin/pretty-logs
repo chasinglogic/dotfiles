@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+
+import fileinput
+import json
+from datetime import datetime
+
+
+class Colors:
+    RESET = "\033[0m"
+
+    RED = "\033[31m"
+    YELLOW = "\033[33m"
+    CYAN = "\033[36m"
+
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
+
+    @staticmethod
+    def color_for_level(level: str) -> str:
+        if not isinstance(level, str):
+            return Colors.CYAN
+
+        level = level.upper()
+        if level == "INFO":
+            return Colors.CYAN
+        if level.startswith("WARN"):
+            return Colors.YELLOW
+        if level.startswith("ERR"):
+            return Colors.RED
+        return Colors.RESET
+
+
+def build_field_message(data, exclude_list=None):
+    if exclude_list is None:
+        exclude_list = []
+
+    if isinstance(data, list):
+        data = {index: value for index, value in enumerate(data)}
+
+    lines = []
+    for key, value in data.items():
+        if key in exclude_list:
+            continue
+
+        if isinstance(value, dict) and value:
+            lines.append(f"{key} = {{")
+            for nested_key, nested_value in value.items():
+                lines.append(f"\t{nested_key} = {nested_value}")
+            lines.append("}")
+        else:
+            lines.append(f"{key} = {value}")
+
+    return "\n\t" + "\n\t".join(lines)
+
+
+def get_level(data):
+    possible_keys = ["levelname", "level_name", "level"]
+    for key in possible_keys:
+        if key in data:
+            return data[key]
+
+    context = data.get("context", {})
+    for key in possible_keys:
+        if key in context:
+            return context[key]
+
+    return "INFO"
+
+
+def get_timestamp(data):
+    for field in (
+        "time",
+        "timestamp",
+    ):
+        value = data.get(field)
+        if value is not None:
+            return field, value
+
+    context = data.get("context")
+    if "asctime" in context:
+        return "", context["asctime"]
+
+    return "", datetime.now().isoformat()
+
+
+def pretty_print(line):
+    data = json.loads(line)
+    timestamp_field, timestamp = get_timestamp(data)
+    msg = data.get("message", "")
+    level = get_level(data)
+    msg = f"{Colors.color_for_level(level)}{level}{Colors.RESET} {timestamp} {msg}"
+    msg += build_field_message(
+        data,
+        exclude_list=(
+            "message",
+            timestamp_field,
+            "level",
+            "context",
+        ),
+    )
+    msg += build_field_message(data.get("context", {}))
+    print(msg)
+
+
+def main():
+    for line in fileinput.input(encoding="utf-8"):
+        try:
+            pretty_print(line)
+        except json.JSONDecodeError:
+            print("NON-JSON LINE:", line)
+
+
+if __name__ == "__main__":
+    main()
