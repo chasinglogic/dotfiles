@@ -9,6 +9,7 @@ go = "latest"
 "pipx:isort" = "latest"
 "pipx:ruff" = "latest"
 "npm:@dotenvx/dotenvx" = "latest"
+"npm:cdktf-cli" = "latest"
 
 [settings]
 experimental = true
