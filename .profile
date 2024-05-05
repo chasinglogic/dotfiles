@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-#
+
 function debug() {
     if [[ -n $CL_DEBUG ]]; then
         echo "$@" 1>&2
