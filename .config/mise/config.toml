@@ -1,5 +1,4 @@
 [tools]
-ruby = "latest"
 node = "lts"
 python = "latest"
 go = "latest"
