@@ -5,13 +5,18 @@ if [[ -z "$*" ]]; then
     exit 1
 fi
 
+START_TIME=$(date +"%Y-%m-%d %H:%M:%S")
+SECONDS=0
 "$@"
+DURATION=$SECONDS
 
 TITLE="Command completed"
-MESSAGE="$* is done"
+MESSAGE="$* started at $START_TIME is complete after $DURATION seconds."
 
 if [[ "$(uname)" == "Darwin" ]]; then
     osascript -e "display notification \"$MESSAGE\" with title \"$TITLE\""
 else
     notify-send "$TITLE" "$MESSAGE"
 fi
+
+echo "$TITLE: $MESSAGE"
