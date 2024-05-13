@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+"$@"
+
+TITLE="Command completed"
+MESSAGE="$* is done"
+
+if [[ "$(uname)" == "Darwin" ]]; then
+    osascript -e "display notification \"$MESSAGE\" with title \"$TITLE\""
+else
+    notify-send "$TITLE" "$MESSAGE"
+fi

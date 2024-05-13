@@ -103,7 +103,7 @@ def pretty_print(line):
 
 
 def main():
-    for line in fileinput.input(encoding="utf-8"):
+    for line in fileinput.input():
         try:
             pretty_print(line)
         except json.JSONDecodeError:
