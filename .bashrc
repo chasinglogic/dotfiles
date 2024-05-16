@@ -120,8 +120,7 @@ for compfile in "$HOME/.local/share/bash-completions"/*; do
     source "$compfile"
 done
 
-# add Pulumi to the PATH
-export PATH=$PATH:$HOME/.pulumi/bin
+eval "$(mise activate bash)"
 
 if [[ -z "$TMUX" ]]; then
     t

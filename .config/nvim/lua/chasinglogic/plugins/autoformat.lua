@@ -14,17 +14,17 @@ return {
 				python = {
 					require("formatter.filetypes.python").black,
 					require("formatter.filetypes.python").isort,
-				}
+				},
+
+				typescript = {
+					require("formatter.filetypes.typescript").prettier,
+				},
+
+				javascript = {
+					require("formatter.filetypes.javascript").prettier,
+				},
 			}
 		})
-
-		-- Switch for controlling whether you want autoformatting.
-		--  Use :AutoformatToggle to toggle autoformatting on or off
-		local format_is_enabled = true
-		vim.api.nvim_create_user_command("AutoformatToggle", function()
-			format_is_enabled = not format_is_enabled
-			print("Setting autoformatting to: " .. tostring(format_is_enabled))
-		end, {})
 
 		-- Create an augroup that is used for managing our formatting autocmds.
 		--      We need one augroup per client to make sure that multiple clients
@@ -65,10 +65,6 @@ return {
 					group = get_augroup(client),
 					buffer = bufnr,
 					callback = function()
-						if not format_is_enabled then
-							return
-						end
-
 						if not use_lsp_formatting then
 							vim.api.nvim_command("FormatWrite")
 							return

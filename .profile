@@ -170,8 +170,3 @@ fi
 if [[ "$EDITOR" != "code --wait" ]]; then
     export EDITOR="$VIM_PROG"
 fi
-
-# Activate mise
-if [[ -n $(find_executable mise) ]]; then
-    eval "$(mise activate $PROFILE_SHELL)"
-fi
