@@ -1,6 +1,6 @@
 [tools]
 node = "lts"
-python = "latest"
+python = "3.12"
 go = "latest"
 "npm:prettier" = "latest"
 "npm:tree-sitter-cli" = "latest"

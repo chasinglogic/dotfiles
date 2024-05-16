@@ -167,5 +167,11 @@ require("lazy").setup({
 
 	},
 
+	-- Justfile syntax support
+	{
+		"NoahTheDuke/vim-just",
+		ft = { "just" },
+	},
+
 	require("chasinglogic.plugins.autoformat"),
 }, {})
