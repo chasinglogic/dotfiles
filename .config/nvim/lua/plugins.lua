@@ -88,11 +88,21 @@ require("lazy").setup({
 	},
 
 	{
+		-- Snippet Engine
+		"L3MON4D3/LuaSnip",
+		version = "v2.*",
+		build = "make install_jsregexp",
+		config = function()
+			require("luasnip.loaders.from_snipmate").load()
+			require("luasnip.loaders.from_lua").load()
+		end,
+	},
+
+	{
 		-- Autocompletion
 		"hrsh7th/nvim-cmp",
 		dependencies = {
-			-- Snippet Engine & its associated nvim-cmp source
-			"L3MON4D3/LuaSnip",
+			-- autocompletion for snippets
 			"saadparwaiz1/cmp_luasnip",
 
 			-- Adds LSP completion capabilities
