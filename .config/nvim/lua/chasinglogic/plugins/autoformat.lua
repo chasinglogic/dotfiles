@@ -7,23 +7,25 @@ return {
 		"mhartington/formatter.nvim",
 	},
 	config = function()
+		formatter_filetypes = {
+			python = {
+				require("formatter.filetypes.python").black,
+				require("formatter.filetypes.python").isort,
+			},
+
+			typescript = {
+				require("formatter.filetypes.typescript").prettier,
+			},
+
+			javascript = {
+				require("formatter.filetypes.javascript").prettier,
+			},
+		}
+
 		require("formatter").setup({
 			logging = true,
 			log_level = vim.log.levels.WARN,
-			filetype = {
-				python = {
-					require("formatter.filetypes.python").black,
-					require("formatter.filetypes.python").isort,
-				},
-
-				typescript = {
-					require("formatter.filetypes.typescript").prettier,
-				},
-
-				javascript = {
-					require("formatter.filetypes.javascript").prettier,
-				},
-			}
+			filetype = formatter_filetypes,
 		})
 
 		-- Create an augroup that is used for managing our formatting autocmds.
@@ -56,8 +58,10 @@ return {
 				local client_id = args.data.client_id
 				local client = vim.lsp.get_client_by_id(client_id)
 				local bufnr = args.buf
+				local use_formatter_formatting = formatter_filetypes[vim.bo.filetype] ~= nil
 				local use_lsp_formatting = client.server_capabilities.documentFormattingProvider and
-					not banned_clients[client.name]
+					not banned_clients[client.name] and
+					not use_formatter_formatting
 
 				-- Create an autocmd that will run *before* we save the buffer.
 				--  Run the formatting command for the LSP that has just attached.
@@ -66,7 +70,8 @@ return {
 					buffer = bufnr,
 					callback = function()
 						if not use_lsp_formatting then
-							vim.api.nvim_command("FormatWrite")
+							print("Using formatter instead of lsp.")
+							vim.api.nvim_command("Format")
 							return
 						end
 
