@@ -122,6 +122,6 @@ done
 
 eval "$(mise activate bash)"
 
-if [[ -z "$TMUX" ]]; then
+if [[ "$EDITOR" != "code --wait" && -z "$TMUX" ]]; then
     t
 fi
