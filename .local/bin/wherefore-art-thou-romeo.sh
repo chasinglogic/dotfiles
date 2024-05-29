@@ -4,7 +4,7 @@
 PREFIX="$1"
 TARGET="$2"
 
-echo "Searching for $1"
+echo "Searching for $TARGET in $PREFIX secrets"
 
 for secret in $(aws --profile production secretsmanager list-secrets --filter "Key=name,Values=$PREFIX" | jq -r .SecretList[].ARN); do
     echo "Checking $secret"
