@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Yes I know it's wherefore means why.
 
-TARGET="$1"
+PREFIX="$1"
+TARGET="$2"
 
 echo "Searching for $1"
 
-for secret in $(aws --profile production secretsmanager list-secrets --filter 'Key=name,Values=core/' | jq -r .SecretList[].ARN); do
+for secret in $(aws --profile production secretsmanager list-secrets --filter "Key=name,Values=$PREFIX" | jq -r .SecretList[].ARN); do
     echo "Checking $secret"
     FOUND=$(aws secretsmanager get-secret-value --secret-id "$secret" | rg "$TARGET")
     if [[ -n "$FOUND" ]]; then
