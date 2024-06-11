@@ -15,6 +15,11 @@ function aws_account() {
   echo "$data" | jq -r '.Account'
 }
 
+# Make it so we start recording our terminal as an asciicast
+function start_incident() {
+  wezterm record
+}
+
 function pyenv_activate() {
   eval "$(pyenv init -)"
 }
@@ -121,16 +126,7 @@ function t() {
     SESS_NAME="$1"
   fi
 
-  tmux has-session -t $SESS_NAME
-  if [ $? -ne 0 ]; then
-    tmux new-session -s $SESS_NAME -d
-  fi
-
-  if [[ -n $TMUX ]]; then
-    tmux switch-client -t $SESS_NAME
-  else
-    tmux attach-session -t $SESS_NAME
-  fi
+  wezterm start --workspace "$SESS_NAME"
 }
 
 function awsprof() {

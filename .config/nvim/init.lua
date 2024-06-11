@@ -75,6 +75,7 @@ vim.defer_fn(function()
       "jsdoc",
       "json",
       "jsonc",
+      "kdl",
       "lua",
       "php",
       "python",
