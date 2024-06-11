@@ -1,11 +1,19 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
+require('keys').apply_to_config(config)
+
 config.color_scheme = 'Dracula'
 config.font = wezterm.font 'Hack'
 config.font_size = 17.0
 config.line_height = 1.1
-config.hide_tab_bar_if_only_one_tab = true
+
+-- This hides status info that is useful so always show it.
+config.hide_tab_bar_if_only_one_tab = false
+config.tab_bar_at_bottom = true
+-- Makes it look more "terminaly" instead of trying to look "native" to the
+-- Platform it is on and failing.
+config.use_fancy_tab_bar = false
 
 config.enable_scroll_bar = false
 config.window_padding = {
