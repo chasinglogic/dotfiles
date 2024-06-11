@@ -121,7 +121,3 @@ for compfile in "$HOME/.local/share/bash-completions"/*; do
 done
 
 eval "$(mise activate bash)"
-
-if [[ "$EDITOR" != "code --wait" && -z "$TMUX" ]]; then
-    t
-fi
