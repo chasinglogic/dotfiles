@@ -2,7 +2,7 @@ local wezterm = require 'wezterm'
 local actions = wezterm.action
 local module = {}
 
-wezterm.on('update-right-status', function(window, pane)
+wezterm.on('update-right-status', function(window, _pane)
     window:set_right_status(window:active_workspace())
 end)
 
@@ -112,6 +112,11 @@ for i = 1, 9 do
 end
 
 function module.apply_to_config(config)
+    -- Rather than emitting fancy composed characters when alt is pressed, treat the
+    -- input more like old school ascii with ALT held down
+    config.send_composed_key_when_left_alt_is_pressed = false
+    config.send_composed_key_when_right_alt_is_pressed = false
+
     config.leader = { key = 'l', mods = 'CTRL', timeout_milliseconds = 1000 }
     config.keys = keys
     config.mouse_bindings = {
