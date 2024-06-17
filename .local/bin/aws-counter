@@ -40,6 +40,7 @@ MAPPINGS = {
 
 def main():
     parser = argparse.ArgumentParser()
+    allowed_types = list(MAPPINGS.keys()) + list(ALIASES.keys())
     parser.add_argument(
         "-p",
         "--profile",
@@ -51,7 +52,9 @@ def main():
         "--type",
         type=str,
         required=True,
-        help="What kind of resource to lookup.",
+        help=f"What kind of resource to lookup. Available options: {', '.join(allowed_types)}",
+        metavar="RESOURCE_TYPE",
+        choices=allowed_types,
     )
     args = parser.parse_args()
 
