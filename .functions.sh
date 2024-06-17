@@ -120,13 +120,24 @@ function nv() {
   fi
 }
 
-function t() {
-  SESS_NAME=${PWD##*/}
-  if [[ -n "$1" ]]; then
-    SESS_NAME="$1"
-  fi
+function rename_sesion() {
+  GENERATED_SESSION_NAME=${PWD##*/}
+  SESS_NAME=${1:-$GENERATED_SESSION_NAME}
+  wezterm cli rename-session "$SESS_NAME"
+}
 
-  wezterm start --workspace "$SESS_NAME"
+function t() {
+  GENERATED_SESSION_NAME=${PWD##*/}
+  SESS_NAME=${1:-$GENERATED_SESSION_NAME}
+  HAS_SESSION=$(wezterm cli list | grep "$SESS_NAME")
+
+  # TODO: find a way to attach session via CLI
+  if [[ -n "$HAS_SESSION" ]]; then
+    echo "Session exists!"
+  else
+    echo "Session is new."
+  fi
+  # wezterm cli spawn "$SESS_NAME"
 }
 
 function awsprof() {

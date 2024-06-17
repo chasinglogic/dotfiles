@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+import shlex
+import subprocess
+import sys
+import json
+
+ALIASES = {
+    "ec2": "ec2-instances",
+    "vpc": "vpcs",
+    "nacl": "network-acls",
+    "nacls": "network-acls",
+    "s3": "buckets",
+    "bucket": "buckets",
+    "sg": "security-groups",
+    "sgs": "security-groups",
+    "roles": "iam-roles",
+    "role": "iam-roles",
+    "users": "iam-users",
+    "user": "iam-users",
+    "policies": "iam-policies",
+    "policy": "iam-policies",
+}
+
+MAPPINGS = {
+    "ec2-instances": "aws ec2 describe-instances --output json",
+    "vpcs": "aws ec2 describe-vpcs --output json",
+    "buckets": "aws s3api list-buckets --output json",
+    "network-acls": "aws ec2 describe-network-acls --output json",
+    "security-groups": "aws ec2 describe-security-groups --output json",
+    "iam-roles": "aws iam list-roles --output json",
+    "iam-users": "aws iam list-users --output json",
+    # --scope Local makes it so it only lists policies which we created not AWS managed
+    # ones.
+    "iam-policies": "aws iam list-policies --scope Local --only-attached",
+}
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-p",
+        "--profile",
+        type=str,
+        help="AWS profile to use to do lookup, if not given default is used.",
+    )
+    parser.add_argument(
+        "-t",
+        "--type",
+        type=str,
+        required=True,
+        help="What kind of resource to lookup.",
+    )
+    args = parser.parse_args()
+
+    object_type = ALIASES.get(args.type, args.type)
+
+    try:
+        command = MAPPINGS[object_type]
+    except KeyError:
+        print(
+            f"{args.type} is not a known countable type. Countable types are: {', '.join(MAPPINGS.keys())}"
+        )
+        sys.exit(1)
+
+    env = {**os.environ}
+    if args.profile:
+        env["AWS_PROFILE"] = args.profile
+
+    output = subprocess.check_output(
+        args=shlex.split(command),
+        env=env,
+    )
+
+    data = json.loads(output)
+    keys = list(data.keys())
+    if len(keys) != 1:
+        print(f"Got unexpected number of keys: {keys}")
+
+    count = len(data[keys[0]])
+    print(f"There are {count} {object_type}")
+
+
+if __name__ == "__main__":
+    main()

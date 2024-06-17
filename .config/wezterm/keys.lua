@@ -63,6 +63,18 @@ local keys = {
         mods = 'LEADER',
         action = actions.CloseCurrentPane({ confirm = false }),
     },
+    -- Haven't yet found the right action for this one. Might have to write some
+    -- custom lua.
+    -- {
+    --     key = 'm',
+    --     mods = 'LEADER',
+    --     action = actions.Close,
+    -- },
+    {
+        key = 'z',
+        mods = 'LEADER',
+        action = actions.TogglePaneZoomState,
+    },
 
     -- Adding in workspace features
     -- Prompt for a name to use for a new workspace and switch to it.
