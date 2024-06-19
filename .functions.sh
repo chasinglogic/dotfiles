@@ -120,10 +120,10 @@ function nv() {
   fi
 }
 
-function rename_sesion() {
+function rename_session() {
   GENERATED_SESSION_NAME=${PWD##*/}
   SESS_NAME=${1:-$GENERATED_SESSION_NAME}
-  wezterm cli rename-session "$SESS_NAME"
+  wezterm cli rename-workspace "$SESS_NAME"
 }
 
 function t() {
