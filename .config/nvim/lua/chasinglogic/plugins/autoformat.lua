@@ -1,13 +1,14 @@
 -- Use the language server to automatically format your code on save.
 -- Adds additional commands as well to manage the behavior
 
+
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
 		"mhartington/formatter.nvim",
 	},
 	config = function()
-		formatter_filetypes = {
+		local formatter_filetypes = {
 			python = {
 				require("formatter.filetypes.python").black,
 				require("formatter.filetypes.python").isort,
@@ -20,12 +21,26 @@ return {
 			javascript = {
 				require("formatter.filetypes.javascript").prettier,
 			},
+
+			sh = {
+				require("formatter.filetypes.sh").shfmt,
+			},
 		}
 
 		require("formatter").setup({
 			logging = true,
 			log_level = vim.log.levels.WARN,
 			filetype = formatter_filetypes,
+		})
+
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			desc = "Format using the formatter.nvim plugin instead of LSP",
+			group = vim.api.nvim_create_augroup("chasinglogic-non-lsp-format", { clear = true }),
+			callback = function(opts)
+				if formatter_filetypes[vim.bo[opts.buf].filetype] then
+					vim.cmd "Format"
+				end
+			end
 		})
 
 		-- Create an augroup that is used for managing our formatting autocmds.
@@ -59,9 +74,10 @@ return {
 				local client = vim.lsp.get_client_by_id(client_id)
 				local bufnr = args.buf
 				local use_formatter_formatting = formatter_filetypes[vim.bo.filetype] ~= nil
-				local use_lsp_formatting = client.server_capabilities.documentFormattingProvider and
-					not banned_clients[client.name] and
-					not use_formatter_formatting
+				local use_lsp_formatting = client ~= nil
+					and client.server_capabilities.documentFormattingProvider
+					and not banned_clients[client.name]
+					and not use_formatter_formatting
 
 				-- Create an autocmd that will run *before* we save the buffer.
 				--  Run the formatting command for the LSP that has just attached.
@@ -70,8 +86,12 @@ return {
 					buffer = bufnr,
 					callback = function()
 						if not use_lsp_formatting then
-							print("Using formatter instead of lsp.")
-							vim.api.nvim_command("Format")
+							print("LSP formatter is disabled.")
+							return
+						end
+
+						if client == nil then
+							print("Somehow LSP client was nil!")
 							return
 						end
 
