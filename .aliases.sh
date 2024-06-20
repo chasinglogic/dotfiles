@@ -32,7 +32,8 @@ alias circleci="NO_COLOR=1 circleci"
 alias mypy="dmypy check"
 alias zyp='sudo zypper'
 
-alias pup="pulumi up --suppress-outputs"
+alias p="pulumi"
+alias pup="pulumi up"
 alias sync_branches="git fetch origin --prune && git branch --merged | grep -v master | xargs git branch -D"
 alias apt="sudo apt"
 alias dnf="sudo dnf"

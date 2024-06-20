@@ -11,10 +11,17 @@ require("lazy").setup({
 	"tpope/vim-sleuth",       -- Detect tabstop and shiftwidth automatically
 
 	"gabrielpoca/replacer.nvim", -- Allows you to edit the quickfix window
-	"folke/which-key.nvim",   -- Help me remember keybinds
 	-- Linting when there is no Language Server or when it complements the
 	-- Language Server
 	"mfussenegger/nvim-lint",
+
+	-- Like avy from Emacs. Jump to stuff on screen.
+	{
+		"ggandor/leap.nvim",
+		config = function()
+			require("leap").create_default_mappings()
+		end
+	},
 
 	-- Show indentation guides
 	{ "lukas-reineke/indent-blankline.nvim", main = "ibl",          opts = {} },
