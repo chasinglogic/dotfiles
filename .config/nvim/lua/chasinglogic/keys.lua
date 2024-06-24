@@ -5,6 +5,8 @@ vim.keymap.set("n", "<leader>fa", ":wa<cr>")
 --}}}
 --Project level ops {{{
 vim.keymap.set("n", "<leader>pf", ":Telescope find_files previewer=false hidden=true<cr>")
+vim.keymap.set("n", "<C-p>", ":Telescope find_files previewer=false hidden=true<cr>")
+vim.keymap.set("i", "<C-p>", ":Telescope find_files previewer=false hidden=true<cr>")
 vim.keymap.set("n", "<leader>ps", ":Telescope live_grep<cr>")
 vim.keymap.set("n", "<leader>pS", require("telescope").extensions.live_grep_args.live_grep_args)
 vim.keymap.set("n", "<leader>pc", ":make<cr>")
