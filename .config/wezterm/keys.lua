@@ -63,13 +63,19 @@ local keys = {
         mods = 'LEADER',
         action = actions.CloseCurrentPane({ confirm = false }),
     },
-    -- Haven't yet found the right action for this one. Might have to write some
-    -- custom lua.
-    -- {
-    --     key = 'm',
-    --     mods = 'LEADER',
-    --     action = actions.Close,
-    -- },
+    {
+        key = 'm',
+        mods = 'LEADER',
+        action = wezterm.action_callback(function(win, pane)
+            local tab = win:active_tab()
+            for _, p in ipairs(tab:panes()) do
+                if p:pane_id() ~= pane:pane_id() then
+                    p:activate()
+                    win:perform_action(actions.CloseCurrentPane { confirm = false }, p)
+                end
+            end
+        end),
+    },
     {
         key = 'z',
         mods = 'LEADER',
