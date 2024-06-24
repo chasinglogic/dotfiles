@@ -19,7 +19,11 @@ require("lazy").setup({
 	{
 		"ggandor/leap.nvim",
 		config = function()
-			require("leap").create_default_mappings()
+			-- default mappings conflicts with vim-surround so use custom ones.
+			local leap = require("leap");
+			vim.keymap.set({ 'n', 'x', 'o' }, '<leader>jc', '<Plug>(leap-forward)')
+			vim.keymap.set({ 'n', 'x', 'o' }, '<leader>jC', '<Plug>(leap-backward)')
+			vim.keymap.set({ 'n', 'x', 'o' }, '<leader>jw', '<Plug>(leap-from-window)')
 		end
 	},
 
@@ -188,6 +192,35 @@ require("lazy").setup({
 	{
 		"NoahTheDuke/vim-just",
 		ft = { "just" },
+	},
+
+	-- Create lists of buffers and quickly jump to them. Also they are saved and
+	-- restored automatically so that's cool.
+	{
+		"ThePrimeagen/harpoon",
+		branch = "harpoon2",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim"
+		},
+		config = function()
+			local harpoon = require('harpoon')
+			-- REQUIRED
+			harpoon:setup()
+			-- REQUIRED
+
+			vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+			vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+
+			vim.keymap.set("n", "<C-1>", function() harpoon:list():select(1) end)
+			vim.keymap.set("n", "<C-2>", function() harpoon:list():select(2) end)
+			vim.keymap.set("n", "<C-3>", function() harpoon:list():select(3) end)
+			vim.keymap.set("n", "<C-4>", function() harpoon:list():select(4) end)
+
+			-- Toggle previous & next buffers stored within Harpoon list
+			vim.keymap.set("n", "<C-[>", function() harpoon:list():prev() end)
+			vim.keymap.set("n", "<C-]>", function() harpoon:list():next() end)
+		end
 	},
 
 	require("chasinglogic.plugins.autoformat"),
