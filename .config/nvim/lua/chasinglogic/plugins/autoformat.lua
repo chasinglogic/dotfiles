@@ -33,12 +33,12 @@ return {
 			filetype = formatter_filetypes,
 		})
 
-		vim.api.nvim_create_autocmd("BufWritePre", {
+		vim.api.nvim_create_autocmd("BufWritePost", {
 			desc = "Format using the formatter.nvim plugin instead of LSP",
 			group = vim.api.nvim_create_augroup("chasinglogic-non-lsp-format", { clear = true }),
 			callback = function(opts)
 				if formatter_filetypes[vim.bo[opts.buf].filetype] then
-					vim.cmd "Format"
+					vim.cmd "FormatWrite"
 				end
 			end
 		})
@@ -88,6 +88,8 @@ return {
 						if not use_lsp_formatting then
 							print("LSP formatter is disabled.")
 							return
+						else
+							print("Using LSP formatting")
 						end
 
 						if client == nil then
