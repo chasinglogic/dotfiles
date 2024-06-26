@@ -2,16 +2,18 @@ local wezterm = require 'wezterm'
 local module = {}
 
 function module.apply_to_config(config)
-    config.color_scheme = 'Dracula'
+    config.color_scheme = 'Dracula (Official)'
     config.font = wezterm.font 'Hack'
     config.font_size = 17.0
     config.line_height = 1.1
 
+    config.window_decorations = "RESIZE"
+
     -- This hides status info that is useful so always show it.
     config.hide_tab_bar_if_only_one_tab = false
     config.tab_bar_at_bottom = true
-    -- Makes it look more "terminaly" instead of trying to look "native" to the
-    -- Platform it is on and failing.
+    -- -- Makes it look more "terminaly" instead of trying to look "native" to the
+    -- -- Platform it is on and failing.
     config.use_fancy_tab_bar = false
 
     config.enable_scroll_bar = false
@@ -19,8 +21,7 @@ function module.apply_to_config(config)
         left = 0,
         right = 0,
         bottom = 0,
-        -- A little separation between tab bar and terminal.
-        top = "0.2cell",
+        top = '0.2cell',
     }
 
     config.colors = {
@@ -28,7 +29,6 @@ function module.apply_to_config(config)
             -- The color of the strip that goes along the top of the window
             -- (does not apply when fancy tab bar is in use)
             background = '#282A36',
-
 
             -- The active tab is the one that has focus in the window
             active_tab = {
