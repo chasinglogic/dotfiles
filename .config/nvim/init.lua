@@ -58,6 +58,16 @@ pcall(require("telescope").load_extension, "fzf")
 -- See `:help nvim-treesitter`
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 vim.defer_fn(function()
+  local parser_config = require 'nvim-treesitter.parsers'.get_parser_configs()
+  parser_config.gotmpl = {
+    install_info = {
+      url = "https://github.com/ngalaiko/tree-sitter-go-template",
+      files = { "src/parser.c" }
+    },
+    filetype = "gotmpl",
+    used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl", "yaml", "html" }
+  }
+
   require("nvim-treesitter.configs").setup({
     -- Add languages to be installed here that you want installed for treesitter
     ensure_installed = {
@@ -69,6 +79,7 @@ vim.defer_fn(function()
       "eex",
       "elixir",
       "go",
+      "gotmpl",
       "heex",
       "html",
       "javascript",
@@ -83,6 +94,7 @@ vim.defer_fn(function()
       "ruby",
       "rust",
       "swift",
+      "svelte",
       "toml",
       "tsx",
       "typescript",
@@ -221,6 +233,7 @@ local servers = {
   tsserver = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   elixirls = {},
+  svelte = {},
 
   lua_ls = {
     Lua = {
