@@ -158,6 +158,11 @@ require("lazy").setup({
 	{
 		"nvim-telescope/telescope.nvim",
 		branch = "0.1.x",
+		config = function()
+			require("telescope").setup({
+				defaults = require('telescope.themes').get_ivy(),
+			})
+		end
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope-live-grep-args.nvim",
@@ -171,6 +176,14 @@ require("lazy").setup({
 				end,
 			},
 		},
+	},
+
+	-- Better sorting of files and such in telescrope
+	{
+		"nvim-telescope/telescope-frecency.nvim",
+		config = function()
+			require("telescope").load_extension("frecency")
+		end,
 	},
 
 	{
