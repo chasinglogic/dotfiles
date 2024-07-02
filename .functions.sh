@@ -42,18 +42,18 @@ function st() {
     tmux attach-session -t $1
   else
     if [[ -n "$TMUX" ]]; then
-        tmux choose-tree -s
+      tmux choose-tree -s
     else
-        sess=$(tmux list-session -F "#S" | head -n1)
-        tmux attach-session -t $sess \; choose-tree -s
+      sess=$(tmux list-session -F "#S" | head -n1)
+      tmux attach-session -t $sess \; choose-tree -s
     fi
   fi
 
 }
 
 function krestart() {
-    DEPLOYMENT=$(kubectl get deployments $@ | fzf | awk '{ print $1 }')
-    kubectl rollout restart $@ deployment/$DEPLOYMENT
+  DEPLOYMENT=$(kubectl get deployments $@ | fzf | awk '{ print $1 }')
+  kubectl rollout restart $@ deployment/$DEPLOYMENT
 }
 
 function sp() {
@@ -127,6 +127,9 @@ function rename_session() {
 }
 
 function t() {
+  rename_session
+  return 0
+
   GENERATED_SESSION_NAME=${PWD##*/}
   SESS_NAME=${1:-$GENERATED_SESSION_NAME}
   HAS_SESSION=$(wezterm cli list | grep "$SESS_NAME")
@@ -141,19 +144,18 @@ function t() {
 }
 
 function awsprof() {
-    if [ $1 == "-h" ] || [ $1 == "--help" ]; then
-        echo "AWS Profile Switcher:"
-        echo "This tool is used for quickly switching between AWS profiles."
-        echo "Usage:"
-        echo "    awsprof [profilename]"
-        exit 0
-    fi
+  if [ $1 == "-h" ] || [ $1 == "--help" ]; then
+    echo "AWS Profile Switcher:"
+    echo "This tool is used for quickly switching between AWS profiles."
+    echo "Usage:"
+    echo "    awsprof [profilename]"
+    exit 0
+  fi
 
-    export AWS_DEFAULT_PROFILE="$1"
-    export AWS_EB_PROFILE="$1"
-    export AWS_PROFILE="$1"
+  export AWS_DEFAULT_PROFILE="$1"
+  export AWS_EB_PROFILE="$1"
+  export AWS_PROFILE="$1"
 }
-
 
 PULUMI_BIN=$(which pulumi 2>/dev/null)
 function pulumi() {
@@ -172,14 +174,13 @@ function kctx() {
   fi
 }
 
-
 function bookmark() {
-  name="$1" 
+  name="$1"
   if [[ -z "$name" ]]; then
     name=$(basename $(pwd))
   fi
 
-  dir=$(pwd);
-  echo "alias c.$name='cd $dir'" >> ~/.aliases.local.sh
+  dir=$(pwd)
+  echo "alias c.$name='cd $dir'" >>~/.aliases.local.sh
   source ~/.aliases.local.sh
 }
