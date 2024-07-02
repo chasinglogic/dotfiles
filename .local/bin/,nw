@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 if [[ -z "$*" ]]; then
-    echo "Must provide a command to run."
-    exit 1
+	echo "Must provide a command to run."
+	exit 1
 fi
 
 START_TIME=$(date +"%Y-%m-%d %H:%M:%S")
@@ -14,9 +14,9 @@ TITLE="Command completed"
 MESSAGE="$* started at $START_TIME is complete after $DURATION seconds."
 
 if [[ "$(uname)" == "Darwin" ]]; then
-    osascript -e "display notification \"$MESSAGE\" with title \"$TITLE\""
+	osascript -e "display notification \"$MESSAGE\" with title \"$TITLE\""
 else
-    notify-send "$TITLE" "$MESSAGE"
+	notify-send "$TITLE" "$MESSAGE"
 fi
 
 echo "$TITLE: $MESSAGE"

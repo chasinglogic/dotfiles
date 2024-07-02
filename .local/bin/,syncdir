@@ -9,23 +9,23 @@ user="chasinglogic"
 remove_trigger=false
 
 while getopts ":h:u:r:l:R" o; do
-    case "$o" in
-        u) user="$OPTARG" ;;
-        h) hostname="$OPTARG" ;;
-        r) remotepath="$OPTARG" ;;
-        l) localpath="$OPTARG" ;;
-        R) remove_trigger=true ;;
-    esac
+	case "$o" in
+	u) user="$OPTARG" ;;
+	h) hostname="$OPTARG" ;;
+	r) remotepath="$OPTARG" ;;
+	l) localpath="$OPTARG" ;;
+	R) remove_trigger=true ;;
+	esac
 done
 
 if [[ $hostname == "" ]]; then
-    echo "hostname must be provided"
-    exit 1
+	echo "hostname must be provided"
+	exit 1
 fi
 
 if [[ "$remove_trigger" == "true" ]]; then
-    watchman trigger-del $localpath sync_to_$hostname
-    exit 0
+	watchman trigger-del $localpath sync_to_$hostname
+	exit 0
 fi
 
 watchman watch $localpath

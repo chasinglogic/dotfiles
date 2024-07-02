@@ -5,7 +5,7 @@ ENV=${2:-platform-prod}
 NAMESPACE="production"
 
 if [[ $ENV == "testing" ]]; then
-    NAMESPACE="rel5"
+	NAMESPACE="rel5"
 fi
 
 POD=$(kubectl get pods -n $NAMESPACE | grep $POD_NAME | awk '{ print $1 }' | tail -n 1)
