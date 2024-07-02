@@ -62,9 +62,12 @@ require("lazy").setup({
 						suggestSpects = true,
 					},
 					on_attach = function(client, bufnr)
-						vim.keymap.set("n", "<space>mf", ":ElixirFromPipe<cr>", { buffer = true, noremap = true })
-						vim.keymap.set("n", "<space>mp", ":ElixirToPipe<cr>", { buffer = true, noremap = true })
-						vim.keymap.set("v", "<space>me", ":ElixirExpandMacro<cr>", { buffer = true, noremap = true })
+						vim.keymap.set("n", "<space>mf", ":ElixirFromPipe<cr>",
+							{ buffer = true, noremap = true })
+						vim.keymap.set("n", "<space>mp", ":ElixirToPipe<cr>",
+							{ buffer = true, noremap = true })
+						vim.keymap.set("v", "<space>me", ":ElixirExpandMacro<cr>",
+							{ buffer = true, noremap = true })
 					end,
 				}
 			}
@@ -128,9 +131,19 @@ require("lazy").setup({
 		'dracula/vim',
 		priority = 1000,
 		config = function()
+			vim.o.background = 'dark'
 			vim.cmd.colorscheme("dracula")
 		end,
 	},
+	-- {
+	-- 	'catppuccin/nvim',
+	-- 	priority = 1000,
+	-- 	name = 'catppuccin',
+	-- 	config = function()
+	-- 		vim.o.background = 'light'
+	-- 		vim.cmd.colorscheme("catppuccin-latte")
+	-- 	end
+	-- },
 	-- This is a good theme, might go back to it
 	-- {
 	-- 	'folke/tokyonight.nvim',
@@ -162,7 +175,7 @@ require("lazy").setup({
 			require("telescope").setup({
 				defaults = require('telescope.themes').get_ivy(),
 			})
-		end
+		end,
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope-live-grep-args.nvim",
