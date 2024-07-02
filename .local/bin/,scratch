@@ -4,8 +4,8 @@ set -eu
 
 filetype="$1"
 case "$filetype" in
-  "python") filetype="py";;
-  "javascript") filetype="js";;
+"python") filetype="py" ;;
+"javascript") filetype="js" ;;
 esac
 
 tmpd=$(mktemp -d)

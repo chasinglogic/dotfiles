@@ -16,21 +16,21 @@ DISABLE_AUTO_UPDATE="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-    aliases
-    aws
-    docker
-    fd
-    helm
-    gitfast
-    golang
-    helm
-    kubectl
-    mix-fast
-    pip
-    podman
-    ripgrep
-    virtualenv
-    rust
+	aliases
+	aws
+	docker
+	fd
+	helm
+	gitfast
+	golang
+	helm
+	kubectl
+	mix-fast
+	pip
+	podman
+	ripgrep
+	virtualenv
+	rust
 )
 
 echo "Sourcing oh-my-zsh..."
@@ -50,7 +50,6 @@ source_if_exists "$HOME/.local.sh"
 autoload -Uz compinit && compinit
 
 if [[ -x $(which atuin 2>/dev/null) ]]; then
-    echo "Setting up atuin..."
-    eval "$(atuin init zsh --disable-up-arrow)"
+	echo "Setting up atuin..."
+	eval "$(atuin init zsh --disable-up-arrow)"
 fi
-

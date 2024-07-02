@@ -2,8 +2,8 @@
 
 VERSION="$1"
 if [[ -z "$VERSION" ]]; then
-    echo "Must provide a version number."
-    exit 1
+	echo "Must provide a version number."
+	exit 1
 fi
 
 DOCKER_TAG="registry.home.chasinglogic.io/cdb:$VERSION"

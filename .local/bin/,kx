@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-if [[ -n $2 ]]; then 
-    kubectl exec -it -n $1 $2
+if [[ -n $2 ]]; then
+	kubectl exec -it -n $1 $2
 else
-    kubectl exec -it $1
+	kubectl exec -it $1
 fi

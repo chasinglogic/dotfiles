@@ -41,18 +41,18 @@ shopt -s histappend
 # amount of lines in $HISTFILE. Note that the line count of $HISTFILE is
 # not necessarily $HISTFILESIZE.
 _bash_history_sync() {
-    builtin history -a
-    HISTFILESIZE=$HISTSIZE
-    builtin history -c
-    builtin history -r
+	builtin history -a
+	HISTFILESIZE=$HISTSIZE
+	builtin history -c
+	builtin history -r
 }
 
 # The history() function overrides the builtin history to make sure that
 # the history is synchronised before it is displayed. This is necessary
 # for the history expansion by number.
 history() {
-    _bash_history_sync
-    builtin history "$@"
+	_bash_history_sync
+	builtin history "$@"
 }
 
 # If  set,  the pattern ** used in a pathname expansion context will match all
@@ -117,7 +117,7 @@ source_if_exists "$HOME/.config/fzf/shell/key-bindings.bash"
 source_if_exists "$HOME/.config/fzf/shell/completion.bash"
 
 for compfile in "$HOME/.local/share/bash-completions"/*; do
-    source "$compfile"
+	source "$compfile"
 done
 
 eval "$(mise activate bash)"
