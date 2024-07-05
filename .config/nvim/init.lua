@@ -108,7 +108,6 @@ vim.defer_fn(function()
     -- Autoinstall languages that are not installed.
     auto_install = true,
 
-    autotag = { enable = true },
     endwise = { enable = true },
     highlight = { enable = true },
     indent = { enable = true },
@@ -166,6 +165,8 @@ vim.defer_fn(function()
       },
     },
   })
+
+  require('nvim-ts-autotag').setup()
 end, 0)
 
 -- [[ Configure LSP ]]
@@ -234,6 +235,7 @@ local servers = {
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   elixirls = {},
   svelte = {},
+  ocamllsp = {},
 
   lua_ls = {
     Lua = {
