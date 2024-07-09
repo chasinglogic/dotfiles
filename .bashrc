@@ -115,6 +115,7 @@ source_if_exists "$HOME/.prompt.bash"
 
 source_if_exists "$HOME/.config/fzf/shell/key-bindings.bash"
 source_if_exists "$HOME/.config/fzf/shell/completion.bash"
+source_if_exists "$HOME/.config/fzf/fzf.bash"
 
 for compfile in "$HOME/.local/share/bash-completions"/*; do
 	source "$compfile"
