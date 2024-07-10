@@ -1,11 +1,16 @@
 local wezterm = require 'wezterm'
+local sys = require 'sys'
 local module = {}
 
 function module.apply_to_config(config)
     config.color_scheme = 'Dracula (Official)'
     -- config.color_scheme = 'Catppuccin Latte'
     config.font = wezterm.font 'Hack'
-    config.font_size = 17.0
+    if sys.is_os('linux') then
+        config.font_size = 13.0
+    else
+        config.font_size = 17.0
+    end
     config.line_height = 1.1
 
     config.window_decorations = "RESIZE"
