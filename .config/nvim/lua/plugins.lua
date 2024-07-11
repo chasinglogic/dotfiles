@@ -132,26 +132,18 @@ require("lazy").setup({
 		priority = 1000,
 		config = function()
 			vim.o.background = 'dark'
-			vim.cmd.colorscheme("dracula")
+			vim.cmd.colorscheme('dracula')
 		end,
 	},
-	-- {
-	-- 	'catppuccin/nvim',
-	-- 	priority = 1000,
-	-- 	name = 'catppuccin',
-	-- 	config = function()
-	-- 		vim.o.background = 'light'
-	-- 		vim.cmd.colorscheme("catppuccin-latte")
-	-- 	end
-	-- },
-	-- This is a good theme, might go back to it
-	-- {
-	-- 	'folke/tokyonight.nvim',
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		vim.cmd.colorscheme("tokyonight-storm")
-	-- 	end,
-	-- },
+	{
+		'projekt0n/github-nvim-theme',
+		lazy = false,
+		priority = 1000,
+		-- config = function()
+		-- 	require('github-theme').setup({})
+		-- 	vim.cmd('colorscheme github_light')
+		-- end,
+	},
 
 	{
 		-- Set lualine as statusline

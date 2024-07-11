@@ -38,8 +38,6 @@ add_alias tf 'terraform'
 add_alias pm "podman"
 add_alias dk "docker"
 
-add_alias circleci "NO_COLOR=1 circleci"
-
 add_alias mypy "dmypy check"
 add_alias zyp 'sudo zypper'
 
