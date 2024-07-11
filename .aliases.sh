@@ -13,7 +13,7 @@ function add_alias() {
 	script_name="$ALIAS_DIR/$1"
 	cat >"$script_name" <<-EOF
 		#!/usr/bin/env bash
-		$2 \$@
+		$2 "\$@"
 	EOF
 	chmod +x "$script_name"
 }
