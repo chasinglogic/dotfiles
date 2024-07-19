@@ -126,21 +126,24 @@ function rename_session() {
 	wezterm cli rename-workspace "$SESS_NAME"
 }
 
-function t() {
+function wt() {
 	rename_session
-	return 0
+}
 
+function t() {
 	GENERATED_SESSION_NAME=${PWD##*/}
 	SESS_NAME=${1:-$GENERATED_SESSION_NAME}
-	HAS_SESSION=$(wezterm cli list | grep "$SESS_NAME")
 
-	# TODO: find a way to attach session via CLI
-	if [[ -n "$HAS_SESSION" ]]; then
-		echo "Session exists!"
-	else
-		echo "Session is new."
+	tmux has-session -t $SESS_NAME
+	if [ $? -ne 0 ]; then
+		tmux new-session -s $SESS_NAME -d
 	fi
-	# wezterm cli spawn "$SESS_NAME"
+
+	if [[ -n $TMUX ]]; then
+		tmux switch-client -t $SESS_NAME
+	else
+		tmux attach-session -t $SESS_NAME
+	fi
 }
 
 function awsprof() {
