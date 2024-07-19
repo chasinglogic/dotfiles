@@ -183,14 +183,6 @@ require("lazy").setup({
 		},
 	},
 
-	-- Better sorting of files and such in telescrope
-	{
-		"nvim-telescope/telescope-frecency.nvim",
-		config = function()
-			require("telescope").load_extension("frecency")
-		end,
-	},
-
 	{
 		-- Highlight, edit, and navigate code
 		"nvim-treesitter/nvim-treesitter",
