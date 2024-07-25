@@ -76,7 +76,7 @@ def get_timestamp(data):
         if value is not None:
             return field, value
 
-    context = data.get("context")
+    context = data.get("context", {})
     if "asctime" in context:
         return "", context["asctime"]
 
