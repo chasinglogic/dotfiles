@@ -104,6 +104,7 @@ vim.defer_fn(function()
       "vimdoc",
       "vue",
       "yaml",
+      "zig",
     },
 
     -- Autoinstall languages that are not installed.
@@ -237,6 +238,7 @@ local servers = {
   elixirls = {},
   svelte = {},
   ocamllsp = {},
+  zls = {},
 
   lua_ls = {
     Lua = {

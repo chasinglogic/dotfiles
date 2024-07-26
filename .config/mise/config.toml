@@ -2,6 +2,7 @@
 node = "lts"
 python = "3.12"
 go = "latest"
+zig = "ref:master"
 "npm:prettier" = "latest"
 "npm:tree-sitter-cli" = "latest"
 "npm:@dotenvx/dotenvx" = "latest"
