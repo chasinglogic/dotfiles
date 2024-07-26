@@ -69,3 +69,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
 	alias sed="gsed"
 	alias grep="ggrep"
 fi
+
+if [[ -x $(which kitten) && -n "$USING_KITTY" ]]; then
+	alias ssh="kitten ssh"
+fi
