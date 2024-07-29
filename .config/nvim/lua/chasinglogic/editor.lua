@@ -7,13 +7,13 @@ vim.opt.shiftwidth = 4    --  An indent is 4 spaces
 vim.opt.shiftround = true --  Round indent to nearest shiftwidth multiple
 --}}}
 --Formatting options {{{
-vim.opt.textwidth = 80                --  80 Column text width by default
+vim.opt.textwidth = 80 --  80 Column text width by default
 -- fo-q Allow formatting of comments with gq
 -- fo-n Recognize numbered lists
 -- fo-j Remove comment char when joining lines
 vim.opt.formatoptions:append({
-	"q",
-	"n",
+    "q",
+    "n",
 })
 -- Don't know why this can't be in the list above but it bombs out if it is.
 vim.opt.formatoptions:append({ "j" })
@@ -29,15 +29,16 @@ vim.opt.wildignore:append({ "*.o", "*.git", "*.svn", "*.pyc", "env/*", ".git/*" 
 --}}}
 --Line numbers {{{
 vim.opt.number = true
+vim.opt.relativenumber = true
 --}}}
 --Enable mouse support {{{
 vim.opt.mouse = "a"
 --}}}
 --Setup an appropriate vimgrep command {{{
 if vim.fn.executable("rg") then
-	vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
+    vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
 else
-	vim.opt.grepprg = "grep -R"
+    vim.opt.grepprg = "grep -R"
 end
 --}}}
 --Use system clipboard {{{
@@ -64,9 +65,9 @@ vim.opt.undofile = true   --  keep persistent undo across vim runs
 vim.opt.undodir = undodir -- where to store undo files
 
 local ensure_dir = function(dir)
-	if not vim.fn.isdirectory(dir) then
-		vim.fn.mkdir(dir, "p")
-	end
+    if not vim.fn.isdirectory(dir) then
+        vim.fn.mkdir(dir, "p")
+    end
 end
 
 ensure_dir(undodir)
