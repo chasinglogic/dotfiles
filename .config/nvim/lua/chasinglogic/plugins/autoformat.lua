@@ -9,11 +9,6 @@ return {
 	},
 	config = function()
 		local formatter_filetypes = {
-			python = {
-				require("formatter.filetypes.python").black,
-				require("formatter.filetypes.python").isort,
-			},
-
 			typescript = {
 				require("formatter.filetypes.typescript").prettier,
 			},
