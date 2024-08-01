@@ -132,6 +132,7 @@ add_to_path "/Applications/PyCharm CE.app/Contents/MacOS"
 add_to_path "/Applications/PyCharm.app/Contents/MacOS"
 add_to_path "$HOME/.config/emacs/bin"
 add_to_path "$HOME/.pulumi/bin"
+add_to_path "/home/linuxbrew/.linuxbrew/bin"
 
 source_if_exists "$HOME/.cargo/env"
 

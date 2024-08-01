@@ -88,7 +88,6 @@ vim.defer_fn(function()
       "jsonc",
       "kdl",
       "lua",
-      "ocaml",
       "php",
       "python",
       "r",
@@ -237,8 +236,6 @@ local servers = {
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   elixirls = {},
   svelte = {},
-  ocamllsp = {},
-  zls = {},
 
   lua_ls = {
     Lua = {
