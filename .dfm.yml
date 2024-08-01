@@ -17,14 +17,6 @@ mappings:
     target_os:
       - "Linux"
 
-hooks:
-  after_link:
-    - |
-      if [ ! -f "$HOME/.local/bin/mise" ]; then
-        echo "Installing mise"
-        install-mise
-      fi
-
 modules:
   # FZF
   - repo: https://github.com/junegunn/fzf
