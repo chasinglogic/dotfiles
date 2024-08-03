@@ -105,4 +105,30 @@ function module.apply_to_config(config)
     }
 end
 
+-- local function tab_title(tab_info)
+--     local title = tab_info.tab_title
+--     -- if the tab title is explicitly set, take that
+--     if title and #title > 0 then
+--         return title
+--     end
+--     -- Otherwise, use the process name of the active pane
+--     -- in that tab
+--     local procname = tab_info.active_pane.foreground_process_name
+--     if procname == "" then
+--         return "uknown"
+--     end
+
+--     return procname
+-- end
+
+-- Tried playing with this, I have to return everythig not just the title of the
+-- tab. so needs more playing then I have time for right now
+-- wezterm.on(
+--     'format-tab-title',
+--     function(tab, tabs, panes, config, hover, max_width)
+--         tab.title = tab_title(tab)
+--         return tab
+--     end
+-- )
+
 return module
