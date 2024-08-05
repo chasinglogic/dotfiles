@@ -5,7 +5,7 @@ local module = {}
 function module.apply_to_config(config)
     config.color_scheme = 'Dracula (Official)'
     -- config.color_scheme = 'Solarized Light (Gogh)'
-    config.font = wezterm.font 'Fira Mono'
+    config.font = wezterm.font 'Source Code Pro'
     if sys.is_os('linux') then
         config.font_size = 13.0
     else
