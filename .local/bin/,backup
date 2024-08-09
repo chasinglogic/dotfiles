@@ -6,6 +6,9 @@ rsync \
 	--recursive \
 	--delete \
 	--exclude "$USER/.Trash" \
+	--exclude "$USER/.m2" \
+	--exclude "$USER/.opam" \
+	--exclude "$USER/.pulumi" \
 	--exclude "$USER/.ansible" \
 	--exclude "$USER/.battlescribe" \
 	--exclude "$USER/.bundle" \
