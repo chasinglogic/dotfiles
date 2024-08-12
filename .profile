@@ -179,3 +179,4 @@ fi
 # This section can be safely removed at any time if needed.
 test -r '/Users/mathewrobinson/.opam/opam-init/init.sh' && . '/Users/mathewrobinson/.opam/opam-init/init.sh' > /dev/null 2> /dev/null || true
 # END opam configuration
+. "$HOME/.cargo/env"
