@@ -21,6 +21,13 @@ function module.apply_to_config(config)
 
     config.window_decorations = "RESIZE"
 
+    local color_scheme = wezterm.get_builtin_color_schemes()[config.color_scheme]
+    local fg = wezterm.color.parse(color_scheme.foreground)
+
+    config.colors = {
+        foreground = fg:lighten(0.4),
+    }
+
     -- This hides status info that is useful so always show it.
     config.hide_tab_bar_if_only_one_tab = false
     config.tab_bar_at_bottom = false
