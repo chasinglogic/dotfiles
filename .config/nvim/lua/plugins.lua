@@ -20,7 +20,6 @@ require("lazy").setup({
 		"ggandor/leap.nvim",
 		config = function()
 			-- default mappings conflicts with vim-surround so use custom ones.
-			local leap = require("leap");
 			vim.keymap.set({ 'n', 'x', 'o' }, '<leader>jc', '<Plug>(leap-forward)')
 			vim.keymap.set({ 'n', 'x', 'o' }, '<leader>jC', '<Plug>(leap-backward)')
 			vim.keymap.set({ 'n', 'x', 'o' }, '<leader>jw', '<Plug>(leap-from-window)')
@@ -130,19 +129,16 @@ require("lazy").setup({
 	{
 		'dracula/vim',
 		priority = 1000,
-		config = function()
-			vim.o.background = 'dark'
-			vim.cmd.colorscheme('dracula')
-		end,
 	},
 	{
-		'projekt0n/github-nvim-theme',
+		"folke/tokyonight.nvim",
 		lazy = false,
 		priority = 1000,
-		-- config = function()
-		-- 	require('github-theme').setup({})
-		-- 	vim.cmd('colorscheme github_light')
-		-- end,
+		opts = {},
+		config = function()
+			vim.o.background = 'dark'
+			vim.cmd.colorscheme('tokyonight')
+		end
 	},
 
 	{
