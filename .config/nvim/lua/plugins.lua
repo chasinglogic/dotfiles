@@ -10,6 +10,8 @@ require("lazy").setup({
 	"tpope/vim-rsi",          -- Readline bindings in the vim command line
 	"tpope/vim-sleuth",       -- Detect tabstop and shiftwidth automatically
 
+	"AndrewRadev/splitjoin.vim", -- Switch between single-line and multiline forms of code
+
 	"gabrielpoca/replacer.nvim", -- Allows you to edit the quickfix window
 	-- Linting when there is no Language Server or when it complements the
 	-- Language Server
