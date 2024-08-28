@@ -37,6 +37,7 @@ add_alias tf 'terraform'
 
 add_alias pm "podman"
 add_alias dk "docker"
+add_alias dce "docker compose exec -it"
 
 add_alias mypy "dmypy check"
 add_alias zyp 'sudo zypper'
