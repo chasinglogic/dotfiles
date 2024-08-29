@@ -4,7 +4,7 @@ local module = {}
 
 function module.apply_to_config(config)
     -- config.color_scheme = 'Dracula (Official)'
-    config.color_scheme = 'Tokyo Night'
+    config.color_scheme = 'Github (base16)'
     local font_family = 'JetBrains Mono'
     config.font = wezterm.font(font_family)
     if sys.is_os('linux') then
@@ -20,14 +20,6 @@ function module.apply_to_config(config)
     }
 
     config.window_decorations = "RESIZE"
-
-    local color_scheme = wezterm.get_builtin_color_schemes()[config.color_scheme]
-    local fg = wezterm.color.parse(color_scheme.foreground)
-
-    config.colors = {
-        foreground = fg:lighten(0.4),
-    }
-
     -- This hides status info that is useful so always show it.
     config.hide_tab_bar_if_only_one_tab = false
     config.tab_bar_at_bottom = false
