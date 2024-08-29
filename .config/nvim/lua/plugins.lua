@@ -138,8 +138,15 @@ require("lazy").setup({
 		priority = 1000,
 		opts = {},
 		config = function()
+			require('tokyonight').setup({
+				on_colors = function(colors)
+					colors.fg = '#d9dff9'
+					colors.fg_dark = '#d9dff9'
+				end
+			})
+
 			vim.o.background = 'dark'
-			vim.cmd.colorscheme('tokyonight')
+			vim.cmd.colorscheme('tokyonight-night')
 		end
 	},
 
