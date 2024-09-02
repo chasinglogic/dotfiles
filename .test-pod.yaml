@@ -9,8 +9,8 @@ spec:
       - cat 
       - "-"
     tty: true
-    image: ubuntu:latest
+    image: fedora:latest
     imagePullPolicy: IfNotPresent
-    name: ubuntu
+    name: fedora
     resources: {}
 
