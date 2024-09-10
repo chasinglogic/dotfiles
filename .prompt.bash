@@ -13,6 +13,7 @@ CYAN="$(tput setaf 6)"
 WHITE="$(tput setaf 15)"
 GREY="$(tput setaf 8)"
 
+INFO_COLOR="$(tput bold)$BLACK"
 COMMAND_STATUS_COLOR="$(tput bold)$RED"
 HOSTNAME_COLOR="$MAGENTA"
 GIT_BRANCH_COLOR="$GREEN"
@@ -36,19 +37,19 @@ function __prompt_command {
 
   if [[ "$VIRTUAL_ENV_PROMPT" != "" ]]; then
     VENV_NAME=${VIRTUAL_ENV_PROMPT//[() ]/}
-    PS1+="\[$WHITE\][venv: $VENV_NAME]"
+    PS1+="\[$INFO_COLOR\][venv: $VENV_NAME]"
   fi
 
   if [[ $(tput cols) -gt 149 ]]; then
     active_context=$(kubectl config current-context 2>/dev/null)
     if [[ "$active_context" != "" ]]; then
       PS1=$(add_sep_if_required "$PS1")
-      PS1+="\[$WHITE\][kube: ${active_context}]"
+      PS1+="\[$INFO_COLOR\][kube: ${active_context}]"
     fi
 
     if [[ "$AWS_PROFILE" != "" ]]; then
       PS1=$(add_sep_if_required "$PS1")
-      PS1+="\[$WHITE\][aws: ${AWS_PROFILE}]"
+      PS1+="\[$INFO_COLOR\][aws: ${AWS_PROFILE}]"
     fi
   fi
 
@@ -64,7 +65,7 @@ function __prompt_command {
     PS1+="\[$COMMAND_STATUS_COLOR\]!!\[$NO_COLOR\] "
   fi
 
-  PS1+="\[$WHITE\]\w "
+  PS1+="\[$INFO_COLOR\]\w "
 
   ref="$(git symbolic-ref HEAD 2>/dev/null)"
   if [[ "$ref" != "" ]]; then
