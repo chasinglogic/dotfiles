@@ -2,9 +2,26 @@ local wezterm = require 'wezterm'
 local sys = require 'sys'
 local module = {}
 
+local function is_dark_mode()
+    if wezterm.gui then
+        return wezterm.gui.get_appearance():find 'Dark'
+    end
+    return true
+end
+
 function module.apply_to_config(config)
-    -- config.color_scheme = 'Tokyo Night'
-    config.color_scheme = 'dayfox'
+    if is_dark_mode() then
+        config.color_scheme = 'carbonfox'
+    else
+        config.color_scheme = 'dayfox'
+        local color_scheme = wezterm.get_builtin_color_schemes()[config.color_scheme]
+        local fg = wezterm.color.parse(color_scheme.foreground)
+    end
+
+    config.colors = {
+        foreground = '#000',
+    }
+
     local font_family = 'JetBrains Mono'
     config.font = wezterm.font(font_family)
     if sys.is_os('linux') then
@@ -20,13 +37,6 @@ function module.apply_to_config(config)
     }
 
     config.window_decorations = "RESIZE"
-
-    local color_scheme = wezterm.get_builtin_color_schemes()[config.color_scheme]
-    local fg = wezterm.color.parse(color_scheme.foreground)
-
-    config.colors = {
-        foreground = '#000',
-    }
 
     -- This hides status info that is useful so always show it.
     config.hide_tab_bar_if_only_one_tab = false
