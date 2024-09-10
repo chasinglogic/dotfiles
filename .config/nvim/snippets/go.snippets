@@ -1,7 +1,9 @@
 snippet ife
   if ${1:err} != nil {
-    return ${0}err
+    return ${2:err}
   }
+
+  $0
 
 snippet main
   package main
@@ -9,3 +11,7 @@ snippet main
   func main() {
     $0
   }
+
+snippet dbg
+  // DELETE ME DEBUG
+  fmt.Println("$1", $1)$0
