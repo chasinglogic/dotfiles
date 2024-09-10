@@ -1,0 +1,6 @@
+# shellcheck: shell=bash
+# vi: ft=bash
+
+if [ -f Justfile ]; then
+    complete -W "$(just --summary)" just
+fi

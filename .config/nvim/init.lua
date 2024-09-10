@@ -20,6 +20,9 @@ vim.opt.rtp:prepend(lazypath)
 
 vim.keymap.set("i", "fd", "<ESC>")
 
+-- Allows filtering down the quickfix and location lists
+vim.cmd.packadd('cfilter')
+
 require("plugins")
 require("chasinglogic.keys")
 require("chasinglogic.editor")
