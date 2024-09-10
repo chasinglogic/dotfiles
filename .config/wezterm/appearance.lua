@@ -75,7 +75,11 @@ wezterm.on('update-status', function(window, _)
     -- darker/lighter depending on whether we're on a dark/light colour
     -- scheme. Let's establish the "from" and "to" bounds of our gradient.
     local gradient_to, gradient_from = bg
-    gradient_from = gradient_to:lighten(0.2)
+    if is_dark_mode() then
+        gradient_from = gradient_to:lighten(0.2)
+    else
+        gradient_from = gradient_to:darken(0.2)
+    end
 
     -- Yes, WezTerm supports creating gradients, because why not?! Although
     -- they'd usually be used for setting high fidelity gradients on your terminal's
