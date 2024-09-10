@@ -3,8 +3,8 @@ local sys = require 'sys'
 local module = {}
 
 function module.apply_to_config(config)
-    -- config.color_scheme = 'Dracula (Official)'
-    config.color_scheme = 'Tokyo Night'
+    -- config.color_scheme = 'Tokyo Night'
+    config.color_scheme = 'dayfox'
     local font_family = 'JetBrains Mono'
     config.font = wezterm.font(font_family)
     if sys.is_os('linux') then
@@ -25,7 +25,7 @@ function module.apply_to_config(config)
     local fg = wezterm.color.parse(color_scheme.foreground)
 
     config.colors = {
-        foreground = fg:lighten(0.4),
+        foreground = '#000',
     }
 
     -- This hides status info that is useful so always show it.
