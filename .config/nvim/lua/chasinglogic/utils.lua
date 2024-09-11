@@ -60,7 +60,7 @@ M.set_theme_according_to_os_dark_mode = function(light_theme, dark_theme)
                 theme_to_use = dark_theme
             end
 
-            if theme_to_use != vim.g.colors_name then
+            if theme_to_use ~= vim.g.colors_name then
                 vim.cmd.colorscheme(theme_to_use)
             end
         end,
