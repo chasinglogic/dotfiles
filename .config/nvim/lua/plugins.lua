@@ -1,3 +1,5 @@
+local utils = require('chasinglogic.utils')
+
 -- Install and Configure plugins
 require("lazy").setup({
 	-- Tpope goodness
@@ -156,7 +158,7 @@ require("lazy").setup({
 		opts = {},
 		config = function()
 			require('nightfox').setup({})
-			vim.cmd.colorscheme('dayfox')
+			utils.keep_theme_in_sync_with_os_dark_mode('dayfox', 'carbonfox')
 		end
 	},
 
