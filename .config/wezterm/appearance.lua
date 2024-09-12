@@ -6,6 +6,7 @@ local function is_dark_mode()
     if wezterm.gui then
         return wezterm.gui.get_appearance():find 'Dark'
     end
+
     return true
 end
 
@@ -14,13 +15,10 @@ function module.apply_to_config(config)
         config.color_scheme = 'carbonfox'
     else
         config.color_scheme = 'dayfox'
-        local color_scheme = wezterm.get_builtin_color_schemes()[config.color_scheme]
-        local fg = wezterm.color.parse(color_scheme.foreground)
+        config.colors = {
+            foreground = '#000',
+        }
     end
-
-    config.colors = {
-        foreground = '#000',
-    }
 
     local font_family = 'JetBrains Mono'
     config.font = wezterm.font(font_family)

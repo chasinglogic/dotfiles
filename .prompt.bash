@@ -12,6 +12,7 @@ PINK="$(tput setaf 5)"
 CYAN="$(tput setaf 6)"
 WHITE="$(tput setaf 15)"
 GREY="$(tput setaf 8)"
+RESET="\e[0m"
 
 COMMAND_STATUS_COLOR="$(tput bold)$RED"
 HOSTNAME_COLOR="$MAGENTA"
@@ -68,10 +69,10 @@ function __prompt_command {
 
   if is_dark_mode; then
     INFO_COLOR="$(tput bold)$WHITE"
-    NO_COLOR="$WHITE"
+    NO_COLOR="$RESET"
   else
     INFO_COLOR="$(tput bold)$BLACK"
-    NO_COLOR="$BLACK"
+    NO_COLOR="$RESET"
   fi
 
   if [[ "$VIRTUAL_ENV_PROMPT" != "" ]]; then
