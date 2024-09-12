@@ -274,6 +274,13 @@ mason_lspconfig.setup_handlers({
   end,
 })
 
+require("lspconfig")["nushell"].setup({
+  capabilities = capabilities,
+  on_attach = on_attach,
+  settings = {},
+  filetypes = { 'nu' },
+})
+
 -- Populate loclist with the current buffer diagnostics
 vim.api.nvim_create_autocmd('DiagnosticChanged', {
   callback = function(args)
