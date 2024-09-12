@@ -887,4 +887,5 @@ $env.config = {
     ]
 }
 
+source ($nu.default-config-dir | path join 'aliases.nu')
 source ~/.cache/carapace/init.nu

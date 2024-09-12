@@ -2,6 +2,10 @@
 #
 # version = "0.97.1"
 
+def is_git_repo [] {
+    '.git' | path exists
+}
+
 def create_left_prompt [] {
     let dir = match (do --ignore-shell-errors { $env.PWD | path relative-to $nu.home-path }) {
         null => $env.PWD
@@ -9,39 +13,40 @@ def create_left_prompt [] {
         $relative_pwd => ([~ $relative_pwd] | path join)
     }
 
-    let path_color = (if (is-admin) { ansi red_bold } else { ansi green_bold })
-    let separator_color = (if (is-admin) { ansi light_red_bold } else { ansi light_green_bold })
-    let path_segment = $"($path_color)($dir)(ansi reset)"
+    let path_color = (if (is-admin) { ansi red_bold } else { ansi reset })
+    let branch = (if (is_git_repo) { 
+        git symbolic-ref HEAD | path basename 
+    } else { 
+        '' 
+    })
+    let branch_color = (if $branch in ['main', 'master'] {
+        ansi red_bold
+    } else if $branch == 'develop' {
+        ansi xterm_orangebold1
+    } else {
+        ansi green
+    })
+    let branch_prompt = (if $branch == "" { "" } else { $" ($branch)" })
+    let last_command_status = (if $env.LAST_EXIT_CODE == 0 { "" } else { $"(ansi red_bold)!! " })
 
-    $path_segment | str replace --all (char path_sep) $"($separator_color)(char path_sep)($path_color)"
-}
-
-def create_right_prompt [] {
-    # create a right prompt in magenta with green separators and am/pm underlined
-    let time_segment = ([
-        (ansi reset)
-        (ansi magenta)
-        (date now | format date '%x %X') # try to respect user's locale
-    ] | str join | str replace --regex --all "([/:])" $"(ansi green)${1}(ansi magenta)" |
-        str replace --regex --all "([AP]M)" $"(ansi magenta_underline)${1}")
-
-    let last_exit_code = if ($env.LAST_EXIT_CODE != 0) {([
-        (ansi rb)
-        ($env.LAST_EXIT_CODE)
-    ] | str join)
-    } else { "" }
-
-    ([$last_exit_code, (char space), $time_segment] | str join)
+    $"($last_command_status)($path_color)($dir)($branch_color)($branch_prompt)(ansi reset) "
 }
 
 # Use nushell functions to define your right and left prompt
 $env.PROMPT_COMMAND = {|| create_left_prompt }
-# FIXME: This default is not implemented in rust code as of 2023-09-08.
-$env.PROMPT_COMMAND_RIGHT = {|| create_right_prompt }
+$env.PROMPT_COMMAND_RIGHT = {||}
 
 # The prompt indicators are environmental variables that represent
 # the state of the prompt
-$env.PROMPT_INDICATOR = {|| "> " }
+$env.PROMPT_INDICATOR = {|| 
+    if (is_git_repo) {
+        if ((git status --porcelain) != "") {
+            return $"(ansi xterm_orange1)Δ "
+        }
+    } else {
+       return $"(ansi xterm_orange1)λ " 
+    }
+}
 $env.PROMPT_INDICATOR_VI_INSERT = {|| ": " }
 $env.PROMPT_INDICATOR_VI_NORMAL = {|| "> " }
 $env.PROMPT_MULTILINE_INDICATOR = {|| "::: " }
@@ -100,40 +105,56 @@ $env.NU_PLUGIN_DIRS = [
 # To load from a custom file you can use:
 # source ($nu.default-config-dir | path join 'custom.nu')
 
-$env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense'
+$env.CARAPACE_BRIDGES = 'bash'
+$env.EDITOR = 'nvim'
 
-# # Just show me the output please...
-# $env.AWS_PAGER = ""
-# # Needed for the go compiler and tooling
-# $env.GOPATH = $"($env.HOME)/Code/go"
+# Just show me the output please...
+$env.AWS_PAGER = ""
+# Needed for the go compiler and tooling
+$env.GOPATH = $"($env.HOME)/Code/go"
 
-# # Set CCACHE directory
-# if ('/data/ccache' | path exists) {
-# 	$env.CCACHE_DIR = '/data/ccache'
-# 	$env.CCACHE_MAXSIZE = '200G'
-# } else {
-# 	$env.CCACHE_MAXSIZE = '20G'
-# }
+# Set CCACHE directory
+if ('/data/ccache' | path exists) {
+	$env.CCACHE_DIR = '/data/ccache'
+	$env.CCACHE_MAXSIZE = '200G'
+} else {
+	$env.CCACHE_MAXSIZE = '20G'
+}
 
-# if ((uname | get operating-system) == 'Darwin') {
-#     $env.OBJC_DISABLE_INITIALIZE_FORK_SAFETY = 'YES'
-# 	$env.CLICOLOR = 1
-# 	$env.GRPC_PYTHON_BUILD_SYSTEM_OPENSSL = 1
-# 	$env.GRPC_PYTHON_BUILD_SYSTEM_ZLIB = 1
-# 	$env.LDFLAGS = "-L/opt/homebrew/opt/openssl@3/lib"
-# 	$env.CPPFLAGS = "-I/opt/homebrew/opt/openssl@3/include"
+$env.PATH = ["/usr/local/bin", "/usr/bin", "/bin", "/sbin"]
 
-#     if ($"($env.HOME)/Library/Python" | path exists) {
-#         for dir in (ls -a | where type == dir) {
-#             $env.PATH = ($env.PATH | split row (char esep) | prepend dir)
-#         }
-#     }
-# }
+def --env add_to_path [dir: string] {
+    $env.PATH = ($env.PATH | split row (char esep) | prepend $dir)
+}
 
-# print $"path: ($env.PATH)"
+if ((uname | get operating-system) == 'Darwin') {
+    $env.OBJC_DISABLE_INITIALIZE_FORK_SAFETY = 'YES'
+    $env.CLICOLOR = 1
+    $env.GRPC_PYTHON_BUILD_SYSTEM_OPENSSL = 1
+    $env.GRPC_PYTHON_BUILD_SYSTEM_ZLIB = 1
+    $env.LDFLAGS = "-L/opt/homebrew/opt/openssl@3/lib"
+    $env.CPPFLAGS = "-I/opt/homebrew/opt/openssl@3/include"
 
-# # Make ripgrep use my config file.
-# $env.RIPGREP_CONFIG_PATH = "$HOME/.ripgreprc"
-# # Make XDG_CONFIG_HOME the same on all platforms.
-# $env.XDG_CONFIG_HOME = "$HOME/.config"
+    if ($"($env.HOME)/Library/Python" | path exists) {
+        for dir in (ls -a | where type == dir) {
+            add_to_path dir
+        }
+    }
+}
+
+add_to_path '/opt/homebrew/bin'
+add_to_path $"($env.HOME)/.local/bin"
+add_to_path $"($env.HOME)/.elixir-ls/dist"
+add_to_path $"($env.GOPATH)/bin"
+add_to_path $"($env.HOME)/.cargo/bin"
+add_to_path "/Applications/PyCharm CE.app/Contents/MacOS"
+add_to_path "/Applications/PyCharm.app/Contents/MacOS"
+add_to_path $"($env.HOME)/.config/emacs/bin"
+add_to_path $"($env.HOME)/.pulumi/bin"
+add_to_path "/home/linuxbrew/.linuxbrew/bin"
+
+# Make ripgrep use my config file.
+$env.RIPGREP_CONFIG_PATH = $"($env.HOME)/.ripgreprc"
+# Make XDG_CONFIG_HOME the same on all platforms.
+$env.XDG_CONFIG_HOME = $"($env.HOME)/.config"
 
