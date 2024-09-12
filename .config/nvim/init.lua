@@ -91,6 +91,7 @@ vim.defer_fn(function()
       "jsonc",
       "kdl",
       "lua",
+      "nu",
       "php",
       "python",
       "r",
