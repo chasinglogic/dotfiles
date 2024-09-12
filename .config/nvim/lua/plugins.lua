@@ -209,6 +209,8 @@ require("lazy").setup({
 			-- Autoclose languges which use "end" like Ruby and Elixir.
 			"RRethy/nvim-treesitter-endwise",
 
+			"nushell/tree-sitter-nu",
+
 			-- Auto close and rename JSX/html tags
 			"windwp/nvim-ts-autotag",
 		},
