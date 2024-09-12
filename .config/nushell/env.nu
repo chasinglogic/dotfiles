@@ -39,10 +39,8 @@ $env.PROMPT_COMMAND_RIGHT = {||}
 # The prompt indicators are environmental variables that represent
 # the state of the prompt
 $env.PROMPT_INDICATOR = {|| 
-    if (is_git_repo) {
-        if ((git status --porcelain) != "") {
-            return $"(ansi xterm_orange1)Δ "
-        }
+    if ((is_git_repo) and (git status --porcelain) != "") {
+        return $"(ansi xterm_orange1)Δ "
     } else {
        return $"(ansi xterm_orange1)λ " 
     }
