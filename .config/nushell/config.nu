@@ -2,6 +2,9 @@
 #
 # version = "0.97.1"
 
+source ($nu.default-config-dir | path join 'aliases.nu')
+source ($nu.default-config-dir | path join 'commands.nu')
+
 # For more information on defining custom themes, see
 # https://www.nushell.sh/book/coloring_and_theming.html
 # And here is the theme collection
@@ -221,7 +224,11 @@ $env.config = {
         vi_normal: underscore # block, underscore, line, blink_block, blink_underscore, blink_line, inherit to skip setting cursor shape (underscore is the default)
     }
 
-    color_config: $light_theme 
+    color_config: (if (is_dark_mode) { 
+        $dark_theme
+    } else {
+        $light_theme
+    })
     use_grid_icons: true
     footer_mode: 25 # always, never, number_of_rows, auto
     float_precision: 2 # the precision for displaying floats in tables
@@ -887,5 +894,4 @@ $env.config = {
     ]
 }
 
-source ($nu.default-config-dir | path join 'aliases.nu')
 source ~/.cache/carapace/init.nu
