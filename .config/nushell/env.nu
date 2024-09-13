@@ -6,6 +6,8 @@ def is_git_repo [] {
     '.git' | path exists
 }
 
+
+
 def create_left_prompt [] {
     let dir = match (do --ignore-shell-errors { $env.PWD | path relative-to $nu.home-path }) {
         null => $env.PWD
@@ -29,7 +31,31 @@ def create_left_prompt [] {
     let branch_prompt = (if $branch == "" { "" } else { $" ($branch)" })
     let last_command_status = (if $env.LAST_EXIT_CODE == 0 { "" } else { $"(ansi red_bold)!! " })
 
-    $"($last_command_status)($path_color)($dir)($branch_color)($branch_prompt)(ansi reset) "
+    mut contextual_info = ""
+    let context_color = (ansi magenta)
+    def context_segment [currentContext: string, key: string, value: string, valueColor = (ansi reset)] {
+        if ($value == "") { return $currentContext }
+        let prefix = if $currentContext == "" {
+            ""
+        } else {
+            $"($currentContext) "
+        }
+        $"($prefix)($context_color)[($key): ($valueColor)($value)($context_color)](ansi reset)"
+    }
+
+    let kube_context = (kubectl config current-context)
+    let kube_color = (if $kube_context in ['production', 'staging'] { 
+        ansi red_bold
+    } else {
+        ansi reset
+    })
+    $contextual_info = (context_segment $contextual_info kube $kube_context $kube_color)
+
+    if $contextual_info != "" {
+        $contextual_info += "\n"
+    }
+
+    $"($contextual_info)($last_command_status)($path_color)($dir)($branch_color)($branch_prompt)(ansi reset) "
 }
 
 # Use nushell functions to define your right and left prompt
