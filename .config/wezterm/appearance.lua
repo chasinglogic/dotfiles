@@ -2,7 +2,7 @@ local wezterm = require 'wezterm'
 local sys = require 'sys'
 local module = {}
 
-local function is_dark_mode()
+module.is_dark_mode = function()
     if wezterm.gui then
         return wezterm.gui.get_appearance():find 'Dark'
     end
@@ -11,7 +11,7 @@ local function is_dark_mode()
 end
 
 function module.apply_to_config(config)
-    if is_dark_mode() then
+    if module.is_dark_mode() then
         config.color_scheme = 'carbonfox'
     else
         config.color_scheme = 'dayfox'
@@ -73,7 +73,7 @@ wezterm.on('update-status', function(window, _)
     -- darker/lighter depending on whether we're on a dark/light colour
     -- scheme. Let's establish the "from" and "to" bounds of our gradient.
     local gradient_to, gradient_from = bg
-    if is_dark_mode() then
+    if module.is_dark_mode() then
         gradient_from = gradient_to:lighten(0.2)
     else
         gradient_from = gradient_to:darken(0.2)
