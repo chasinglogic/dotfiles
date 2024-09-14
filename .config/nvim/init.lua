@@ -236,7 +236,7 @@ local servers = {
   pyright = {},
   ruff_lsp = {},
   rust_analyzer = {},
-  tsserver = {},
+  ts_ls = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   elixirls = {},
   svelte = {},
