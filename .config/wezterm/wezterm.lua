@@ -9,6 +9,8 @@ config.set_environment_variables = {
 
 if sys.file_exists('/opt/homebrew/bin/nu') then
     config.default_prog = { '/opt/homebrew/bin/nu', '-l' }
+elseif sys.file_exists('/usr/local/bin/nu') then
+    config.default_prog = { '/usr/local/bin/nu', '-l' }
 end
 
 require('appearance').apply_to_config(config)
