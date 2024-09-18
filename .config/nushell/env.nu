@@ -3,10 +3,8 @@
 # version = "0.97.1"
 
 def is_git_repo [] {
-    '.git' | path exists
+    (git rev-parse --is-inside-work-tree) == 'true'
 }
-
-
 
 def create_left_prompt [] {
     let dir = match (do --ignore-shell-errors { $env.PWD | path relative-to $nu.home-path }) {
