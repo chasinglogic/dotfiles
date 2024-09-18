@@ -43,3 +43,11 @@ def kctx [
         kubectl config use-context $context
     }
 }
+
+def kube_namespaces [] {
+    kubectl get ns -o json | from yaml | get items | each {|ns| $ns.metadata.name}
+}
+
+def images_in_namespace [namespace: string@kube_namespaces] {
+    kubectl get pods -n $namespace -o yaml | from yaml | get items | each {|pod| $pod.spec.containers.0.image} | sort | uniq
+}
