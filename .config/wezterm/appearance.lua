@@ -11,14 +11,16 @@ module.is_dark_mode = function()
 end
 
 function module.apply_to_config(config)
-    if module.is_dark_mode() then
-        config.color_scheme = 'carbonfox'
-    else
-        config.color_scheme = 'dayfox'
-        config.colors = {
-            foreground = '#000',
-        }
-    end
+    -- Disabled while trialing nushell since it doesn't sync up well or play
+    -- nice with light themes yet.
+    -- if module.is_dark_mode() then
+    config.color_scheme = 'carbonfox'
+    -- else
+    --     config.color_scheme = 'dayfox'
+    --     config.colors = {
+    --         foreground = '#000',
+    --     }
+    -- end
 
     local font_family = 'JetBrains Mono'
     config.font = wezterm.font(font_family)

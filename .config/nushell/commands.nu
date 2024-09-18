@@ -24,3 +24,7 @@ def kube_namespaces [] {
 def images_in_namespace [namespace: string@kube_namespaces] {
     kubectl get pods -n $namespace -o yaml | from yaml | get items | each {|pod| $pod.spec.containers.0.image} | sort | uniq
 }
+
+def --env dotfiles [] {
+    cd (dfm where)
+}

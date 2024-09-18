@@ -68,13 +68,17 @@ M.set_theme_according_to_os_dark_mode = function(light_theme, dark_theme)
 end
 
 M.keep_theme_in_sync_with_os_dark_mode = function(light_theme, dark_theme)
-    local timer = vim.uv.new_timer()
-    local interval = 1000
-    timer:start(interval, interval, function()
-        vim.schedule(function()
-            M.set_theme_according_to_os_dark_mode(light_theme, dark_theme)
-        end)
-    end)
+    vim.cmd.colorscheme(dark_theme)
+
+    -- Disabled while trialing nushell since it doesn't sync up well or play
+    -- nice with light themes yet.
+    -- local timer = vim.uv.new_timer()
+    -- local interval = 1000
+    -- timer:start(interval, interval, function()
+    --     vim.schedule(function()
+    --         M.set_theme_according_to_os_dark_mode(light_theme, dark_theme)
+    --     end)
+    -- end)
 end
 
 return M
