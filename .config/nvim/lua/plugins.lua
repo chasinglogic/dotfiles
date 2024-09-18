@@ -159,7 +159,6 @@ require("lazy").setup({
 		config = function()
 			require('nightfox').setup({})
 			utils.keep_theme_in_sync_with_os_dark_mode('dayfox', 'carbonfox')
-			utils.set_theme_according_to_os_dark_mode('dayfox', 'carbonfox')
 		end
 	},
 
