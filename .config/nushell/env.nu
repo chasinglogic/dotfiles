@@ -2,8 +2,10 @@
 #
 # version = "0.97.1"
 
+source ($nu.default-config-dir | path join 'theme.nu')
+
 def is_git_repo [] {
-    (git rev-parse --is-inside-work-tree) == 'true'
+    (git rev-parse --is-inside-work-tree err> /dev/null) == 'true'
 }
 
 def create_left_prompt [] {
@@ -53,6 +55,7 @@ def create_left_prompt [] {
         $contextual_info += "\n"
     }
 
+    $env.config.color_config = (get_theme)
     $"($contextual_info)($last_command_status)($path_color)($dir)($branch_color)($branch_prompt)(ansi reset) "
 }
 
