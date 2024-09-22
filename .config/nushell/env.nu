@@ -43,13 +43,13 @@ def create_left_prompt [] {
         $"($prefix)($context_color)[($key): ($valueColor)($value)($context_color)](ansi reset)"
     }
 
-    let kube_context = (kubectl config current-context err> /dev/null)
-    let kube_color = (if $kube_context in ['production', 'staging'] { 
+    let kube_context = (kubectl config current-context err> /dev/null | complete)
+    let kube_color = (if $kube_context.stdout in ['production', 'staging'] {
         ansi red_bold
     } else {
         ansi reset
     })
-    $contextual_info = (context_segment $contextual_info kube $kube_context $kube_color)
+    $contextual_info = (context_segment $contextual_info kube $kube_context.stdout $kube_color)
 
     if $contextual_info != "" {
         $contextual_info += "\n"
