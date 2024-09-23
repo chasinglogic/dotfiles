@@ -166,10 +166,9 @@ def is_dark_mode [] {
 }
 
 export def get_theme [] {
-    $dark_theme
-    # if (is_dark_mode) {
-    #     $dark_theme
-    # } else {
-    #     $light_theme
-    # }
+    if (is_dark_mode) {
+        $dark_theme
+    } else {
+        $light_theme
+    }
 }
