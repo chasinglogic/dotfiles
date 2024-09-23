@@ -24,7 +24,7 @@ def create_left_prompt [] {
     let branch_color = (if $branch in ['main', 'master'] {
         ansi red_bold
     } else if $branch == 'develop' {
-        ansi xterm_orangebold1
+        ansi xterm_orange1
     } else {
         ansi green
     })
@@ -67,9 +67,9 @@ $env.PROMPT_COMMAND_RIGHT = {||}
 # the state of the prompt
 $env.PROMPT_INDICATOR = {|| 
     if ((is_git_repo) and (git status --porcelain) != "") {
-        return $"(ansi xterm_orange1)Δ "
+        return $"(ansi xterm_yellow1)Δ "
     } else {
-       return $"(ansi xterm_orange1)λ " 
+       return $"(ansi xterm_yellow1)λ " 
     }
 }
 $env.PROMPT_INDICATOR_VI_INSERT = {|| ": " }
@@ -182,4 +182,3 @@ add_to_path "/home/linuxbrew/.linuxbrew/bin"
 $env.RIPGREP_CONFIG_PATH = $"($env.HOME)/.ripgreprc"
 # Make XDG_CONFIG_HOME the same on all platforms.
 $env.XDG_CONFIG_HOME = $"($env.HOME)/.config"
-
