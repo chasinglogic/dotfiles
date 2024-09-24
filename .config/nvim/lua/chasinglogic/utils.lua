@@ -32,7 +32,7 @@ elseif system == "Windows_NT" or system == "WSL" then
     'reg.exe Query "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize" /v AppsUseLightTheme | findstr.exe "AppsUseLightTheme"'
 end
 
-function parse_query_response(res)
+local function parse_query_response(res)
     if system == "Linux" then
         -- https://github.com/flatpak/xdg-desktop-portal/blob/c0f0eb103effdcf3701a1bf53f12fe953fbf0b75/data/org.freedesktop.impl.portal.Settings.xml#L32-L46
         -- 0: no preference

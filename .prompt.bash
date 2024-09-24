@@ -4,14 +4,14 @@
 ##########
 
 BLACK="$(tput setaf 0)"
-RED="$(tput setaf 1)"
-GREEN="$(tput setaf 2)"
-YELLOW="$(tput setaf 3)"
-MAGENTA="$(tput setaf 4)"
-PINK="$(tput setaf 5)"
-CYAN="$(tput setaf 6)"
-WHITE="$(tput setaf 15)"
-GREY="$(tput setaf 8)"
+RED="$(tput setaf 196)"
+GREEN="$(tput setaf 34)"
+YELLOW="$(tput setaf 226)"
+MAGENTA="$(tput setaf 164)"
+PINK="$(tput setaf 201)"
+CYAN="$(tput setaf 17)"
+WHITE="$(tput setaf 255)"
+GREY="$(tput setaf 240)"
 RESET="\e[0m"
 
 COMMAND_STATUS_COLOR="$(tput bold)$RED"
@@ -21,39 +21,6 @@ LAMBDA_COLOR="$YELLOW"
 DELTA_COLOR="$YELLOW"
 
 SEPARATOR=" "
-
-function is_dark_mode_linux() {
-  scheme=$(
-    gdbus call --session --timeout=1000 \
-      --dest=org.freedesktop.portal.Desktop \
-      --object-path /org/freedesktop/portal/desktop \
-      --method org.freedesktop.portal.Settings.Read org.freedesktop.appearance color-scheme
-  )
-
-  case $scheme in
-  '(<<uint32 1>>,)') return 0 ;;
-  # This means prefer light but is same as default for us.
-  # '(<<uint32 2>>,)') return false ;;
-  *) return 1 ;;
-  esac
-}
-
-function is_dark_mode_macos() {
-  style=$(defaults read -g AppleInterfaceStyle 2>/dev/null)
-  if [[ "$style" == "Dark" ]]; then
-    return 0
-  else
-    return 1
-  fi
-}
-
-function is_dark_mode() {
-  if [[ "$(uname)" == "Darwin" ]]; then
-    is_dark_mode_macos
-  else
-    is_dark_mode_linux
-  fi
-}
 
 function add_sep_if_required {
   if [[ "$1" == "$START" ]]; then
@@ -67,13 +34,8 @@ function __prompt_command {
   RET="$?"
   PS1=""
 
-  if is_dark_mode; then
-    INFO_COLOR="$(tput bold)$WHITE"
-    NO_COLOR="$RESET"
-  else
-    INFO_COLOR="$(tput bold)$BLACK"
-    NO_COLOR="$RESET"
-  fi
+  INFO_COLOR="$(tput bold)$WHITE"
+  NO_COLOR="$RESET"
 
   if [[ "$VIRTUAL_ENV_PROMPT" != "" ]]; then
     VENV_NAME=${VIRTUAL_ENV_PROMPT//[() ]/}

@@ -2,23 +2,8 @@ local wezterm = require 'wezterm'
 local sys = require 'sys'
 local module = {}
 
-module.is_dark_mode = function()
-    if wezterm.gui then
-        return wezterm.gui.get_appearance():find 'Dark'
-    end
-
-    return true
-end
-
 function module.apply_to_config(config)
-    if module.is_dark_mode() then
-        config.color_scheme = 'carbonfox'
-    else
-        config.color_scheme = 'dayfox'
-        config.colors = {
-            foreground = '#000',
-        }
-    end
+    config.color_scheme = 'carbonfox'
 
     local font_family = 'JetBrains Mono'
     config.font = wezterm.font(font_family)
@@ -73,11 +58,7 @@ wezterm.on('update-status', function(window, _)
     -- darker/lighter depending on whether we're on a dark/light colour
     -- scheme. Let's establish the "from" and "to" bounds of our gradient.
     local gradient_to, gradient_from = bg
-    if module.is_dark_mode() then
-        gradient_from = gradient_to:lighten(0.2)
-    else
-        gradient_from = gradient_to:darken(0.2)
-    end
+    gradient_from = gradient_to:lighten(0.2)
 
     -- Yes, WezTerm supports creating gradients, because why not?! Although
     -- they'd usually be used for setting high fidelity gradients on your terminal's
