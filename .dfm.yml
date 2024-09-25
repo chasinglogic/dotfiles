@@ -4,6 +4,7 @@ prompt_for_commit_message: true
 hooks:
   after_sync:
     - |
+      echo "ran"
       if [[ $(uname -a) == "Darwin" ]]; then
         brew bundle --global
       fi
