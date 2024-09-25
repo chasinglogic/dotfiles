@@ -81,10 +81,7 @@ return {
 					buffer = bufnr,
 					callback = function()
 						if not use_lsp_formatting then
-							print("LSP formatter is disabled.")
 							return
-						else
-							print("Using LSP formatting")
 						end
 
 						if client == nil then
