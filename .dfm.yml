@@ -4,13 +4,12 @@ prompt_for_commit_message: true
 hooks:
   after_sync:
     - |
-      echo "ran"
-      if [[ $(uname -a) == "Darwin" ]]; then
+      if [[ $(uname) == "Darwin" ]]; then
         brew bundle --global
       fi
   after_link:
     - |
-      if [[ $(uname -a) == "Darwin" ]]; then
+      if [[ $(uname) == "Darwin" ]]; then
         brew bundle --global
       fi
 
