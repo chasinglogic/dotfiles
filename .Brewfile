@@ -16,6 +16,7 @@ brew "shellcheck"
 brew "golang-migrate"
 brew "golangci-lint"
 brew "carapace"
+brew "duckdb"
 
 if OS.mac?
   tap "mongodb/brew"
@@ -25,7 +26,7 @@ if OS.mac?
   brew "grep"
   brew "gnu-tar"
   brew "coreutils"
-  brew "mysql"
+  brew "mysql@8.4"
   brew "postgresql"
 
   if not File.exist?("/Applications/Google Chrome.app")

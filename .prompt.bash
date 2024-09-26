@@ -30,6 +30,17 @@ function add_sep_if_required {
   fi
 }
 
+function __kube_context {
+  active_context=$(kubectl config current-context 2>/dev/null)
+  if [[ "$active_context" == "production" ]]; then
+    echo "${RED}${active_context}"
+  elif [[ "$active_context" == "staging" ]]; then
+    echo "${YELLOW}${active_context}"
+  else
+    echo "${active_context}"
+  fi
+}
+
 function __prompt_command {
   RET="$?"
   PS1=""
@@ -43,7 +54,7 @@ function __prompt_command {
   fi
 
   if [[ $(tput cols) -gt 149 ]]; then
-    active_context=$(kubectl config current-context 2>/dev/null)
+    active_context=$(__kube_context)
     if [[ "$active_context" != "" ]]; then
       PS1=$(add_sep_if_required "$PS1")
       PS1+="\[$INFO_COLOR\][kube: ${active_context}]"
