@@ -2,6 +2,7 @@
 vim.keymap.set("n", "<leader>fs", ":w<cr>")
 vim.keymap.set("n", "<leader>fq", ":wq<cr>")
 vim.keymap.set("n", "<leader>fa", ":wa<cr>")
+vim.keymap.set("n", "<leader>ft", ":Neotree<cr>")
 --}}}
 --Project level ops {{{
 vim.keymap.set("n", "<leader>pf", ":Telescope find_files previewer=false hidden=true<cr>")
