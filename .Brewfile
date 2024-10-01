@@ -1,5 +1,8 @@
 # vi: ft=ruby
 
+tap "aws/tap"
+brew "eks-node-viewer"
+
 brew "siderolabs/tap/talosctl"
 brew "kubectl"
 brew "awscli"
