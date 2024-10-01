@@ -31,16 +31,41 @@ require("lazy").setup({
 	},
 
 	-- Show indentation guides
-	{ "lukas-reineke/indent-blankline.nvim", main = "ibl",          opts = {} },
+	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 
 	-- Better netrw
 	{ "stevearc/oil.nvim",                   opts = {} },
+	-- File tree
+	{
+		"nvim-neo-tree/neo-tree.nvim",
+		branch = "v3.x",
+		config = function()
+			require('neo-tree').setup({
+				filesystem = {
+					filtered_items = {
+						visible = false,
+						hide_dotfiles = false,
+						hide_hidden = false,
+						hide_gitignored = true,
+						hide_by_name = {
+							"node_modules",
+						},
+					}
+				}
+			})
+		end,
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			-- "nvim-tree/nvim-web-devicons",
+			"MunifTanjim/nui.nvim",
+		}
+	},
 
 	-- Auto pair things
-	{ "windwp/nvim-autopairs",               event = "InsertEnter", opts = {} },
+	{ "windwp/nvim-autopairs", event = "InsertEnter", opts = {} },
 
 	-- "gc" to comment visual regions/lines
-	{ "numToStr/Comment.nvim",               opts = {} },
+	{ "numToStr/Comment.nvim", opts = {} },
 
 	{
 		"elixir-tools/elixir-tools.nvim",
