@@ -1,5 +1,3 @@
-use commands.nu is_system
-
 # For more information on defining custom themes, see
 # https://www.nushell.sh/book/coloring_and_theming.html
 # And here is the theme collection
@@ -138,37 +136,7 @@ let light_theme = {
     shape_raw_string: light_purple
 }
 
-def is_dark_mode_linux [] {
-    let scheme = (
-        gdbus call --session --timeout=1000
-            --dest=org.freedesktop.portal.Desktop
-            --object-path /org/freedesktop/portal/desktop
-            --method org.freedesktop.portal.Settings.Read org.freedesktop.appearance color-scheme
-    )
-
-    match $scheme {
-        "(<<uint32 1>>,)" => true
-        _ => false
-    }
-}
-
-def is_dark_mode_macos [] {
-    let preference = (defaults read -g AppleInterfaceStyle err> /dev/null)
-    $preference == "Dark"
-}
-
-def is_dark_mode [] {
-    if (is_system "Darwin") {
-        is_dark_mode_macos
-    } else {
-        is_dark_mode_linux
-    }
-}
 
 export def get_theme [] {
-    if (is_dark_mode) {
-        $dark_theme
-    } else {
-        $light_theme
-    }
+    $dark_theme
 }
