@@ -16,7 +16,7 @@ set $down j
 set $up k
 set $right l
 
-set $term alacritty
+set $term wezterm
 set $menu wofi --conf=/etc/wofi/config
 
 set $wallpaper /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
