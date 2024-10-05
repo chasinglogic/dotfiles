@@ -121,8 +121,9 @@ for compfile in "$HOME/.local/share/bash-completions"/*; do
 	source "$compfile"
 done
 
-eval "$(mise activate bash)"
-. "$HOME/.cargo/env"
+if [[ -x $(which mise 2>/dev/null) ]]; then
+	eval "$(mise activate bash)"
+fi
 
 if [[ -x $(which carapace 2>/dev/null) ]]; then
 	export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
