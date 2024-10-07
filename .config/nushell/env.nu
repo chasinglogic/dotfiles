@@ -5,7 +5,7 @@
 source ($nu.default-config-dir | path join 'theme.nu')
 
 def is_git_repo [] {
-    (git rev-parse --is-inside-work-tree err> /dev/null) == 'true'
+    (git rev-parse --is-inside-work-tree | complete) == 'true'
 }
 
 def create_left_prompt [] {
