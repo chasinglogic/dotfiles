@@ -5,7 +5,6 @@ local module = {}
 function module.apply_to_config(config)
     config.color_scheme = 'carbonfox'
 
-    -- local font_family = 'JetBrains Mono'
     local font_family = 'Fira Code'
     config.font = wezterm.font(font_family)
     if sys.is_os('linux') then

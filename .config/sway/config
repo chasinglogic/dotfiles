@@ -17,7 +17,7 @@ set $up k
 set $right l
 
 set $term wezterm
-set $menu wofi --conf=/etc/wofi/config
+set $menu fuzzel
 
 set $wallpaper /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 set $screenlock 'swaylock --config /etc/swaylock/openSUSEway.conf'
@@ -48,20 +48,6 @@ exec swayidle -w \
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
 # resumed. It will also lock your screen before your computer goes to sleep.
-
-# Status Bar:
-#
-# Read `man 5 sway-bar` for more information about this section.
-bar {
-    position top
-    swaybar_command swaybar
-
-    colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
-    }
-}
 
 # Clamshell mode
 set $laptop eDP-1
