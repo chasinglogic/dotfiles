@@ -42,6 +42,7 @@ require("lazy").setup({
 		config = function()
 			require('neo-tree').setup({
 				filesystem = {
+					hijack_netrw_behavior = "disabled",
 					filtered_items = {
 						visible = false,
 						hide_dotfiles = false,
