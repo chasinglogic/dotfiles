@@ -129,3 +129,7 @@ if [[ -x $(which carapace 2>/dev/null) ]]; then
 	export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
 	source <(carapace _carapace)
 fi
+
+if [[ $(tty) == "/dev/tty1" ]]; then
+	exec dbus-run-session sway
+fi

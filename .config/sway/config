@@ -20,7 +20,7 @@ set $term wezterm
 set $menu fuzzel
 
 set $wallpaper /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
-set $screenlock 'swaylock --config /etc/swaylock/openSUSEway.conf'
+set $screenlock 'swaylock'
 
 include ~/.config/sway/config.d/*
 
