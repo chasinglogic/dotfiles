@@ -57,7 +57,7 @@ function __prompt_command {
     active_context=$(__kube_context)
     if [[ "$active_context" != "" ]]; then
       PS1=$(add_sep_if_required "$PS1")
-      PS1+="\[$INFO_COLOR\][kube: ${active_context}]"
+      PS1+="\[$INFO_COLOR\][kube: ${active_context}\[$INFO_COLOR\]]"
     fi
 
     if [[ "$AWS_PROFILE" != "" ]]; then
