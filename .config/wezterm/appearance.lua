@@ -19,7 +19,7 @@ function module.apply_to_config(config)
     config.line_height = 1.1
 
     config.window_frame = {
-        font = wezterm.font({ family = font_family, weight = 'Bold' }),
+        font = wezterm.font({ family = 'JetBrains Mono', weight = 'Bold' }),
         font_size = config.font_size - 2.0,
     }
 
