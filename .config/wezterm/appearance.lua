@@ -6,10 +6,11 @@ function module.apply_to_config(config)
     config.color_scheme = 'carbonfox'
 
     config.font = wezterm.font_with_fallback {
-        'Fira Code Nerd Font',
+        'Fira Code Nerd Font Mono',
         'Fira Code',
         'JetBrains Mono',
     }
+
     if sys.is_os('linux') then
         config.font_size = 14.0
     else
