@@ -5,8 +5,11 @@ local module = {}
 function module.apply_to_config(config)
     config.color_scheme = 'carbonfox'
 
-    local font_family = 'Fira Code'
-    config.font = wezterm.font(font_family)
+    config.font = wezterm.font_with_fallback {
+        'Fira Code Nerd Font',
+        'Fira Code',
+        'JetBrains Mono',
+    }
     if sys.is_os('linux') then
         config.font_size = 14.0
     else

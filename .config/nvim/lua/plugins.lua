@@ -14,6 +14,7 @@ require("lazy").setup({
 
 	"andrewferrier/debugprint.nvim", -- Insert debug print statements using g?
 	"AndrewRadev/splitjoin.vim",  -- Switch between single-line and multiline forms of code
+	'Bekaboo/dropbar.nvim',       -- A top bar that provides contextual information
 
 	"gabrielpoca/replacer.nvim",  -- Allows you to edit the quickfix window
 	-- Linting when there is no Language Server or when it complements the
@@ -58,7 +59,7 @@ require("lazy").setup({
 		end,
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			-- "nvim-tree/nvim-web-devicons",
+			"nvim-tree/nvim-web-devicons",
 			"MunifTanjim/nui.nvim",
 		}
 	},
