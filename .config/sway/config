@@ -19,8 +19,8 @@ set $right l
 set $term wezterm
 set $menu fuzzel
 
-set $wallpaper /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
-set $screenlock 'swaylock'
+set $wallpaper ~/.wallpaper.png
+set $screenlock 'swaylock --color 000000'
 
 include ~/.config/sway/config.d/*
 
@@ -38,8 +38,7 @@ output * bg $wallpaper fill
 
 ### Idle configuration
 # Lock the desktop
-bindsym $mod+m $screenlock
-exec swayidle -w \
+exec_always (pkill swayidle || true) && swayidle -w \
         timeout 900 $screenlock \
         timeout 960 'swaymsg "output * power off"' \
              resume 'swaymsg "output * power on"'  \
@@ -55,5 +54,5 @@ bindswitch --reload --locked lid:on output $laptop disable
 bindswitch --reload --locked lid:off output $laptop enable
 exec_always /home/chasinglogic/.config/sway/clamshell.sh
 
-default_border pixel
+default_border pixel 4
 gaps inner 5
