@@ -28,7 +28,7 @@ function module.apply_to_config(config)
     -- This hides status info that is useful so always show it.
     config.hide_tab_bar_if_only_one_tab = false
     config.tab_bar_at_bottom = false
-    config.use_fancy_tab_bar = true
+    config.use_fancy_tab_bar = false
 
     config.enable_scroll_bar = false
     config.window_padding = {
