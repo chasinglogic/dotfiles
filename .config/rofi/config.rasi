@@ -1,0 +1,28 @@
+@theme "/usr/share/rofi/themes/Arc-Dark.rasi"
+
+* {
+    foreground: rgba ( 255, 255, 255, 100 % );
+    background: rgba ( 45, 48, 59, 100 % );
+}
+
+window {
+    font: "Fira Code Nerd Font 12";
+}
+
+element {
+    children: [ element-text, element-icon ];
+}
+
+element-icon {
+    background: rgba ( 0, 0, 0, 0 % );
+    size: 2.5em;
+}
+
+element.alternate.normal {
+    background-color: inherit;
+    text-color:       @foreground;
+}
+element.alternate.urgent {
+    background-color: inherit;
+    text-color:       @foreground;
+}

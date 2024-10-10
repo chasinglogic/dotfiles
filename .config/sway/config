@@ -17,7 +17,7 @@ set $up k
 set $right l
 
 set $term wezterm
-set $menu fuzzel
+set $menu 'rofi -show drun'
 
 set $wallpaper ~/.wallpaper.png
 set $screenlock 'swaylock --color 000000'
