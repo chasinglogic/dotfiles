@@ -53,17 +53,15 @@ function __prompt_command {
     PS1+="\[$INFO_COLOR\][venv: $VENV_NAME]"
   fi
 
-  if [[ $(tput cols) -gt 149 ]]; then
-    active_context=$(__kube_context)
-    if [[ "$active_context" != "" ]]; then
-      PS1=$(add_sep_if_required "$PS1")
-      PS1+="\[$INFO_COLOR\][kube: ${active_context}\[$INFO_COLOR\]]"
-    fi
+  active_context=$(__kube_context)
+  if [[ "$active_context" != "" ]]; then
+    PS1=$(add_sep_if_required "$PS1")
+    PS1+="\[$INFO_COLOR\][kube: ${active_context}\[$INFO_COLOR\]]"
+  fi
 
-    if [[ "$AWS_PROFILE" != "" ]]; then
-      PS1=$(add_sep_if_required "$PS1")
-      PS1+="\[$INFO_COLOR\][aws: ${AWS_PROFILE}]"
-    fi
+  if [[ "$AWS_PROFILE" != "" ]]; then
+    PS1=$(add_sep_if_required "$PS1")
+    PS1+="\[$INFO_COLOR\][aws: ${AWS_PROFILE}]"
   fi
 
   if [[ -n "$PS1" ]]; then
