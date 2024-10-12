@@ -25,6 +25,6 @@ input "6940:6972:Corsair_Corsair_Gaming_HARPOON_RGB_Mouse" {
     scroll_factor 0.5
 
     accel_profile "flat"
-    pointer_accel 0.001
+    pointer_accel 0.00000000001
 }
 

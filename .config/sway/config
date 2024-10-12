@@ -16,7 +16,7 @@ set $down j
 set $up k
 set $right l
 
-set $term wezterm
+set $term 'wezterm start --always-new-process'
 set $menu 'rofi -show drun'
 
 set $wallpaper ~/.wallpaper.png
