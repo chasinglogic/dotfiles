@@ -6,7 +6,9 @@ function module.apply_to_config(config)
     config.color_scheme = 'carbonfox'
 
     config.font = wezterm.font_with_fallback {
+        'FiraCode Nerd Font Mono',
         'Fira Code Nerd Font Mono',
+        'FiraCode Nerd Font',
         'Fira Code',
         'JetBrains Mono',
     }
