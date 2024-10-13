@@ -7,11 +7,6 @@ hooks:
       if [ $(uname) = "Darwin" ]; then
         brew bundle --global
       fi
-  after_link:
-    - |
-      if [ $(uname) = "Darwin" ]; then
-        brew bundle --global
-      fi
 
 mappings:
   - match: '.config/nvim/snippets'
