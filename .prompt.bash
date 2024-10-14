@@ -16,7 +16,6 @@ RESET="\e[0m"
 
 COMMAND_STATUS_COLOR="$(tput bold)$RED"
 HOSTNAME_COLOR="$MAGENTA"
-GIT_BRANCH_COLOR="$GREEN"
 LAMBDA_COLOR="$YELLOW"
 DELTA_COLOR="$YELLOW"
 
@@ -30,7 +29,7 @@ function add_sep_if_required {
   fi
 }
 
-function __kube_context {
+function __kube_context_prompt {
   active_context=$(kubectl config current-context 2>/dev/null)
   if [[ "$active_context" == "production" ]]; then
     echo "${RED}${active_context}"
@@ -38,6 +37,18 @@ function __kube_context {
     echo "${YELLOW}${active_context}"
   else
     echo "${active_context}"
+  fi
+}
+
+function __git_branch_prompt {
+  ref="$(git symbolic-ref HEAD 2>/dev/null)"
+  branch=${ref#refs/heads/}
+  if [[ "$branch" == "main" || "$branch" == "master" ]]; then
+    echo "${RED}${branch}"
+  elif [[ "$branch" == "develop" ]]; then
+    echo "${YELLOW}${branch}"
+  else
+    echo "${branch}"
   fi
 }
 
@@ -53,7 +64,13 @@ function __prompt_command {
     PS1+="\[$INFO_COLOR\][venv: $VENV_NAME]"
   fi
 
-  active_context=$(__kube_context)
+  branch=$(__git_branch_prompt)
+  if [[ "$ref" != "" ]]; then
+    PS1=$(add_sep_if_required "$PS1")
+    PS1+="\[$INFO_COLOR\][git: ${branch}\[$INFO_COLOR\]]"
+  fi
+
+  active_context=$(__kube_context_prompt)
   if [[ "$active_context" != "" ]]; then
     PS1=$(add_sep_if_required "$PS1")
     PS1+="\[$INFO_COLOR\][kube: ${active_context}\[$INFO_COLOR\]]"
@@ -76,12 +93,7 @@ function __prompt_command {
     PS1+="\[$COMMAND_STATUS_COLOR\]!!\[$NO_COLOR\] "
   fi
 
-  PS1+="\[$INFO_COLOR\]\w "
-
-  ref="$(git symbolic-ref HEAD 2>/dev/null)"
-  if [[ "$ref" != "" ]]; then
-    PS1+="\[$GIT_BRANCH_COLOR\]${ref#refs/heads/} "
-  fi
+  PS1+="\[$GREEN\]\w "
 
   if [[ "$(git diff --shortstat 2>/dev/null | tail -n1)" != "" ]]; then
     PS1+="\[$DELTA_COLOR\]Δ "
