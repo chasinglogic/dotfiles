@@ -28,6 +28,7 @@ if OS.mac?
   brew "bash"
   brew "grep"
   brew "gnu-tar"
+  brew "gawk"
   brew "coreutils"
   brew "mysql@8.4"
   brew "postgresql"
