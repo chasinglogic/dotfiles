@@ -65,7 +65,7 @@ function __prompt_command {
   fi
 
   branch=$(__git_branch_prompt)
-  if [[ "$ref" != "" ]]; then
+  if [[ "$branch" != "" ]]; then
     PS1=$(add_sep_if_required "$PS1")
     PS1+="\[$INFO_COLOR\][git: ${branch}\[$INFO_COLOR\]]"
   fi

@@ -1,12 +1,10 @@
 [tools]
 node = "latest"
-python = "3.12"
+python = "latest"
 go = "latest"
 zig = "ref:master"
 "npm:prettier" = "latest"
-"npm:tree-sitter-cli" = "latest"
-"npm:@dotenvx/dotenvx" = "latest"
-"npm:cdktf-cli" = "latest"
 
 [settings]
 experimental = true
+disable_hints = ["python_multi"]
