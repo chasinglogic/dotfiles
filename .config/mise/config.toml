@@ -1,6 +1,6 @@
 [tools]
 node = "latest"
-python = "latest"
+python = "3.12"
 go = "latest"
 zig = "ref:master"
 "npm:prettier" = "latest"
