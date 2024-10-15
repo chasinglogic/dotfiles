@@ -23,6 +23,8 @@ mappings:
     dest: /etc/nixos/configuration.nix
     target_os:
       - "Linux"
+  - match: "playbooks/workstation"
+    link_as_dir: true
 
 modules:
   # FZF

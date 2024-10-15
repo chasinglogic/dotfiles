@@ -1,0 +1,25 @@
+---
+- hosts: workstation
+  pre_tasks:
+    - name: Include variables depending on OS family
+      include_vars: "{{ item }}"
+      with_first_found:
+        - files: ["{{ ansible_facts['os_family'] }}.yml"]
+          skip: true
+          errors: ignore
+  roles:
+    - role: chasinglogic.os_packages
+      when: ansible_system == "Linux"
+    - role: chasinglogic.ansible_users
+      when: ansible_system == "Linux"
+    - role: chasinglogic.linux_power_saving
+      when: ansible_system == "Linux"
+    - role: chasinglogic.dconf_settings
+      when: ansible_system == "Linux"
+    - role: macos
+      when: ansible_system == "Darwin"
+    # These are installed as part of the macos role on non-linux systems
+    - role: docker
+      when: ansible_system == "Linux"
+    - role: terraform
+      when: ansible_system == "Linux"
