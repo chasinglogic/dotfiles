@@ -1,0 +1,23 @@
+---
+rpm_packages:
+  - aspell
+  - aspell-en
+ 
+   # C++ Compiler
+  - gcc-c++
+  - clang-tools-extra
+ 
+   # Misc tools
+  - perf
+  - the_silver_searcher
+  - python3-libselinux
+  - python3-ansible-lint
+  - maildir-utils
+  - proselint
+  - libtool
+
+  # MPB dev libs
+  - libxml2-devel
+  - libxslt-devel
+  - python2-devel
+  - mysql
