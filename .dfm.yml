@@ -1,13 +1,6 @@
 ---
 prompt_for_commit_message: true
 
-hooks:
-  after_sync:
-    - |
-      if [ $(uname) = "Darwin" ]; then
-        brew bundle --global
-      fi
-
 mappings:
   - match: '.config/nvim/snippets'
     link_as_dir: true
