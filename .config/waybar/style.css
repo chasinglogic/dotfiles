@@ -22,13 +22,11 @@ tooltip label {
 
 #workspaces button {
     padding: 0 5px;
-    background: transparent;
     color: white;
     border-bottom: 3px solid transparent;
 }
 
 #workspaces button.focused {
-    background: #64727D;
     border-bottom: 3px solid white;
 }
 
@@ -48,20 +46,19 @@ tooltip label {
     border-bottom: 3px solid white;
 }
 
+#network {
+    color: #FF8A65;
+    border-bottom: 3px solid #FF8A65;
+}
+
+#wireplumber {
+    color: #81D4FA;
+    border-bottom: 3px solid #81D4FA;
+}
+
 #clock {
-    background-color: #64727D;
-}
-
-#battery {
-    background-color: #FFFF00;
-    color: black;
-}
-
-#battery.charging, 
-#battery.full, 
-#battery.plugged {
-    color: white;
-    background-color: #26A65B;
+    color: #BA68C8;
+    border-bottom: 3px solid #BA68C8;
 }
 
 @keyframes blink {
@@ -69,6 +66,18 @@ tooltip label {
         background-color: #ffffff;
         color: black;
     }
+}
+
+#battery {
+    color: white;
+    border-bottom: 3px solid white;
+}
+
+#battery.charging, 
+#battery.full, 
+#battery.plugged {
+    color: #26D05B;
+    border-bottom: 3px solid #26D05B;
 }
 
 #battery.warning:not(.charging) {

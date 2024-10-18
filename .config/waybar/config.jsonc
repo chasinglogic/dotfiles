@@ -19,7 +19,7 @@
   // Modules configuration
   "sway/workspaces": {
     "all-outputs": false,
-    "format": "{icon}: {windows} ",
+    "format": "{icon}",
     "window-format": "{name}",
     "window-rewrite-default": "",
     "window-rewrite": {
@@ -94,7 +94,6 @@
   },
   "battery": {
     "states": {
-      "good": 90,
       "warning": 15,
       "critical": 5,
     },
