@@ -239,7 +239,7 @@ local servers = {
   gopls = {},
   helm_ls = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
-  nginx_language_service = {},
+  -- nginx_language_server = {},
   pyright = {},
   ruff_lsp = {},
   rust_analyzer = {},
