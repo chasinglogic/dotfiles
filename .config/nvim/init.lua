@@ -230,15 +230,24 @@ require("mason-lspconfig").setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
+
+  ansiblels = {},
   clangd = {},
+  docker_compose_language_service = {},
+  dockerls = {},
+  elixirls = {},
   gopls = {},
+  helm_ls = {},
+  html = { filetypes = { 'html', 'twig', 'hbs' } },
+  nginx_language_service = {},
   pyright = {},
   ruff_lsp = {},
   rust_analyzer = {},
-  ts_ls = {},
-  html = { filetypes = { 'html', 'twig', 'hbs' } },
-  elixirls = {},
   svelte = {},
+  terraformls = {},
+  tflint = {},
+  ts_ls = {},
+  zls = {},
 
   lua_ls = {
     Lua = {
@@ -258,9 +267,9 @@ capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 -- Ensure the servers above are installed
 local mason_lspconfig = require("mason-lspconfig")
 
--- mason_lspconfig.setup({
---   ensure_installed = vim.tbl_keys(servers),
--- })
+mason_lspconfig.setup({
+  ensure_installed = vim.tbl_keys(servers),
+})
 
 mason_lspconfig.setup_handlers({
   function(server_name)
