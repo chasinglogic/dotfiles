@@ -58,31 +58,32 @@ function __prompt_command {
 
   INFO_COLOR="$(tput bold)$WHITE"
   NO_COLOR="$RESET"
+  INFO=""
 
   if [[ "$VIRTUAL_ENV_PROMPT" != "" ]]; then
     VENV_NAME=${VIRTUAL_ENV_PROMPT//[() ]/}
-    PS1+="\[$INFO_COLOR\][venv: $VENV_NAME]"
+    INFO+="\[$INFO_COLOR\][venv: $VENV_NAME]"
   fi
 
   branch=$(__git_branch_prompt)
   if [[ "$branch" != "" ]]; then
-    PS1=$(add_sep_if_required "$PS1")
-    PS1+="\[$INFO_COLOR\][git: ${branch}\[$INFO_COLOR\]]"
+    INFO=$(add_sep_if_required "$INFO")
+    INFO+="\[$INFO_COLOR\][git: ${branch}\[$INFO_COLOR\]]"
   fi
 
   active_context=$(__kube_context_prompt)
   if [[ "$active_context" != "" ]]; then
-    PS1=$(add_sep_if_required "$PS1")
-    PS1+="\[$INFO_COLOR\][kube: ${active_context}\[$INFO_COLOR\]]"
+    INFO=$(add_sep_if_required "$INFO")
+    INFO+="\[$INFO_COLOR\][kube: ${active_context}\[$INFO_COLOR\]]"
   fi
 
   if [[ "$AWS_PROFILE" != "" ]]; then
-    PS1=$(add_sep_if_required "$PS1")
-    PS1+="\[$INFO_COLOR\][aws: ${AWS_PROFILE}]"
+    INFO=$(add_sep_if_required "$INFO")
+    INFO+="\[$INFO_COLOR\][aws: ${AWS_PROFILE}]"
   fi
 
-  if [[ -n "$PS1" ]]; then
-    PS1+="\n"
+  if [[ -n "$INFO" ]]; then
+    PS1+="┌─$INFO\n└─ "
   fi
 
   if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then

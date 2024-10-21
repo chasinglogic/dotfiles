@@ -12,14 +12,7 @@
 [includeIf "gitdir:~/Work/"]
   path = ~/.work.gitconfig
 
-[interactive]
-    diffFilter = delta --color-only
-
-[delta]
-    side-by-side = true
-
 [core]
-    pager = delta
     excludesfile = ~/.gitignore_global
 
 [add]
