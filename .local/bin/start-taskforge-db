@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# Setup and run my development DB for taskforge
-
-docker run -it -p 5432:5432 --volume taskforge-db:/var/lib/postgresql/data -e POSTGRES_USER=taskforge -e POSTGRES_DATABASE=taskforge -e POSTGRES_PASSWORD=taskforge postgres

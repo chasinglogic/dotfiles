@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-ENV=${1:-prod}
-
-watch "kubectl --context=$ENV get pods -A | grep -v Running | grep -v Completed | grep -v OOMKilled | grep -v Evicted"

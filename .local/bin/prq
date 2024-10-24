@@ -1,4 +1,0 @@
-#!/bin/bash
-# vi: ft=sh
-
-hub pull-request -m "$(git log -n 1 --format='%s')" --browse $@

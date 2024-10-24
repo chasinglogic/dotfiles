@@ -1,9 +1,0 @@
-#!/bin/bash
-
-BRANCH=$(git branch -a | fzf | tr -d '[:space:]')
-if grep -q '^remotes/*' <(echo $BRANCH); then
-    LOCAL_BRANCH=$(echo $BRANCH | awk -F/ '{ $1=""; $2=""; print }' | tr -d '[:space:]')
-    git branch $LOCAL_BRANCH $BRANCH
-fi
-
-git checkout $BRANCH
