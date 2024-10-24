@@ -18,19 +18,20 @@ DISABLE_AUTO_UPDATE="true"
 plugins=(
 	aliases
 	aws
+	branch
+	bundler
 	docker
-	fd
-	helm
+	docker-compose
 	gitfast
 	golang
+	gem
 	helm
 	kubectl
 	mix-fast
 	pip
 	podman
-	ripgrep
-	virtualenv
 	rust
+	virtualenv
 )
 
 echo "Sourcing oh-my-zsh..."
@@ -48,8 +49,3 @@ source_if_exists "$HOME/.local.sh"
 
 # initialise completions with ZSH's compinit
 autoload -Uz compinit && compinit
-
-if [[ -x $(which atuin 2>/dev/null) ]]; then
-	echo "Setting up atuin..."
-	eval "$(atuin init zsh --disable-up-arrow)"
-fi

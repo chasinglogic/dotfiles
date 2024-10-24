@@ -2,11 +2,6 @@
 # PROMPT #
 ##########
 
-function parse_git_branch {
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-    echo "${ref#refs/heads/} "
-}
-
 function asterisk_if_dirty {
     [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]] && echo "*"
 }
@@ -64,9 +59,9 @@ function set_prompt {
     fi
 
     if [[ $SHORT_PROMPT -ne 0 && "$DISABLE_SHORT_PROMPT" == "" ]]; then
-        export PROMPT="$PWD_PROMPT %F{green}\$(parse_git_branch)%f%F{4}\$(lambda_or_delta)%f "
+        export PROMPT="$PWD_PROMPT %F{green}\$(branch_prompt_info) %f%F{yellow}\$(lambda_or_delta)%f "
     else
-        export PROMPT="$COMMAND_STATUS\$(venv_name)\$(aws_profile)\$(kube_context) $PWD_PROMPT %F{green}\$(parse_git_branch)%F{yellow}\$(lambda_or_delta)%f "
+        export PROMPT="$COMMAND_STATUS\$(venv_name)\$(aws_profile)\$(kube_context) $PWD_PROMPT %F{green}\$(branch_prompt_info) %F{yellow}\$(lambda_or_delta)%f "
     fi
 }
 

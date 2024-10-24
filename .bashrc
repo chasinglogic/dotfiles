@@ -130,6 +130,4 @@ if [[ -x $(which carapace 2>/dev/null) ]]; then
 	source <(carapace _carapace)
 fi
 
-if [[ $(tty) == "/dev/tty1" ]]; then
-	exec dbus-run-session sway
-fi
+exit

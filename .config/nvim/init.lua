@@ -522,6 +522,7 @@ vim.api.nvim_command("augroup END")
 require('lint').linters_by_ft = {
   -- markdown = { 'proselint', },
   sh = { 'shellcheck', },
+  zsh = { 'shellcheck', },
   bash = { 'shellcheck', },
   nix = { 'nix', },
 }
