@@ -7,11 +7,6 @@ mappings:
   - match: ".*gpg-agent.conf.darwin"
     dest: ~/.gnupg/gpg-agent.conf
     target_os: Darwin
-  - match: "Library"
-    target_os:
-      - "Darwin"
-  - match: "README.md"
-    skip: true
   - match: ".config/nixos/configuration.nix"
     dest: /etc/nixos/configuration.nix
     target_os:
@@ -20,6 +15,10 @@ mappings:
     link_as_dir: true
 
 modules:
+  - repo: https://github.com/ohmyzsh/ohmyzsh
+    link: none
+    location: ~/.oh-my-zsh
+    pull_only: true
   # FZF
   - repo: https://github.com/junegunn/fzf
     link: none
@@ -27,7 +26,7 @@ modules:
     pull_only: true
     hooks:
       after_sync:
-        - ./install --xdg --key-bindings --no-zsh --no-fish --no-update-rc --completion
+        - ./install --xdg --key-bindings --no-fish --no-update-rc --completion
   # My not-so-secret secrets
   - repository: git@github.com:chasinglogic/secrets.git
     name: secrets

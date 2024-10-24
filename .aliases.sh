@@ -53,14 +53,17 @@ add_alias aws-login-twine "aws --profile internal-services codeartifact login --
 add_alias aws-login-helm "aws --profile internal-services ecr get-login-password | helm registry login --username AWS --password-stdin 307488140247.dkr.ecr.eu-west-1.amazonaws.com"
 add_alias aws-login-docker "AWS_PROFILE=internal-services aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 307488140247.dkr.ecr.eu-west-1.amazonaws.com"
 
+add_alias vim "\${VIM_PROG:-$(which vim)}"
+
+if [[ -x "$(which zenith 2>/dev/null)" ]]; then
+	add_alias htop zenith
+fi
+
+add_alias e "\$EDITOR"
+
 # Real aliases that can't be scripts.
 
 alias cd..="cd .."
-if [[ -n "$VIM_PROG" ]]; then
-	alias vim="$VIM_PROG"
-fi
-
-alias e="$EDITOR"
 
 alias apt="sudo apt"
 alias dnf="sudo dnf"
