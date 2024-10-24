@@ -5,7 +5,7 @@ if [[ ! -x $(which ansible-playbook 2>/dev/null) ]]; then
     if [[ -f $(which brew) ]]; then
         brew install ansible
     elif [[ -f $(which pacman) ]]; then
-        sudo pacman -Sy ansible python
+        sudo pacman -Sy --needed ansible python
     elif [[ -f $(which apt) ]]; then
         sudo apt install -y ansible build-essential python3
     else
