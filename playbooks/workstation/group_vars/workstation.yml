@@ -45,6 +45,7 @@ pacman_packages:
   - opentofu
   - podman
   - podman-compose
+  - pulumi
   - ripgrep
   - rustup
   - shellcheck
