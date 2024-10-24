@@ -1,0 +1,64 @@
+---
+groups_to_create:
+  - name: docker
+  - name: wheel
+  - name: sudo
+
+users:
+  - username: chasinglogic
+    name: Mathew Robinson
+    home: /home/chasinglogic
+    update_password: on_create
+    groups:
+      - sudo
+      - wheel
+      - docker
+      - libvirt
+      - kvm
+
+zsh_users: "{{ users }}"
+
+dconf_settings:
+  - name: Set CAPSLOCK as Ctrl and Disable ALTGR on UK keyboards
+    key: /org/gnome/desktop/input-sources/xkb-options
+    value: "['ctrl:nocaps', 'lv3:ralt_alt']"
+
+deb_package_specs: []
+rpm_package_specs: []
+generic_package_specs: []
+
+pacman_packages:
+  - aws-cli
+  - bash-completion
+  - bind # provides dig
+  - docker
+  - docker-compose
+  - fd
+  - firefox
+  - flatpak
+  - fzf
+  - git
+  - helm
+  - helmfile
+  - htop
+  - kubectl
+  - neovim
+  - nmap
+  - podman
+  - podman-compose
+  - ripgrep
+  - rustup
+  - shellcheck
+  - shfmt
+  - snap-pac
+  - snapper
+  - talosctl
+  - tealdeer
+  - traceroute
+  - ttf-hack-nerd
+  - ttf-liberation
+  - unzip
+  - virt-manager
+  - wezterm
+  - wl-clipboard
+  - zenith
