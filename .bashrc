@@ -129,5 +129,3 @@ if [[ -x $(which carapace 2>/dev/null) ]]; then
 	export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
 	source <(carapace _carapace)
 fi
-
-exit
