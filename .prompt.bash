@@ -7,22 +7,24 @@ BLACK="$(tput setaf 0)"
 RED="$(tput setaf 196)"
 GREEN="$(tput setaf 34)"
 YELLOW="$(tput setaf 226)"
-MAGENTA="$(tput setaf 164)"
-PINK="$(tput setaf 201)"
+MAGENTA="$(tput setaf 128)"
+PINK="$(tput setaf 165)"
 CYAN="$(tput setaf 17)"
 WHITE="$(tput setaf 255)"
 GREY="$(tput setaf 240)"
 RESET="\e[0m"
 
-COMMAND_STATUS_COLOR="$(tput bold)$RED"
-HOSTNAME_COLOR="$MAGENTA"
-LAMBDA_COLOR="$YELLOW"
-DELTA_COLOR="$YELLOW"
+NO_COLOR="${RESET}"
+COMMAND_STATUS_COLOR="$(tput bold)${RED}"
+LAMBDA_COLOR="${YELLOW}"
+DELTA_COLOR="${YELLOW}"
+INFO_COLOR="$(tput bold)$(tput setaf 9)"
+CONNECTOR_COLOR="${INFO_COLOR}"
 
 SEPARATOR=" "
 
 function add_sep_if_required {
-  if [[ "$1" == "$START" ]]; then
+  if [[ "$1" == "${START}" ]]; then
     echo "$1"
   else
     echo "${1}${SEPARATOR}"
@@ -56,53 +58,49 @@ function __prompt_command {
   RET="$?"
   PS1=""
 
-  INFO_COLOR="$(tput bold)$WHITE"
-  NO_COLOR="$RESET"
   INFO=""
 
-  if [[ "$VIRTUAL_ENV_PROMPT" != "" ]]; then
+  function __info_segment {
+    INFO=$(add_sep_if_required "${INFO}")
+    INFO+="\[${INFO_COLOR}\][${1}: ${2}\[${INFO_COLOR}\]]"
+  }
+
+  __info_segment "dir" "\w"
+
+  if [[ -n "${VIRTUAL_ENV_PROMPT}" ]]; then
     VENV_NAME=${VIRTUAL_ENV_PROMPT//[() ]/}
-    INFO+="\[$INFO_COLOR\][venv: $VENV_NAME]"
+    __info_segment "venv" "$VENV_NAME"
   fi
 
   branch=$(__git_branch_prompt)
-  if [[ "$branch" != "" ]]; then
-    INFO=$(add_sep_if_required "$INFO")
-    INFO+="\[$INFO_COLOR\][git: ${branch}\[$INFO_COLOR\]]"
+  if [[ -n "$branch" ]]; then
+    __info_segment "git" "$branch"
   fi
 
   active_context=$(__kube_context_prompt)
-  if [[ "$active_context" != "" ]]; then
-    INFO=$(add_sep_if_required "$INFO")
-    INFO+="\[$INFO_COLOR\][kube: ${active_context}\[$INFO_COLOR\]]"
+  if [[ -n "$active_context" ]]; then
+    __info_segment "kube" "$active_context"
   fi
 
-  if [[ "$AWS_PROFILE" != "" ]]; then
-    INFO=$(add_sep_if_required "$INFO")
-    INFO+="\[$INFO_COLOR\][aws: ${AWS_PROFILE}]"
+  if [[ -n "${AWS_PROFILE}" ]]; then
+    __info_segment "aws" "$AWS_PROFILE"
   fi
 
-  if [[ -n "$INFO" ]]; then
-    PS1+="┌─$INFO\n└─ "
+  if [[ -n "${INFO}" ]]; then
+    PS1+="${CONNECTOR_COLOR}┌─${INFO}\n${CONNECTOR_COLOR}└─ "
   fi
 
-  if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-    PS1+="\[$HOSTNAME_COLOR\]\u@\h\[$NO_COLOR\] "
+  if [[ "${RET}" != "0" ]]; then
+    PS1+="\[${COMMAND_STATUS_COLOR}\]!!\[${NO_COLOR}\] "
   fi
-
-  if [[ "$RET" != "0" ]]; then
-    PS1+="\[$COMMAND_STATUS_COLOR\]!!\[$NO_COLOR\] "
-  fi
-
-  PS1+="\[$GREEN\]\w "
 
   if [[ "$(git diff --shortstat 2>/dev/null | tail -n1)" != "" ]]; then
-    PS1+="\[$DELTA_COLOR\]Δ "
+    PS1+="\[${DELTA_COLOR}\]Δ "
   else
-    PS1+="\[$LAMBDA_COLOR\]λ "
+    PS1+="\[${LAMBDA_COLOR}\]λ "
   fi
 
-  PS1+="\[$NO_COLOR\]"
+  PS1+="\[${NO_COLOR}\]"
   _bash_history_sync
 }
 
