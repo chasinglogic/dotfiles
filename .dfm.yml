@@ -15,10 +15,6 @@ mappings:
     link_as_dir: true
 
 modules:
-  - repo: https://github.com/ohmyzsh/ohmyzsh
-    link: none
-    location: ~/.oh-my-zsh
-    pull_only: true
   # FZF
   - repo: https://github.com/junegunn/fzf
     link: none
