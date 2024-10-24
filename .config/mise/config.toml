@@ -1,9 +1,12 @@
 [tools]
 node = "latest"
-python = "3.12"
+python = "latest"
 go = "latest"
 zig = "ref:master"
+ruby = "latest"
 "npm:prettier" = "latest"
+"cargo:git-delta" = "latest"
+"cargo:tealdeer" = "latest"
 
 [settings]
 experimental = true
