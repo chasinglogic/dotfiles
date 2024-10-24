@@ -1,7 +1,0 @@
-#!/bin/bash
-export GPG_TTY=$(tty)
-echo "Importing public keys"
-keybase pgp export | gpg --import
-echo "Importing secret keys"
-keybase pgp export --secret | gpg --allow-secret-key-import --import
-killall gpg-agent

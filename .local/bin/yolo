@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-if [[ -f Pulumi.yaml ]]; then
-  pulumi up --yes $@
-else
-  terraform apply -auto-approve $@
-fi

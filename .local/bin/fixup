@@ -1,2 +1,0 @@
-#!/bin/bash
-git commit --no-gpg-sign -m "fixup: $(echo $@)"

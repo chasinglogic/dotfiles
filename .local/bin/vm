@@ -1,5 +1,0 @@
-#!/bin/bash
-
-CUR_DIR=$(pwd)
-
-
