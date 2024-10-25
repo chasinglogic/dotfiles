@@ -1,14 +1,16 @@
 # shellcheck shell=bash
 
 function debug() {
-	if [[ -n $CL_DEBUG ]]; then
+	LEVEL="${2:-1}"
+	DEBUG_LEVEL="${CL_DEBUG:-0}"
+	if [[ $LEVEL -le $DEBUG_LEVEL ]]; then
 		echo "$@" 1>&2
 	fi
 }
 
 function find_executable() {
 	X=$(which "$1" 2>/dev/null)
-	debug "Searching for $1 found: $X"
+	debug "Searching for $1 found: $X" 2
 	echo "$X"
 }
 
@@ -17,7 +19,7 @@ function source_if_exists() {
 		debug "Sourcing $1 because it exists."
 		source "$1"
 	else
-		debug "Not source $1 because it could not be found."
+		debug "Not source $1 because it could not be found." 2
 	fi
 }
 
@@ -25,16 +27,14 @@ function source_if_exists() {
 function add_to_path() {
 	debug "Adding $1 to PATH."
 	if [[ "$PATH" == *"$1"* && "$2" == "" ]]; then
-		debug "$1 is already in PATH doing nothing."
+		debug "$1 is already in PATH doing nothing." 2
 		return 0
 	elif [[ "$PATH" == *"$1"* ]]; then
-		debug "$1 is already in PATH but force flag was provided to adding again."
+		debug "$1 is already in PATH but force flag was provided to adding again." 2
 	fi
 
 	export PATH="$1:$PATH"
 }
-
-debug "PATH=$PATH"
 
 if test -n "$ZSH_VERSION"; then
 	export PROFILE_SHELL=zsh
@@ -130,7 +130,6 @@ add_to_path "$GOPATH/bin"
 add_to_path "$HOME/.cargo/bin"
 add_to_path "/Applications/PyCharm CE.app/Contents/MacOS"
 add_to_path "/Applications/PyCharm.app/Contents/MacOS"
-add_to_path "$HOME/.config/emacs/bin"
 add_to_path "$HOME/.pulumi/bin"
 
 source_if_exists "$HOME/.cargo/env"
@@ -148,6 +147,8 @@ source_if_exists "$HOME/.env.local"
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
+source_if_exists "$HOME/.aliases.sh"
+source_if_exists "$HOME/.aliases.local.sh"
 
 # This has to be after the $PATH is set up.
 # FZF default find command
@@ -170,3 +171,14 @@ fi
 if [[ "$EDITOR" != "code --wait" ]]; then
 	export EDITOR="$VIM_PROG"
 fi
+
+if [[ -n $(find_executable carapace) ]]; then
+	export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+	source <(carapace _carapace)
+fi
+
+if [[ -n $(find_executable mise) ]]; then
+	eval "$(mise activate bash)"
+fi
+
+debug "PATH=$PATH" 2

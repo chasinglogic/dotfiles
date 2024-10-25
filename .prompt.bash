@@ -46,7 +46,7 @@ function __git_branch_prompt {
   if [[ "$branch" == "main" || "$branch" == "master" ]]; then
     echo "${RED}${branch}"
   else
-    echo "${branch}"
+    echo "${CYAN}${branch}"
   fi
 }
 
