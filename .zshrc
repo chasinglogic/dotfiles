@@ -41,7 +41,7 @@ source "$ZSH/oh-my-zsh.sh"
 
 echo "Sourcing my configs..."
 source "$HOME/.profile"
-source_if_exists "$HOME/.prompt.zsh"
+# source_if_exists "$HOME/.prompt.zsh"
 source_if_exists "$HOME/.functions.sh"
 source_if_exists "$HOME/.env.sh"
 source_if_exists "$HOME/.aliases.sh"
