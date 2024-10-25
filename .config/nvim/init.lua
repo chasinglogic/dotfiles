@@ -83,6 +83,7 @@ vim.defer_fn(function()
       "elixir",
       "go",
       "gotmpl",
+      "haskell",
       "heex",
       "html",
       "javascript",
@@ -230,7 +231,6 @@ require("mason-lspconfig").setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-
   ansiblels = {},
   clangd = {},
   docker_compose_language_service = {},
@@ -238,6 +238,7 @@ local servers = {
   elixirls = {},
   gopls = {},
   helm_ls = {},
+  hls = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   -- nginx_language_server = {},
   pyright = {},
