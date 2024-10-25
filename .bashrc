@@ -108,9 +108,6 @@ source_if_exists /opt/homebrew/etc/profile.d/bash_completion.sh
 source_if_exists /usr/share/bash-completion/bash_completion
 source_if_exists /etc/bash_completion
 
-source_if_exists "$HOME/.aliases.sh"
-source_if_exists "$HOME/.aliases.local.sh"
-
 source_if_exists "$HOME/.prompt.bash"
 
 source_if_exists "$HOME/.config/fzf/shell/key-bindings.bash"
@@ -121,11 +118,4 @@ for compfile in "$HOME/.local/share/bash-completions"/*; do
 	source "$compfile"
 done
 
-if [[ -x $(which mise 2>/dev/null) ]]; then
-	eval "$(mise activate bash)"
-fi
-
-if [[ -x $(which carapace 2>/dev/null) ]]; then
-	export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
-	source <(carapace _carapace)
-fi
+exit
