@@ -43,10 +43,14 @@ function __kube_context_prompt {
 function __git_branch_prompt {
   ref="$(git symbolic-ref HEAD 2>/dev/null)"
   branch=${ref#refs/heads/}
+  # remove the trailing whitespace
+  branch=${branch%%[[:space:]]}
   if [[ "$branch" == "main" || "$branch" == "master" ]]; then
-    echo "${RED}${branch}"
+    echo -n "${RED}${branch}"
+  elif [[ -n "$branch" ]]; then
+    echo -n "${CYAN}${branch}"
   else
-    echo "${CYAN}${branch}"
+    echo -n ""
   fi
 }
 
