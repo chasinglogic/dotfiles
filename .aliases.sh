@@ -38,7 +38,7 @@ alias aws-login-docker="AWS_PROFILE=internal-services aws ecr get-login-password
 alias vim="\${VIM_PROG:-\$(which vim)}"
 
 if [[ -x "$(which zenith 2>/dev/null)" ]]; then
-	add_alias htop zenith
+	alias htop="zenith"
 fi
 
 alias e="\$EDITOR"
