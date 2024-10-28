@@ -74,7 +74,7 @@ function __prompt_command {
   fi
 
   if [[ "${RET}" != "0" ]]; then
-    PS1+="\[${COMMAND_STATUS_COLOR}\]!!\[${NO_COLOR}\] "
+    PS1+=" \[${COMMAND_STATUS_COLOR}\]!!\[${NO_COLOR}\] "
   fi
 
   PS1=$(add_sep_if_required "$PS1")

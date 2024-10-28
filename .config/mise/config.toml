@@ -10,4 +10,4 @@ ruby = "latest"
 
 [settings]
 experimental = true
-disable_hints = ["python_multi"]
+disable_hints = ["python_multi", "outdated_bump"]
