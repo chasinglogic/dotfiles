@@ -4,7 +4,7 @@
 # FUNCTIONS #
 #############
 
-function aws_account() {
+function aws_account {
 	data=""
 	if [[ -n "$1" ]]; then
 		data=$(aws sts get-caller-identity --profile "$1")
@@ -16,27 +16,27 @@ function aws_account() {
 }
 
 # Make it so we start recording our terminal as an asciicast
-function start_incident() {
+function start_incident {
 	wezterm record
 }
 
-function pyenv_activate() {
+function pyenv_activate {
 	eval "$(pyenv init -)"
 }
 
-function dotfiles() {
-	cd $DOTFILES
+function dotfiles {
+	cd $(dfm where)
 }
 
-function page() {
+function page {
 	$@ | less
 }
 
-function redact() {
+function redact {
 	$@ 1>/dev/null 2>/dev/null
 }
 
-function st() {
+function st {
 	if [[ -n $1 ]]; then
 		sess=$(tmux list-session -F "#S" | grep -i $1)
 		tmux attach-session -t $1
@@ -51,12 +51,12 @@ function st() {
 
 }
 
-function krestart() {
+function krestart {
 	DEPLOYMENT=$(kubectl get deployments $@ | fzf | awk '{ print $1 }')
 	kubectl rollout restart $@ deployment/$DEPLOYMENT
 }
 
-function sp() {
+function sp {
 	PROJECT=""
 	if [[ $1 == "" ]]; then
 		PROJECT=$(projector list | fzf)
@@ -79,7 +79,7 @@ function sp() {
 	fi
 }
 
-function v() {
+function v {
 	if [[ -n $(env | grep 'VIRTUAL_ENV=') ]]; then
 		deactivate
 	fi
@@ -110,7 +110,7 @@ function v() {
 	source $ENVDIR/bin/activate
 }
 
-function nv() {
+function nv {
 	if test $# -gt 0; then
 		env $VIM_PROG "$@"
 	elif test -f Session.vim; then
@@ -120,17 +120,17 @@ function nv() {
 	fi
 }
 
-function rename_session() {
+function rename_session {
 	GENERATED_SESSION_NAME=${PWD##*/}
 	SESS_NAME=${1:-$GENERATED_SESSION_NAME}
 	wezterm cli rename-workspace "$SESS_NAME"
 }
 
-function wt() {
+function wt {
 	rename_session
 }
 
-function t() {
+function t {
 	GENERATED_SESSION_NAME=${PWD##*/}
 	SESS_NAME=${1:-$GENERATED_SESSION_NAME}
 
@@ -146,7 +146,7 @@ function t() {
 	fi
 }
 
-function awsprof() {
+function awsprof {
 	if [ $1 == "-h" ] || [ $1 == "--help" ]; then
 		echo "AWS Profile Switcher:"
 		echo "This tool is used for quickly switching between AWS profiles."
@@ -161,7 +161,7 @@ function awsprof() {
 }
 
 PULUMI_BIN=$(which pulumi 2>/dev/null)
-function pulumi() {
+function pulumi {
 	if [[ $@ =~ "stack select" ]]; then
 		STACK_CACHE=""
 	fi
@@ -169,7 +169,7 @@ function pulumi() {
 	"$PULUMI_BIN" $@
 }
 
-function kctx() {
+function kctx {
 	if [[ -n "$1" ]]; then
 		kubectl config use-context $@
 	else
@@ -177,7 +177,7 @@ function kctx() {
 	fi
 }
 
-function bookmark() {
+function bookmark {
 	name="$1"
 	if [[ -z "$name" ]]; then
 		name=$(basename $(pwd))
@@ -188,14 +188,14 @@ function bookmark() {
 	source ~/.aliases.local.sh
 }
 
-function color() {
+function color {
 	for c; do
 		printf '\e[48;5;%dm%03d' $c $c
 	done
 	printf '\e[0m \n'
 }
 
-function color_table() {
+function color_table {
 	IFS=$' \t\n'
 	color {0..15}
 	for ((i = 0; i < 6; i++)); do

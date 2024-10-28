@@ -164,21 +164,13 @@ else
 	export VIM_PROG="vim"
 fi
 
-if [[ -n $(find_executable dfm) ]]; then
-	export DOTFILES=$(dfm where)
-fi
-
 if [[ "$EDITOR" != "code --wait" ]]; then
 	export EDITOR="$VIM_PROG"
 fi
 
-if [[ -n $(find_executable carapace) ]]; then
+if [ -n "$(find_executable carapace)" ]; then
 	export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
 	source <(carapace _carapace)
-fi
-
-if [[ -n $(find_executable mise) ]]; then
-	eval "$(mise activate bash)"
 fi
 
 debug "PATH=$PATH" 2

@@ -117,3 +117,7 @@ source_if_exists "$HOME/.config/fzf/fzf.bash"
 for compfile in "$HOME/.local/share/bash-completions"/*; do
 	source "$compfile"
 done
+
+if [ -n "$(find_executable mise)" ]; then
+	eval "$(mise activate bash)"
+fi
