@@ -20,6 +20,7 @@ COMMAND_STATUS_COLOR="$(tput bold)${RED}"
 LAMBDA_COLOR="${RESET}${YELLOW}"
 DELTA_COLOR="${RESET}${YELLOW}"
 INFO_COLOR="$(tput bold)${WHITE}"
+BRANCH_COLOR="${CYAN}"
 
 SEPARATOR=" "
 
@@ -34,7 +35,7 @@ function add_sep_if_required {
 function __kube_context_prompt {
   active_context=$(kubectl config current-context 2>/dev/null)
   if [[ "$active_context" == "production" ]]; then
-    echo "${RED}${active_context}"
+    echo "\[${RED}\]${active_context}"
   else
     echo "${active_context}"
   fi
@@ -45,16 +46,12 @@ function __git_branch_prompt {
   branch=${ref#refs/heads/}
   # remove the trailing whitespace
   branch=${branch%%[[:space:]]}
-  if [[ "$branch" == "main" || "$branch" == "master" ]]; then
-    echo -n "${RED}${branch}"
-  elif [[ -n "$branch" ]]; then
-    echo -n "${CYAN}${branch}"
-  else
-    echo -n ""
-  fi
+  echo -n "$branch"
 }
 
 function __prompt_command {
+  _bash_history_sync
+
   RET="$?"
   PS1=""
 
@@ -73,16 +70,16 @@ function __prompt_command {
     __info_segment "kube" "$active_context"
   fi
 
-  if [[ "${RET}" != "0" ]]; then
-    PS1+=" \[${COMMAND_STATUS_COLOR}\]!!\[${NO_COLOR}\] "
-  fi
-
   PS1=$(add_sep_if_required "$PS1")
   PS1+="\w "
 
   branch=$(__git_branch_prompt)
   if [[ -n "$branch" ]]; then
-    PS1+="$branch "
+    PS1+="\[${BRANCH_COLOR}\]$branch "
+  fi
+
+  if [[ "${RET}" != "0" ]]; then
+    PS1+="\[${COMMAND_STATUS_COLOR}\]!!\[${NO_COLOR}\] "
   fi
 
   if [[ "$(git diff --shortstat 2>/dev/null | tail -n1)" != "" ]]; then
@@ -92,7 +89,6 @@ function __prompt_command {
   fi
 
   PS1+="\[${NO_COLOR}\]"
-  _bash_history_sync
 }
 
 PROMPT_COMMAND=__prompt_command
