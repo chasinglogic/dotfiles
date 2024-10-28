@@ -91,7 +91,7 @@ function v() {
 
 	NAME=$(basename $TOP_LEVEL)
 	ENVDIR=""
-	for envdir in "$TOP_LEVEL/env" "$TOP_LEVEL/venv"; do
+	for envdir in "$TOP_LEVEL/env" "$TOP_LEVEL/venv" "$TOP_LEVEL/.venv"; do
 		if [[ -d $envdir ]]; then
 			ENVDIR="$envdir"
 			break

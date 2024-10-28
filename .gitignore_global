@@ -49,3 +49,5 @@ __pycache__/*
 */__pycache__/*
 
 .phpactor.json
+
+/.mise.toml
