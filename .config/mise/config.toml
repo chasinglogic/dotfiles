@@ -1,5 +1,5 @@
 [tools]
-node = "latest"
+node = "lts"
 python = "latest"
 go = "latest"
 zig = "ref:master"
