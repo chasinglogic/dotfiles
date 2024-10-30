@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+vars=$(kubectl exec -it "$@" -- env 2>/dev/null)
+kube_exit_code=$?
+if [[ $kube_exit_code != 0 ]]; then
+    echo "Something when wrong with the kubectl command!"
+    exit $kube_exit_code
+fi
+
+OUTPUT=""
+for line in $vars; do
+    case $line in
+    *HOME*) ;;
+    *TERM*) ;;
+    *PATH*) ;;
+    *HOSTNAME*) ;;
+    KUBERNETES_*) ;;
+    *)
+        OUTPUT+="export $line\n"
+        ;;
+    esac
+done
+
+printf "$OUTPUT"
