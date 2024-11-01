@@ -3,7 +3,8 @@ local sys = require 'sys'
 local module = {}
 
 function module.apply_to_config(config)
-    config.color_scheme = 'carbonfox'
+    -- config.color_scheme = 'carbonfox'
+    config.color_scheme = 'Tokyo Night'
     config.harfbuzz_features = { 'calt=0' }
 
     config.font = wezterm.font_with_fallback {
