@@ -158,37 +158,33 @@ require("lazy").setup({
 	},
 
 	-- NOTE: color theme
+	-- {
+	-- 	'dracula/vim',
+	-- 	priority = 1000,
+	-- },
 	{
-		'dracula/vim',
+		"folke/tokyonight.nvim",
+		priority = 1000,
+		config = function()
+			vim.o.background = "dark"
+			vim.cmd.colorscheme("tokyonight")
+		end
+	},
+	{
+		"catppuccin/nvim",
+		name = "catppuccin",
 		priority = 1000,
 	},
-	-- {
-	-- 	"folke/tokyonight.nvim",
-	-- 	lazy = false,
-	-- 	priority = 1000,
-	-- 	opts = {},
-	-- 	config = function()
-	-- 		require('tokyonight').setup({
-	-- 			on_colors = function(colors)
-	-- 				colors.fg = '#d9dff9'
-	-- 				colors.fg_dark = '#d9dff9'
-	-- 			end
-	-- 		})
-	--
-	-- 		vim.o.background = 'dark'
-	-- 		vim.cmd.colorscheme('tokyonight-moon')
-	-- 	end
-	-- },
 	{
 		"EdenEast/nightfox.nvim",
 		lazy = false,
 		priority = 1000,
 		opts = {},
-		config = function()
-			require('nightfox').setup({})
-			vim.o.background = 'dark'
-			vim.cmd.colorscheme('carbonfox')
-		end
+		-- config = function()
+		-- 	require('nightfox').setup({})
+		-- 	vim.o.background = 'dark'
+		-- 	vim.cmd.colorscheme('carbonfox')
+		-- end
 	},
 
 	{
