@@ -163,12 +163,12 @@ require("lazy").setup({
 	-- 	priority = 1000,
 	-- },
 	{
+		"Mofiqul/dracula.nvim",
+		priority = 1000,
+	},
+	{
 		"folke/tokyonight.nvim",
 		priority = 1000,
-		config = function()
-			vim.o.background = "dark"
-			vim.cmd.colorscheme("tokyonight")
-		end
 	},
 	{
 		"catppuccin/nvim",
@@ -180,11 +180,11 @@ require("lazy").setup({
 		lazy = false,
 		priority = 1000,
 		opts = {},
-		-- config = function()
-		-- 	require('nightfox').setup({})
-		-- 	vim.o.background = 'dark'
-		-- 	vim.cmd.colorscheme('carbonfox')
-		-- end
+		config = function()
+			require('nightfox').setup({})
+			vim.o.background = 'dark'
+			vim.cmd.colorscheme('nightfox')
+		end
 	},
 
 	{
