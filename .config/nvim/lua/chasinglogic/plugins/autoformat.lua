@@ -8,6 +8,7 @@ return {
 		"mhartington/formatter.nvim",
 	},
 	config = function()
+		local util = require 'formatter.util'
 		local formatter_filetypes = {
 			typescript = {
 				require("formatter.filetypes.typescript").prettier,
@@ -24,6 +25,19 @@ return {
 			zsh = {
 				require("formatter.filetypes.sh").shfmt,
 			},
+
+			ruby = {
+				require("formatter.filetypes.ruby").rubocop,
+				{
+					exe = "rufo",
+					args = {
+						"--filename",
+						util.escape_path(util.get_current_buffer_file_name()),
+						"--simple-exit",
+					},
+					stdin = true,
+				},
+			}
 		}
 
 		require("formatter").setup({

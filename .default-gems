@@ -1,4 +1,5 @@
 bundler
 ruby-lsp
 rubocop
+rufo
 rails
