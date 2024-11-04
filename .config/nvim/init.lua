@@ -238,7 +238,6 @@ local servers = {
   elixirls = {},
   gopls = {},
   helm_ls = {},
-  hls = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   -- nginx_language_server = {},
   pyright = {},
