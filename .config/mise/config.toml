@@ -1,10 +1,42 @@
 [tools]
 node = "lts"
-python = "latest"
-go = "latest"
-zig = "ref:master"
-ruby = "latest"
 "npm:prettier" = "latest"
+
+python = "latest"
+
+go = "latest"
+gomigrate = "latest"
+goreleaser = "latest"
+golangci-lint = "latest"
+
+helm = "latest"
+helmfile = "latest"
+
+jq = "latest"
+
+just = "latest"
+
+grype = "latest"
+syft = "latest"
+
+talosctl = "latest"
+
+vale = "latest"
+
+zig = "ref:master"
+
+ruby = "latest"
+
+ocaml = "latest"
+opam = "latest"
+
+opentofu = "latest"
+
+shfmt = "latest"
+shellcheck = "latest"
+
+fzf = "latest"
+
 "cargo:git-delta" = "latest"
 "cargo:tealdeer" = "latest"
 
