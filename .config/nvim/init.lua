@@ -236,6 +236,7 @@ local servers = {
   docker_compose_language_service = {},
   dockerls = {},
   elixirls = {},
+  lexical = {},
   gopls = {},
   helm_ls = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
