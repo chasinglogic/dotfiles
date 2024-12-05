@@ -121,3 +121,5 @@ done
 if [ -n "$(find_executable mise)" ]; then
 	eval "$(mise activate bash)"
 fi
+export PATH="/Users/mathewrobinson/.config/herd-lite/bin:$PATH"
+export PHP_INI_SCAN_DIR="/Users/mathewrobinson/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"

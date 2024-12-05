@@ -85,7 +85,6 @@ require("lazy").setup({
 				credo = { enable = false },
 				elixirls = {
 					enable = true,
-					tag = "v0.20.0",
 					settings = elixirls.settings {
 						dialyzerEnabled = false,
 						enableTestLenses = true,
