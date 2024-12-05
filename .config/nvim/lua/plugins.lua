@@ -70,42 +70,42 @@ require("lazy").setup({
 	-- "gc" to comment visual regions/lines
 	{ "numToStr/Comment.nvim", opts = {} },
 
-	{
-		"elixir-tools/elixir-tools.nvim",
-		version = "*",
-		event = { "BufReadPre", "BufNewFile" },
-		config = function()
-			local elixir = require("elixir")
-			local elixirls = require("elixir.elixirls")
+	-- {
+	-- 	"elixir-tools/elixir-tools.nvim",
+	-- 	version = "*",
+	-- 	event = { "BufReadPre", "BufNewFile" },
+	-- 	config = function()
+	-- 		local elixir = require("elixir")
+	-- 		local elixirls = require("elixir.elixirls")
 
-			elixir.setup {
-				nextls = { enable = true },
-				-- Disabled because nextls works with credo and ends up doubling
-				-- diagnostics if both are enabled.
-				credo = { enable = false },
-				elixirls = {
-					enable = true,
-					settings = elixirls.settings {
-						dialyzerEnabled = false,
-						enableTestLenses = true,
-						fetchDeps = true,
-						suggestSpects = true,
-					},
-					on_attach = function(client, bufnr)
-						vim.keymap.set("n", "<space>mf", ":ElixirFromPipe<cr>",
-							{ buffer = true, noremap = true })
-						vim.keymap.set("n", "<space>mp", ":ElixirToPipe<cr>",
-							{ buffer = true, noremap = true })
-						vim.keymap.set("v", "<space>me", ":ElixirExpandMacro<cr>",
-							{ buffer = true, noremap = true })
-					end,
-				}
-			}
-		end,
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-		},
-	},
+	-- 		elixir.setup {
+	-- 			nextls = { enable = true },
+	-- 			-- Disabled because nextls works with credo and ends up doubling
+	-- 			-- diagnostics if both are enabled.
+	-- 			credo = { enable = false },
+	-- 			elixirls = {
+	-- 				enable = true,
+	-- 				settings = elixirls.settings {
+	-- 					dialyzerEnabled = false,
+	-- 					enableTestLenses = true,
+	-- 					fetchDeps = true,
+	-- 					suggestSpects = true,
+	-- 				},
+	-- 				on_attach = function(client, bufnr)
+	-- 					vim.keymap.set("n", "<space>mf", ":ElixirFromPipe<cr>",
+	-- 						{ buffer = true, noremap = true })
+	-- 					vim.keymap.set("n", "<space>mp", ":ElixirToPipe<cr>",
+	-- 						{ buffer = true, noremap = true })
+	-- 					vim.keymap.set("v", "<space>me", ":ElixirExpandMacro<cr>",
+	-- 						{ buffer = true, noremap = true })
+	-- 				end,
+	-- 			}
+	-- 		}
+	-- 	end,
+	-- 	dependencies = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 	},
+	-- },
 
 	-- NOTE: This is where your plugins related to LSP can be installed.
 	{
