@@ -2,6 +2,9 @@
 node = "lts"
 "npm:prettier" = "latest"
 
+elixir = "latest"
+erlang = "latest"
+
 python = "latest"
 
 go = "latest"
@@ -11,6 +14,8 @@ golangci-lint = "latest"
 
 helm = "latest"
 helmfile = "latest"
+
+bat = "latest"
 
 jq = "latest"
 
@@ -27,18 +32,14 @@ zig = "ref:master"
 
 ruby = "latest"
 
-ocaml = "latest"
-opam = "latest"
-
-opentofu = "latest"
-
 shfmt = "latest"
 shellcheck = "latest"
 
 fzf = "latest"
 
-"cargo:git-delta" = "latest"
-"cargo:tealdeer" = "latest"
+delta = "latest"
+
+"cargo:oha" = "latest"
 
 [settings]
 experimental = true
