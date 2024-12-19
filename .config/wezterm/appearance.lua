@@ -8,9 +8,6 @@ function module.apply_to_config(config)
     config.harfbuzz_features = { 'calt=0' }
 
     config.font = wezterm.font_with_fallback {
-        'Hack Nerd Font Mono',
-        'Hack Nerd Font',
-        'Hack',
         'JetBrains Mono',
     }
 

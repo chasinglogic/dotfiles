@@ -9,7 +9,7 @@ spec:
       - cat 
       - "-"
     tty: true
-    image: fedora:latest
+    image: alpine:latest
     imagePullPolicy: IfNotPresent
     name: fedora
     resources: {}
