@@ -29,7 +29,6 @@ vim.opt.wildignore:append({ "*.o", "*.git", "*.svn", "*.pyc", "env/*", ".git/*" 
 --}}}
 --Line numbers {{{
 vim.opt.number = true
-vim.opt.relativenumber = true
 --}}}
 --Enable mouse support {{{
 vim.opt.mouse = "a"
