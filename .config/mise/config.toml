@@ -11,6 +11,7 @@ go = "latest"
 gomigrate = "latest"
 goreleaser = "latest"
 golangci-lint = "latest"
+"go:golang.org/x/tools/cmd/goimports" = "latest"
 
 helm = "latest"
 helmfile = "latest"
