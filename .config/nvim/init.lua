@@ -202,8 +202,19 @@ local on_attach = function(_, bufnr)
   nmap("ga", vim.lsp.buf.code_action, "Do code action")
   nmap("<space>sr", vim.lsp.buf.rename, "[R]ename [S]ymbol")
 
+  local hover_or_open_diagnostic_float = function()
+    local lineNumber = vim.fn.line(".") - 1 -- Needs to be 0-based indexing but line returns 1 based
+    local diag = vim.diagnostic.get(0, { lnum = lineNumber })
+    local has_diagnostics = #diag > 0
+    if has_diagnostics then
+      vim.diagnostic.open_float()
+    else
+      vim.lsp.buf.hover()
+    end
+  end
+
   -- See `:help K` for why this keymap
-  nmap("K", vim.lsp.buf.hover, "Hover Documentation")
+  nmap("K", hover_or_open_diagnostic_float, "Hover Documentation")
   nmap("<C-h>", vim.lsp.buf.signature_help, "Signature Documentation")
 
   -- Lesser used LSP functionality
