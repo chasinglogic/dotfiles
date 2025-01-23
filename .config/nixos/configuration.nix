@@ -47,8 +47,8 @@ in {
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   
-  services.xserver.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true; 
+  services.xserver.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true; 
 
   # Configure keymap in X11
   services.xserver = {
@@ -95,7 +95,7 @@ in {
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [ vim tailscale ];
+  environment.systemPackages = with pkgs; [ neovim tailscale ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
