@@ -23,42 +23,28 @@ dconf_settings:
     key: /org/gnome/desktop/input-sources/xkb-options
     value: "['ctrl:nocaps', 'lv3:ralt_alt']"
 
-pacman_package_specs: []
+rpm_package_specs: []
 
-pacman_packages:
-  - aws-cli
+rpm_packages:
+  - awscli2
   - bash-completion
   - bind # provides dig
   - docker
   - docker-compose
   - fd
   - firefox
-  - flatpak
-  - fzf
   - git
-  - helm
-  - helmfile
   - htop
   - kubectl
   - neovim
   - nmap
-  - opentofu
   - podman
   - podman-compose
-  - pulumi
   - ripgrep
   - rustup
-  - shellcheck
-  - shfmt
-  - snap-pac
   - snapper
-  - talosctl
   - tealdeer
   - traceroute
-  - ttf-hack-nerd
-  - ttf-liberation
   - unzip
   - virt-manager
-  - wezterm
   - wl-clipboard
-  - zenith

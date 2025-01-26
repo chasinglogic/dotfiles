@@ -7,10 +7,6 @@ mappings:
   - match: ".*gpg-agent.conf.darwin"
     dest: ~/.gnupg/gpg-agent.conf
     target_os: Darwin
-  - match: ".config/nixos/configuration.nix"
-    dest: /etc/nixos/configuration.nix
-    target_os:
-      - "Linux"
   - match: "playbooks/workstation"
     link_as_dir: true
 
