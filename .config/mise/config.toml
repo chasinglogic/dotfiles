@@ -1,50 +1,73 @@
 [tools]
-node = "lts"
-"npm:prettier" = "latest"
+neovim = "latest"
 
+# Local AI for when I want to heat the house
+ollama = "latest"
+
+# Cloud provider tooling
+aws-cli = "latest"
+azure = "latest"
+gcloud = "latest"
+
+# Kubernetes
+kubectl = "latest"
+helm = "latest"
+helmfile = "latest"
+kube-capacity = "latest"
+kubectx = "latest"
+kubens = "latest"
+minikube = "latest"
+
+# IaC tools
+opentofu = "latest"
+pulumi = "latest"
+
+# General utilities that either are unixy or better versions of existing unix
+# tools.
+hwatch = "latest"
+grpcurl = "latest"
+fd = "latest"
+ripgrep = "latest"
+bat = "latest"
+jq = "latest"
+just = "latest"
+fzf = "latest"
+delta = "latest"
+"aqua:bvaisvil/zenith" = "latest"
+node = "lts"
+"ubi:chasinglogic/projector" = "latest"
+
+# For building and publishing my blog
+hugo = "latest"
+
+# Load testing tool
+"cargo:oha" = "latest"
+
+# Container security scanning tools
+grype = "latest"
+syft = "latest"
+
+# Interaction with Talos Linux which is currently on the homelab.
+talosctl = "latest"
+
+# Languages
+rust = "latest"
+zig = "ref:master"
+ruby = "latest"
+go = "latest"
 elixir = "latest"
 erlang = "latest"
-
 python = "latest"
 
-go = "latest"
+# Language tooling
+ruff = "latest"
+shfmt = "latest"
+shellcheck = "latest"
 gomigrate = "latest"
 goreleaser = "latest"
 golangci-lint = "latest"
 "go:golang.org/x/tools/cmd/goimports" = "latest"
-
-helm = "latest"
-helmfile = "latest"
-
-"ubi:opentofu/opentofu" = "latest"
-"ubi:pulumi/pulumi" = "latest"
-
-bat = "latest"
-
-jq = "latest"
-
-just = "latest"
-
-grype = "latest"
-syft = "latest"
-
-talosctl = "latest"
-
-vale = "latest"
-
-zig = "ref:master"
-
-ruby = "latest"
-
-shfmt = "latest"
-shellcheck = "latest"
-
-fzf = "latest"
-
-delta = "latest"
-"ubi:bvaisvil/zenith" = "latest"
-
-"cargo:oha" = "latest"
+"npm:prettier" = "latest"
 
 [settings]
 experimental = true
