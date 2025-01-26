@@ -16,6 +16,9 @@ golangci-lint = "latest"
 helm = "latest"
 helmfile = "latest"
 
+"ubi:opentofu/opentofu" = "latest"
+"ubi:pulumi/pulumi" = "latest"
+
 bat = "latest"
 
 jq = "latest"
@@ -39,6 +42,7 @@ shellcheck = "latest"
 fzf = "latest"
 
 delta = "latest"
+"ubi:bvaisvil/zenith" = "latest"
 
 "cargo:oha" = "latest"
 
