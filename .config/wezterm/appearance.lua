@@ -7,7 +7,7 @@ function module.apply_to_config(config)
     config.color_scheme = 'nightfox'
     -- Disable ligatures
     -- https://wezfurlong.org/wezterm/config/font-shaping.html#advanced-font-shaping-options
-    config.harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' }
+    -- config.harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' }
 
     config.font = wezterm.font_with_fallback {
         'JetBrains Mono',
