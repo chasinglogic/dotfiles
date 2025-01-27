@@ -25,7 +25,7 @@ function module.apply_to_config(config)
         font_size = config.font_size - 2.0,
     }
 
-    config.window_decorations = "NONE"
+    config.window_decorations = "RESIZE"
 
     -- This hides status info that is useful so always show it.
     config.hide_tab_bar_if_only_one_tab = false
