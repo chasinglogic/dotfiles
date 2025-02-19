@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# vi: ft=python
 
 import fileinput
 import json
@@ -17,17 +18,15 @@ class Colors:
 
     @staticmethod
     def color_for_level(level: str) -> str:
-        if not isinstance(level, str):
-            return Colors.CYAN
-
-        level = level.upper()
-        if level == "INFO":
-            return Colors.CYAN
-        if level.startswith("WARN"):
-            return Colors.YELLOW
-        if level.startswith("ERR"):
-            return Colors.RED
-        return Colors.RESET
+        match level.upper():
+            case "INFO":
+                return Colors.CYAN
+            case "WARN" | "WARNING":
+                return Colors.YELLOW
+            case "ERR" | "ERROR":
+                return Colors.RED
+            case _:
+                return Colors.RESET
 
 
 def build_field_message(data, exclude_list=None):
