@@ -1,5 +1,6 @@
 local wezterm = require 'wezterm'
 local projects = require 'projects'
+local sys = require 'sys'
 local actions = wezterm.action
 local module = {}
 
@@ -131,12 +132,14 @@ function module.apply_to_config(config)
             action = actions.ActivateTab(i - 1),
         })
 
-        -- alt + number to activate that tab
-        table.insert(keys, {
-            key = tostring(i),
-            mods = 'ALT',
-            action = actions.ActivateTab(i - 1),
-        })
+        if sys.is_linux then
+            -- alt + number to activate that tab
+            table.insert(keys, {
+                key = tostring(i),
+                mods = 'ALT',
+                action = actions.ActivateTab(i - 1),
+            })
+        end
     end
 
     -- Rather than emitting fancy composed characters when alt is pressed, treat the

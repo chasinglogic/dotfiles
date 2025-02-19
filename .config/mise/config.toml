@@ -2,11 +2,10 @@
 neovim = "latest"
 
 # Local AI for when I want to heat the house
-ollama = "latest"
+"aqua:ollama/ollama" = "latest"
 
 # Cloud provider tooling
 aws-cli = "latest"
-azure = "latest"
 gcloud = "latest"
 
 # Kubernetes
@@ -53,13 +52,13 @@ talosctl = "latest"
 # Languages
 rust = "latest"
 zig = "ref:master"
-ruby = "latest"
 go = "latest"
 elixir = "latest"
 erlang = "latest"
 python = "latest"
 
 # Language tooling
+uv = "latest"
 ruff = "latest"
 shfmt = "latest"
 shellcheck = "latest"
