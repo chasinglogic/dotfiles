@@ -173,17 +173,17 @@ require("lazy").setup({
 		"catppuccin/nvim",
 		name = "catppuccin",
 		priority = 1000,
+		config = function()
+			require('catppuccin').setup({})
+			vim.o.background = 'dark'
+			vim.cmd.colorscheme('catppuccin-mocha')
+		end
 	},
 	{
 		"EdenEast/nightfox.nvim",
 		lazy = false,
 		priority = 1000,
 		opts = {},
-		config = function()
-			require('nightfox').setup({})
-			vim.o.background = 'dark'
-			vim.cmd.colorscheme('nightfox')
-		end
 	},
 
 	{
