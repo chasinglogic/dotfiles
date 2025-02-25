@@ -7,7 +7,11 @@
 
 [pull]
     default = current
-	ff = only
+    ff = only
+	rebase = true
+
+[grep]
+    patternType = perl
 
 [includeIf "gitdir:~/Work/"]
   path = ~/.work.gitconfig
@@ -57,22 +61,49 @@
 
 [diff]
     renameLimit = 4487
+    colorMoved = true
+    algorithm = histogram
+	mnemonicPrefix = true
+	renames = true
 
 [branch]
     autosetupmerge = true
     autosetuprebase = remote
+	sort = -committerdate
+
 [rebase]
+    autostash = true
     autosquash = true
+	updateRefs = true
+
 [push]
     default = current
+	autoSetupRemote = true
+	followTags = true
+
 [filter "lfs"]
     clean = git-lfs clean -- %f
     smudge = git-lfs smudge -- %f
     process = git-lfs filter-process
     required = true
+
 [url "https://invent.kde.org/"]
     insteadOf = kde:
+
 [url "ssh://git@invent.kde.org/"]
     pushInsteadOf = kde:
+
 [merge]
-	ff = only
+    conflictstyle = zdiff3
+    ff = only
+[tag]
+	sort = version:refname
+[init]
+	defaultBranch = main
+[fetch]
+	prune = true
+	pruneTags = true
+	all = true
+[rerere]
+	enabled = true
+	autoupdate = true
