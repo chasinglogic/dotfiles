@@ -26,7 +26,11 @@ function module.apply_to_config(config)
         font_size = config.font_size - 2.0,
     }
 
-    config.window_decorations = "RESIZE"
+    if sys.is_linux then
+        config.window_decorations = "NONE"
+    else
+        config.window_decorations = "RESIZE"
+    end
 
     -- This hides status info that is useful so always show it.
     config.hide_tab_bar_if_only_one_tab = false
