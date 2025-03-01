@@ -18,6 +18,7 @@
 
 [core]
     excludesfile = ~/.gitignore_global
+	pager = delta
 
 [add]
     verbose = true
@@ -107,3 +108,7 @@
 [rerere]
 	enabled = true
 	autoupdate = true
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
