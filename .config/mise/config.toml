@@ -14,11 +14,14 @@ kubens = "latest"
 minikube = "latest"
 
 # IaC tools
+terragrunt = "latest"
 opentofu = "latest"
+terraform = "latest"
 pulumi = "latest"
 
 # General utilities that either are unixy or better versions of existing unix
 # tools.
+"ubi:sharkdp/hyperfine" = "latest"
 hwatch = "latest"
 grpcurl = "latest"
 fd = "latest"
