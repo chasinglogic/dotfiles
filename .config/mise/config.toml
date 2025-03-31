@@ -18,6 +18,7 @@ terragrunt = "latest"
 opentofu = "latest"
 terraform = "latest"
 pulumi = "latest"
+"npm:cdktf-cli" = "latest"
 
 # General utilities that either are unixy or better versions of existing unix
 # tools.
