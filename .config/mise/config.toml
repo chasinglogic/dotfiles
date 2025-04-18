@@ -59,7 +59,7 @@ python = "latest"
 
 # Language tooling
 uv = "latest"
-ruff = "latest"
+"aqua:astral-sh/ruff" = "latest"
 shfmt = "latest"
 shellcheck = "latest"
 gomigrate = "latest"
