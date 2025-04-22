@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Setup and run my development DB for taskforge
+
+DB_NAME="${1:-taskforge_dev}"
+echo "Creating database: ${DB_NAME}"
+
+docker run \
+    -it \
+    --name "${DB_NAME}-db" \
+    -p 5432:5432 \
+    --volume taskforge-db:/var/lib/postgresql/data \
+    -e "POSTGRES_DB=${DB_NAME}" \
+    -e POSTGRES_PASSWORD=postgres \
+    postgres
