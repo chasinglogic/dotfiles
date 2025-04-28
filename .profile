@@ -168,9 +168,4 @@ if [[ "$EDITOR" != "code --wait" ]]; then
 	export EDITOR="$VIM_PROG"
 fi
 
-if [ -n "$(find_executable carapace)" ]; then
-	export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
-	source <(carapace _carapace)
-fi
-
 debug "PATH=$PATH" 2

@@ -252,8 +252,6 @@ local servers = {
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   -- nginx_language_server = {},
   pyright = {},
-  rubocop = {},
-  ruby_lsp = {},
   ruff = {},
   rust_analyzer = {},
   stimulus_ls = {},
