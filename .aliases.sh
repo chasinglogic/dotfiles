@@ -15,7 +15,9 @@ fi
 alias k='kubectl'
 alias logs='kubectl logs'
 
-alias tf='terraform'
+alias tf='tofu'
+alias tg='terragrunt'
+alias grunt='terragrunt'
 
 alias pm="podman"
 alias dk="docker"

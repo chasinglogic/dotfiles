@@ -2,9 +2,6 @@
     email = mathew@chasinglogic.io
     name = Mathew Robinson
 
-[include]
-    path = ~/.gitconfig_local
-
 [pull]
     default = current
     ff = only
@@ -112,3 +109,8 @@
 	diffFilter = delta --color-only
 [delta]
 	navigate = true
+
+[include]
+    path = ~/.gitconfig_local
+
+
