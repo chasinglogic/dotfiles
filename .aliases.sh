@@ -55,3 +55,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
 	alias sed="gsed"
 	alias grep="ggrep"
 fi
+
+if [[ -x "$(find_executable hwatch)" ]]; then
+	alias watch="hwatch" 
+fi

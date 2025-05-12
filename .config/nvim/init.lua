@@ -23,7 +23,14 @@ vim.keymap.set("i", "fd", "<ESC>")
 -- Allows filtering down the quickfix and location lists
 vim.cmd.packadd('cfilter')
 
-require("plugins")
+-- Load plugins
+require("lazy").setup({
+  spec = {
+    { import = "plugins" },
+  },
+  checker = { enabled = true, notify = false },
+})
+
 require("chasinglogic.keys")
 require("chasinglogic.editor")
 require("chasinglogic.abbrevs")
@@ -285,23 +292,16 @@ mason_lspconfig.setup({
   ensure_installed = vim.tbl_keys(servers),
 })
 
-mason_lspconfig.setup_handlers({
-  function(server_name)
-    require("lspconfig")[server_name].setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    })
-  end,
-})
-
-require("lspconfig")["nushell"].setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  settings = {},
-  filetypes = { 'nu' },
-})
+-- mason_lspconfig.setup_handlers({
+--   function(server_name)
+--     require("lspconfig")[server_name].setup({
+--       capabilities = capabilities,
+--       on_attach = on_attach,
+--       settings = servers[server_name],
+--       filetypes = (servers[server_name] or {}).filetypes,
+--     })
+--   end,
+-- })
 
 -- Populate loclist with the current buffer diagnostics
 vim.api.nvim_create_autocmd('DiagnosticChanged', {

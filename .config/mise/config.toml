@@ -1,8 +1,10 @@
 [tools]
-neovim = "latest"
-
 # Local AI for when I want to heat the house
 "aqua:ollama/ollama" = "latest"
+
+# Encryption
+"ubi:getsops/sops" = "latest"
+"ubi:FiloSottile/age" = "latest"
 
 # Kubernetes
 kubectl = "latest"
