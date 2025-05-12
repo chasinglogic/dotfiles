@@ -256,7 +256,9 @@ local servers = {
   rust_analyzer = {},
   stimulus_ls = {},
   svelte = {},
-  terraformls = {},
+  terraformls = {
+    filetypes = { 'terraform', 'terraform-vars', 'hcl' },
+  },
   tflint = {},
   ts_ls = {},
   zls = {},

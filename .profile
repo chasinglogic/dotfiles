@@ -150,6 +150,10 @@ source_if_exists "$HOME/.env.local"
 source_if_exists "$HOME/.aliases.sh"
 source_if_exists "$HOME/.aliases.local.sh"
 
+if [ -d "$HOME/.krew" ]; then
+	export PATH="${HOME}/.krew/bin:$PATH"
+fi
+
 # This has to be after the $PATH is set up.
 # FZF default find command
 if [[ -n $(find_executable fd) ]]; then
