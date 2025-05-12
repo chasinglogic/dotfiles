@@ -118,3 +118,10 @@ vim.opt.shortmess = vim.opt.shortmess + "c"
 -- Colour support {{{
 vim.o.termguicolors = true
 --}}}
+-- FileType detection {{{
+vim.filetype.add({
+    extension = {
+        tf = "terraform"
+    }
+})
+-- }}}
