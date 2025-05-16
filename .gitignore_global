@@ -51,3 +51,6 @@ __pycache__/*
 .phpactor.json
 
 /.mise.toml
+
+/tmp/*
+*/tmp/*
