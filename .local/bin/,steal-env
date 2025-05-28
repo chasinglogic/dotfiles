@@ -7,7 +7,6 @@ if [[ $kube_exit_code != 0 ]]; then
     exit $kube_exit_code
 fi
 
-OUTPUT=""
 for line in $vars; do
     case $line in
     *HOME*) ;;
@@ -16,9 +15,7 @@ for line in $vars; do
     *HOSTNAME*) ;;
     KUBERNETES_*) ;;
     *)
-        OUTPUT+="export $line\n"
+        echo "export $line"
         ;;
     esac
 done
-
-printf "$OUTPUT"
