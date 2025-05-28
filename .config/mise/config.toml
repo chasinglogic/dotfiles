@@ -1,4 +1,6 @@
 [tools]
+"ubi:asdine/cueimports" = "latest"
+
 # Encryption
 "ubi:getsops/sops" = "latest"
 "ubi:FiloSottile/age" = "latest"

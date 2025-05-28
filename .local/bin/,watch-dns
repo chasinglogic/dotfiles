@@ -1,26 +1,77 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 
-domain=$1
-expected_ip=$2
-dns_server=${3:-""}
+import socket
+import subprocess
+import time
+import platform
+import os
+import logging
 
-ARGS=()
-if [ "${dns_server}" != "" ]; then
-	ARGS+=("@${dns_server}")
-fi
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
+NUMERIC_LOG_LEVEL = getattr(logging, LOG_LEVEL, None)
+if not isinstance(NUMERIC_LOG_LEVEL, int):
+    raise ValueError(f"Invalid log level: {LOG_LEVEL}")
 
-ARGS+=("$domain")
+logging.basicConfig(
+    level=NUMERIC_LOG_LEVEL,
+    format="[%(asctime)s] %(message)s",
+)
 
-until dig "${ARGS[@]}" | grep "$expected_ip"; do
-	echo "Trying again..."
-	sleep 2
-done
 
-TITLE="DNS Updated"
-MESSAGE="$domain now points to $expected_ip"
+def resolve_dns(domain: str, dns_server: str = ""):
+    try:
+        if dns_server:
+            resolver = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            resolver.connect((dns_server, 53))  # DNS port is 53
+            return socket.getaddrinfo(domain, None, socket.AF_INET)[0][4][0]
+        else:
+            return socket.gethostbyname(domain)
+    except socket.gaierror:
+        return None
 
-if [[ "$(uname)" == "Darwin" ]]; then
-	osascript -e "display notification \"$MESSAGE\" with title \"$TITLE\""
-else
-	notify-send "$TITLE" "$MESSAGE"
-fi
+
+def notify(title: str, message: str):
+    match platform.system():
+        case "Darwin":
+            subprocess.run(
+                [
+                    "osascript",
+                    "-e",
+                    f'display notification "{message}" with title "{title}"',
+                ]
+            )
+        case "Linux":
+            subprocess.run(["notify-send", title, message])
+        case _:
+            pass
+
+
+def watch_dns(domain, expected_ip, dns_server=""):
+    while True:
+        resolved_ip = resolve_dns(domain, dns_server=dns_server)
+        if resolved_ip == expected_ip:
+            break
+        else:
+            logging.info(f"DNS points at {resolved_ip} Trying again...")
+            time.sleep(2)
+
+    title = "DNS Updated"
+    message = f"{domain} now points to {expected_ip}"
+
+    notify(title, message)
+    logging.info(f"{title}: {message}")
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Watch DNS for a domain and notify when it matches the expected IP."
+    )
+    parser.add_argument("domain", help="The domain to watch.")
+    parser.add_argument("expected_ip", help="The expected IP address.")
+    parser.add_argument("--dns_server", help="The DNS server to use.", default="")
+
+    args = parser.parse_args()
+
+    watch_dns(args.domain, args.expected_ip, args.dns_server)

@@ -9,11 +9,6 @@ function module.apply_to_config(config)
     -- https://wezfurlong.org/wezterm/config/font-shaping.html#advanced-font-shaping-options
     -- config.harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' }
 
-    config.font = wezterm.font_with_fallback {
-        'Hack Nerd Font Mono',
-        'JetBrains Mono',
-    }
-
     if sys.is_os('linux') then
         config.font_size = 14.0
     else
