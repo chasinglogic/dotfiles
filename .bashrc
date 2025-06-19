@@ -107,6 +107,7 @@ source "$HOME/.functions.sh"
 source_if_exists /opt/homebrew/etc/profile.d/bash_completion.sh
 source_if_exists /usr/share/bash-completion/bash_completion
 source_if_exists /etc/bash_completion
+source_if_exists /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc
 
 source_if_exists "$HOME/.prompt.bash"
 
