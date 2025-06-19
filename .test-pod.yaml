@@ -11,6 +11,6 @@ spec:
     tty: true
     image: alpine:latest
     imagePullPolicy: IfNotPresent
-    name: fedora
+    name: alpine
     resources: {}
 
