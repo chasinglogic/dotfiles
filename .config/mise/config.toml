@@ -8,11 +8,10 @@
 # Kubernetes
 kubectl = "latest"
 helm = "latest"
-helmfile = "latest"
 kube-capacity = "latest"
 kubectx = "latest"
 kubens = "latest"
-minikube = "latest"
+kind = "latest"
 
 # IaC tools
 terragrunt = "latest"
@@ -52,7 +51,6 @@ talosctl = "latest"
 
 # Languages
 rust = "latest"
-zig = "ref:master"
 go = "latest"
 elixir = "latest"
 erlang = "latest"
