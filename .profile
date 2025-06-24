@@ -130,6 +130,7 @@ add_to_path "$GOPATH/bin"
 add_to_path "$HOME/.cargo/bin"
 add_to_path "/Applications/PyCharm CE.app/Contents/MacOS"
 add_to_path "/Applications/PyCharm.app/Contents/MacOS"
+add_to_path "/Applications/Docker.app/Contents/Resources/bin"
 add_to_path "$HOME/.pulumi/bin"
 
 source_if_exists "$HOME/.cargo/env"

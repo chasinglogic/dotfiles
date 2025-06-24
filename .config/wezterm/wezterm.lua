@@ -11,4 +11,17 @@ wezterm.on('gui-startup', function()
     window:gui_window():maximize()
 end)
 
+local fish_path = ''
+if sys.is_linux then
+    -- Not sure this is correct yet
+    fish_path = wezterm.glob('/usr/bin/fish')
+else
+    fish_path = wezterm.glob('/opt/homebrew/bin/fish')
+end
+
+fish_path = fish_path[1]
+if fish_path ~= nil then
+    config.default_prog = { fish_path, '-l' }
+end
+
 return config
