@@ -67,6 +67,6 @@ else
     set -gx VIM_PROG vim
 end
 
-if string match -q -r "code.*" "$EDITOR"
+if test "EDITOR" = ""
     set -gx EDITOR "$VIM_PROG"
 end
