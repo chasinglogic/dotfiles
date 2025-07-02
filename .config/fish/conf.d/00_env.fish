@@ -67,6 +67,6 @@ else
     set -gx VIM_PROG vim
 end
 
-if test "EDITOR" = ""
+if test -z "$EDITOR"
     set -gx EDITOR "$VIM_PROG"
 end
