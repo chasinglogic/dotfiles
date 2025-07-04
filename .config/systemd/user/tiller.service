@@ -1,9 +1,0 @@
-[Unit]
-Description=Local tiller server
-
-[Service]
-ExecStart=/home/chasinglogic/.local/bin/tiller --storage=secret
-Restart=on-failure
-
-[Install]
-WantedBy=default.target

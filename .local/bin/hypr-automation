@@ -1,0 +1,132 @@
+#!/usr/bin/env python3
+
+import socket
+import os
+import logging
+
+logging.basicConfig(
+    format="%(asctime)s %(levelname)-8s %(message)s",
+    level=logging.INFO,
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+logger = logging.getLogger(__name__)
+
+XDG_RUNTIME_DIR = os.getenv("XDG_RUNTIME_DIR")
+HYPRLAND_INSTANCE_SIGNATURE = os.getenv("HYPRLAND_INSTANCE_SIGNATURE")
+
+if not XDG_RUNTIME_DIR:
+    raise Exception("UNABLE TO DETECT XDG_RUNTIME_DIR")
+
+if not HYPRLAND_INSTANCE_SIGNATURE:
+    raise Exception("UNABLE TO DETECT HYPRLAND_INSTANCE_SIGNATURE")
+
+HYPRLAND_EVENTS = os.path.join(
+    XDG_RUNTIME_DIR,
+    "hypr",
+    HYPRLAND_INSTANCE_SIGNATURE,
+    ".socket2.sock",
+)
+HYPRLAND_COMMANDS = os.path.join(
+    XDG_RUNTIME_DIR,
+    "hypr",
+    HYPRLAND_INSTANCE_SIGNATURE,
+    ".socket.sock",
+)
+
+
+def send_command(command: str) -> str:
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
+        client.connect(HYPRLAND_COMMANDS)
+        client.sendall(command.encode())
+        data = client.recv(8192)
+        return data.decode("utf-8")
+
+
+def balance_monitors():
+    """Determine if external displays are connected and if so then disable laptop screen."""
+    logger.info("Balancing monitors.")
+
+    response = send_command("monitors")
+    monitors = []
+
+    current_monitor = None
+    for line in response.split("\n"):
+        if line.startswith("Monitor"):
+            if current_monitor is not None:
+                monitors.append(current_monitor)
+
+            _, port, _, id = line.split()
+            current_monitor = {
+                "port": port,
+                "id": id.replace("):", ""),
+            }
+
+        if ":" in line:
+            field_name, value = line.split(":")
+            current_monitor[field_name.strip()] = value.strip()
+
+    if current_monitor is not None:
+        monitors.append(current_monitor)
+
+    try:
+        laptop_screen = next(
+            monitor for monitor in monitors if monitor["port"] == "eDP-1"
+        )
+        laptop_is_enabled = laptop_screen["disabled"] != "true"
+    except StopIteration:
+        laptop_screen = {}
+        laptop_is_enabled = False
+
+    logger.info("Detected %d monitors connected.", len(monitors))
+    logger.info("Laptop screen is enabled: %s", laptop_is_enabled)
+
+    if len(monitors) == 0 and not laptop_is_enabled:
+        logger.info("No monitors and laptop is disabled, enabling laptop monitor")
+        send_command("keyword monitor eDP-1,preferred,auto,auto")
+    elif len(monitors) > 1 and laptop_is_enabled:
+        logger.info(
+            "Multiple monitors connected and laptop is enabled, disabling laptop monitor"
+        )
+        send_command("keyword monitor eDP-1,disabled")
+    else:
+        logger.info("Desired state achieved, no action required.")
+
+
+def parse_events(msg: str) -> list[dict[str, str]]:
+    return [
+        {
+            "name": event.split(">>")[0],
+            "data": event.split(">>")[-1],
+        }
+        for event in msg.split("\n")
+    ]
+
+
+def handle_event(event):
+    if event["name"] in ("monitoradded", "monitorremoved"):
+        balance_monitors()
+
+
+balance_monitors()
+
+with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
+    while True:
+        try:
+            client.connect(HYPRLAND_EVENTS)
+            break
+        except FileNotFoundError:
+            logger.error("Hyprland doesn't appear to be running yet, retrying...")
+            import time
+
+            time.sleep(10)
+
+    while True:
+        msg = ""
+        while not msg.endswith("\n"):
+            data = client.recv(10)
+            msg += data.decode()
+
+        events = parse_events(msg)
+        for event in events:
+            handle_event(event)
