@@ -21,11 +21,12 @@ abbr --position anywhere --add dce "docker compose exec -it"
 abbr --position anywhere --add mypy "dmypy check"
 abbr --position anywhere --add zyp 'sudo zypper'
 
-abbr --position anywhere --add pu pulumi
-abbr --position anywhere --add pup "pulumi up"
-abbr --position anywhere --add sync-branches "git fetch origin --prune && git branch --merged | grep -v master | xargs git branch -D"
-abbr --position anywhere --add zyp "sudo zypper"
-abbr --position anywhere --add pac "sudo pacman"
+abbr --add pu pulumi
+abbr --add pup "pulumi up"
+abbr --add sync-branches "git fetch origin --prune && git branch --merged | grep -v master | xargs git branch -D"
+
+abbr --add zyp "sudo zypper"
+abbr --add pac "sudo pacman"
 
 abbr --position anywhere --add aws-login-pip "aws --profile internal-services codeartifact login --tool pip --repository tillo-python --domain tillo --domain-owner 307488140247 --region eu-west-1"
 abbr --position anywhere --add aws-login-twine "aws --profile internal-services codeartifact login --tool twine --repository tillo-python --domain tillo --domain-owner 307488140247 --region eu-west-1"
@@ -42,10 +43,10 @@ abbr --position anywhere --add e $EDITOR
 
 abbr --position anywhere --add cd.. "cd .."
 
-abbr --position anywhere --add apt "sudo apt"
-abbr --position anywhere --add dnf "sudo dnf"
-abbr --position anywhere --add zypper "sudo zypper"
-abbr --position anywhere --add pacman "sudo pacman"
+abbr --add apt "sudo apt"
+abbr --add dnf "sudo dnf"
+abbr --add zypper "sudo zypper"
+abbr --add pacman "sudo pacman"
 if test (uname) = Darwin
     abbr --position anywhere --add sed gsed
     abbr --position anywhere --add grep ggrep
