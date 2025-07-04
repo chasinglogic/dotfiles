@@ -9,8 +9,6 @@ abbr --position anywhere --add venv "python3 -m venv"
 abbr --position anywhere --add k kubectl
 abbr --position anywhere --add kctx "kubectl config use-context"
 
-abbr --position anywhere --add logs 'kubectl logs'
-
 abbr --position anywhere --add tf tofu
 abbr --position anywhere --add tg terragrunt
 abbr --position anywhere --add grunt terragrunt
