@@ -15,15 +15,9 @@
     "custom/smallspacer",
     "hyprland/workspaces",
     "custom/spacer",
-    "mpris",
   ],
 
   "modules-center": [
-    "custom/padd",
-    "custom/l_end",
-    "custom/r_end",
-    "hyprland/window",
-    "custom/padd",
   ],
 
   "modules-right": [
@@ -31,9 +25,8 @@
     "custom/l_end",
     "group/expand",
     "network",
-    "group/expand-3",
-    "group/expand-2",
-    "group/expand-4",
+    "battery",
+    "pulseaudio",
     "memory",
     "cpu",
     "clock",
@@ -41,48 +34,19 @@
     "custom/padd",
   ],
 
-  "upower": {
-    "icon-size": 20,
-    "format": "",
-    "format-alt": "{}<span color='orange'>[{time}]</span>",
-    "tooltip": true,
-    "tooltip-spacing": 20,
-    "on-click-right": "pkill waybar & hyprctl dispatch exec waybar",
-  },
-
-  "upower#headset": {
-    "format": " {percentage}",
-    "native-path": "/org/freedesktop/UPower/devices/headset_dev_A6_98_9A_0D_D3_49",
-    "show-icon": false,
-    "tooltip": false,
-  },
-
-  "group/expand-4": {
-    "orientation": "horizontal",
-    "drawer": {
-      "transition-duration": 600,
-      "children-class": "not-power",
-      "transition-to-left": true,
-      "click-to-reveal": true,
-    },
-    "modules": ["upower", "upower/headset"],
-  },
-
   "custom/smallspacer": {
     "format": " ",
   },
+
   "memory": {
-    "interval": 1,
-    "rotate": 270,
-    "format": "{icon}",
-    "format-icons": ["󰝦", "󰪞", "󰪟", "󰪠", "󰪡", "󰪢", "󰪣", "󰪤", "󰪥"],
-    "max-length": 10,
+    "format": "  {used:0.1f}G/{total:0.1f}G",
+    "tooltip": true,
+    "tooltip-format": "当前内存占比: {used:0.2f}G/{total:0.2f}G"
   },
+
   "cpu": {
-    "interval": 1,
-    "format": "{icon}",
-    "rotate": 270,
-    "format-icons": ["󰝦", "󰪞", "󰪟", "󰪠", "󰪡", "󰪢", "󰪣", "󰪤", "󰪥"],
+    "format": "  {usage}%",
+    "tooltip": true
   },
 
   "mpris": {
@@ -158,17 +122,26 @@
   },
 
   "custom/spacer": {
-    "format": "|",
+    "format": "  ",
   },
 
+  // "hyprland/workspaces": {
+  //   "format": "{name} {windows}",
+	// "window-rewrite-default": "",
+  //   "format-icons": {
+  //     "default": "",
+  //     "active": "",
+  //   },
+  // },
+
   "hyprland/workspaces": {
-    "format": "{icon}",
+    "all-outputs": true,
+	"format": "{icon} ",
     "format-icons": {
-      "default": "",
-      "active": "",
-      //"default": "○",
-      //"default": "●"
-    },
+      "1": "",
+      "2": "",
+      "default": ""
+    }
   },
 
   "wlr/workspaces": {
@@ -327,20 +300,14 @@
 
   "battery": {
     "states": {
-      "good": 95,
       "warning": 30,
-      "critical": 20,
+      "critical": 15
     },
-    "format": "{icon}",
-    "rotate": 0,
-    "format-charging": "<span color='#a6d189'>󱐋</span>",
-    "format-plugged": "󰂄",
-    // "format-alt": "<<span weight='bold' color='#c2864a'>{time} <span weight='bold' color='white'>| <span weight='bold' color='#82d457'>{capacity}%</span></span></span>",
-    "format-icons": ["󰝦", "󰪞", "󰪟", "󰪠", "󰪡", "󰪢", "󰪣", "󰪤", "󰪥"],
-    //  "format-icons": ["","","","","","","",""],
-    //"format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-    "on-click-right": "pkill waybar & hyprctl dispatch exec waybar",
-    //  "format-icons": [<i class='fa-solid fa-wifi-slash'></i>],
+    "format": "{icon} {capacity}% ",
+    "format-charging": "󱐋 {capacity}%",
+	"interval": 1,
+    "format-icons": ["󰂄"],
+    "tooltip": true
   },
 
   "backlight": {
@@ -352,53 +319,18 @@
     "min-length": 2,
   },
 
-  "group/expand-2": {
-    "orientation": "horizontal",
-    "drawer": {
-      "transition-duration": 600,
-      "children-class": "not-power",
-      "transition-to-left": true,
-      "click-to-reveal": true,
-    },
-    "modules": [
-      "backlight",
-      "backlight/slider",
-      "custom/smallspacer",
-    ],
-  },
-
-  "group/expand-3": {
-    "orientation": "horizontal",
-    "drawer": {
-      "transition-duration": 600,
-      "children-class": "not-power",
-      "transition-to-left": true,
-      "click-to-reveal": true,
-    },
-    "modules": ["pulseaudio", "pulseaudio/slider"],
-  },
-
   "network": {
-    "tooltip": true,
-    "format-wifi": "{icon} ",
-    "format-icons": ["󰤟", "󰤢", "󰤥"],
-    //  "format-wifi": "<i class='fa-solid fa-wifi-slash'></i>",
-    "rotate": 0,
-    "format-ethernet": "󰈀 ",
-    "tooltip-format": "Network: <big><b>{essid}</b></big>\nSignal strength: <b>{signaldBm}dBm ({signalStrength}%)</b>\nFrequency: <b>{frequency}MHz</b>\nInterface: <b>{ifname}</b>\nIP: <b>{ipaddr}/{cidr}</b>\nGateway: <b>{gwaddr}</b>\nNetmask: <b>{netmask}</b>",
-    "format-linked": "󰈀 {ifname} (No IP)",
-    "format-disconnected": " ",
-    "tooltip-format-disconnected": "Disconnected",
-    "on-click": "/usr/local/bin/ags -t ControlPanel",
-    "interval": 2,
+    "format-wifi": "󰤨 {essid}",
+    "format-ethernet": " Wired ",
+    "tooltip-format": "<span color='#FF1493'> 󰅧 </span>{bandwidthUpBytes}  <span color='#00BFFF'> 󰅢 </span>{bandwidthDownBytes}",
+    "format-linked": " 󱘖 {ifname} (No IP) ",
+    "format-disconnected": "  Disconnected ",
+    "format-alt": " 󰤨 {signalStrength}% ",
+    "interval": 1
   },
 
   "pulseaudio": {
-    "format": "{icon}",
-    "rotate": 0,
-    "format-muted": "婢",
-    "tooltip-format": "{icon} {desc} // {volume}%",
-    "scroll-step": 5,
+    "format": "{icon} {volume}%",
     "format-icons": {
       "headphone": "",
       "hands-free": "",
