@@ -62,3 +62,5 @@ function last_history_item
     echo $history[1]
 end
 abbr --position anywhere --add !! --function last_history_item
+
+abbr --position anywhere --add gsutil "gcloud storage"
