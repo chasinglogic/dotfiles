@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# So I don't have to remember Linux and Mac differences.
+sysctl -n hw.ncpu
