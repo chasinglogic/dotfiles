@@ -1,11 +1,9 @@
+set -gx SHELL (which fish)
+
 # Just show me the output please....
 set -gx AWS_PAGER
 # Google should just make this default since it is required...
 set -gx USE_GKE_GCLOUD_AUTH_PLUGIN True
-# Node version manager storage location
-set -gx NOTES_DIR "$HOME/Dropbox/Notes"
-# Use Python3 for Virtualenvwrapper
-set -gx VIRTUALENVWRAPPER_PYTHON "$(which python3)"
 # Plasma scale with HIDPI
 set -gx PLASMA_USE_QT_SCALING 1
 # Packer's colorized output messes with terminals and other programs I use.
