@@ -7,7 +7,9 @@ keybinds clear-defaults=true {
         bind "c" { NewTab; SwitchToMode "locked"; }
         bind "v" { NewPane "right"; SwitchToMode "locked"; }
         bind "s" { NewPane "down"; SwitchToMode "locked"; }
+        bind "S" { NewPane "down"; SwitchToMode "locked"; }
         bind "z" { ToggleFocusFullscreen; SwitchToMode "locked"; }
+        bind "d" { Detach; }
 
         bind "h" { MoveFocus "left"; SwitchToMode "locked"; }
         bind "j" { MoveFocus "down"; SwitchToMode "locked"; }
