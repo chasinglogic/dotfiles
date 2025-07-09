@@ -7,7 +7,7 @@ import threading
 import time
 
 logging.basicConfig(
-    format="%(asctime)s %(levelname)-8s %(message)s",
+    format="%(asctime)s [%(name)s] %(levelname)-8s %(message)s",
     level=logging.INFO,
     datefmt="%Y-%m-%d %H:%M:%S",
 )
@@ -31,35 +31,44 @@ def parse_events(msg: str) -> list[dict[str, str]]:
 
 class HyprAutomation(threading.Thread):
     def __init__(self, hyprland_instance_signature: str):
+        super().__init__()
+        self.hyprland_instance_signature = hyprland_instance_signature
+        self._stop_event = threading.Event()
+
         if XDG_RUNTIME_DIR is None:
             raise Exception("UNABLE TO DETECT XDG_RUNTIME_DIR")
 
         self.logger = logging.getLogger(
-            f"{__name__}_{self.__class__}_{hyprland_instance_signature}"
+            f"{self.__class__.__name__}_{self.hyprland_instance_signature}"
         )
-        self.hyprland_instance_signature = hyprland_instance_signature
 
         self.events_socket = os.path.join(
             XDG_RUNTIME_DIR,
             "hypr",
-            hyprland_instance_signature,
+            self.hyprland_instance_signature,
             ".socket2.sock",
         )
         self.events_client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        self.logger.info("Connecting to events socket: %s", self.events_socket)
         self.events_client.connect(self.events_socket)
 
         self.commands_socket = os.path.join(
             XDG_RUNTIME_DIR,
             "hypr",
-            hyprland_instance_signature,
+            self.hyprland_instance_signature,
             ".socket.sock",
         )
-        self.commands_client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        self.commands_client.connect(self.commands_socket)
+
+    def stop(self):
+        self._stop_event.set()
+
+    def stopped(self):
+        return self._stop_event.set()
 
     def run(self):
         self.balance_monitors()
-        while True:
+
+        while not self._stop_event.is_set():
             data = self.events_client.recv(8192)
             msg = data.decode()
             events = parse_events(msg)
@@ -67,9 +76,11 @@ class HyprAutomation(threading.Thread):
                 self.handle_event(event)
 
     def send_command(self, command: str) -> str:
-        self.commands_client.sendall(command.encode())
-        data = self.commands_client.recv(8192)  # 8192 stolen from hyprctl's code
-        return data.decode("utf-8")
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as commands_client:
+            commands_client.connect(self.commands_socket)
+            commands_client.sendall(command.encode())
+            data = commands_client.recv(8192)  # 8192 stolen from hyprctl's code
+            return data.decode("utf-8")
 
     def handle_event(self, event):
         self.logger.info("Handling event: %s", event)
@@ -128,14 +139,6 @@ class HyprAutomation(threading.Thread):
             self.logger.info("Desired state achieved, no action required.")
 
 
-# class RepeatTimer(threading.Timer):
-#     def run(self):
-#         while not self.finished.wait(self.interval):
-#             self.function(*self.args, **self.kwargs)
-
-
-# RepeatTimer(10, balance_monitors)
-
 HYPR_RUNTIME_DIR = os.path.join(XDG_RUNTIME_DIR, "hypr")
 sleep_time = 1
 while not os.path.exists(HYPR_RUNTIME_DIR):
@@ -146,13 +149,32 @@ while not os.path.exists(HYPR_RUNTIME_DIR):
 
 
 automation_instances = {}
+banned_instances = []
+
 while True:
+    logger.debug("Checking for un-automated hyprland instances.")
+
     with os.scandir(HYPR_RUNTIME_DIR) as instances:
         for instance in instances:
-            if instance in automation_instances:
+            if instance.name in banned_instances:
                 continue
 
-            automation_instances[instance] = HyprAutomation(instance.name)
-            automation_instances[instance].start()
+            if instance.name in automation_instances:
+                continue
+
+            logger.info(
+                "Un-automated instance found, starting automation for: %s",
+                instance.name,
+            )
+            try:
+                automator = HyprAutomation(instance.name)
+                automator.start()
+                automation_instances[instance.name] = automator
+            except ConnectionRefusedError:
+                logger.error(
+                    "Banning instance %s because it failed to connect.",
+                    instance.name,
+                )
+                banned_instances.append(instance.name)
 
     time.sleep(10)
