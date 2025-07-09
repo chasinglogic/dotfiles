@@ -15,89 +15,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 XDG_RUNTIME_DIR = os.getenv("XDG_RUNTIME_DIR")
-HYPRLAND_INSTANCE_SIGNATURE = os.getenv("HYPRLAND_INSTANCE_SIGNATURE", None)
-
 if not XDG_RUNTIME_DIR:
-    raise Exception("UNABLE TO DETECT XDG_RUNTIME_DIR")
-
-while HYPRLAND_INSTANCE_SIGNATURE is None:
-    logger.info(
-        "Unable to detect HYPRLAND_INSTANCE_SIGNATURE, waiting for hyprland to start..."
-    )
-    time.sleep(2)
-    HYPRLAND_INSTANCE_SIGNATURE = os.getenv("HYPRLAND_INSTANCE_SIGNATURE", None)
-
-
-HYPRLAND_EVENTS = os.path.join(
-    XDG_RUNTIME_DIR,
-    "hypr",
-    HYPRLAND_INSTANCE_SIGNATURE,
-    ".socket2.sock",
-)
-HYPRLAND_COMMANDS = os.path.join(
-    XDG_RUNTIME_DIR,
-    "hypr",
-    HYPRLAND_INSTANCE_SIGNATURE,
-    ".socket.sock",
-)
-
-
-def send_command(command: str) -> str:
-    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
-        client.connect(HYPRLAND_COMMANDS)
-        client.sendall(command.encode())
-        data = client.recv(8192)
-        return data.decode("utf-8")
-
-
-def balance_monitors():
-    """Determine if external displays are connected and if so then disable laptop screen."""
-    logger.info("Balancing monitors.")
-
-    response = send_command("monitors")
-    monitors = []
-
-    current_monitor = None
-    for line in response.split("\n"):
-        if line.startswith("Monitor"):
-            if current_monitor is not None:
-                monitors.append(current_monitor)
-
-            _, port, _, id = line.split()
-            current_monitor = {
-                "port": port,
-                "id": id.replace("):", ""),
-            }
-
-        if ":" in line:
-            field_name, value = line.split(":")
-            current_monitor[field_name.strip()] = value.strip()
-
-    if current_monitor is not None:
-        monitors.append(current_monitor)
-
-    try:
-        laptop_screen = next(
-            monitor for monitor in monitors if monitor["port"] == "eDP-1"
-        )
-        laptop_is_enabled = laptop_screen["disabled"] != "true"
-    except StopIteration:
-        laptop_screen = {}
-        laptop_is_enabled = False
-
-    logger.info("Detected %d monitors connected.", len(monitors))
-    logger.info("Laptop screen is enabled: %s", laptop_is_enabled)
-
-    if len(monitors) == 0 and not laptop_is_enabled:
-        logger.info("No monitors and laptop is disabled, enabling laptop monitor")
-        send_command("keyword monitor eDP-1,preferred,auto,auto")
-    elif len(monitors) > 1 and laptop_is_enabled:
-        logger.info(
-            "Multiple monitors connected and laptop is enabled, disabling laptop monitor"
-        )
-        send_command("keyword monitor eDP-1,disabled")
-    else:
-        logger.info("Desired state achieved, no action required.")
+    raise Exception("Unable to detect XDG_RUNTIME_DIR!")
 
 
 def parse_events(msg: str) -> list[dict[str, str]]:
@@ -110,36 +29,130 @@ def parse_events(msg: str) -> list[dict[str, str]]:
     ]
 
 
-def handle_event(event):
-    if event["name"] in ("monitoradded", "monitorremoved"):
-        balance_monitors()
+class HyprAutomation(threading.Thread):
+    def __init__(self, hyprland_instance_signature: str):
+        if XDG_RUNTIME_DIR is None:
+            raise Exception("UNABLE TO DETECT XDG_RUNTIME_DIR")
 
+        self.logger = logging.getLogger(
+            f"{__name__}_{self.__class__}_{hyprland_instance_signature}"
+        )
+        self.hyprland_instance_signature = hyprland_instance_signature
 
-class RepeatTimer(threading.Timer):
+        self.events_socket = os.path.join(
+            XDG_RUNTIME_DIR,
+            "hypr",
+            hyprland_instance_signature,
+            ".socket2.sock",
+        )
+        self.events_client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        self.events_client.connect(self.events_socket)
+
+        self.commands_socket = os.path.join(
+            XDG_RUNTIME_DIR,
+            "hypr",
+            hyprland_instance_signature,
+            ".socket.sock",
+        )
+        self.commands_client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        self.commands_client.connect(self.commands_socket)
+
     def run(self):
-        while not self.finished.wait(self.interval):
-            self.function(*self.args, **self.kwargs)
+        self.balance_monitors()
+        while True:
+            data = self.events_client.recv(8192)
+            msg = data.decode()
+            events = parse_events(msg)
+            for event in events:
+                self.handle_event(event)
 
+    def send_command(self, command: str) -> str:
+        self.commands_client.sendall(command.encode())
+        data = self.commands_client.recv(8192)  # 8192 stolen from hyprctl's code
+        return data.decode("utf-8")
 
-RepeatTimer(10, balance_monitors)
+    def handle_event(self, event):
+        self.logger.info("Handling event: %s", event)
+        if event["name"] in ("monitoradded", "monitorremoved"):
+            self.balance_monitors()
 
-balance_monitors()
+    def balance_monitors(self):
+        """Determine if external displays are connected and if so then disable laptop screen."""
+        self.logger.info("Balancing monitors.")
 
-with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
-    while True:
+        response = self.send_command("monitors")
+        monitors = []
+
+        current_monitor = None
+        for line in response.split("\n"):
+            if line.startswith("Monitor"):
+                if current_monitor is not None:
+                    monitors.append(current_monitor)
+
+                _, port, _, id = line.split()
+                current_monitor = {
+                    "port": port,
+                    "id": id.replace("):", ""),
+                }
+
+            if ":" in line:
+                field_name, value = line.split(":")
+                current_monitor[field_name.strip()] = value.strip()
+
+        if current_monitor is not None:
+            monitors.append(current_monitor)
+
         try:
-            client.connect(HYPRLAND_EVENTS)
-            break
-        except FileNotFoundError:
-            logger.error("Hyprland doesn't appear to be running yet, retrying...")
-            time.sleep(10)
+            laptop_screen = next(
+                monitor for monitor in monitors if monitor["port"] == "eDP-1"
+            )
+            laptop_is_enabled = laptop_screen["disabled"] != "true"
+        except StopIteration:
+            laptop_screen = {}
+            laptop_is_enabled = False
 
-    while True:
-        msg = ""
-        while not msg.endswith("\n"):
-            data = client.recv(10)
-            msg += data.decode()
+        self.logger.info("Detected %d monitors connected.", len(monitors))
+        self.logger.info("Laptop screen is enabled: %s", laptop_is_enabled)
 
-        events = parse_events(msg)
-        for event in events:
-            handle_event(event)
+        if len(monitors) == 0 and not laptop_is_enabled:
+            self.logger.info(
+                "No monitors and laptop is disabled, enabling laptop monitor"
+            )
+            self.send_command("keyword monitor eDP-1,preferred,auto,auto")
+        elif len(monitors) > 1 and laptop_is_enabled:
+            self.logger.info(
+                "Multiple monitors connected and laptop is enabled, disabling laptop monitor"
+            )
+            self.send_command("keyword monitor eDP-1,disabled")
+        else:
+            self.logger.info("Desired state achieved, no action required.")
+
+
+# class RepeatTimer(threading.Timer):
+#     def run(self):
+#         while not self.finished.wait(self.interval):
+#             self.function(*self.args, **self.kwargs)
+
+
+# RepeatTimer(10, balance_monitors)
+
+HYPR_RUNTIME_DIR = os.path.join(XDG_RUNTIME_DIR, "hypr")
+sleep_time = 1
+while not os.path.exists(HYPR_RUNTIME_DIR):
+    logger.info("Hypr doesn't appear to be running, waiting...")
+    time.sleep(sleep_time)
+    if sleep_time < 10:
+        sleep_time = sleep_time * 2
+
+
+automation_instances = {}
+while True:
+    with os.scandir(HYPR_RUNTIME_DIR) as instances:
+        for instance in instances:
+            if instance in automation_instances:
+                continue
+
+            automation_instances[instance] = HyprAutomation(instance.name)
+            automation_instances[instance].start()
+
+    time.sleep(10)
