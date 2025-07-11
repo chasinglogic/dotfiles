@@ -49,6 +49,7 @@ fish_add_path --path "/Applications/Docker.app/Contents/Resources/bin"
 fish_add_path --path "$HOME/.pulumi/bin"
 fish_add_path --path "$HOME/.krew/bin"
 fish_add_path --path "$HOME/.krew/bin"
+fish_add_path --path "/opt/google-cloud-sdk/bin"
 
 # These have to be after the $PATH is set up.
 
