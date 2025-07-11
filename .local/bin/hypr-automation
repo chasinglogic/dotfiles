@@ -77,7 +77,15 @@ class HyprAutomation(threading.Thread):
 
     def send_command(self, command: str) -> str:
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as commands_client:
-            commands_client.connect(self.commands_socket)
+            retries = 0
+            while retries < 3:
+                try:
+                    commands_client.connect(self.commands_socket)
+                    break
+                except:
+                    logger.exception("Failed to connect to command socket. Retrying...")
+                    time.sleep(retries * 2)
+
             commands_client.sendall(command.encode())
             data = commands_client.recv(8192)  # 8192 stolen from hyprctl's code
             return data.decode("utf-8")
