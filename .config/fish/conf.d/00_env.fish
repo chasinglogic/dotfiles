@@ -50,6 +50,7 @@ fish_add_path --path "$HOME/.pulumi/bin"
 fish_add_path --path "$HOME/.krew/bin"
 fish_add_path --path "$HOME/.krew/bin"
 fish_add_path --path "/opt/google-cloud-sdk/bin"
+fish_add_path --path "$HOME/.local/share/gem/ruby/3.4.0/bin"
 
 # These have to be after the $PATH is set up.
 

@@ -35,10 +35,6 @@ abbr --position anywhere --add aws-login-docker "AWS_PROFILE=internal-services a
 
 abbr --position anywhere --add vim $VIM_PROG
 
-if command -q zenith
-    abbr --position anywhere --add htop zenith
-end
-
 abbr --position anywhere --add e $EDITOR
 
 abbr --position anywhere --add cd.. "cd .."
