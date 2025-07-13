@@ -1,3 +1,3 @@
+theme = dark:catppuccin-mocha,light:catppuccin-latte
 command = fish --login --interactive
 font-size = 16
-theme = catppuccin-mocha

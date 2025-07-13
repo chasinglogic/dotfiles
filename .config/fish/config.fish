@@ -1,7 +1,12 @@
 if status is-interactive
-    # Commands to run in interactive sessions can go here
+    if command -q mise
+        mise activate fish | source
+    end
+
+    if command -q fzf
+        fzf --fish | source
+    end
+
+    
 end
 
-if command -q mise
-    mise activate fish | source
-end
