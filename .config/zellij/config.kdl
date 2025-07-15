@@ -10,6 +10,7 @@ keybinds clear-defaults=true {
         bind "S" { NewPane "down"; SwitchToMode "locked"; }
         bind "z" { ToggleFocusFullscreen; SwitchToMode "locked"; }
         bind "d" { Detach; }
+        bind "x" { CloseFocus; SwitchToMode "locked"; }
 
         bind "h" { MoveFocus "left"; SwitchToMode "locked"; }
         bind "j" { MoveFocus "down"; SwitchToMode "locked"; }
