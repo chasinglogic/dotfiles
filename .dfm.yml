@@ -9,6 +9,10 @@ mappings:
     target_os: Darwin
   - match: "playbooks/workstation"
     link_as_dir: true
+  - match: ".config/ghostty/macos-config"
+    target_os: Linux
+    skip: true
+
 
 modules:
   - repo: https://github.com/ohmyzsh/ohmyzsh
