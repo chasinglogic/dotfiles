@@ -54,7 +54,7 @@ rust = "latest"
 go = "latest"
 elixir = "latest"
 erlang = "latest"
-# python = "latest"
+python = "latest"
 
 # Language tooling
 uv = "latest"
