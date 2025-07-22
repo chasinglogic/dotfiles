@@ -17,6 +17,7 @@ target/*
 clang+llvm*/
 node_modules/*
 
+.dmypy.json
 *mypy_cache*
 .ccls-cache/*
 

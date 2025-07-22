@@ -11,6 +11,7 @@ keybinds clear-defaults=true {
         bind "z" { ToggleFocusFullscreen; SwitchToMode "locked"; }
         bind "d" { Detach; }
         bind "x" { CloseFocus; SwitchToMode "locked"; }
+        // bind "o" { CloseUnfocused; SwitchToMode "locked"; }
 
         bind "h" { MoveFocus "left"; SwitchToMode "locked"; }
         bind "j" { MoveFocus "down"; SwitchToMode "locked"; }
@@ -206,7 +207,7 @@ keybinds clear-defaults=true {
     }
 
     shared_except "locked" "entersearch" "search" "renametab" "renamepane" "session" {
-        bind "o" { SwitchToMode "session"; }
+        bind "S" { SwitchToMode "session"; }
     }
 
     shared_except "locked" "tab" "entersearch" "renametab" "renamepane" {
