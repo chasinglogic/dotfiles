@@ -8,6 +8,11 @@ function v
         set -f top_level (pwd)
     end
 
+    if test -f "$top_level/poetry.lock"
+        eval (poetry env activate)
+        return 0
+    end
+
     for envdir in "$top_level/env" "$top_level/venv" "$top_level/.venv"
         if test -d $envdir
             source "$envdir/bin/activate.fish"
