@@ -47,14 +47,16 @@ function __git_is_dirty
 end
 
 function __prompt_kube_context
-    set -f active_context (kubectl config current-context 2>/dev/null)
-    set -l kube_color (set_color normal)
-    if test "$active_context" = "production"
-        set -l kube_color (set_color red)
-    end
+    if command -q kubectl
+        set -f active_context (kubectl config current-context 2>/dev/null)
+        set -l kube_color (set_color normal)
+        if test "$active_context" = "production"
+            set -l kube_color (set_color red)
+        end
 
-    if test -n "$active_context"
-        echo -n $kube_color
-        echo -n "(kube: $active_context) "
+        if test -n "$active_context"
+            echo -n $kube_color
+            echo -n "(kube: $active_context) "
+        end
     end
 end
