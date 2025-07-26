@@ -3,3 +3,4 @@ font-size = 16
 macos-option-as-alt = true
 command = fish --login --interactive
 config-file = ?macos-config
+maximize = true
