@@ -122,9 +122,3 @@ done
 if [ -n "$(find_executable mise)" ]; then
 	eval "$(mise activate bash)"
 fi
-
-if [ "$(uname)" = "Linux" ]; then
-	if uwsm check may-start; then
-		exec uwsm start hyprland-uwsm.desktop
-	fi
-fi
