@@ -293,19 +293,21 @@ mason_lspconfig.setup({
 })
 
 vim.lsp.config('*', {
+  capabilities = capabilities,
   on_attach = on_attach,
 })
 
--- mason_lspconfig.setup_handlers({
---   function(server_name)
---     require("lspconfig")[server_name].setup({
---       capabilities = capabilities,
---       on_attach = on_attach,
---       settings = servers[server_name],
---       filetypes = (servers[server_name] or {}).filetypes,
---     })
---   end,
--- })
+for server, settings in pairs(servers) do
+  if not rawequal(next(settings), nil) then
+    local filetypes = settings.filetypes
+    settings.filetypes = nil
+
+    vim.lsp.config(server, {
+      settings = settings,
+      filetypes = filetypes
+    })
+  end
+end
 
 -- Populate loclist with the current buffer diagnostics
 vim.api.nvim_create_autocmd('DiagnosticChanged', {
