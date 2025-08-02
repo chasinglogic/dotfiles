@@ -1,0 +1,8 @@
+# vi: ft=dockerfile
+FROM ghcr.io/chasinglogic/workstation:latest
+
+LABEL com.github.containers.toolbox="true" \
+    name="workstation-toolbox" \
+    version="42" \
+    usage="This image is meant to be used with the toolbox(1) command" \
+    summary="Chasinglogic's toolbox container"
