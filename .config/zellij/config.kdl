@@ -28,13 +28,12 @@ keybinds clear-defaults=true {
         bind "8" { GoToTab 8; SwitchToMode "locked"; }
         bind "9" { GoToTab 9; SwitchToMode "locked"; }
 
-        bind "P" {
-            LaunchOrFocusPlugin "session-manager" {
-                floating true
-                move_to_focused_tab true
-            }
-            SwitchToMode "locked"
-        }
+        bind "P" { SwitchToMode "session" }
+        bind "m" { SwitchToMode "move"; }
+        bind "t" { SwitchToMode "tab"; }
+        bind "s" { SwitchToMode "scroll"; }
+        bind "p" { SwitchToMode "pane"; }
+        bind "r" { SwitchToMode "resize"; }
     }
 
     pane {
@@ -200,30 +199,6 @@ keybinds clear-defaults=true {
 
     shared_except "locked" "entersearch" "renametab" "renamepane" {
         bind "esc" { SwitchToMode "locked"; }
-    }
-
-    shared_except "locked" "entersearch" "renametab" "renamepane" "move" {
-        bind "m" { SwitchToMode "move"; }
-    }
-
-    shared_except "locked" "entersearch" "search" "renametab" "renamepane" "session" {
-        bind "S" { SwitchToMode "session"; }
-    }
-
-    shared_except "locked" "tab" "entersearch" "renametab" "renamepane" {
-        bind "t" { SwitchToMode "tab"; }
-    }
-
-    shared_except "locked" "tab" "scroll" "entersearch" "renametab" "renamepane" {
-        bind "s" { SwitchToMode "scroll"; }
-    }
-
-    shared_among "normal" "resize" "tab" "scroll" "prompt" "tmux" {
-        bind "p" { SwitchToMode "pane"; }
-    }
-
-    shared_except "locked" "resize" "pane" "tab" "entersearch" "renametab" "renamepane" {
-        bind "r" { SwitchToMode "resize"; }
     }
 
     shared_among "scroll" "search" {
