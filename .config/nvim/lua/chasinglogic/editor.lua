@@ -7,7 +7,7 @@ vim.opt.shiftwidth = 4    --  An indent is 4 spaces
 vim.opt.shiftround = true --  Round indent to nearest shiftwidth multiple
 --}}}
 --Formatting options {{{
-vim.opt.textwidth = 80 --  80 Column text width by default
+vim.opt.textwidth = 88 --  88 Column text width by default
 -- fo-q Allow formatting of comments with gq
 -- fo-n Recognize numbered lists
 -- fo-j Remove comment char when joining lines

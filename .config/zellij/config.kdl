@@ -28,7 +28,7 @@ keybinds clear-defaults=true {
         bind "8" { GoToTab 8; SwitchToMode "locked"; }
         bind "9" { GoToTab 9; SwitchToMode "locked"; }
 
-        bind "P" { SwitchToMode "session" }
+        bind "P" { SwitchToMode "session"; }
         bind "m" { SwitchToMode "move"; }
         bind "t" { SwitchToMode "tab"; }
         bind "s" { SwitchToMode "scroll"; }
