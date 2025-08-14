@@ -28,7 +28,14 @@ require("lazy").setup({
   spec = {
     { import = "plugins" },
   },
-  checker = { enabled = true, notify = false },
+  checker = {
+    enabled = true,
+    notify = false,
+  },
+  change_detection = {
+    enabled = false,
+    notify = false,
+  },
 })
 
 require("chasinglogic.keys")
