@@ -5,11 +5,6 @@ vim.keymap.set("n", "<leader>fa", ":wa<cr>")
 vim.keymap.set("n", "<leader>ft", ":Neotree<cr>")
 --}}}
 --Project level ops {{{
-vim.keymap.set("n", "<leader>pf", ":Telescope find_files previewer=false hidden=true<cr>")
-vim.keymap.set("n", "<C-p>", ":Telescope find_files previewer=false hidden=true<cr>")
-vim.keymap.set("i", "<C-p>", ":Telescope find_files previewer=false hidden=true<cr>")
-vim.keymap.set("n", "<leader>ps", ":Telescope live_grep<cr>")
-vim.keymap.set("n", "<leader>pS", require("telescope").extensions.live_grep_args.live_grep_args)
 vim.keymap.set("n", "<leader>pc", ":make<cr>")
 vim.keymap.set("n", "<leader>h", function()
 	require("replacer").run({ rename_files = false })
@@ -17,16 +12,6 @@ end)
 vim.keymap.set("n", "<leader>H", function()
 	require("replacer").run({ rename_files = true })
 end)
--- vim.keymap.set("n", "<leader>gf", require("telescope.builtin").git_files, { desc = "Search [G]it [F]iles" })
--- vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })
--- vim.keymap.set("n", "<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
--- vim.keymap.set("n", "<leader>sw", require("telescope.builtin").grep_string, { desc = "[S]earch current [W]ord" })
--- vim.keymap.set("n", "<leader>sg", require("telescope.builtin").live_grep, { desc = "[S]earch by [G]rep" })
--- vim.keymap.set("n", "<leader>sG", ":LiveGrepGitRoot<cr>", { desc = "[S]earch by [G]rep on Git Root" })
--- vim.keymap.set("n", "<leader>sd", require("telescope.builtin").diagnostics, { desc = "[S]earch [D]iagnostics" })
--- vim.keymap.set("n", "<leader>sr", require("telescope.builtin").resume, { desc = "[S]earch [R]esume" })
--- TODO: fix probably a telescope function we can use.
--- vim.keymap.set('n', '<leader>pa', ':args `rg --files --hidden --ignore-vcs -g !{**/node_modules/*,**/.git/*}`<cr>')
 vim.keymap.set("n", "<leader>pg", ":grep  <cr>")
 --}}}
 --Lists {{{
@@ -46,7 +31,6 @@ vim.keymap.set("n", "<leader>jp", "<C-o>")
 vim.keymap.set("n", "<leader>jn", "<C-i>")
 --}}}
 --Buffers {{{
-vim.keymap.set("n", "<leader>bb", ":Telescope buffers<cr>")
 --Switch to the last buffer and delete this one.
 vim.keymap.set("n", "<leader>bd", ":bprevious|bdelete #<cr>")
 vim.keymap.set("n", "<leader>bs", ":SC<cr>")
