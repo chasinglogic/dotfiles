@@ -42,8 +42,14 @@ return {
 		},
 	},
 	keys = {
-		{ "<leader>ps", "<cmd>FzfLua live_grep<cr>", desc = "Search Project" },
-		{ "<leader>pf", "<cmd>FzfLua files<cr>",     desc = "Project Files" },
-		{ "<leader>bb", "<cmd>FzfLua buffers<cr>",   desc = "Search Buffers" },
+		{ "<leader>ps",       "<cmd>FzfLua live_grep<cr>",                  desc = "Search Project" },
+		{ "<leader>pf",       "<cmd>FzfLua files<cr>",                      desc = "Project Files" },
+		{ "<leader>bb",       "<cmd>FzfLua buffers<cr>",                    desc = "Search Buffers" },
+		{ "<leader><leader>", "<cmd>FzfLua commands<cr>",                   desc = "Search Commands" },
+		{ "<leader>sg",       "<cmd>FzfLua git_commits<cr>",                desc = "Search Git Commits" },
+		{ "<leader>sr",       "<cmd>FzfLua lsp_references<cr>",             desc = "Search LSP References" },
+		{ "<leader>sd",       "<cmd>FzfLua lsp_definitions<cr>",            desc = "Search LSP Definitions" },
+		{ "<leader>ss",       "<cmd>FzfLua lsp_live_workspace_symbols<cr>", desc = "Search LSP Symbols" },
+		{ "<leader>sl",       "<cmd>FzfLua lsp_finder<cr>",                 desc = "Search Everything LSP" },
 	},
 }

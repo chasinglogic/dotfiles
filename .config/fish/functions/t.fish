@@ -1,6 +1,10 @@
 function t
     set -l session_name (basename (pwd))
-    zellij attach --create-background $session_name
+    if test -d ".git"
+        zellij --layout dev attach --create-background $session_name
+    else
+        zellij attach --create-background $session_name
+    end
 
     if test -n "$ZELLIJ"
         echo "Created session: $session_name"
