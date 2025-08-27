@@ -1,5 +1,6 @@
 [tools]
 "ubi:asdine/cueimports" = "latest"
+"ubi:direnv/direnv" = "latest"
 
 # Encryption
 "ubi:getsops/sops" = "latest"
