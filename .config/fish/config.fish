@@ -7,6 +7,7 @@ if status is-interactive
         fzf --fish | source
     end
 
-    
+    if command -q direnv
+        direnv hook fish | source
+    end
 end
-
