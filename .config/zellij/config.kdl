@@ -69,8 +69,8 @@ keybinds clear-defaults=true {
         bind "7" { GoToTab 7; SwitchToMode "locked"; }
         bind "8" { GoToTab 8; SwitchToMode "locked"; }
         bind "9" { GoToTab 9; SwitchToMode "locked"; }
-        bind "[" { BreakPaneLeft; SwitchToMode "locked"; }
-        bind "]" { BreakPaneRight; SwitchToMode "locked"; }
+        bind "[" { MoveTab "left"; }
+        bind "]" { MoveTab "right"; }
         bind "b" { BreakPane; SwitchToMode "locked"; }
         bind "h" { GoToPreviousTab; }
         bind "j" { GoToNextTab; }
