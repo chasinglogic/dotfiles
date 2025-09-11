@@ -15,18 +15,6 @@ mappings:
 
 
 modules:
-  - repo: https://github.com/ohmyzsh/ohmyzsh
-    link: none
-    pull_only: true
-    location: ~/.oh-my-zsh
-  # FZF
-  - repo: https://github.com/junegunn/fzf
-    link: none
-    location: ~/.config/fzf
-    pull_only: true
-    hooks:
-      after_sync:
-        - ./install --xdg --key-bindings --no-fish --no-update-rc --completion
   # My not-so-secret secrets
   - repository: git@github.com:chasinglogic/secrets.git
     name: secrets
