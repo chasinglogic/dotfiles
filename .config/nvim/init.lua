@@ -188,16 +188,11 @@ local on_attach = function(_, bufnr)
     vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
   end
 
-  nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+  nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame Symbol")
   nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
   nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
-  -- nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-  -- nmap("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-  -- nmap("<leader>sd", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
-  -- nmap("<leader>ss", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
   nmap("ga", vim.lsp.buf.code_action, "Do code action")
-  nmap("<space>sr", vim.lsp.buf.rename, "[R]ename [S]ymbol")
 
   local hover_or_open_diagnostic_float = function()
     local lineNumber = vim.fn.line(".") - 1 -- Needs to be 0-based indexing but line returns 1 based
@@ -267,6 +262,9 @@ local servers = {
       telemetry = { enable = false },
     },
   },
+
+  nil_ls = {},
+  alejandra = {},
 }
 
 -- Setup neovim lua configuration
