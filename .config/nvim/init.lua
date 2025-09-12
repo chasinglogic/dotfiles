@@ -220,11 +220,6 @@ local on_attach = function(_, bufnr)
   nmap("<leader>bf", vim.lsp.buf.format, "[B]uffer [F]ormat")
 end
 
--- mason-lspconfig requires that these setup functions are called in this order
--- before setting up the servers.
-require("mason").setup()
-require("mason-lspconfig").setup()
-
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 --
