@@ -3,6 +3,7 @@ TODO.md
 *#*#
 *.#*
 /.dir-locals.el
+/.direnv/*
 
 *.bak
 *.log
