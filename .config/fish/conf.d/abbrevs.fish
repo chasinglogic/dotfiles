@@ -12,7 +12,7 @@ abbr --position anywhere --add kctx "kubectl config use-context"
 abbr --position anywhere --add tf tofu
 abbr --position anywhere --add tg terragrunt
 abbr --position anywhere --add grunt terragrunt
-abbr --position anywhere --add dotfiles "cd (dfm where)"
+abbr --add dotfiles "cd (dfm where)"
 
 abbr --position anywhere --add pm podman
 abbr --position anywhere --add dk docker
