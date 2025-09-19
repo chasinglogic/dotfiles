@@ -12,6 +12,7 @@ set -gx PACKER_NO_COLOR 1
 set -gx GPG_TTY (tty)
 # Needed for the go compiler and tooling
 set -gx GOPATH "$HOME/Code/go"
+set -gx GOBIN "$GOPATH/bin"
 # Make helm work with our internal chart museum
 set -gx GODEBUG x509ignoreCN=0
 
@@ -41,7 +42,7 @@ end
 fish_add_path --path /opt/homebrew/bin
 fish_add_path --path "$HOME/.local/bin"
 fish_add_path --path "$HOME/.elixir-ls/dist"
-fish_add_path --path "$GOPATH/bin"
+fish_add_path --path "$GOBIN"
 fish_add_path --path "$HOME/.cargo/bin"
 fish_add_path --path "/Applications/PyCharm CE.app/Contents/MacOS"
 fish_add_path --path "/Applications/PyCharm.app/Contents/MacOS"
