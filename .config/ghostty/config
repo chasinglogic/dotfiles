@@ -1,5 +1,5 @@
 theme = catppuccin-mocha
-font-size = 16
+font-size = 14
 macos-option-as-alt = true
 command = fish --login --interactive
 config-file = ?macos-config
