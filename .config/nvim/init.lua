@@ -258,7 +258,7 @@ local servers = {
     },
   },
 
-  nil_ls = {},
+  -- nil_ls = {},
 }
 
 -- Setup neovim lua configuration
