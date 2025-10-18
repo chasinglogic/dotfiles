@@ -28,6 +28,14 @@ config.window_frame = {
     font_size = config.font_size - 2.0,
 }
 
+local padding_size = "1cell"
+config.window_padding = {
+    left = padding_size,
+    right = 0,
+    top = '0.5cell',
+    bottom = 0,
+}
+
 if is_linux then
     config.window_decorations = "NONE"
 else
@@ -39,12 +47,6 @@ config.hide_tab_bar_if_only_one_tab = true
 -- config.use_fancy_tab_bar = false
 
 config.enable_scroll_bar = false
-config.window_padding = {
-    left = 0,
-    right = 0,
-    bottom = 0,
-    top = '0.2cell',
-}
 
 ---- Key Bindings ----
 
