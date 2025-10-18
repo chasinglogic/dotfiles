@@ -1,6 +1,0 @@
----
-- src: chasinglogic.os_packages
-- src: chasinglogic.ansible_users
-- src: chasinglogic.dconf_settings
-- src: chasinglogic.linux_power_saving
-- src: chasinglogic.podman
