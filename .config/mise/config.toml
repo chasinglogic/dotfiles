@@ -1,3 +1,79 @@
+[tools]
+"ubi:asdine/cueimports" = "latest"
+"ubi:direnv/direnv" = "latest"
+
+# Encryption
+"ubi:getsops/sops" = "latest"
+"ubi:FiloSottile/age" = "latest"
+
+# Kubernetes
+kubectl = "latest"
+helm = "latest"
+kube-capacity = "latest"
+kubectx = "latest"
+kubens = "latest"
+kind = "latest"
+
+# IaC tools
+terragrunt = "latest"
+opentofu = "latest"
+terraform = "latest"
+pulumi = "latest"
+"npm:cdktf-cli" = "latest"
+"aqua:twistedpair/google-cloud-sdk" = "latest"
+cosign = "latest"
+
+# General utilities that either are unixy or better versions of existing unix
+# tools.
+"ubi:sharkdp/hyperfine" = "latest"
+hwatch = "latest"
+grpcurl = "latest"
+fd = "latest"
+ripgrep = "latest"
+bat = "latest"
+jq = "latest"
+just = "latest"
+fzf = "latest"
+delta = "latest"
+"aqua:bvaisvil/zenith" = "latest"
+node = "lts"
+"ubi:chasinglogic/projector" = "latest"
+
+# For building and publishing my blog
+hugo = "latest"
+
+# Load testing tool
+"cargo:oha" = "latest"
+
+# Container security scanning tools
+grype = "latest"
+syft = "latest"
+
+# Interaction with Talos Linux which is currently on the homelab.
+talosctl = "latest"
+
+# Languages
+rust = "latest"
+go = "latest"
+elixir = "latest"
+erlang = "latest"
+python = "latest"
+
+# Language tooling
+uv = "latest"
+"aqua:astral-sh/ruff" = "latest"
+shfmt = "latest"
+shellcheck = "latest"
+gomigrate = "latest"
+"ubi:goreleaser/goreleaser" = "latest"
+golangci-lint = "latest"
+"go:golang.org/x/tools/cmd/goimports" = "latest"
+"npm:prettier" = "latest"
+"npm:eslint" = "latest"
+"npm:pnpm" = "latest"
+usage = "latest"
+ruby = "latest"
+
 [settings]
 experimental = true
 idiomatic_version_file_enable_tools = ["python"]
