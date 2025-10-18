@@ -17,6 +17,8 @@ kubens = "latest"
 kind = "latest"
 
 # IaC tools
+"pipx:ansible" = { version = "latest", uvx = "false", pipx_args = "--include-deps" }
+"pipx:ansible-dev-tools" = { version = "latest", uvx = "false" }
 terragrunt = "latest"
 opentofu = "latest"
 terraform = "latest"
@@ -68,6 +70,7 @@ golangci-lint = "latest"
 "npm:prettier" = "latest"
 "npm:eslint" = "latest"
 "npm:pnpm" = "latest"
+pipx = "latest"
 
 [settings]
 experimental = true
