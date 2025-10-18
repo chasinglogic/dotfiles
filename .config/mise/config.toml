@@ -1,4 +1,6 @@
 [tools]
+neovim = "latest"
+
 "ubi:asdine/cueimports" = "latest"
 "ubi:direnv/direnv" = "latest"
 
@@ -21,7 +23,6 @@ terraform = "latest"
 pulumi = "latest"
 "npm:cdktf-cli" = "latest"
 "aqua:twistedpair/google-cloud-sdk" = "latest"
-cosign = "latest"
 
 # General utilities that either are unixy or better versions of existing unix
 # tools.
@@ -36,8 +37,8 @@ just = "latest"
 fzf = "latest"
 delta = "latest"
 "aqua:bvaisvil/zenith" = "latest"
-node = "lts"
 "ubi:chasinglogic/projector" = "latest"
+"ubi:chasinglogic/dfm" = "latest"
 
 # For building and publishing my blog
 hugo = "latest"
@@ -49,15 +50,11 @@ hugo = "latest"
 grype = "latest"
 syft = "latest"
 
-# Interaction with Talos Linux which is currently on the homelab.
-talosctl = "latest"
-
 # Languages
 rust = "latest"
 go = "latest"
-elixir = "latest"
-erlang = "latest"
 python = "latest"
+node = "latest"
 
 # Language tooling
 uv = "latest"
@@ -71,8 +68,6 @@ golangci-lint = "latest"
 "npm:prettier" = "latest"
 "npm:eslint" = "latest"
 "npm:pnpm" = "latest"
-usage = "latest"
-ruby = "latest"
 
 [settings]
 experimental = true
