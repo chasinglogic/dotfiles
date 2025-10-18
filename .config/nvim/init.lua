@@ -259,7 +259,6 @@ local servers = {
   },
 
   nil_ls = {},
-  alejandra = {},
 }
 
 -- Setup neovim lua configuration

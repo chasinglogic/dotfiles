@@ -1,9 +1,9 @@
 function st
-    if test -z "$ZELLIJ"
-        set -l selected_session (zellij list-sessions --no-formatting | fzf | awk '{ print $1 }')
-        zellij attach $selected_session
+    set -l session_name (tmux list-sessions | fzf | awk '{ print $1 }')
+
+    if test -n $TMUX
+        tmux switch-client -t $session_name
     else
-        echo "Cannot run while in zellij because there is no command to switch the active session."
-        return 1
+        tmux attach-session -t $session_name
     end
 end

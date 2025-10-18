@@ -39,10 +39,6 @@ alias aws-login-docker="AWS_PROFILE=internal-services aws ecr get-login-password
 
 alias vim="\${VIM_PROG:-\$(which vim)}"
 
-if [[ -x "$(which zenith 2>/dev/null)" ]]; then
-	alias htop="zenith"
-fi
-
 alias e="\$EDITOR"
 
 alias cd..="cd .."
@@ -57,5 +53,5 @@ if [[ "$(uname)" == "Darwin" ]]; then
 fi
 
 if [[ -x "$(find_executable hwatch)" ]]; then
-	alias watch="hwatch" 
+	alias watch="hwatch"
 fi
