@@ -4,8 +4,6 @@ abbr --position anywhere --add l "ls -CF"
 
 abbr --position anywhere --add g git
 
-abbr --position anywhere --add venv "python3 -m venv"
-
 abbr --position anywhere --add k kubectl
 abbr --position anywhere --add kctx "kubectl config use-context"
 
@@ -18,7 +16,6 @@ abbr --position anywhere --add pm podman
 abbr --position anywhere --add dk docker
 abbr --position anywhere --add dce "docker compose exec -it"
 
-abbr --position anywhere --add mypy "dmypy check"
 abbr --position anywhere --add zyp 'sudo zypper'
 
 abbr --add pu pulumi
@@ -48,10 +45,6 @@ if test (uname) = Darwin
     abbr --position anywhere --add grep ggrep
 end
 
-if command -q hwatch
-    abbr --position anywhere --add watch hwatch
-end
-
 abbr --position anywhere --add start-incident "wezterm record"
 
 function last_history_item
@@ -60,10 +53,3 @@ end
 abbr --position anywhere --add !! --function last_history_item
 
 abbr --position anywhere --add gsutil "gcloud storage"
-
-if command -q code
-    abbr --add vscode (which code)
-end
-
-abbr --add work "cd ~/Work"
-abbr --add code "cd ~/Code"
