@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+
+import argparse
+import re
+import os
+import tomllib
+from pathlib import Path
+
+
+def matches_any(value: str, regexes):
+    for regex in regexes:
+        if regex.search(value) is not None:
+            return True
+    return False
+
+
+def get_projects(
+    *,
+    code_dirs: list[str],
+    excludes: list[str] | None = None,
+    includes: list[str] | None = None,
+):
+    if excludes is None:
+        exclude_rgx = []
+    else:
+        exclude_rgx = [re.compile(exclude) for exclude in excludes]
+
+    if includes is None:
+        include_rgx = []
+    else:
+        include_rgx = [re.compile(include) for include in includes]
+
+    for code_dir in code_dirs:
+        code_dir = os.path.expanduser(code_dir)
+        for root, dirs, _ in os.walk(code_dir):
+            needs_scanning = []
+
+            for dir in dirs:
+                abs_path = os.path.join(root, dir)
+                if os.path.exists(os.path.join(abs_path, ".git")):
+                    yield abs_path
+                elif not matches_any(abs_path, exclude_rgx) and not matches_any(
+                    abs_path, include_rgx
+                ):
+                    needs_scanning.append(dir)
+
+            dirs[:] = needs_scanning
+
+
+def is_dirty(project):
+    import subprocess
+
+    proc = subprocess.run(
+        ["git", "status", "--porcelain"],
+        capture_output=True,
+        cwd=project,
+    )
+    return proc.stdout.decode("utf-8") != ""
+
+
+def list_projects(projects, dirty=False):
+    for project in projects:
+        if not dirty:
+            print(project)
+        elif dirty and is_dirty(project):
+            print(project)
+
+
+def find_project(projects, *, search_term, reverse=False):
+    rgx = re.compile(search_term)
+    matches = [(project, rgx.search(project)) for project in projects]
+
+    def __key_func(obj):
+        project = obj[0]
+        m = obj[1]
+        if m is None:
+            return -1
+
+        match_percentage = m.end() / len(project)
+        return match_percentage
+
+    by_match_percentage = sorted(
+        [m for m in matches if m[1] is not None],
+        key=__key_func,
+        reverse=not reverse,
+    )
+    print(by_match_percentage[0][0])
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    subparser = parser.add_subparsers(help="subcommand help", dest="command")
+
+    find_parser = subparser.add_parser(
+        "find", help="Find a singular project by searching"
+    )
+    find_parser.add_argument("SEARCH_TERM", nargs=1)
+    find_parser.add_argument(
+        "-r",
+        "--reverse",
+        help="If provided find leftmost match instead of rightmost match",
+        action="store_true",
+    )
+
+    list_parser = subparser.add_parser(
+        "list", help="Find a singular project by searching"
+    )
+    list_parser.add_argument(
+        "-d",
+        "--dirty",
+        help="If provided find projects with a dirty git state",
+        action="store_true",
+    )
+
+    args = parser.parse_args()
+
+    config_file = Path.home() / ".projector.toml"
+    with open(config_file, "rb") as fh:
+        config = tomllib.load(fh)
+
+    projects = get_projects(**config)
+    if args.command == "list":
+        list_projects(projects, dirty=args.dirty)
+    elif args.command == "find":
+        find_project(projects, search_term=args.SEARCH_TERM[0], reverse=args.reverse)
+
+
+if __name__ == "__main__":
+    main()
