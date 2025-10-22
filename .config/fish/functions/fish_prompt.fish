@@ -38,10 +38,7 @@ end
 
 function __prompt_host
     set -l host_color (set_color E64553)
-
-    if test -n "$SSH_CLIENT"
-        echo -n "$host_color@$(hostname) "
-    end
+    echo -n "$host_color@$(hostname) "
 end
 
 function __git_is_dirty
