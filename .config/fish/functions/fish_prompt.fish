@@ -33,9 +33,14 @@ function fish_prompt --description 'Write out the prompt'
     set -l statusb_color (set_color $bold_flag $fish_color_status)
     set -l prompt_status (__fish_print_pipestatus "[" "] " "|" "$status_color" "$statusb_color" $last_pipestatus)
 
-    echo -n -s (__prompt_kube_context) (set_color $color_cwd) (prompt_pwd) $normal (fish_vcs_prompt) $normal " " $prompt_status $suffix " "
+    echo -n -s (__prompt_host) (__prompt_kube_context) (set_color $color_cwd) (prompt_pwd) $normal (fish_vcs_prompt) $normal " " $prompt_status $suffix " "
 end
 
+function __prompt_host
+    if test -n "$SSH_CLIENT"
+        echo "@" hostname
+    end
+end
 
 function __git_is_dirty
     set -l diff (git diff --shortstat 2>/dev/null | tail -n1)
@@ -43,14 +48,14 @@ function __git_is_dirty
         return 1
     else
         return 0
-    end    
+    end
 end
 
 function __prompt_kube_context
     if command -q kubectl
         set -f active_context (kubectl config current-context 2>/dev/null)
         set -l kube_color (set_color normal)
-        if test "$active_context" = "production"
+        if test "$active_context" = production
             set -l kube_color (set_color red)
         end
 
