@@ -53,13 +53,15 @@ config.enable_scroll_bar = false
 local keys = {
 }
 
-for i = 1, 9 do
-    -- alt + number to activate that tab
-    table.insert(keys, {
-        key = tostring(i),
-        mods = 'ALT',
-        action = actions.ActivateTab(i - 1),
-    })
+if is_linux then
+    for i = 1, 9 do
+        -- alt + number to activate that tab
+        table.insert(keys, {
+            key = tostring(i),
+            mods = 'ALT',
+            action = actions.ActivateTab(i - 1),
+        })
+    end
 end
 
 -- Rather than emitting fancy composed characters when alt is pressed, treat the
