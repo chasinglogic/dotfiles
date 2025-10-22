@@ -37,8 +37,10 @@ function fish_prompt --description 'Write out the prompt'
 end
 
 function __prompt_host
+    set -l host_color (set_color E64553)
+
     if test -n "$SSH_CLIENT"
-        echo "@" hostname
+        echo -n "$host_color@$(hostname) "
     end
 end
 
