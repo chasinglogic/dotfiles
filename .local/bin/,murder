@@ -1,0 +1,202 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import subprocess
+import time
+import re
+
+# Signals to send for a "murder" attempt: [signal_code, wait_time_seconds]
+# 15: SIGTERM (terminate)
+# 3: SIGQUIT (quit)
+# 1: SIGHUP (hang up)
+# 9: SIGKILL (kill - non-catchable, non-ignorable)
+SIGNALS = [
+    [15, 3],
+    [2, 3],
+    [1, 4],
+    [9, 0],
+]
+
+EXIT_CODE = 0
+
+
+def set_exit_code(code: int):
+    global EXIT_CODE
+    if EXIT_CODE == 0:
+        EXIT_CODE = code
+
+
+def running(pid):
+    """
+    Checks if a process with the given PID is currently running.
+    Uses 'os.kill(pid, 0)' as a non-invasive check.
+    """
+    try:
+        # Signal 0 checks if the process is alive without killing it.
+        os.kill(pid, 0)
+        return True
+    except OSError:
+        return False
+
+
+def go_ahead():
+    """
+    Prompts the user and returns True if the response is a 'yes' equivalent.
+    """
+    try:
+        response = input().strip().lower()
+        return response in ("y", "yes", "yas")
+    except EOFError:
+        # Handle case where input stream is closed
+        return False
+
+
+def murder_pid(pid: int):
+    """
+    Attempts to kill a process using a sequence of signals.
+    """
+    for code, wait in SIGNALS:
+        if not running(pid):
+            break
+
+        print(f"-> Sending signal {code} to PID {pid}...")
+
+        try:
+            os.kill(pid, code)
+        except OSError as e:
+            # Process may have already died or we lack permission
+            print(f"Error sending signal {code} to PID {pid}: {e}", file=sys.stderr)
+
+        if running(pid) and wait > 0:
+            print(f"-> Waiting for {wait} seconds...")
+            time.sleep(wait)
+
+    if running(pid):
+        print(f"❗️ Process with PID {pid} is still running after all attempts.")
+        set_exit_code(1)
+    else:
+        print(f"✅ Process with PID {pid} terminated.")
+
+
+def murder_names(name):
+    """
+    Finds and attempts to kill processes by command name.
+    """
+    # Use subprocess.run for a clean command execution
+    try:
+        # -e: select all processes
+        # -o 'pid command': output format
+        ps_output = subprocess.run(
+            ["ps", "-eo", "pid command"],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+    except subprocess.CalledProcessError as e:
+        print(f"Error running 'ps': {e}", file=sys.stderr)
+        set_exit_code(1)
+        return
+
+    lines = ps_output.splitlines()
+    # Skip the header line
+    for line in lines[1:]:
+        parts = line.strip().split(None, 1)
+        if len(parts) != 2:
+            print("Got unexpected ps output:", line)
+            continue
+
+        pid, fullname = parts
+        pid = pid.strip()
+        fullname = fullname.strip()
+
+        if re.search(r"\b" + re.escape(name) + r"\b", fullname, re.IGNORECASE):
+            if os.getpid() == int(pid):
+                continue
+
+            print(f"murder {fullname} (pid {pid})? ", end="")
+            if go_ahead():
+                murder_pid(int(pid))
+
+
+def murder_port(port: str):
+    """
+    Finds and attempts to kill processes listening on a given port.
+    Requires the 'lsof' utility to be installed.
+    """
+    try:
+        # -i :<port> lists processes listening on the port
+        lsof_output = subprocess.run(
+            ["lsof", "-i", port],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+    except subprocess.CalledProcessError as e:
+        # lsof returns non-zero if no process is found, which is fine
+        if e.returncode == 1:
+            print(f"No process found listening on port {port}.")
+            return
+        else:
+            print(f"Error running 'lsof': {e}", file=sys.stderr)
+            return
+    except FileNotFoundError:
+        print("Error: 'lsof' command not found. Cannot kill by port.", file=sys.stderr)
+        return
+
+    lines = lsof_output.splitlines()
+    # Skip the header line
+    for line in lines[1:]:
+        parts = line.split()
+        if len(parts) < 2:
+            continue
+
+        pid = parts[1]
+
+        # Get the full command name using 'ps'
+        try:
+            fullname_output = subprocess.run(
+                ["ps", "-eo", "command", pid],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout
+            # ps output will have a header and then the command line
+            fullname = fullname_output.splitlines()[1].strip()
+        except Exception:
+            # Couldn't get process name, maybe it just died
+            fullname = f"[Process info unavailable for PID {pid}]"
+
+        print(f"murder {fullname} (pid {pid})? ", end="")
+        if go_ahead():
+            murder_pid(int(pid))
+
+
+def murder(arg):
+    """
+    Dispatches the murder request based on the argument type.
+    """
+    is_pid = arg.isnumeric()
+    # Check if it starts with ':' and the rest is a non-zero integer
+    is_port = arg.startswith(":") and arg[1:].isnumeric()
+
+    print(f"\nAttempting to murder: {arg}...")
+
+    if is_pid:
+        murder_pid(arg)
+    elif is_port:
+        murder_port(arg)
+    else:
+        murder_names(arg)
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("PIDS_PORTS_OR_PROCESS_NAMES", nargs="+")
+    args = parser.parse_args()
+    for pid_port_or_name in args.PIDS_PORTS_OR_PROCESS_NAMES:
+        murder(pid_port_or_name)
+
+    sys.exit(EXIT_CODE)
