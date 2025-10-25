@@ -40,6 +40,7 @@ delta = "latest"
 "aqua:bvaisvil/zenith" = "latest"
 "ubi:chasinglogic/projector" = "latest"
 "ubi:chasinglogic/dfm" = "latest"
+"npm:@google/gemini-cli" = "latest"
 
 # For building and publishing my blog
 hugo = "latest"
@@ -54,7 +55,7 @@ syft = "latest"
 # Languages
 rust = "latest"
 go = "latest"
-python = "latest"
+python = "3.13"
 node = "latest"
 
 # Language tooling
@@ -70,6 +71,7 @@ golangci-lint = "latest"
 "npm:eslint" = "latest"
 "npm:pnpm" = "latest"
 pipx = "latest"
+ruby = "latest"
 
 [settings]
 experimental = true

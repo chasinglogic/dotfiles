@@ -97,4 +97,6 @@ if fish_path ~= nil then
     config.default_prog = { fish_path, '-l' }
 end
 
+config.warn_about_missing_glyphs = false
+
 return config

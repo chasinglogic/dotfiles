@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+
+import sys
+import subprocess
+import json
+from datetime import datetime
+
+
+def exec_command(*args):
+    """
+    Executes an external command and returns True if it exited successfully (status code 0),
+    False otherwise. It handles the case where the command isn't found (Errno::ENOENT).
+    """
+    try:
+        result = subprocess.run(args, check=False, text=True)
+        return result.returncode == 0
+    except FileNotFoundError:
+        return False
+    except Exception as e:
+        print(f"An unexpected error occurred during execution: {e}", file=sys.stderr)
+        return False
+
+
+def notify(title, description):
+    """
+    Attempts to send a desktop notification using platform-specific tools.
+    1. Tries 'notify-send' (common on Linux/BSD).
+    2. Tries 'osascript' with JavaScript (macOS).
+    3. Fails if neither succeeds.
+    """
+    # 1. Try notify-send (Linux/BSD)
+    # --expire-time=5000 is 5 seconds
+    if exec_command("notify-send", f"--expire-time={5000}", title, description):
+        return
+
+    # 2. Try osascript with JavaScript (macOS)
+    js_description = json.dumps(description)
+    js_title = json.dumps(title)
+
+    js = f"""
+    var app = Application.currentApplication()
+    app.includeStandardAdditions = true
+    app.displayNotification({js_description}, {{
+      withTitle: {js_title}
+    }})
+    """
+
+    if exec_command("osascript", "-l", "JavaScript", "-e", js):
+        return
+
+    # 3. Fallback error
+    sys.stderr.write(
+        "Can't send desktop notifications (notify-send and osascript failed).\n"
+    )
+    sys.exit(1)
+
+
+# --- Main Execution Block ---
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Send a desktop notification.",
+    )
+
+    parser.add_argument(
+        "title",
+        type=str,
+        nargs="?",
+        default="Notification",
+        help='The title of the notification (defaults to "Notification").',
+    )
+
+    parser.add_argument(
+        "description",
+        type=str,
+        nargs="?",
+        default="Done",
+        help="The main text body of the notification (defaults to the current ISO 8601 timestamp).",
+    )
+
+    args = parser.parse_args()
+
+    notify(args.title, args.description)
