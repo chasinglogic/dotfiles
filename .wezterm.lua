@@ -17,7 +17,7 @@ config.color_scheme = 'Catppuccin Mocha'
 -- config.harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' }
 
 if is_linux then
-    config.font_size = 14.0
+    config.font_size = 13.0
 else
     config.font_size = 18.0
 end
