@@ -118,3 +118,4 @@ source_if_exists "$HOME/.prompt.bash"
 for compfile in "$HOME/.local/share/bash-completions"/*; do
 	source "$compfile"
 done
+. "$HOME/.cargo/env"

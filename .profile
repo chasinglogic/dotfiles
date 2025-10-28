@@ -174,3 +174,4 @@ if [[ "$EDITOR" != "code --wait" ]]; then
 fi
 
 debug "PATH=$PATH" 2
+. "$HOME/.cargo/env"
