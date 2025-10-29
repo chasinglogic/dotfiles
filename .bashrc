@@ -1,4 +1,4 @@
-if [ -n "$SSH_CLIENT" ]; then
+if [[ $- == *i* ]] && [ -n "$SSH_CLIENT" ]; then
 	exec fish
 fi
 
@@ -118,4 +118,3 @@ source_if_exists "$HOME/.prompt.bash"
 for compfile in "$HOME/.local/share/bash-completions"/*; do
 	source "$compfile"
 done
-. "$HOME/.cargo/env"
