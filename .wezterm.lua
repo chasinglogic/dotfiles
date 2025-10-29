@@ -10,7 +10,9 @@ local is_linux = is_os("linux")
 
 ---- Appearance Settings -----
 
-config.color_scheme = 'Catppuccin Mocha'
+-- config.color_scheme = 'Catppuccin Mocha'
+-- config.color_scheme = 'Catppuccin Latte'
+config.color_scheme = 'Catppuccin Macchiato'
 
 -- Disable ligatures
 -- https://wezfurlong.org/wezterm/config/font-shaping.html#advanced-font-shaping-options
