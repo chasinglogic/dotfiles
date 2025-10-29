@@ -22,7 +22,6 @@ return {
 		priority = 1000,
 		config = function()
 			require('catppuccin').setup({})
-			vim.o.background = 'dark'
 			vim.cmd.colorscheme('catppuccin-mocha')
 		end
 	},
