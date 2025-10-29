@@ -21,7 +21,7 @@ config.color_scheme = 'Catppuccin Macchiato'
 if is_linux then
     config.font_size = 13.0
 else
-    config.font_size = 18.0
+    config.font_size = 17.0
 end
 config.line_height = 1.1
 
