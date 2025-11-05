@@ -72,6 +72,7 @@ golangci-lint = "latest"
 "npm:pnpm" = "latest"
 pipx = "latest"
 ruby = "latest"
+npm = "latest"
 
 [settings]
 experimental = true

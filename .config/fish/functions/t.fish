@@ -3,7 +3,12 @@ function t
         set -gx SHELL (which fish)
     end
 
-    set -l session_name (basename (pwd))
+    if test -n "$argv[1]"
+        set -f session_name $argv[1]
+    else
+        set -f session_name (basename (pwd))
+    end
+
     echo "Starting session: $session_name"
 
     if ! tmux has-session -t $session_name
