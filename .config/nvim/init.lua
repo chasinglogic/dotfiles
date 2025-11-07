@@ -281,7 +281,8 @@ for server, settings in pairs(servers) do
 
     vim.lsp.config(server, {
       settings = settings,
-      filetypes = filetypes
+      filetypes = filetypes,
+      on_attach = on_attach,
     })
   end
 end
