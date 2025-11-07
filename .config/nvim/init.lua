@@ -173,52 +173,57 @@ end, 0)
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
-  -- NOTE: Remember that lua is a real programming language, and as such it is possible
-  -- to define small helper and utility functions so you don't have to repeat yourself
-  -- many times.
-  --
-  -- In this case, we create a function that lets us more easily define mappings specific
-  -- for LSP related items. It sets the mode, buffer and description for us each time.
-  local nmap = function(keys, func, desc)
-    if desc then
-      desc = "LSP: " .. desc
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("lsp-attach-config", { clear = true }),
+  callback = function(args)
+    local bufnr = args.buf
+
+    -- NOTE: Remember that lua is a real programming language, and as such it is possible
+    -- to define small helper and utility functions so you don't have to repeat yourself
+    -- many times.
+    --
+    -- In this case, we create a function that lets us more easily define mappings specific
+    -- for LSP related items. It sets the mode, buffer and description for us each time.
+    local nmap = function(keys, func, desc)
+      if desc then
+        desc = "LSP: " .. desc
+      end
+
+      vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
     end
 
-    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-  end
+    nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame Symbol")
+    nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
-  nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame Symbol")
-  nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+    nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
+    nmap("ga", vim.lsp.buf.code_action, "Do code action")
 
-  nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
-  nmap("ga", vim.lsp.buf.code_action, "Do code action")
-
-  local hover_or_open_diagnostic_float = function()
-    local lineNumber = vim.fn.line(".") - 1 -- Needs to be 0-based indexing but line returns 1 based
-    local diag = vim.diagnostic.get(0, { lnum = lineNumber })
-    local has_diagnostics = #diag > 0
-    if has_diagnostics then
-      vim.diagnostic.open_float()
-    else
-      vim.lsp.buf.hover()
+    local hover_or_open_diagnostic_float = function()
+      local lineNumber = vim.fn.line(".") - 1 -- Needs to be 0-based indexing but line returns 1 based
+      local diag = vim.diagnostic.get(0, { lnum = lineNumber })
+      local has_diagnostics = #diag > 0
+      if has_diagnostics then
+        vim.diagnostic.open_float()
+      else
+        vim.lsp.buf.hover()
+      end
     end
+
+    -- See `:help K` for why this keymap
+    nmap("K", hover_or_open_diagnostic_float, "Hover Documentation")
+    nmap("<C-h>", vim.lsp.buf.signature_help, "Signature Documentation")
+
+    -- Lesser used LSP functionality
+    nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+
+    -- Create a command `:Format` local to the LSP buffer
+    vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
+      vim.lsp.buf.format()
+    end, { desc = "Format current buffer with LSP" })
+
+    nmap("<leader>bf", vim.lsp.buf.format, "[B]uffer [F]ormat")
   end
-
-  -- See `:help K` for why this keymap
-  nmap("K", hover_or_open_diagnostic_float, "Hover Documentation")
-  nmap("<C-h>", vim.lsp.buf.signature_help, "Signature Documentation")
-
-  -- Lesser used LSP functionality
-  nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-
-  -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
-    vim.lsp.buf.format()
-  end, { desc = "Format current buffer with LSP" })
-
-  nmap("<leader>bf", vim.lsp.buf.format, "[B]uffer [F]ormat")
-end
+})
 
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -270,10 +275,6 @@ mason_lspconfig.setup({
   ensure_installed = vim.tbl_keys(servers),
 })
 
-vim.lsp.config('*', {
-  on_attach = on_attach,
-})
-
 for server, settings in pairs(servers) do
   if not rawequal(next(settings), nil) then
     local filetypes = settings.filetypes
@@ -282,7 +283,6 @@ for server, settings in pairs(servers) do
     vim.lsp.config(server, {
       settings = settings,
       filetypes = filetypes,
-      on_attach = on_attach,
     })
   end
 end
