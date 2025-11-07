@@ -53,6 +53,10 @@ config.enable_scroll_bar = false
 ---- Key Bindings ----
 
 local keys = {
+    {
+        key = 'F11',
+        action = actions.ToggleFullScreen
+    }
 }
 
 if is_linux then
