@@ -8,8 +8,6 @@ function fish_prompt --description 'Write out the prompt'
     set -q fish_color_status
     or set -g fish_color_status red
 
-    # Color the prompt differently when we're root
-    set -l color_cwd $fish_color_cwd
     if __git_is_dirty
         set -f suffix "$orange"λ
     else
@@ -28,7 +26,7 @@ function fish_prompt --description 'Write out the prompt'
     set -l statusb_color (set_color $bold_flag $fish_color_status)
     set -l prompt_status (__fish_print_pipestatus "[" "] " "|" "$status_color" "$statusb_color" $last_pipestatus)
 
-    set -l status_line "$(set_color $color_cwd)$(prompt_pwd) $(__prompt_git_branch) $(__prompt_kube_context) \n"
+    set -l status_line "$(set_color $fish_color_cwd)$(prompt_pwd) $(__prompt_git_branch) $(__prompt_kube_context) \n"
 
     echo -e -n -s $status_line $prompt_status (__prompt_host) $suffix " "
 end
@@ -60,8 +58,9 @@ function __git_is_dirty
 end
 
 function __prompt_git_branch
-    if test (git rev-parse --is-inside-work-tree) = true
-        status_segment git (fish_vcs_prompt '%s')
+    set -l branch (fish_vcs_prompt '%s')
+    if test "$branch" != ''
+        status_segment vcs $branch 
     end
 end
 
