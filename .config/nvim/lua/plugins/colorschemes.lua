@@ -5,8 +5,9 @@ return {
 	-- 	priority = 1000,
 	-- },
 	{
-		"Mofiqul/dracula.nvim",
+		"maxmx03/dracula.nvim",
 		priority = 1000,
+		opts = {},
 	},
 	{
 		"folke/tokyonight.nvim",
