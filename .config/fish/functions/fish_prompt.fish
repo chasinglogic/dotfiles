@@ -1,8 +1,10 @@
+set -g KEY_COLOR (set_color 89DCEB)
+set -g NORMAL (set_color normal)
+
 function fish_prompt --description 'Write out the prompt'
     set -l last_pipestatus $pipestatus
     set -lx __fish_last_status $status # Export for __fish_print_pipestatus.
-    set -l normal (set_color normal)
-    set -l orange (set_color FFA500)
+    set -l orange (set_color FAB387)
     set -q fish_color_status
     or set -g fish_color_status red
 
@@ -26,7 +28,16 @@ function fish_prompt --description 'Write out the prompt'
     set -l statusb_color (set_color $bold_flag $fish_color_status)
     set -l prompt_status (__fish_print_pipestatus "[" "] " "|" "$status_color" "$statusb_color" $last_pipestatus)
 
-    echo -n -s (__prompt_host) (__prompt_kube_context) (set_color $color_cwd) (prompt_pwd) $normal " " $prompt_status $suffix " "
+    set -l status_line "$(set_color $color_cwd)$(prompt_pwd) $(__prompt_git_branch) $(__prompt_kube_context) \n"
+
+    echo -e -n -s $status_line $prompt_status (__prompt_host) $suffix " "
+end
+
+function status_segment
+    set -l key $argv[1]
+    set -l value $argv[2]
+
+    echo -s -n -e $KEY_COLOR $key "=" $NORMAL $value " " $NORMAL
 end
 
 function __prompt_host
@@ -48,17 +59,22 @@ function __git_is_dirty
     end
 end
 
+function __prompt_git_branch
+    if test (git rev-parse --is-inside-work-tree) = true
+        status_segment git (fish_vcs_prompt '%s')
+    end
+end
+
 function __prompt_kube_context
     if command -q kubectl
         set -f active_context (kubectl config current-context 2>/dev/null)
-        set -l kube_color (set_color normal)
+        set -f kube_color (set_color normal)
         if test "$active_context" = production
-            set -l kube_color (set_color red)
+            set -f kube_color (set_color red)
         end
 
         if test -n "$active_context"
-            echo -n $kube_color
-            echo -n "(kube: $active_context) "
+            status_segment kube $kube_color$active_context
         end
     end
 end
