@@ -63,10 +63,4 @@ else
     set -gx FZF_DEFAULT_COMMAND "find . -path './.git' -prune -o -type f -print"
 end
 
-if command -q nvim
-    set -gx VIM_PROG nvim
-else
-    set -gx VIM_PROG vim
-end
-
-set -gx EDITOR "$VIM_PROG"
+set -gx EDITOR nvim
