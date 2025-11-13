@@ -254,7 +254,6 @@ local servers = {
   },
   tflint = {},
   ts_ls = {},
-  eslint_lsp = {},
   zls = {},
 
   lua_ls = {
