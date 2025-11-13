@@ -43,9 +43,11 @@ function __prompt_host
     set -f host (hostname | sed 's/.local//')
     if test -n "$SSH_CLIENT"
         set -f host "$USER@$host"
+    else
+        set -f host "@$host"
     end
 
-    echo -n "$host_color@$host "
+    echo -n "$host_color$host "
 end
 
 function __git_is_dirty
