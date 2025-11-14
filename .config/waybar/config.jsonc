@@ -13,7 +13,7 @@
 
   "modules-left": [
     "custom/smallspacer",
-    "hyprland/workspaces",
+    "niri/workspaces",
     "custom/spacer",
   ],
 
@@ -134,14 +134,8 @@
   //   },
   // },
 
-  "hyprland/workspaces": {
+  "niri/workspaces": {
     "all-outputs": true,
-	"format": "{icon} ",
-    "format-icons": {
-      "1": "",
-      "2": "",
-      "default": ""
-    }
   },
 
   "wlr/workspaces": {
