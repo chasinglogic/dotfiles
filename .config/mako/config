@@ -1,14 +1,17 @@
-text-color=#cad3f5
-border-color=#94e2d5
-background-color=#24273a
-width=420
-height=120
-padding=12
-border-size=2
-font=Hack Nerd Font 14
-anchor=top-center
+# vi: ft=ini
+
+text-color=#cdd6f4
+border-color=#f9e2af
+background-color=#1e1e2e
+
+anchor=top-right
 default-timeout=5000
+width=420
+outer-margin=20
+padding=10,15
+border-size=2
 max-icon-size=32
+font=Hack Nerd Font 14
 
 [app-name=Spotify]
 invisible=1
@@ -18,3 +21,6 @@ invisible=true
 
 [mode=do-not-disturb app-name=notify-send]
 invisible=false
+
+[urgency=critical]
+default-timeout=0
