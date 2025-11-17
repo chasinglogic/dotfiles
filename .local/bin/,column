@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+COL_NUMBER=$1
+if [ -z "$COL_NUMBER" ]; then
+    echo "Usage: ,col <column-number>"
+    exit 1
+fi
+
+exec awk "{ print \$$COL_NUMBER }"
