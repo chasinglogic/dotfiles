@@ -41,6 +41,7 @@ require("lazy").setup({
 require("chasinglogic.keys")
 require("chasinglogic.editor")
 require("chasinglogic.abbrevs")
+require("chasinglogic.statusline")
 
 -- vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 
