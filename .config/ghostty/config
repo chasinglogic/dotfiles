@@ -4,3 +4,4 @@ macos-option-as-alt = true
 command = fish --login --interactive
 config-file = ?macos-config
 maximize = true
+window-inherit-working-directory = false
