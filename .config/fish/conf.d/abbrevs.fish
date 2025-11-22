@@ -53,3 +53,7 @@ end
 abbr --position anywhere --add !! --function last_history_item
 
 abbr --position anywhere --add gsutil "gcloud storage"
+
+if command -q bat
+	abbr --add cat bat
+end
