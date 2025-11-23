@@ -332,5 +332,19 @@ vim.api.nvim_create_autocmd('DiagnosticChanged', {
 })
 
 -- }}}
+-- Abbreviations {{{
+local abbreviations = {
+    teh = "the",
+    becuase = "because",
+    concats = "concatenates",
+    editting = "editing",
+    irreplacable = "irreplaceable",
+    repos = "repositories",
+    similiar = "similar",
+}
 
+for abbreviation, expansion in pairs(abbreviations) do
+    vim.cmd("abb " .. abbreviation .. " " .. expansion)
+end
+-- }}}
 vim.cmd("colorscheme catppuccin-mocha")
