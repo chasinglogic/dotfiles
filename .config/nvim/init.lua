@@ -3,6 +3,18 @@
 -- Options {{{
 -- Enable modelines
 vim.o.modeline = true
+-- fo-n Recognize numbered lists
+vim.opt.formatoptions:append({
+    "n",
+})
+-- Use ripgrep if it's available
+if vim.fn.executable("rg") then
+    vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
+else
+    vim.opt.grepprg = "grep -R"
+end
+-- Ignore these kinds of files when pressing <TAB> to complete a command.
+vim.opt.wildignore:append({ "*.o", "*.git", "*.svn", "*.pyc", "env/*", ".git/*" })
 -- automatically save your undo history when you write a file and restore undo
 -- history when you edit the file again
 vim.o.undofile = true
@@ -17,6 +29,8 @@ vim.o.autoindent = true
 vim.o.smartindent = true
 -- Hightly search matches as search is typed.
 vim.o.incsearch = true
+-- Show incsearch in a split
+vim.o.inccommand = "split"
 -- Don't show mode in command line (status line has info already)
 vim.o.showmode = false
 -- Enable line numbers
@@ -26,12 +40,14 @@ vim.o.wrap = false
 -- Always show sign column to avoid flickering when LSP's are thinking.
 vim.o.signcolumn = "yes"
 -- Use system clipboard
-vim.o.clipboard = "unnamedplus"
+vim.opt.clipboard:append("unnamedplus")
 -- Make tabs 4 spaces
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 -- Expand tabs to spaces
 vim.o.expandtab = true
+--  Don't highlight search matches after search is completed
+vim.opt.hlsearch = false
 -- Add dash as a keyword separator so the word textobject respects it.
 vim.o.iskeyword = '@,48-57,_,192-255,-'
 -- A comma-separated list of options for Insert mode completion, used options:
@@ -64,6 +80,11 @@ vim.diagnostic.config({
     signs = { priority = 9999, severity = { min = 'WARN', max = 'ERROR' } },
     virtual_text = true,
 })
+-- Set <space> as the leader key
+-- See `:help mapleader`
+-- NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 -- }}}
 -- Plugins {{{
 
@@ -212,6 +233,8 @@ require("mason-tool-installer").setup({
         "ruff",
         "rust-analyzer",
         "stimulus-language-server",
+        "shellcheck",
+        "shfmt",
         "terraform-ls",
         "tflint",
         "typescript-language-server",
@@ -221,12 +244,9 @@ require("mason-tool-installer").setup({
 -- }}}
 -- Autoformatting (conform) {{{
 require('conform').setup({
-    formatters_by_ft = {
-        bash = { "shfmt" },
-    },
     format_on_save = {
         timeout_ms = 500,
-        lsp_format = 'fallback',
+        lsp_format = 'first',
     }
 })
 vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
@@ -255,8 +275,6 @@ require('oil').setup({
 local nmap = function(keys, func, desc)
     vim.keymap.set("n", keys, func, { desc = desc })
 end
-
-vim.g.mapleader = " "
 
 vim.keymap.set('i', 'fd', '<ESC>')
 
@@ -346,5 +364,35 @@ local abbreviations = {
 for abbreviation, expansion in pairs(abbreviations) do
     vim.cmd("abb " .. abbreviation .. " " .. expansion)
 end
+-- }}}
+-- Auto commands {{{
+-- Open location and quickfix list when using associated commands {{{
+vim.cmd([[
+augroup AutoOpenListWindow
+    autocmd!
+    autocmd QuickFixCmdPost [^l]* cwindow
+    autocmd QuickFixCmdPost l*    lwindow
+augroup END
+]])
+-- }}}
+-- Highlight on yank {{{
+-- See `:help vim.highlight.on_yank()`
+local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
+vim.api.nvim_create_autocmd("TextYankPost", {
+    callback = function()
+        vim.highlight.on_yank()
+    end,
+    group = highlight_group,
+    pattern = "*",
+})
+-- }}}
+-- Make Terminal more usable on startup {{{
+vim.api.nvim_command([[
+augroup TerminalSettings
+    autocmd TermOpen * startinsert
+    autocmd TermOpen * setlocal listchars= nonumber norelativenumber
+augroup END
+]])
+-- }}}
 -- }}}
 vim.cmd("colorscheme catppuccin-mocha")
