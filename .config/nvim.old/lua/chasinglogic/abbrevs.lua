@@ -1,7 +1,0 @@
-vim.cmd("abb teh the")
-vim.cmd("abb becuase because")
-vim.cmd("abb concats concatenates")
-vim.cmd("abb editting editing")
-vim.cmd("abb irreplacable irreplaceable")
-vim.cmd("abb repos repositories")
-vim.cmd("abb similiar similar")

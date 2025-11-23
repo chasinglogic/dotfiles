@@ -1,2 +1,0 @@
-(text) @yaml
-(text) @html
