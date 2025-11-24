@@ -7,6 +7,11 @@ vim.o.modeline = true
 vim.opt.formatoptions:append({
     "n",
 })
+-- If the 'ignorecase' option is on, the case of normal letters is ignored.
+-- 'smartcase' can be set to ignore case when the pattern contains lowercase
+-- letters only. Note that this affects mini.pick as well.
+vim.o.ignorecase = true
+vim.o.smartcase = true
 -- Use ripgrep if it's available
 if vim.fn.executable("rg") then
     vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
