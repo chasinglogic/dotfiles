@@ -311,8 +311,14 @@ local nmap = function(keys, func, desc)
 end
 
 vim.keymap.set('i', 'fd', '<ESC>')
+--On MacOS I tell my keyboard to use alt as meta as the Lord intended but that
+--means I can't type the hash symbol on my UK keyboards. This fixes that.
+if vim.fn.has("macunix") then
+    vim.keymap.set("i", "<M-3>", "#")
+end
 
 nmap("-", "<CMD>Oil<CR>", "Open parent directory")
+nmap("!", ":!", "Run shell command")
 
 nmap('<leader>?', function()
     require("which-key").show({ global = false })
@@ -335,6 +341,9 @@ nmap('<leader>pf', '<CMD>Pick files<CR>', '[P]ick [F]iles')
 nmap('<leader>pg', '<CMD>Pick grep_live<CR>', '[P]ick [G]rep')
 nmap('<leader>pb', '<CMD>Pick buffers<CR>', '[P]ick [B]uffers')
 nmap('<leader><leader>', '<CMD>Pick commands<CR>', '[P]ick vim commands')
+
+nmap('<leader>br', '<CMD>e %<CR>', '[B]uffer [R]efresh')
+nmap('<leader>bd', '<CMD>bprevious<CR><CMD>bdelete #<CR>', '[B]uffer [R]efresh')
 
 -- }}}
 -- LSP {{{
