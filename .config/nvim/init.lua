@@ -129,35 +129,44 @@ require('which-key').setup()
 require('dropbar').setup()
 -- }}}
 -- TreeSitter {{{
-require('nvim-treesitter').setup({
-    ensure_installed = {
-        "bash",
-        "c",
-        "cpp",
-        "css",
-        "dockerfile",
-        "embedded_template",
-        "go",
-        "gotmpl",
-        "html",
-        "javascript",
-        "jsdoc",
-        "json",
-        "jsonc",
-        "kdl",
-        "lua",
-        "python",
-        "ruby",
-        "rust",
-        "svelte",
-        "toml",
-        "tsx",
-        "typescript",
-        "vim",
-        "vimdoc",
-        "yaml",
-        "zig",
-    }
+local treesitter_langs = {
+    "bash",
+    "c",
+    "cpp",
+    "css",
+    "dockerfile",
+    "embedded_template",
+    "go",
+    "gotmpl",
+    "hcl",
+    "html",
+    "javascript",
+    "jsdoc",
+    "json",
+    "jsonc",
+    "kdl",
+    "lua",
+    "python",
+    "ruby",
+    "rust",
+    "svelte",
+    "terraform",
+    "toml",
+    "tsx",
+    "typescript",
+    "vim",
+    "vimdoc",
+    "yaml",
+    "zig",
+}
+require('nvim-treesitter').install(treesitter_langs)
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = treesitter_langs,
+    callback = function()
+        vim.treesitter.start()
+        vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end,
 })
 -- }}}
 -- Mini {{{

@@ -1,6 +1,7 @@
 [tools]
 "ubi:asdine/cueimports" = "latest"
 "ubi:direnv/direnv" = "latest"
+"ubi:tree-sitter/tree-sitter" = "latest"
 
 # Encryption
 "ubi:getsops/sops" = "latest"
