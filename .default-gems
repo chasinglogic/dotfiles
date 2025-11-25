@@ -3,3 +3,4 @@ ruby-lsp
 rubocop
 rufo
 rails
+erb-formatter
