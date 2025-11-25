@@ -184,7 +184,19 @@ require('mini.icons').setup()
 require('mini.completion').setup()
 require('mini.notify').setup()
 require('mini.statusline').setup()
-require('mini.pick').setup()
+-- Centered on screen
+local centered_picker_window = function()
+    local height = math.floor(0.618 * vim.o.lines)
+    local width = math.floor(0.618 * vim.o.columns)
+    return {
+        anchor = 'NW',
+        height = height,
+        width = width,
+        row = math.floor(0.5 * (vim.o.lines - height)),
+        col = math.floor(0.5 * (vim.o.columns - width)),
+    }
+end
+require('mini.pick').setup({ window = { config = centered_picker_window } })
 -- Align text interactively. Example usage:
 -- - `gaip,` - `ga` (align operator) *i*nside *p*aragraph by comma
 -- - `gAip` - start interactive alignment on the paragraph. Choose how to
@@ -338,6 +350,7 @@ nmap('<leader>fq', '<CMD>wq<CR>', '[F]ile save and [Q]uit')
 
 nmap('<leader>w', '<C-w>', '[W]indows')
 nmap('<leader>r', '<CMD>source ~/.config/nvim/init.lua<CR>')
+nmap('<leader>u', vim.pack.update)
 
 nmap('<leader>to', '<CMD>tabnew<CR>', '[T]ab [O]pen')
 nmap('<leader>tc', '<CMD>tabclose<CR>', '[T]ab [C]lose')
@@ -345,6 +358,7 @@ nmap('<leader>tn', '<CMD>tabnext<CR>', '[T]ab [N]ext')
 nmap('<leader>tp', '<CMD>tabprev<CR>', '[T]ab [P]revious')
 
 nmap('<leader>gs', '<CMD>Git<CR>', '[G]it [S]tatus')
+nmap('<leader>gg', ':Git ', '[G]it')
 
 nmap('<leader>pf', '<CMD>Pick files<CR>', '[P]ick [F]iles')
 nmap('<leader>pg', '<CMD>Pick grep_live<CR>', '[P]ick [G]rep')
