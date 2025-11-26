@@ -49,3 +49,6 @@ source_if_exists "$HOME/.local.sh"
 
 # initialise completions with ZSH's compinit
 autoload -Uz compinit && compinit
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /Users/chasinglogic/.local/share/mise/installs/terragrunt/v0.93.3/terragrunt terragrunt

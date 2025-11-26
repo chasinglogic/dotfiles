@@ -118,3 +118,5 @@ source_if_exists "$HOME/.prompt.bash"
 for compfile in "$HOME/.local/share/bash-completions"/*; do
 	source "$compfile"
 done
+
+complete -C /Users/chasinglogic/.local/share/mise/installs/terragrunt/v0.93.3/terragrunt terragrunt
