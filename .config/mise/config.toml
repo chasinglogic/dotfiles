@@ -71,7 +71,6 @@ golangci-lint = "latest"
 pipx = "latest"
 ruby = "latest"
 npm = "latest"
-bun = "latest"
 usage = "latest"
 "asdf:neovim" = "nightly"
 
