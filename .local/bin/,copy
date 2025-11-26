@@ -4,8 +4,8 @@ set -u
 
 if hash pbcopy 2>/dev/null; then
   exec pbcopy
-elif hash wl-clip 2>/dev/null; then
-  exec wl-clip
+elif hash wl-copy 2>/dev/null; then
+  exec wl-copy
 elif hash putclip 2>/dev/null; then
   exec putclip
 else
