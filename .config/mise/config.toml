@@ -73,6 +73,7 @@ ruby = "latest"
 npm = "latest"
 usage = "latest"
 "asdf:neovim" = "nightly"
+act = "latest"
 
 [settings]
 experimental = true
