@@ -294,7 +294,6 @@ require("mason-tool-installer").setup({
         "terraform-ls",
         "tflint",
         "typescript-language-server",
-        "nil_ls",
     }
 })
 -- }}}
