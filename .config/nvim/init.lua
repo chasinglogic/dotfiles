@@ -427,6 +427,7 @@ local abbreviations = {
     editting = "editing",
     irreplacable = "irreplaceable",
     repos = "repositories",
+    repo = "repository",
     similiar = "similar",
 }
 
