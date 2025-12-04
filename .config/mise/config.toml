@@ -74,6 +74,7 @@ npm = "latest"
 usage = "latest"
 "asdf:neovim" = "nightly"
 act = "latest"
+k9s = "latest"
 
 [settings]
 experimental = true
