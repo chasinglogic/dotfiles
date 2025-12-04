@@ -5,6 +5,7 @@
 
 # Cloud tools
 gcloud = "latest"
+aws-cli = { version = "2", symlink_bins = "true" }
 
 # Encryption
 "ubi:getsops/sops" = "latest"
