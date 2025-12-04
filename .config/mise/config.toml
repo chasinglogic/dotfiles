@@ -3,11 +3,15 @@
 "ubi:direnv/direnv" = "latest"
 "ubi:tree-sitter/tree-sitter" = "latest"
 
+# Cloud tools
+gcloud = "latest"
+
 # Encryption
 "ubi:getsops/sops" = "latest"
 "ubi:FiloSottile/age" = "latest"
 
 # Kubernetes
+k9s = "latest"
 kubectl = "latest"
 helm = "latest"
 kube-capacity = "latest"
@@ -74,7 +78,6 @@ npm = "latest"
 usage = "latest"
 "asdf:neovim" = "nightly"
 act = "latest"
-k9s = "latest"
 
 [settings]
 experimental = true
