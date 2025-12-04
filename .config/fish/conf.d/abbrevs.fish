@@ -23,7 +23,6 @@ abbr --add zypper "sudo zypper"
 abbr --add pacman "sudo pacman"
 if test (uname) = Darwin
     abbr --position anywhere --add sed gsed
-    abbr --position anywhere --add grep ggrep
 end
 
 function last_history_item
@@ -34,5 +33,5 @@ abbr --position anywhere --add !! --function last_history_item
 abbr --position anywhere --add gsutil "gcloud storage"
 
 if command -q bat
-	abbr --position anywhere --add cat bat
+    abbr --position anywhere --add cat bat
 end
