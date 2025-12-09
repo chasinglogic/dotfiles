@@ -1,1 +1,21 @@
-no-color: true
+style:
+    footer:
+        text-color: '#11111b'
+        background-color: '#b4befe'
+        number-color: '#11111b'
+    header:
+        text-color: '#11111b'
+        background-color: '#b4befe'
+        hidden: false
+    selected-row:
+        text-color: '#11111b'
+        background-color: '#f5e0dc'
+    result-row:
+        number-color: '#fab387'
+        directory-color: '#89b4fa'
+    progress-modal:
+        current-item-path-max-len: 0
+    use-old-size-bar: false
+
+# no-color: true
+mouse: true
