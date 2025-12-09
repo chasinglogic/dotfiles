@@ -21,8 +21,6 @@ kubens = "latest"
 kind = "latest"
 
 # IaC tools
-"pipx:ansible" = { version = "latest", uvx = "false", pipx_args = "--include-deps" }
-"pipx:ansible-dev-tools" = { version = "latest", uvx = "false" }
 terragrunt = "latest"
 opentofu = "latest"
 terraform = "latest"
@@ -79,6 +77,9 @@ npm = "latest"
 usage = "latest"
 "asdf:neovim" = "nightly"
 act = "latest"
+fx = "latest"
+gh = "latest"
+"ubi:dundee/gdu" = "latest"
 
 [settings]
 experimental = true

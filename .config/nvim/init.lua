@@ -175,12 +175,14 @@ require('mini.pairs').setup()
 require('mini.surround').setup()
 require('mini.splitjoin').setup()
 require('mini.comment').setup()
-local gen_loader = require('mini.snippets').gen_loader
-require('mini.snippets').setup({
-    snippets = {
-        gen_loader.from_lang(),
-    }
-})
+-- Disabled because it bugs out often or I can't figure out how to use it right
+-- now.
+-- local gen_loader = require('mini.snippets').gen_loader
+-- require('mini.snippets').setup({
+--     snippets = {
+--         gen_loader.from_lang(),
+--     }
+-- })
 require('mini.icons').setup()
 require('mini.completion').setup()
 require('mini.notify').setup()
