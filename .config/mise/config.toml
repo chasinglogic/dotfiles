@@ -80,6 +80,9 @@ act = "latest"
 fx = "latest"
 gh = "latest"
 "ubi:dundee/gdu" = "latest"
+clojure = "latest"
+java = "openjdk-25"
+babashka = "latest"
 
 [settings]
 experimental = true
