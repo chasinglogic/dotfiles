@@ -133,6 +133,7 @@ require('dropbar').setup()
 local treesitter_langs = {
     "bash",
     "c",
+    "clojure",
     "cpp",
     "css",
     "dockerfile",
@@ -276,6 +277,8 @@ require("mason-lspconfig").setup()
 require("mason-tool-installer").setup({
     ensure_installed = {
         "ansible-language-server",
+        "cljfmt",
+        "clojure-lsp",
         "docker-compose-language-service",
         "dockerfile-language-server",
         "erb-formatter",
@@ -290,9 +293,9 @@ require("mason-tool-installer").setup({
         "ruby-lsp",
         "ruff",
         "rust-analyzer",
-        "stimulus-language-server",
         "shellcheck",
         "shfmt",
+        "stimulus-language-server",
         "terraform-ls",
         "tflint",
         "typescript-language-server",
