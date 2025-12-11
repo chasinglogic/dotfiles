@@ -22,55 +22,67 @@
        ("ERR" "ERROR") (:red colors)
        (:reset colors)))))
 
-;; --- State for dynamic keys ---
-(defonce timestamp-key (atom nil))
-(defonce level-key (atom nil))
-(defonce message-key (atom nil))
+(def timestamp-keys [:time :timestamp :ts])
+(def level-keys [:level :levelname :level_name])
+(def message-keys [:message :msg])
 
-(defn- discover-key [key-atom possible-keys data]
-  (when-let [found-key (some #(when (contains? data %) %) possible-keys)]
-    (reset! key-atom found-key)))
+(defn cache-forever [f]
+  (let [mem (atom {})
+        cache-key (-> f meta :name)]
+    (fn [& args]
+      (or (when-let [cached (get @mem cache-key)]
+            cached)
+          (let [ret (apply f args)]
+            (swap! mem assoc cache-key ret)
+            ret)))))
 
-(defn- discover-keys [data]
-  (when (nil? @timestamp-key)
-    (discover-key timestamp-key ["time" "timestamp" "ts"] data))
-  (when (nil? @level-key)
-    (discover-key level-key ["levelname" "level_name" "level"] data))
-  (when (nil? @message-key)
-    (discover-key message-key ["message" "msg"] data)))
+(defn- discover-key [possible-keys data]
+  (when-let [found-key (some #(when (apply % [data]) %) possible-keys)]
+    found-key))
+
+(defn timestamp-key* [data]
+  (discover-key timestamp-keys data))
+
+(defn level-key* [data]
+  (discover-key level-keys data))
+
+(defn message-key* [data]
+  (discover-key message-keys data))
+
+(def timestamp-key (cache-forever timestamp-key*))
+(def level-key (cache-forever level-key*))
+(def message-key (cache-forever message-key*))
+(def exclude-list (set (filter some? (concat timestamp-keys level-keys message-keys))))
 
 (declare print-fields)
 
-(defn- print-nested [prefix key value nesting-level exclude-list]
+(defn- print-nested [prefix key value nesting-level]
   (println (str prefix key " = {"))
-  (print-fields value (inc nesting-level) exclude-list)
+  (print-fields value (inc nesting-level))
   (println (str prefix "}")))
 
-(defn- print-fields [data nesting-level exclude-list]
+(defn- print-fields [data nesting-level]
   (let [prefix (apply str (repeat nesting-level "\t"))]
     (doseq [[key val] data]
       (when-not (contains? exclude-list key)
         (cond
-          (map? val) (print-nested prefix key val nesting-level exclude-list)
-          (vector? val) (print-nested prefix key (into {} (map-indexed vector val)) nesting-level exclude-list)
+          (map? val) (print-nested prefix key val nesting-level)
+          (vector? val) (print-nested prefix key (into {} (map-indexed vector val)) nesting-level)
           :else (println (str prefix key " = " val)))))))
 
 (defn pretty-print [line]
-  (let [data (json/parse-string line true)]
-    (discover-keys data)
+  (let [data (json/parse-string line true)
+        level (get data (level-key data) :INFO)
+        timestamp (get data (timestamp-key data) "")
+        msg (get data (message-key data) "")]
 
-    (let [level (get data @level-key :INFO)
-          timestamp (get data @timestamp-key "")
-          msg (get data @message-key "")
-          exclude-list (set (filter some? [@timestamp-key @level-key @message-key]))]
-
-      (println (format "%s%s%s %s %s"
-                       (color-for-level level)
-                       (str/upper-case (name level))
-                       (:reset colors)
-                       timestamp
-                       msg))
-      (print-fields data 1 exclude-list))))
+    (println (format "%s%s%s %s %s"
+                     (color-for-level level)
+                     (str/upper-case (name level))
+                     (:reset colors)
+                     timestamp
+                     msg))
+    (print-fields data 1)))
 
 (defn main []
   (with-open [reader (java.io.BufferedReader. *in*)]
