@@ -1,135 +1,85 @@
-#!/usr/bin/env -S uv run --with ujson --script
-# vi: ft=python
+#!/usr/bin/env bb
+; vi: ft=clojure
 
-import fileinput
-import ujson as json
-from functools import cache
+(require '[cheshire.core :as json]
+         '[clojure.string :as str])
 
+;; --- ANSI Color Codes ---
+(def colors
+  {:reset   "\u001b[0m"
+   :red     "\u001b[31m"
+   :yellow  "\u001b[33m"
+   :cyan    "\u001b[36m"
+   :bold    "\u001b[1m"
+   :underline "\u001b[4m"})
 
-class Colors:
-    RESET = "\033[0m"
+(def color-for-level
+  (memoize
+   (fn [level]
+     (case (str/upper-case (name level))
+       ("INFO") (:cyan colors)
+       ("WARN" "WARNING") (:yellow colors)
+       ("ERR" "ERROR") (:red colors)
+       (:reset colors)))))
 
-    RED = "\033[31m"
-    YELLOW = "\033[33m"
-    CYAN = "\033[36m"
+;; --- State for dynamic keys ---
+(defonce timestamp-key (atom nil))
+(defonce level-key (atom nil))
+(defonce message-key (atom nil))
 
-    BOLD = "\033[1m"
-    UNDERLINE = "\033[4m"
+(defn- discover-key [key-atom possible-keys data]
+  (when-let [found-key (some #(when (contains? data %) %) possible-keys)]
+    (reset! key-atom found-key)))
 
-    @staticmethod
-    @cache
-    def color_for_level(level: str) -> str:
-        match level.upper():
-            case "INFO":
-                return Colors.CYAN
-            case "WARN" | "WARNING":
-                return Colors.YELLOW
-            case "ERR" | "ERROR":
-                return Colors.RED
-            case _:
-                return Colors.RESET
+(defn- discover-keys [data]
+  (when (nil? @timestamp-key)
+    (discover-key timestamp-key ["time" "timestamp" "ts"] data))
+  (when (nil? @level-key)
+    (discover-key level-key ["levelname" "level_name" "level"] data))
+  (when (nil? @message-key)
+    (discover-key message-key ["message" "msg"] data)))
 
+(declare print-fields)
 
-def print_field_message(data, nesting_level=1, exclude_list=None):
-    if exclude_list is None:
-        exclude_list = tuple()
+(defn- print-nested [prefix key value nesting-level exclude-list]
+  (println (str prefix key " = {"))
+  (print-fields value (inc nesting-level) exclude-list)
+  (println (str prefix "}")))
 
-    try:
-        fields = data.items()
-    except (TypeError, AttributeError):
-        fields = enumerate(data)
+(defn- print-fields [data nesting-level exclude-list]
+  (let [prefix (apply str (repeat nesting-level "\t"))]
+    (doseq [[key val] data]
+      (when-not (contains? exclude-list key)
+        (cond
+          (map? val) (print-nested prefix key val nesting-level exclude-list)
+          (vector? val) (print-nested prefix key (into {} (map-indexed vector val)) nesting-level exclude-list)
+          :else (println (str prefix key " = " val)))))))
 
-    prefix = "\t" * nesting_level
-    for key, value in fields:
-        if key in exclude_list:
-            continue
+(defn pretty-print [line]
+  (let [data (json/parse-string line true)]
+    (discover-keys data)
 
-        if type(value) is dict and value:
-            print(f"{prefix}{key} = {{")
-            print_field_message(value, nesting_level=nesting_level + 1)
-            print(f"{prefix}}}")
-        else:
-            print(f"{prefix}{key} = {value}")
+    (let [level (get data @level-key :INFO)
+          timestamp (get data @timestamp-key "")
+          msg (get data @message-key "")
+          exclude-list (set (filter some? [@timestamp-key @level-key @message-key]))]
 
+      (println (format "%s%s%s %s %s"
+                       (color-for-level level)
+                       (str/upper-case (name level))
+                       (:reset colors)
+                       timestamp
+                       msg))
+      (print-fields data 1 exclude-list))))
 
-TIMESTAMP_KEY = None
+(defn main []
+  (with-open [reader (java.io.BufferedReader. *in*)]
+    (loop [line (.readLine reader)]
+      (when line
+        (try
+          (pretty-print line)
+          (catch Exception _e
+            (println "NON-JSON LINE:" line)))
+        (recur (.readLine reader))))))
 
-
-def get_timestamp_key(data):
-    global TIMESTAMP_KEY
-
-    for key in (
-        "time",
-        "timestamp",
-        "ts",
-    ):
-        if data.get(key):
-            TIMESTAMP_KEY = key
-            return
-
-    TIMESTAMP_KEY = ""
-
-
-LEVEL_KEY = None
-
-
-def get_level_key(data):
-    global LEVEL_KEY
-
-    possible_keys = ("levelname", "level_name", "level", "ts")
-    for key in possible_keys:
-        if data.get(key):
-            LEVEL_KEY = key
-            return
-
-    LEVEL_KEY = ""
-
-
-MESSAGE_KEY = None
-
-
-def get_message_key(data):
-    global MESSAGE_KEY
-
-    possible_keys = ("message", "msg")
-    for key in possible_keys:
-        if data.get(key):
-            MESSAGE_KEY = key
-            return
-
-    MESSAGE_KEY = ""
-
-
-def pretty_print(line):
-    data = json.loads(line)
-    if TIMESTAMP_KEY is None:
-        get_timestamp_key(data)
-    if LEVEL_KEY is None:
-        get_level_key(data)
-    if MESSAGE_KEY is None:
-        get_message_key(data)
-
-    timestamp = data.get(TIMESTAMP_KEY, "")
-    level = data.get(LEVEL_KEY, "INFO")
-    msg = data.get(MESSAGE_KEY, "")
-    print(f"{Colors.color_for_level(level)}{level}{Colors.RESET} {timestamp} {msg}")
-    print_field_message(
-        data,
-        exclude_list=(
-            MESSAGE_KEY,
-            TIMESTAMP_KEY,
-            LEVEL_KEY,
-        ),
-    )
-
-
-def main():
-    for line in fileinput.input():
-        try:
-            pretty_print(line)
-        except json.JSONDecodeError:
-            print("NON-JSON LINE:", line)
-
-
-if __name__ == "__main__":
-    main()
+(main)
