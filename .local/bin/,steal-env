@@ -1,21 +1,23 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bb
+; vi: ft=clojure
 
-vars=$(kubectl exec -it "$@" -- env 2>/dev/null)
-kube_exit_code=$?
-if [[ $kube_exit_code != 0 ]]; then
-    echo "Something when wrong with the kubectl command!"
-    exit $kube_exit_code
-fi
+(require '[babashka.process :refer [sh]]
+         '[clojure.string :as str])
 
-for line in $vars; do
-    case $line in
-    *HOME*) ;;
-    *TERM*) ;;
-    *PATH*) ;;
-    *HOSTNAME*) ;;
-    KUBERNETES_*) ;;
-    *)
-        echo "export $line"
-        ;;
-    esac
-done
+(defn- dump-vars [args]
+  (->
+   (sh (concat ["kubectl exec -it"] args ["--" "env"]))
+   :out
+   str/split-lines))
+
+(def banned-predicates #{"KUBERNETES_" "HOME" "TERM" "PATH" "HOSTNAME"})
+
+(defn- is-dumpable-var [env-var]
+  (not (some #(str/starts-with? env-var %) banned-predicates)))
+
+(defn- main [args]
+  (doseq [env-var (dump-vars args)]
+    (when (is-dumpable-var env-var)
+      (println "export" env-var))))
+
+(main *command-line-args*)
