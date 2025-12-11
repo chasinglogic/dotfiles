@@ -112,6 +112,8 @@ vim.pack.add({
     { src = "https://github.com/rafamadriz/friendly-snippets" },
     -- Manage files in neovim without suffering
     { src = "https://github.com/stevearc/oil.nvim" },
+    -- File tree when I need it.
+    { src = "https://github.com/A7Lavinraj/fyler.nvim",                    version = 'stable' },
     -- Give contextual location information in a winbar
     { src = "https://github.com/Bekaboo/dropbar.nvim" },
     -- Do git stuff with vim, like magit
@@ -123,6 +125,9 @@ vim.pack.add({
     -- Help me remember keybinds
     { src = "https://github.com/folke/which-key.nvim" },
 }, { confirm = false })
+-- Fyler {{{
+require('fyler').setup()
+-- }}}
 -- Which Key {{{
 require('which-key').setup()
 -- }}}
@@ -355,6 +360,7 @@ end, "Buffer local keymaps")
 
 nmap('<leader>fs', '<CMD>w<CR>', '[F]ile [S]ave')
 nmap('<leader>fq', '<CMD>wq<CR>', '[F]ile save and [Q]uit')
+nmap('<leader>ft', '<CMD>Fyler kind=split_left_most<CR>', '[F]ile [T]ree')
 
 nmap('<leader>w', '<C-w>', '[W]indows')
 nmap('<leader>r', '<CMD>source ~/.config/nvim/init.lua<CR>')
