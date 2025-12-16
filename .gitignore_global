@@ -4,60 +4,62 @@ GEMINI.md
 *#*#
 *.#*
 /.dir-locals.el
-/.direnv/*
+/.direnv/
 
 *.bak
 *.log
 *.tar
 *.tgz
 *.tar.gz
-build/*
-target/*
+build/
+target/
 
 *DS_Store*
 .dropbox*
 clang+llvm*/
-node_modules/*
+node_modules/
 
 .dmypy.json
 *mypy_cache*
-.ccls-cache/*
+.ccls-cache/
 
 .tags
 TAGS
-TAGStmp/*
+TAGStmp/
 
-.vagrant/*
+.vagrant/
 
-.venv/*
+.venv/
 venv*
 
 Session.vim
 
-env/*
+env/
 
 .env.local
 
 mat.py
 
-/ignore/*
+/ignore/
 
-.vscode/*
+.vscode/
 
-/.git/*
+/.git/
 
-.idea/*
+.idea/
 
-__pycache__/*
-*/__pycache__/*
+__pycache__/
+*/__pycache__/
 
 .phpactor.json
 
 /mise.toml
 /.mise.toml
 
-/tmp/*
-*/tmp/*
+/tmp/
+*/tmp/
 
-/.clj-kondo
-/.lsp
+.clj-kondo/
+.lsp/
+.cpcache/
+.nrepl-port

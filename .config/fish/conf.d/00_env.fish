@@ -53,6 +53,7 @@ fish_add_path --path "$HOME/.krew/bin"
 fish_add_path --path /opt/google-cloud-sdk/bin
 fish_add_path --path "$HOME/.local/share/gem/ruby/3.4.0/bin"
 fish_add_path --path "$HOME/.nix-profile/bin"
+fish_add_path --path "$HOME/.config/emacs/bin"
 
 # These have to be after the $PATH is set up.
 
