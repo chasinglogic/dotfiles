@@ -3,6 +3,8 @@
 -- Options {{{
 -- Enable modelines
 vim.o.modeline = true
+-- Start with all folds open
+vim.o.foldlevelstart = 99
 -- fo-n Recognize numbered lists
 vim.opt.formatoptions:append({
     "n",
@@ -112,8 +114,6 @@ vim.pack.add({
     { src = "https://github.com/rafamadriz/friendly-snippets" },
     -- Manage files in neovim without suffering
     { src = "https://github.com/stevearc/oil.nvim" },
-    -- File tree when I need it.
-    { src = "https://github.com/A7Lavinraj/fyler.nvim",                    version = 'stable' },
     -- Give contextual location information in a winbar
     { src = "https://github.com/Bekaboo/dropbar.nvim" },
     -- Do git stuff with vim, like magit
@@ -122,15 +122,8 @@ vim.pack.add({
     { src = "https://github.com/tpope/vim-endwise" },
     -- Useful commands like Rename, Delete, SudoWrite
     { src = "https://github.com/tpope/vim-eunuch" },
-    -- Help me remember keybinds
-    { src = "https://github.com/folke/which-key.nvim" },
+    { src = "https://github.com/Olical/conjure" },
 }, { confirm = false })
--- Fyler {{{
-require('fyler').setup()
--- }}}
--- Which Key {{{
-require('which-key').setup()
--- }}}
 -- DropBar {{{
 require('dropbar').setup()
 -- }}}
@@ -171,7 +164,8 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = treesitter_langs,
     callback = function()
         vim.treesitter.start()
-        vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        vim.wo[0][0].foldmethod = 'expr'
         vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
     end,
 })
@@ -340,15 +334,17 @@ require('oil').setup({
 -- }}}
 -- Keys {{{
 
-local nmap = function(keys, func, desc)
-    vim.keymap.set("n", keys, func, { desc = desc })
-end
-
 vim.keymap.set('i', 'fd', '<ESC>')
+vim.keymap.set('t', 'fd', '<c-\\><c-n>')
+
 --On MacOS I tell my keyboard to use alt as meta as the Lord intended but that
 --means I can't type the hash symbol on my UK keyboards. This fixes that.
 if vim.fn.has("macunix") then
     vim.keymap.set("i", "<M-3>", "#")
+end
+
+local nmap = function(keys, func, desc)
+    vim.keymap.set("n", keys, func, { desc = desc })
 end
 
 nmap("-", "<CMD>Oil<CR>", "Open parent directory")
