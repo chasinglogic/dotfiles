@@ -95,7 +95,18 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 -- }}}
 -- Plugins {{{
-
+vim.g["conjure#filetypes"] = {
+    "clojure",
+    "fennel",
+    "janet",
+    "hy",
+    "julia",
+    "racket",
+    "scheme",
+    "lua",
+    "lisp",
+    "sql",
+}
 vim.pack.add({
     -- Color theme
     { src = "https://github.com/catppuccin/nvim" },

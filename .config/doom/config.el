@@ -21,8 +21,8 @@
 ;; See 'C-h v doom-font' for documentation and more examples of what they
 ;; accept. For example:
 ;;
-;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
-;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
+(setq doom-font (font-spec :family "Hack Nerd Font Mono" :size 16)
+      doom-variable-pitch-font (font-spec :family "Hack Nerd Font Mono" :size 17))
 ;;
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
@@ -36,14 +36,9 @@
 (after! evil-escape
   (setq evil-escape-key-sequence "fd"))
 
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
-
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
-
+(setq org-directory "~/Documents/Org")
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -51,7 +46,7 @@
 ;;   (after! PACKAGE
 ;;     (setq x y))
 ;;
-; The exceptions to this rule:
+                                        ; The exceptions to this rule:
 ;;
 ;;   - Setting file/directory variables (like `org-directory')
 ;;   - Setting variables which explicitly tell you to set them before their
@@ -76,3 +71,15 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+(after! lsp-mode
+  (progn
+    (defun my/lsp-mode-setup-completion ()
+      (setq-local completion-at-point-functions
+                  (list
+                   (cape-capf-buster #'lsp-completion-at-point)   ;; wrap lsp-completion-at-point with cape-capf-buster
+                   #'cape-file
+                   #'cape-dabbrev
+                   t
+                   #'yasnippet-capf)))
+    (add-hook 'lsp-completion-mode #'my/lsp-mode-setup-completion)))
