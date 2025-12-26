@@ -14,6 +14,8 @@
 ;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
 ;;      directory (for easy access to its source code).
 
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
 (doom! :input
        :completion
        (corfu +orderless)  ; complete with cap(f), cape and a flying feather!
@@ -67,6 +69,7 @@
        ansible
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        docker
+       direnv
        editorconfig      ; let someone else argue about tabs vs spaces
        ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
@@ -133,7 +136,7 @@
        ;;plantuml          ; diagrams for confusing people more
        ;;graphviz          ; diagrams for confusing yourself even more
        ;;purescript        ; javascript, but functional
-       (python +lsp +tree-sitter)            ; beautiful is better than ugly
+       (python +pyenv +pyright +poetry +lsp +tree-sitter)            ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6

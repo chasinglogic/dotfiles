@@ -72,14 +72,5 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(after! lsp-mode
-  (progn
-    (defun my/lsp-mode-setup-completion ()
-      (setq-local completion-at-point-functions
-                  (list
-                   (cape-capf-buster #'lsp-completion-at-point)   ;; wrap lsp-completion-at-point with cape-capf-buster
-                   #'cape-file
-                   #'cape-dabbrev
-                   t
-                   #'yasnippet-capf)))
-    (add-hook 'lsp-completion-mode #'my/lsp-mode-setup-completion)))
+(after! projectile
+  (setq projectile-switch-project-action #'projectile-dired))

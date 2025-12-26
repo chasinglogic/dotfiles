@@ -25,8 +25,6 @@ vim.opt.wildignore:append({ "*.o", "*.git", "*.svn", "*.pyc", "env/*", ".git/*" 
 -- automatically save your undo history when you write a file and restore undo
 -- history when you edit the file again
 vim.o.undofile = true
--- Limit text to 80 columns
-vim.o.textwidth = 80
 -- Preserve horizontal blocks of text when indenting
 vim.o.breakindent = true
 -- Copy indent from current line when starting a new line
