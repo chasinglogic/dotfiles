@@ -1,23 +1,61 @@
-#!/usr/bin/env bb
-; vi: ft=clojure
+#!/usr/bin/env python3
+# vi: ft=python
 
-(require '[babashka.process :refer [sh]]
-         '[clojure.string :as str])
+import argparse
+import subprocess
+import sys
+from typing import Iterable
 
-(defn- dump-vars [args]
-  (->
-   (sh (concat ["kubectl exec -it"] args ["--" "env"]))
-   :out
-   str/split-lines))
 
-(def banned-predicates #{"KUBERNETES_" "HOME" "TERM" "PATH" "HOSTNAME"})
+BANNED_PREFIXES = {"KUBERNETES_", "HOME", "TERM", "PATH", "HOSTNAME"}
 
-(defn- is-dumpable-var [env-var]
-  (not (some #(str/starts-with? env-var %) banned-predicates)))
 
-(defn- main [args]
-  (doseq [env-var (dump-vars args)]
-    (when (is-dumpable-var env-var)
-      (println "export" env-var))))
+def dump_vars(args: list[str]) -> Iterable[str]:
+    cmd = ["kubectl", "exec", "-it", *args, "--", "env"]
+    try:
+        proc = subprocess.run(
+            cmd,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError as e:
+        sys.stderr.write(e.stderr)
+        raise SystemExit(e.returncode)
 
-(main *command-line-args*)
+    return proc.stdout.splitlines()
+
+
+def is_dumpable_var(env_var: str) -> bool:
+    return not any(env_var.startswith(prefix) for prefix in BANNED_PREFIXES)
+
+
+def main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(
+        description="Print export statements for env vars from a kubectl exec pod, excluding some system vars.",
+        add_help=True,
+    )
+
+    # We don't know the exact arg structure (pod, namespace, etc.), so we just
+    # accept passthrough args after "--" style: ,steal-env <kubectl-args>
+    parser.add_argument(
+        "kubectl_args",
+        nargs=argparse.REMAINDER,
+        help="Arguments to pass to 'kubectl exec -it ... -- env'",
+    )
+
+    ns, _ = parser.parse_known_intermixed_args(argv)
+
+    if not ns.kubectl_args:
+        parser.print_usage(sys.stderr)
+        return 1
+
+    for env_var in dump_vars(ns.kubectl_args):
+        if is_dumpable_var(env_var):
+            print(f"export {env_var}")
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))

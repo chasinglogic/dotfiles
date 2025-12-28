@@ -1,4 +1,4 @@
--- vim: foldmethod=marker
+-- vim: foldmethod=marker foldlevel=0
 
 -- Options {{{
 -- Enable modelines
@@ -105,34 +105,50 @@ vim.g["conjure#filetypes"] = {
     "lisp",
     "sql",
 }
-vim.pack.add({
-    -- Color theme
-    { src = "https://github.com/catppuccin/nvim" },
-    -- LSP helpers
-    { src = "https://github.com/neovim/nvim-lspconfig" },
-    { src = "https://github.com/mason-org/mason.nvim" },
-    { src = "https://github.com/mason-org/mason-lspconfig.nvim" },
-    { src = "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim" },
-    -- One plugin to rule them all (provides tons of basic functionality)
-    { src = "https://github.com/nvim-mini/mini.nvim",                      version = 'main' },
-    -- Pre-configured treesitter setups with installation
-    { src = "https://github.com/nvim-treesitter/nvim-treesitter",          version = 'main' },
-    -- Autoformatting that uses tools and LSP together happily.
-    { src = "https://github.com/stevearc/conform.nvim" },
-    -- Loads of free snippets
-    { src = "https://github.com/rafamadriz/friendly-snippets" },
-    -- Manage files in neovim without suffering
-    { src = "https://github.com/stevearc/oil.nvim" },
-    -- Give contextual location information in a winbar
-    { src = "https://github.com/Bekaboo/dropbar.nvim" },
-    -- Do git stuff with vim, like magit
-    { src = "https://github.com/tpope/vim-fugitive" },
-    -- Automatically add end or similar constructs
-    { src = "https://github.com/tpope/vim-endwise" },
-    -- Useful commands like Rename, Delete, SudoWrite
-    { src = "https://github.com/tpope/vim-eunuch" },
-    { src = "https://github.com/Olical/conjure" },
-}, { confirm = false })
+
+-- Bootstrap mini.deps {{{
+local mini_path = vim.fn.stdpath("data") .. "/site/pack/deps/start/mini.nvim"
+if not vim.loop.fs_stat(mini_path) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/nvim-mini/mini.nvim",
+        mini_path,
+    })
+end
+vim.opt.rtp:prepend(mini_path)
+-- }}}
+-- Install plugins {{{
+local MiniDeps = require("mini.deps")
+MiniDeps.setup()
+
+MiniDeps.add("catppuccin/nvim")
+-- LSP helpers
+MiniDeps.add("neovim/nvim-lspconfig")
+MiniDeps.add("mason-org/mason.nvim")
+MiniDeps.add("mason-org/mason-lspconfig.nvim")
+MiniDeps.add("WhoIsSethDaniel/mason-tool-installer.nvim")
+-- One plugin to rule them all (provides tons of basic functionality)
+MiniDeps.add("nvim-mini/mini.nvim")
+-- Pre-configured treesitter setups with installation
+MiniDeps.add("nvim-treesitter/nvim-treesitter")
+-- Autoformatting that uses tools and LSP together happily.
+MiniDeps.add("stevearc/conform.nvim")
+-- Loads of free snippets
+MiniDeps.add("rafamadriz/friendly-snippets")
+-- Manage files in neovim without suffering
+MiniDeps.add("stevearc/oil.nvim")
+-- Give contextual location information in a winbar
+MiniDeps.add("Bekaboo/dropbar.nvim")
+-- Do git stuff with vim, like magit
+MiniDeps.add("tpope/vim-fugitive")
+-- Automatically MiniDeps.add end or similar constructs
+MiniDeps.add("tpope/vim-endwise")
+-- Useful commands like Rename, Delete, SudoWrite
+MiniDeps.add("tpope/vim-eunuch")
+MiniDeps.add("Olical/conjure")
+-- }}}
 -- DropBar {{{
 require('dropbar').setup()
 -- }}}
@@ -182,6 +198,8 @@ vim.api.nvim_create_autocmd('FileType', {
 -- Mini {{{
 require('mini.pairs').setup()
 require('mini.surround').setup()
+require('mini.cmdline').setup()
+require('mini.bracketed').setup()
 require('mini.splitjoin').setup()
 require('mini.comment').setup()
 -- Disabled because it bugs out often or I can't figure out how to use it right
@@ -369,7 +387,7 @@ nmap('<leader>ft', '<CMD>Fyler kind=split_left_most<CR>', '[F]ile [T]ree')
 
 nmap('<leader>w', '<C-w>', '[W]indows')
 nmap('<leader>r', '<CMD>source ~/.config/nvim/init.lua<CR>')
-nmap('<leader>u', vim.pack.update)
+nmap('<leader>u', '<CMD>DepsUpdate<CR>', 'Update plugins')
 
 nmap('<leader>to', '<CMD>tabnew<CR>', '[T]ab [O]pen')
 nmap('<leader>tc', '<CMD>tabclose<CR>', '[T]ab [C]lose')

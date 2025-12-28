@@ -1,33 +1,59 @@
-#!/usr/bin/env bb
-; vi: ft=clojure
+#!/usr/bin/env python3
+# vi: ft=python
 
-(require '[babashka.cli :as cli])
+import argparse
+import base64
+import sys
+from typing import Literal
 
-(defn get-decoder [encoding]
-  (case encoding
-    :base64 (java.util.Base64/getDecoder)
-    (throw (Exception. (format "%s is not a valid encoding" encoding)))))
 
-(defn decode [encoding data]
-  (let [decoder (get-decoder encoding)
-        result-bytes (.decode decoder data)]
-    (String. result-bytes)))
+Encoding = Literal["base64"]
 
-(def cli-spec
-  {:help {:alias :h
-          :coerce :boolean}
-   :encoding {:ref "<encoding>"
-              :coerce :keyword
-              :desc "The encoding of the provided strings"
-              :default-desc "base64"
-              :default :base64}})
 
-(defn- main [args]
-  (let [{:keys [opts args]} (cli/parse-args args {:spec cli-spec})]
-    (if (or (:help opts) (empty? args))
-      (println (cli/format-opts {:spec cli-spec, :header "Usage: decode [opts] encoded_string [encoded_string...]\n\nOptions:"}))
-      (doseq [arg args]
-        (println (decode (:encoding opts) arg))))))
+def get_decoder(encoding: Encoding):
+    if encoding == "base64":
+        return base64.b64decode
+    raise SystemExit(f"{encoding} is not a valid encoding")
 
-; (decode :base64 "YW1xcHM6Ly9hZG1pbjpQWTZRUElFTUdHRzNQTkhJSFNLMkpOR1IyNUB6aWEtcmFiYml0bXEuc3RhZ2luZy16aWEtcGxhdGZvcm0uc3ZjLmNsdXN0ZXIubG9jYWw6NTY3MQ==")
-(main *command-line-args*)
+
+def decode(encoding: Encoding, data: str) -> str:
+    decoder = get_decoder(encoding)
+    result_bytes = decoder(data.encode("utf-8"))
+    return result_bytes.decode("utf-8")
+
+
+def main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(
+        prog="decode",
+        description="Decode strings using the specified encoding (default: base64)",
+    )
+    parser.add_argument(
+        "-e",
+        "--encoding",
+        dest="encoding",
+        default="base64",
+        metavar="<encoding>",
+        help="The encoding of the provided strings (default: base64)",
+    )
+    parser.add_argument(
+        "encoded_strings",
+        nargs="+",
+        help="One or more encoded strings to decode",
+    )
+
+    if not argv:
+        parser.print_help(sys.stderr)
+        return 1
+
+    args = parser.parse_args(argv)
+
+    enc: Encoding = args.encoding  # type: ignore[assignment]
+
+    for s in args.encoded_strings:
+        print(decode(enc, s))
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))
