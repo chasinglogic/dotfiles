@@ -2,17 +2,13 @@ local wezterm = require 'wezterm'
 local actions = wezterm.action
 local config = wezterm.config_builder()
 
-local function is_os(name)
-    return wezterm.target_triple:find(name) ~= nil
-end
-
-local is_linux = is_os("linux")
+local is_linux = wezterm.target_triple:find("linux") ~= nil
 
 ---- Appearance Settings -----
 
--- config.color_scheme = 'Catppuccin Mocha'
+config.color_scheme = 'Catppuccin Mocha'
 -- config.color_scheme = 'Catppuccin Latte'
-config.color_scheme = 'Catppuccin Macchiato'
+-- config.color_scheme = 'Catppuccin Macchiato'
 
 -- Disable ligatures
 -- https://wezfurlong.org/wezterm/config/font-shaping.html#advanced-font-shaping-options
@@ -30,9 +26,8 @@ config.window_frame = {
     font_size = config.font_size - 2.0,
 }
 
-local padding_size = "1cell"
 config.window_padding = {
-    left = padding_size,
+    left = 0,
     right = 0,
     top = '0.5cell',
     bottom = 0,
