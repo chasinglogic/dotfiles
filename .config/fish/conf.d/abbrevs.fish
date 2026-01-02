@@ -20,6 +20,7 @@ abbr --add cd.. "cd .."
 abbr --add apt "sudo apt"
 abbr --add dnf "sudo dnf"
 abbr --add zypper "sudo zypper"
+abbr --add zyp "sudo zypper"
 abbr --add pacman "sudo pacman"
 if test (uname) = Darwin
     abbr --position anywhere --add sed gsed
@@ -35,3 +36,6 @@ abbr --position anywhere --add gsutil "gcloud storage"
 if command -q bat
     abbr --position anywhere --add cat bat
 end
+
+abbr --add work "cd ~/Work"
+abbr --add code "cd ~/Code"
