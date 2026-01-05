@@ -82,6 +82,7 @@ gh = "latest"
 clojure = "latest"
 java = "openjdk-25"
 babashka = "latest"
+duckdb = "latest"
 
 [settings]
 experimental = true

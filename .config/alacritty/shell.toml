@@ -1,0 +1,2 @@
+[terminal]
+shell = { program = "fish", args = ["--login", "--interactive"]}
