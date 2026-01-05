@@ -67,10 +67,6 @@ vim.o.iskeyword = '@,48-57,192-255'
 --          to gather more alternatives for your candidate list,
 --          see 'completefuzzycollect'.
 --
--- nosort   Disable sorting of completion candidates based on fuzzy
---	        scores when "fuzzy" is enabled.  Candidates will appear
---	        in their original order.
---
 -- menuone  Use the popup menu also when there is only one match.
 -- 	        Useful when there is additional information about the
 -- 	        match, e.g., what file it comes from.
@@ -80,7 +76,7 @@ vim.o.iskeyword = '@,48-57,192-255'
 --          "noselect" are present, "noselect" takes precedence.  This is
 --          enabled automatically when 'autocomplete' is on, unless "preinsert"
 --          is also enabled.
-vim.o.completeopt = 'menuone,fuzzy,nosort,noselect'
+vim.o.completeopt = 'menuone,fuzzy,noselect'
 vim.diagnostic.config({
     -- Show signs on top of any other sign, but only for warnings and errors
     signs = { priority = 9999, severity = { min = 'WARN', max = 'ERROR' } },
@@ -148,6 +144,51 @@ MiniDeps.add("tpope/vim-endwise")
 -- Useful commands like Rename, Delete, SudoWrite
 MiniDeps.add("tpope/vim-eunuch")
 MiniDeps.add("Olical/conjure")
+-- Better auto-complete
+MiniDeps.add({
+    source = 'saghen/blink.cmp',
+    checkout = 'v1.8.0',
+})
+-- }}}
+-- blink.cmp {{{
+local blink = require('blink.cmp')
+blink.setup({
+    -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+    -- 'super-tab' for mappings similar to vscode (tab to accept)
+    -- 'enter' for enter to accept
+    -- 'none' for no mappings
+    --
+    -- All presets have the following mappings:
+    -- C-space: Open menu or open docs if already open
+    -- C-n/C-p or Up/Down: Select next/previous item
+    -- C-e: Hide menu
+    -- C-k: Toggle signature help (if signature.enabled = true)
+    --
+    -- See :h blink-cmp-config-keymap for defining your own keymap
+    keymap = { preset = 'super-tab' },
+
+    appearance = {
+        -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+        -- Adjusts spacing to ensure icons are aligned
+        nerd_font_variant = 'mono'
+    },
+
+    -- (Default) Only show the documentation popup when manually triggered
+    completion = { documentation = { auto_show = false } },
+
+    -- Default list of enabled providers defined so that you can extend it
+    -- elsewhere in your config, without redefining it, due to `opts_extend`
+    sources = {
+        default = { 'lsp', 'path', 'buffer' },
+    },
+
+    -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+    -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+    -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+    --
+    -- See the fuzzy documentation for more information
+    fuzzy = { implementation = "prefer_rust_with_warning" }
+})
 -- }}}
 -- DropBar {{{
 require('dropbar').setup()
@@ -211,7 +252,7 @@ require('mini.comment').setup()
 --     }
 -- })
 require('mini.icons').setup()
-require('mini.completion').setup()
+-- require('mini.completion').setup()
 require('mini.notify').setup()
 require('mini.statusline').setup()
 -- Centered on screen
@@ -314,7 +355,7 @@ require("mason-tool-installer").setup({
         "helm-ls",
         "html-lsp",
         "lua_ls",
-        "pyright",
+        "python-lsp-server",
         "rubocop",
         "ruby-lsp",
         "ruff",
