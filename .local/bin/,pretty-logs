@@ -1,105 +1,121 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
 # vi: ft=python
 
-import sys
 import json
-from dataclasses import dataclass
-from typing import Any, Dict
+import sys
+from typing import Any, Dict, Iterable
 
 
-RESET = "\u001b[0m"
-RED = "\u001b[31m"
-YELLOW = "\u001b[33m"
-CYAN = "\u001b[36m"
+COLORS = {
+    "reset": "\u001b[0m",
+    "red": "\u001b[31m",
+    "yellow": "\u001b[33m",
+    "cyan": "\u001b[36m",
+}
+
+TIMESTAMP_KEYS: tuple[str, ...] = ("time", "timestamp", "ts")
+LEVEL_KEYS: tuple[str, ...] = ("level", "levelname", "level_name")
+MESSAGE_KEYS: tuple[str, ...] = ("message", "msg")
+
+_EXCLUDE_KEYS = set(TIMESTAMP_KEYS + LEVEL_KEYS + MESSAGE_KEYS)
+
+_cached_timestamp_key: str | None = None
+_cached_level_key: str | None = None
+_cached_message_key: str | None = None
 
 
-def color_for_level(level: str) -> str:
-    lvl = str(level).upper()
-    if lvl == "INFO":
-        return CYAN
-    if lvl in ("WARN", "WARNING"):
-        return YELLOW
-    if lvl in ("ERR", "ERROR"):
-        return RED
-    return RESET
+def color_for_level(level: Any) -> str:
+    name = str(level).upper()
+    if name == "INFO":
+        return COLORS["cyan"]
+    if name in {"WARN", "WARNING"}:
+        return COLORS["yellow"]
+    if name in {"ERR", "ERROR"}:
+        return COLORS["red"]
+    return COLORS["reset"]
 
 
-TIMESTAMP_KEYS = ["time", "timestamp", "ts"]
-LEVEL_KEYS = ["level", "levelname", "level_name"]
-MESSAGE_KEYS = ["message", "msg"]
-
-
-@dataclass
-class LogKeys:
-    timestamp: str | None
-    level: str | None
-    message: str | None
-
-
-def discover_key(possible_keys, data: Dict[str, Any]) -> str | None:
-    for key in possible_keys:
-        if key in data:
+def _discover_key(candidates: Iterable[str], data: Dict[str, Any]) -> str | None:
+    for key in candidates:
+        if data.get(key) is not None:
             return key
     return None
 
 
-def find_keys(data: Dict[str, Any]) -> LogKeys:
-    return LogKeys(
-        timestamp=discover_key(TIMESTAMP_KEYS, data),
-        level=discover_key(LEVEL_KEYS, data),
-        message=discover_key(MESSAGE_KEYS, data),
-    )
+def timestamp_key(data: Dict[str, Any]) -> str | None:
+    global _cached_timestamp_key
+    if _cached_timestamp_key is None:
+        _cached_timestamp_key = _discover_key(TIMESTAMP_KEYS, data)
+    return _cached_timestamp_key
 
 
-def print_fields(data: Dict[str, Any], keys: LogKeys, nesting_level: int = 1) -> None:
-    exclude = set(filter(None, TIMESTAMP_KEYS + LEVEL_KEYS + MESSAGE_KEYS))
+def level_key(data: Dict[str, Any]) -> str | None:
+    global _cached_level_key
+    if _cached_level_key is None:
+        _cached_level_key = _discover_key(LEVEL_KEYS, data)
+    return _cached_level_key
+
+
+def message_key(data: Dict[str, Any]) -> str | None:
+    global _cached_message_key
+    if _cached_message_key is None:
+        _cached_message_key = _discover_key(MESSAGE_KEYS, data)
+    return _cached_message_key
+
+
+def _print_fields(obj: Any, nesting_level: int = 1) -> None:
+    if not isinstance(obj, dict):
+        return
+
     prefix = "\t" * nesting_level
-
-    for key, val in data.items():
-        if key in exclude:
+    for key, value in obj.items():
+        if key in _EXCLUDE_KEYS:
             continue
 
-        if isinstance(val, dict):
+        if isinstance(value, dict):
             print(f"{prefix}{key} = {{")
-            print_fields(val, keys, nesting_level + 1)
+            _print_fields(value, nesting_level + 1)
             print(f"{prefix}}}")
-        elif isinstance(val, list):
-            nested = {i: v for i, v in enumerate(val)}
+        elif isinstance(value, list):
+            # Represent lists as an indexed map, similar to the original Clojure code
             print(f"{prefix}{key} = {{")
-            print_fields(nested, keys, nesting_level + 1)
+            indexed = {i: v for i, v in enumerate(value)}
+            _print_fields(indexed, nesting_level + 1)
             print(f"{prefix}}}")
         else:
-            print(f"{prefix}{key} = {val}")
+            print(f"{prefix}{key} = {value}")
 
 
-def pretty_print(line: str) -> None:
+def _pretty_print(line: str) -> None:
     data = json.loads(line)
-    keys = find_keys(data)
 
-    level = data.get(keys.level, "INFO") if keys.level else "INFO"
-    timestamp = data.get(keys.timestamp, "") if keys.timestamp else ""
-    msg = data.get(keys.message, "") if keys.message else ""
+    lvl_key = level_key(data)
+    ts_key = timestamp_key(data)
+    msg_key = message_key(data)
+
+    level = data.get(lvl_key, "INFO") if lvl_key else "INFO"
+    timestamp = data.get(ts_key, "") if ts_key else ""
+    message = data.get(msg_key, "") if msg_key else ""
 
     color = color_for_level(level)
-    level_name = str(level).upper()
+    reset = COLORS["reset"]
 
-    print(f"{color}{level_name}{RESET} {timestamp} {msg}")
-    print_fields(data, keys, 1)
+    print(f"{color}{str(level).upper()}{reset} {timestamp} {message}")
+    _print_fields(data, nesting_level=1)
 
 
 def main() -> int:
-    for line in sys.stdin:
-        line = line.rstrip("\n")
+    for raw_line in sys.stdin:
+        line = raw_line.rstrip("\n")
         if not line:
             continue
-        
         try:
-            pretty_print(line)
+            _pretty_print(line)
         except Exception:
+            # Match the behaviour of the original script on non-JSON input
             print(f"NON-JSON LINE: {line}")
-
     return 0
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())
