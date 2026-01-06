@@ -1,17 +1,25 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
 # vi: ft=python
 
 import argparse
 import subprocess
 import sys
-from typing import Iterable
+from typing import List
 
 
-BANNED_PREFIXES = {"KUBERNETES_", "HOME", "TERM", "PATH", "HOSTNAME"}
+BANNED_PREFIXES = {
+    "KUBERNETES_",
+    "HOME",
+    "TERM",
+    "PATH",
+    "HOSTNAME",
+}
 
 
-def dump_vars(args: list[str]) -> Iterable[str]:
-    cmd = ["kubectl", "exec", "-it", *args, "--", "env"]
+def dump_vars(kubectl_args: List[str]) -> List[str]:
+    """Run `kubectl exec -it ... -- env` and return the raw env lines."""
+
+    cmd = ["kubectl", "exec", "-it", *kubectl_args, "--", "env"]
     try:
         proc = subprocess.run(
             cmd,
@@ -19,43 +27,44 @@ def dump_vars(args: list[str]) -> Iterable[str]:
             capture_output=True,
             text=True,
         )
-    except subprocess.CalledProcessError as e:
-        sys.stderr.write(e.stderr)
-        raise SystemExit(e.returncode)
+    except subprocess.CalledProcessError as exc:  # pragma: no cover - passthrough
+        sys.stderr.write(exc.stderr or "kubectl exec failed\n")
+        raise SystemExit(exc.returncode)
 
     return proc.stdout.splitlines()
 
 
 def is_dumpable_var(env_var: str) -> bool:
-    return not any(env_var.startswith(prefix) for prefix in BANNED_PREFIXES)
+    """Return True if this `VAR=VALUE` line should be exported."""
+
+    for prefix in BANNED_PREFIXES:
+        if env_var.startswith(prefix):
+            return False
+    return True
 
 
-def main(argv: list[str]) -> int:
+def main(argv: List[str]) -> int:
     parser = argparse.ArgumentParser(
-        description="Print export statements for env vars from a kubectl exec pod, excluding some system vars.",
+        description="Generate export statements from a pod's environment.",
         add_help=True,
     )
-
-    # We don't know the exact arg structure (pod, namespace, etc.), so we just
-    # accept passthrough args after "--" style: ,steal-env <kubectl-args>
     parser.add_argument(
         "kubectl_args",
         nargs=argparse.REMAINDER,
-        help="Arguments to pass to 'kubectl exec -it ... -- env'",
+        help="Arguments to pass to `kubectl exec -it ... -- env`.",
     )
 
-    ns, _ = parser.parse_known_intermixed_args(argv)
+    args = parser.parse_args(argv)
 
-    if not ns.kubectl_args:
-        parser.print_usage(sys.stderr)
-        return 1
+    if not args.kubectl_args:
+        parser.error("You must provide arguments for kubectl (e.g. -n ns pod-name)")
 
-    for env_var in dump_vars(ns.kubectl_args):
+    for env_var in dump_vars(args.kubectl_args):
         if is_dumpable_var(env_var):
             print(f"export {env_var}")
 
     return 0
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(main(sys.argv[1:]))
