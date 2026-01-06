@@ -63,3 +63,6 @@ __pycache__/
 .lsp/
 .cpcache/
 .nrepl-port
+
+/WARP.md
+/GEMINI.md

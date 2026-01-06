@@ -1,6 +1,0 @@
-[user]
-    email = mathew.robinson@tillo.io
-    signingkey = FAB14B9262DC06CDE4791C1E98306CA986E8394D 
-
-[commit]
-    gpgSign = true
