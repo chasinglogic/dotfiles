@@ -11,7 +11,7 @@ save_to_clipboard = true
 
 [font]
 size = 13.0
-normal = { family = "JetBrainsMono Nerd Font" }
+normal = { family = "JetBrainsMonoNL Nerd Font" }
 
 [terminal]
 shell = { program = "fish", args = ["--login", "--interactive"]}
