@@ -84,6 +84,7 @@ java = "openjdk-25"
 babashka = "latest"
 duckdb = "latest"
 tflint = "latest"
+"github:sharkdp/bat" = "latest"
 
 [settings]
 experimental = true
