@@ -154,6 +154,10 @@ MiniDeps.add({
     source = 'milanglacier/minuet-ai.nvim',
     depends = { 'nvim-lua/plenary.nvim' },
 })
+-- Autoclose tags in TSX, HTML, etc.
+MiniDeps.add({
+    source = 'windwp/nvim-ts-autotag'
+})
 -- }}}
 -- blink.cmp {{{
 local blink = require('blink.cmp')
@@ -423,6 +427,15 @@ end, { range = true })
 require('oil').setup({
     view_options = {
         show_hidden = true,
+    },
+})
+-- }}}
+-- nvim-ts-autotag {{{
+require('nvim-ts-autotag').setup({
+    opts = {
+        enable_close = true,         -- Auto close tags
+        enable_rename = true,        -- Auto rename pairs of tags
+        enable_close_on_slash = true -- Auto close on trailing </
     },
 })
 -- }}}
