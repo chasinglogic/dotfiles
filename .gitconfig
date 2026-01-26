@@ -28,6 +28,7 @@
     olcolor = %Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>
 
 [alias]
+    wt = worktree
     su = submodule update --init --recursive
     unstage = reset HEAD --
     amend = commit --amend --no-edit
