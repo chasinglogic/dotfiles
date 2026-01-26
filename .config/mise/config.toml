@@ -87,6 +87,7 @@ tflint = "latest"
 "github:sharkdp/bat" = "latest"
 sops = "latest"
 "github:eduardofuncao/pam" = "latest"
+bun = "latest"
 
 [settings]
 experimental = true
