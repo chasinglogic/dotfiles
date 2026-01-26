@@ -6,8 +6,14 @@ import base64
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Decode a base64 encoded string.")
-    parser.add_argument("encoded_string", help="The string to decode.")
+    parser = argparse.ArgumentParser(
+        description="Decode a base64 encoded string.",
+    )
+    parser.add_argument(
+        "encoded_string",
+        help="The string to decode.",
+        nargs="+",
+    )
     parser.add_argument(
         "-e",
         "--encoding",
@@ -16,13 +22,14 @@ def main():
     )
     args = parser.parse_args()
 
-    try:
-        decoded_bytes = base64.b64decode(args.encoded_string)
-        decoded_string = decoded_bytes.decode("utf-8")
-        print(decoded_string)
-    except Exception as e:
-        print(f"Error decoding string: {e}")
-        sys.exit(1)
+    for encoded_string in args.encoded_string:
+        try:
+            decoded_bytes = base64.b64decode(encoded_string)
+            decoded_string = decoded_bytes.decode("utf-8")
+            print(decoded_string)
+        except Exception as e:
+            print(f"Error decoding string: {e}")
+            sys.exit(1)
 
 
 if __name__ == "__main__":
