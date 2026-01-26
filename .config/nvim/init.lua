@@ -84,6 +84,22 @@ vim.diagnostic.config({
 -- NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+-- Make it so dd in the quickfix window removes entries
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'qf',
+    callback = function()
+        vim.keymap.set('n', 'dd', function()
+            local qf_list = vim.fn.getqflist()
+            local current_line = vim.fn.line('.')
+            if qf_list[current_line] then
+                table.remove(qf_list, current_line)
+                vim.fn.setqflist(qf_list, 'r')
+                local new_line = math.min(current_line, #qf_list)
+                vim.fn.cursor(new_line, 1)
+            end
+        end, { buffer = true, silent = true, desc = 'Remove quickfix item under cursor' })
+    end
+})
 -- }}}
 -- Plugins {{{
 vim.g["conjure#filetypes"] = {
@@ -98,6 +114,9 @@ vim.g["conjure#filetypes"] = {
     "lisp",
     "sql",
 }
+
+-- Enable filtering the quickfix list this plugin is bundled with vim.
+vim.cmd('packadd cfilter')
 
 -- Bootstrap mini.deps {{{
 local mini_path = vim.fn.stdpath("data") .. "/site/pack/deps/start/mini.nvim"
@@ -231,14 +250,19 @@ local treesitter_langs = {
     "css",
     "dockerfile",
     "embedded_template",
+    "fish",
     "go",
     "gotmpl",
     "hcl",
     "html",
+    "htmldjango",
+    "ini",
     "javascript",
     "jsdoc",
     "json",
-    "jsonc",
+    "json5",
+    "jsonnet",
+    "jsx",
     "kdl",
     "lua",
     "python",
@@ -251,6 +275,7 @@ local treesitter_langs = {
     "typescript",
     "vim",
     "vimdoc",
+    "vue",
     "yaml",
     "zig",
 }
