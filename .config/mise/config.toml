@@ -85,6 +85,7 @@ babashka = "latest"
 duckdb = "latest"
 tflint = "latest"
 "github:sharkdp/bat" = "latest"
+sops = "latest"
 
 [settings]
 experimental = true
