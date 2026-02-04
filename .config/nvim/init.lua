@@ -53,9 +53,6 @@ vim.o.shiftwidth = 4
 vim.o.expandtab = true
 --  Don't highlight search matches after search is completed
 vim.opt.hlsearch = false
--- Remove underscore as a keyword separator so the word textobject treats
--- each_word_as_separate
-vim.o.iskeyword = '@,48-57,192-255'
 -- A comma-separated list of options for Insert mode completion, used options:
 -- fuzzy    Enable fuzzy-matching for completion candidates.  This
 --          allows for more flexible and intuitive matching, where
