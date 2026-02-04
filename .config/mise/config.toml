@@ -86,6 +86,7 @@ duckdb = "latest"
 tflint = "latest"
 "github:sharkdp/bat" = "latest"
 sops = "latest"
+"github:eduardofuncao/pam" = "latest"
 
 [settings]
 experimental = true
