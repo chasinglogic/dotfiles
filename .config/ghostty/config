@@ -1,4 +1,4 @@
-theme = catppuccin-mocha
+theme = "Challenger Deep"
 font-size = 13
 macos-option-as-alt = true
 command = fish --login --interactive

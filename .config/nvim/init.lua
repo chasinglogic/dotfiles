@@ -117,6 +117,7 @@ local MiniDeps = require("mini.deps")
 MiniDeps.setup()
 
 MiniDeps.add("catppuccin/nvim")
+MiniDeps.add("challenger-deep-theme/vim")
 -- LSP helpers
 MiniDeps.add("neovim/nvim-lspconfig")
 MiniDeps.add("mason-org/mason.nvim")
@@ -577,4 +578,4 @@ augroup END
 ]])
 -- }}}
 -- }}}
-vim.cmd("colorscheme catppuccin-mocha")
+vim.cmd("colorscheme challenger_deep")
