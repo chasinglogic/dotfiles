@@ -88,6 +88,9 @@ tflint = "latest"
 sops = "latest"
 "github:eduardofuncao/pam" = "latest"
 bun = "latest"
+"github:eduardofuncao/pam" = "latest"
+erlang = "latest"
+elixir = "latest"
 
 [settings]
 experimental = true
