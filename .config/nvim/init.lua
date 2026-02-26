@@ -394,7 +394,11 @@ require('mini.extra').setup()
 -- }}}
 -- Mason {{{
 require("mason").setup()
-require("mason-lspconfig").setup()
+require("mason-lspconfig").setup({
+    handlers = function(server_name)
+        require('lspconfig')[server_name].setup({})
+    end
+})
 require("mason-tool-installer").setup({
     ensure_installed = {
         "ansible-language-server",
@@ -485,7 +489,7 @@ nmap('<leader>?', function()
     require("which-key").show({ global = false })
 end, "Buffer local keymaps")
 
-nmap('<leader>fs', '<CMD>w<CR>', '[F]ile [S]ave')
+nmap('<leader>fs', '<CMD>wa<CR>', '[F]ile [S]ave')
 nmap('<leader>fq', '<CMD>wq<CR>', '[F]ile save and [Q]uit')
 nmap('<leader>ft', '<CMD>Fyler kind=split_left_most<CR>', '[F]ile [T]ree')
 
