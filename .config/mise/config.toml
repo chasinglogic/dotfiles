@@ -56,7 +56,7 @@ syft = "latest"
 # Languages
 rust = "latest"
 go = "latest"
-python = "3.13"
+python = "3.14"
 "pipx:hatch" = "latest"
 node = "latest"
 
@@ -80,7 +80,7 @@ fx = "latest"
 gh = "latest"
 "github:dundee/gdu" = "latest"
 clojure = "latest"
-java = "openjdk-25"
+java = "openjdk-26"
 babashka = "latest"
 duckdb = "latest"
 tflint = "latest"
@@ -90,6 +90,7 @@ sops = "latest"
 bun = "latest"
 erlang = "latest"
 elixir = "latest"
+poetry = "latest"
 
 [settings]
 experimental = true
