@@ -11,6 +11,8 @@ abbr --add tf tofu
 abbr --add tg terragrunt
 abbr --add dotfiles "cd (dfm where)"
 
+abbr --add e "nvim ."
+
 abbr --add pu pulumi
 abbr --add pup "pulumi up"
 abbr --add sync-branches "git fetch origin --prune && git branch --merged | grep -v master | xargs git branch -D"
