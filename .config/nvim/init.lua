@@ -641,4 +641,4 @@ augroup END
 ]])
 -- }}}
 -- }}}
-vim.cmd("colorscheme challenger_deep")
+vim.cmd("colorscheme catppuccin-mocha")
