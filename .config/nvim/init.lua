@@ -488,7 +488,7 @@ require("toggleterm").setup({
         -- see :h nvim_open_win for details on borders however
         -- the 'curved' border is a custom border type
         -- not natively supported but implemented in this plugin.
-        border = 'single',
+        border = 'curved',
         -- -- like `size`, width, height, row, and col can be a number or function which is passed the current terminal
         -- width = <value>,
         -- height = <value>,
