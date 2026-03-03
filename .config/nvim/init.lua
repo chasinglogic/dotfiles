@@ -523,6 +523,8 @@ nmap('<leader>?', function()
     require("which-key").show({ global = false })
 end, "Buffer local keymaps")
 
+nmap('<leader>qq', '<CMD>qa<CR>', '[Q]uit')
+
 nmap('<leader>fs', '<CMD>wa<CR>', '[F]ile [S]ave')
 nmap('<leader>fq', '<CMD>wq<CR>', '[F]ile save and [Q]uit')
 nmap('<leader>ft', '<CMD>Fyler kind=split_left_most<CR>', '[F]ile [T]ree')
