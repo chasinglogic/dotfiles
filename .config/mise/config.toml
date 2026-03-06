@@ -86,11 +86,13 @@ duckdb = "latest"
 tflint = "latest"
 "github:sharkdp/bat" = "latest"
 sops = "latest"
-"github:eduardofuncao/pam" = "latest"
+"github:eduardofuncao/squix" = "latest"
 bun = "latest"
 erlang = "latest"
 elixir = "latest"
 poetry = "latest"
+claude = "latest"
+codex = "latest"
 
 [settings]
 experimental = true

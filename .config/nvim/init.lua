@@ -73,7 +73,7 @@ vim.opt.hlsearch = false
 --          "noselect" are present, "noselect" takes precedence.  This is
 --          enabled automatically when 'autocomplete' is on, unless "preinsert"
 --          is also enabled.
-vim.o.completeopt = 'menuone,fuzzy,noselect'
+vim.o.completeopt = 'fuzzy,menuone,noselect'
 vim.diagnostic.config({
     -- Show signs on top of any other sign, but only for warnings and errors
     signs = { priority = 9999, severity = { min = 'WARN', max = 'ERROR' } },
@@ -98,6 +98,12 @@ vim.api.nvim_create_autocmd('FileType', {
                 vim.fn.cursor(new_line, 1)
             end
         end, { buffer = true, silent = true, desc = 'Remove quickfix item under cursor' })
+    end
+})
+-- Make it so exiting terminal closes buffer
+vim.api.nvim_create_autocmd("TermClose", {
+    callback = function()
+        vim.cmd("close!")
     end
 })
 -- }}}
@@ -205,6 +211,11 @@ blink.setup({
 
     -- (Default) Only show the documentation popup when manually triggered
     completion = { documentation = { auto_show = false } },
+
+    cmdline = {
+        keymap = { preset = 'inherit' },
+        completion = { menu = { auto_show = true } },
+    },
 
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
@@ -537,6 +548,10 @@ nmap('<leader>to', '<CMD>tabnew<CR>', '[T]ab [O]pen')
 nmap('<leader>tc', '<CMD>tabclose<CR>', '[T]ab [C]lose')
 nmap('<leader>tn', '<CMD>tabnext<CR>', '[T]ab [N]ext')
 nmap('<leader>tp', '<CMD>tabprev<CR>', '[T]ab [P]revious')
+nmap('<leader>tt', function()
+    vim.cmd('tabnew')
+    vim.cmd('terminal')
+end, '[T]erminal [T]ab')
 
 nmap('<leader>gs', '<CMD>Git<CR>', '[G]it [S]tatus')
 nmap('<leader>gg', ':Git ', '[G]it')
