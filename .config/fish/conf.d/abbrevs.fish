@@ -38,3 +38,5 @@ abbr --position anywhere --add gsutil "gcloud storage"
 if command -q bat
     abbr --position anywhere --add cat bat
 end
+
+abbr --add kk "k9s"
