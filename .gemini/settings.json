@@ -1,0 +1,33 @@
+{
+  "security": {
+    "auth": {
+      "selectedType": "gemini-api-key"
+    },
+    "enablePermanentToolApproval": true
+  },
+  "general": {
+    "sessionRetention": {
+      "enabled": true,
+      "maxAge": "30d",
+      "warningAcknowledged": true
+    },
+    "defaultApprovalMode": "plan"
+  },
+  "ui": {
+    "inlineThinkingMode": "full",
+    "autoThemeSwitching": false,
+    "showMemoryUsage": true,
+    "showCitations": true,
+    "showModelInfoInChat": true
+  },
+  "tools": {
+    "shell": {
+      "showColor": true
+    },
+    "disableLLMCorrection": false
+  },
+  "experimental": {
+    "modelSteering": true,
+    "directWebFetch": true
+  }
+}

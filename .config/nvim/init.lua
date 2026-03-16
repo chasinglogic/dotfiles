@@ -416,6 +416,7 @@ require("mason-lspconfig").setup({
 })
 require("mason-tool-installer").setup({
     ensure_installed = {
+        "alejandra", -- Nix formatter
         "ansible-language-server",
         "cljfmt",
         "clojure-lsp",
@@ -428,6 +429,7 @@ require("mason-tool-installer").setup({
         "helm-ls",
         "html-lsp",
         "lua_ls",
+        "nil_ls",
         "python-lsp-server",
         "rubocop",
         "ruby-lsp",

@@ -58,7 +58,7 @@ rust = "latest"
 go = "latest"
 python = "3.13"
 "pipx:hatch" = "latest"
-node = "latest"
+node = "lts"
 
 # Language tooling
 uv = "latest"
@@ -90,10 +90,15 @@ sops = "latest"
 bun = "latest"
 erlang = "latest"
 elixir = "latest"
-poetry = "latest"
+# poetry = "latest"
 claude = "latest"
 codex = "latest"
+krew = "latest"
 
 [settings]
 experimental = true
 idiomatic_version_file_enable_tools = ["python"]
+
+[settings.node]
+compile = false
+mirror_url = "https://unofficial-builds.nodejs.org/download/release/"
