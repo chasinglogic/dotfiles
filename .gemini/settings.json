@@ -29,5 +29,10 @@
   "experimental": {
     "modelSteering": true,
     "directWebFetch": true
+  },
+  "telemetry": {
+      "enabled": true,
+      "target": "local",
+      "otlpEndpoint": "http://raza.beefalo-drum.ts.net:4317"
   }
 }
