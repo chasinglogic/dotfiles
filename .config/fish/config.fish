@@ -3,3 +3,6 @@ if status is-interactive
 		mise activate fish | source
 	end
 end
+
+# OpenClaw Completion
+source "/home/chasinglogic/.openclaw/completions/openclaw.fish"
