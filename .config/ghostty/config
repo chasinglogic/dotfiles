@@ -6,3 +6,4 @@ config-file = ?macos-config
 maximize = true
 window-inherit-working-directory = false
 window-decoration = server
+

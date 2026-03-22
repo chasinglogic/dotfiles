@@ -5,4 +5,6 @@ if status is-interactive
 end
 
 # OpenClaw Completion
-source "/home/chasinglogic/.openclaw/completions/openclaw.fish"
+if test -f "/home/chasinglogic/.openclaw/completions/openclaw.fish"
+    source "/home/chasinglogic/.openclaw/completions/openclaw.fish"
+end
