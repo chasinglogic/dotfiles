@@ -34,5 +34,8 @@
       "enabled": true,
       "target": "local",
       "otlpEndpoint": "http://raza.beefalo-drum.ts.net:4317"
+  },
+  "context": {
+    "fileName": ["AGENTS.md", "GEMINI.md"]
   }
 }
