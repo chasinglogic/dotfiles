@@ -1,121 +1,164 @@
-#!/usr/bin/env -S uv run --script
-# vi: ft=python
+#!/usr/bin/env bun
+// vi: ft=typescript
 
-import json
-import sys
-from typing import Any, Dict, Iterable
+import { createInterface } from "node:readline";
 
+type LogRecord = Record<string, unknown>;
 
-COLORS = {
-    "reset": "\u001b[0m",
-    "red": "\u001b[31m",
-    "yellow": "\u001b[33m",
-    "cyan": "\u001b[36m",
+const COLORS = {
+    reset: "\u001b[0m",
+    red: "\u001b[31m",
+    yellow: "\u001b[33m",
+    cyan: "\u001b[36m",
+};
+
+const TIMESTAMP_KEYS = ["time", "timestamp", "ts"] as const;
+const LEVEL_KEYS = ["level", "levelname", "level_name"] as const;
+const MESSAGE_KEYS = ["message", "msg"] as const;
+
+const EXCLUDE_KEYS = new Set<string>([...TIMESTAMP_KEYS, ...LEVEL_KEYS, ...MESSAGE_KEYS]);
+
+let cachedTimestampKey: string | undefined;
+let cachedLevelKey: string | undefined;
+let cachedMessageKey: string | undefined;
+
+function colorForLevel(level: unknown): string {
+    const name = String(level).toUpperCase();
+    switch (name) {
+        case "INFO":
+            return COLORS.cyan;
+        case "WARN":
+        case "WARNING":
+            return COLORS.yellow;
+        case "ERR":
+        case "ERROR":
+            return COLORS.red;
+        default:
+            return COLORS.reset;
+    }
 }
 
-TIMESTAMP_KEYS: tuple[str, ...] = ("time", "timestamp", "ts")
-LEVEL_KEYS: tuple[str, ...] = ("level", "levelname", "level_name")
-MESSAGE_KEYS: tuple[str, ...] = ("message", "msg")
+function discoverKey(candidates: readonly string[], data: LogRecord): string | undefined {
+    for (const key of candidates) {
+        if (data[key] !== undefined && data[key] !== null) {
+            return key;
+        }
+    }
+    return undefined;
+}
 
-_EXCLUDE_KEYS = set(TIMESTAMP_KEYS + LEVEL_KEYS + MESSAGE_KEYS)
+function timestampKey(data: LogRecord): string | undefined {
+    if (!cachedTimestampKey) {
+        cachedTimestampKey = discoverKey(TIMESTAMP_KEYS, data);
+    }
+    return cachedTimestampKey;
+}
 
-_cached_timestamp_key: str | None = None
-_cached_level_key: str | None = None
-_cached_message_key: str | None = None
+function levelKey(data: LogRecord): string | undefined {
+    if (!cachedLevelKey) {
+        cachedLevelKey = discoverKey(LEVEL_KEYS, data);
+    }
+    return cachedLevelKey;
+}
 
+function messageKey(data: LogRecord): string | undefined {
+    if (!cachedMessageKey) {
+        cachedMessageKey = discoverKey(MESSAGE_KEYS, data);
+    }
+    return cachedMessageKey;
+}
 
-def color_for_level(level: Any) -> str:
-    name = str(level).upper()
-    if name == "INFO":
-        return COLORS["cyan"]
-    if name in {"WARN", "WARNING"}:
-        return COLORS["yellow"]
-    if name in {"ERR", "ERROR"}:
-        return COLORS["red"]
-    return COLORS["reset"]
+function isRecord(value: unknown): value is LogRecord {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+}
 
+function printFields(obj: unknown, nestingLevel = 1): void {
+    if (!isRecord(obj)) {
+        return;
+    }
 
-def _discover_key(candidates: Iterable[str], data: Dict[str, Any]) -> str | None:
-    for key in candidates:
-        if data.get(key) is not None:
-            return key
-    return None
+    const prefix = "\t".repeat(nestingLevel);
+    for (const [key, value] of Object.entries(obj)) {
+        if (EXCLUDE_KEYS.has(key)) {
+            continue;
+        }
 
+        if (isRecord(value)) {
+            console.log(`${prefix}${key} = {`);
+            printFields(value, nestingLevel + 1);
+            console.log(`${prefix}}`);
+        } else if (Array.isArray(value)) {
+            console.log(`${prefix}${key} = {`);
+            const indexed = value.reduce<LogRecord>((acc, entry, index) => {
+                acc[String(index)] = entry;
+                return acc;
+            }, {});
+            printFields(indexed, nestingLevel + 1);
+            console.log(`${prefix}}`);
+        } else {
+            console.log(`${prefix}${key} = ${String(value)}`);
+        }
+    }
+}
 
-def timestamp_key(data: Dict[str, Any]) -> str | None:
-    global _cached_timestamp_key
-    if _cached_timestamp_key is None:
-        _cached_timestamp_key = _discover_key(TIMESTAMP_KEYS, data)
-    return _cached_timestamp_key
+function extractPrimaryFields(data: LogRecord): { level: unknown; timestamp: string; message: string } {
+    const lvlKey = levelKey(data);
+    const tsKey = timestampKey(data);
+    const msgKey = messageKey(data);
 
+    const level = lvlKey ? data[lvlKey] ?? "INFO" : "INFO";
+    const timestamp = tsKey ? formatField(data[tsKey]) : "";
+    const message = msgKey ? formatField(data[msgKey]) : "";
 
-def level_key(data: Dict[str, Any]) -> str | None:
-    global _cached_level_key
-    if _cached_level_key is None:
-        _cached_level_key = _discover_key(LEVEL_KEYS, data)
-    return _cached_level_key
+    return { level, timestamp, message };
+}
 
+function formatField(value: unknown): string {
+    if (value === undefined || value === null) {
+        return "";
+    }
+    return typeof value === "string" ? value : String(value);
+}
 
-def message_key(data: Dict[str, Any]) -> str | None:
-    global _cached_message_key
-    if _cached_message_key is None:
-        _cached_message_key = _discover_key(MESSAGE_KEYS, data)
-    return _cached_message_key
+function prettyPrint(line: string): void {
+    const parsed = JSON.parse(line);
+    if (!isRecord(parsed)) {
+        throw new Error("JSON line is not an object");
+    }
 
+    const { level, timestamp, message } = extractPrimaryFields(parsed);
+    const color = colorForLevel(level);
+    const parts = [`${color}${String(level).toUpperCase()}${COLORS.reset}`];
+    if (timestamp) {
+        parts.push(timestamp);
+    }
+    if (message) {
+        parts.push(message);
+    }
 
-def _print_fields(obj: Any, nesting_level: int = 1) -> None:
-    if not isinstance(obj, dict):
-        return
+    console.log(parts.join(" "));
+    printFields(parsed, 1);
+}
 
-    prefix = "\t" * nesting_level
-    for key, value in obj.items():
-        if key in _EXCLUDE_KEYS:
-            continue
+const rl = createInterface({
+    input: process.stdin,
+    crlfDelay: Infinity,
+    terminal: false,
+});
 
-        if isinstance(value, dict):
-            print(f"{prefix}{key} = {{")
-            _print_fields(value, nesting_level + 1)
-            print(f"{prefix}}}")
-        elif isinstance(value, list):
-            # Represent lists as an indexed map, similar to the original Clojure code
-            print(f"{prefix}{key} = {{")
-            indexed = {i: v for i, v in enumerate(value)}
-            _print_fields(indexed, nesting_level + 1)
-            print(f"{prefix}}}")
-        else:
-            print(f"{prefix}{key} = {value}")
+rl.on("line", (rawLine: string) => {
+    const line = rawLine.endsWith("\r") ? rawLine.slice(0, -1) : rawLine;
+    if (line.length === 0) {
+        return;
+    }
 
+    try {
+        prettyPrint(line);
+    } catch {
+        console.log(`NON-JSON LINE: ${line}`);
+    }
+});
 
-def _pretty_print(line: str) -> None:
-    data = json.loads(line)
-
-    lvl_key = level_key(data)
-    ts_key = timestamp_key(data)
-    msg_key = message_key(data)
-
-    level = data.get(lvl_key, "INFO") if lvl_key else "INFO"
-    timestamp = data.get(ts_key, "") if ts_key else ""
-    message = data.get(msg_key, "") if msg_key else ""
-
-    color = color_for_level(level)
-    reset = COLORS["reset"]
-
-    print(f"{color}{str(level).upper()}{reset} {timestamp} {message}")
-    _print_fields(data, nesting_level=1)
-
-
-def main() -> int:
-    for raw_line in sys.stdin:
-        line = raw_line.rstrip("\n")
-        if not line:
-            continue
-        try:
-            _pretty_print(line)
-        except Exception:
-            # Match the behaviour of the original script on non-JSON input
-            print(f"NON-JSON LINE: {line}")
-    return 0
-
-
-if __name__ == "__main__":  # pragma: no cover
-    raise SystemExit(main())
+rl.on("close", () => {
+    process.exit(0);
+});
