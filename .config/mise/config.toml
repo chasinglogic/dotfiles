@@ -90,6 +90,7 @@ bun = "latest"
 claude = "latest"
 codex = "latest"
 krew = "latest"
+biome = "latest"
 
 [settings]
 experimental = true

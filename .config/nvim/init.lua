@@ -418,6 +418,7 @@ require("mason-tool-installer").setup({
     ensure_installed = {
         "alejandra", -- Nix formatter
         "ansible-language-server",
+        "biome",
         "cljfmt",
         "clojure-lsp",
         "docker-compose-language-service",
@@ -447,7 +448,11 @@ require("mason-tool-installer").setup({
 -- Autoformatting (conform) {{{
 require('conform').setup({
     formatters_by_ft = {
-        eruby = { "erb_format" }
+        eruby = { "erb_format" },
+        javascript = { "biome" },
+        javascriptreact = { "biome" },
+        typescript = { "biome" },
+        typescriptreact = { "biome" },
     },
     format_on_save = {
         timeout_ms = 500,
