@@ -2,8 +2,11 @@ theme = "catppuccin-mocha"
 font-size = 12
 macos-option-as-alt = true
 command = fish --login --interactive
-config-file = ?macos-config
 maximize = true
 window-inherit-working-directory = false
 window-decoration = server
+clipboard-read = allow
+clipboard-write = allow
+
+config-file = ?macos-config
 config-file = ?local-config
