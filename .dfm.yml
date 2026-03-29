@@ -34,7 +34,11 @@ modules:
   repository: git@github.com:chasinglogic/secrets.git
   root_dir: ""
   hooks: {}
-prompt_for_commit_message: true
+
+llm:
+  model_provider: gemini
+  commit_messages: true
+
 pull_only: false
 repository: ""
 root_dir: ""
