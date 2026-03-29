@@ -4,7 +4,7 @@ macos-option-as-alt = true
 command = fish --login --interactive
 maximize = true
 window-inherit-working-directory = false
-window-decoration = server
+window-decoration = none
 clipboard-read = allow
 clipboard-write = allow
 
