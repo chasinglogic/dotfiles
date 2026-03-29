@@ -39,8 +39,6 @@ just = "latest"
 fzf = "latest"
 delta = "latest"
 "github:bvaisvil/zenith" = "latest"
-"github:chasinglogic/projector" = "latest"
-"github:chasinglogic/dfm" = "latest"
 "npm:@google/gemini-cli" = "latest"
 
 # For building and publishing my blog

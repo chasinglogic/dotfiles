@@ -1,0 +1,59 @@
+{
+  "version": 3,
+  "skills": {
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/skills.git",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "skillFolderHash": "3013fdeb8a11b10b1eb795ec3ae8bfca38f7c26d",
+      "installedAt": "2026-03-29T09:25:55.319Z",
+      "updatedAt": "2026-03-29T09:25:59.344Z"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "skillFolderHash": "928950704df8a8b885c03de5da626331e6f29cf8",
+      "pluginName": "example-skills",
+      "installedAt": "2026-03-29T09:34:27.595Z",
+      "updatedAt": "2026-03-29T09:34:27.595Z"
+    },
+    "gcp-expert": {
+      "source": "personamanagmentlayer/pcl",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/personamanagmentlayer/pcl.git",
+      "skillPath": "stdlib/cloud/gcp-expert/SKILL.md",
+      "skillFolderHash": "5e88484a31abded211be7f4a293363fbf10e8fca",
+      "installedAt": "2026-03-29T09:50:35.302Z",
+      "updatedAt": "2026-03-29T09:50:35.302Z"
+    },
+    "linear": {
+      "source": "openai/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/openai/skills.git",
+      "skillPath": "skills/.curated/linear/SKILL.md",
+      "skillFolderHash": "31c1648f2d1a4d05d32eab4bdfb2ed89a5541e06",
+      "installedAt": "2026-03-29T09:52:14.591Z",
+      "updatedAt": "2026-03-29T09:52:14.591Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "antigravity",
+    "cline",
+    "codex",
+    "cursor",
+    "deepagents",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-cli",
+    "opencode",
+    "warp",
+    "openclaw"
+  ]
+}

@@ -1,45 +1,22 @@
-link_mode: ""
 mappings:
-- match: .config/nvim/snippets
-  link_as_dir: true
-  skip: false
-  dest: ""
-  target_os: ""
-- match: .*gpg-agent.conf.darwin
-  link_as_dir: false
-  skip: false
-  dest: ~/.gnupg/gpg-agent.conf
-  target_os: Darwin
-- match: playbooks/workstation
-  link_as_dir: true
-  skip: false
-  dest: ""
-  target_os: ""
-- match: .config/ghostty/macos-config
-  link_as_dir: false
-  skip: true
-  dest: ""
-  target_os: Linux
-- match: .gemini/policies/.*
-  link_as_dir: true
-  skip: false
-  dest: ""
-  target_os: ""
+  - match: .config/nvim/snippets
+    link_as_dir: true
+  - match: .*gpg-agent.conf.darwin
+    dest: ~/.gnupg/gpg-agent.conf
+    target_os: Darwin
+  - match: .config/ghostty/macos-config
+    skip: true
+    target_os: Linux
+  - match: .gemini/policies/.*
+    link_as_dir: true
+  - match: .agents/.*
+    link_as_dir: true
+  - match: .config/opencode/agents/.*
+    link_as_dir: true
+
 modules:
-- link_mode: ""
-  mappings: []
-  modules: []
-  prompt_for_commit_message: false
-  pull_only: false
-  repository: git@github.com:chasinglogic/secrets.git
-  root_dir: ""
-  hooks: {}
+  - repository: git@github.com:chasinglogic/secrets.git
 
 llm:
   model_provider: gemini
   commit_messages: true
-
-pull_only: false
-repository: ""
-root_dir: ""
-hooks: {}
