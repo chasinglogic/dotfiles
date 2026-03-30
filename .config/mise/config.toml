@@ -54,7 +54,6 @@ syft = "latest"
 # Languages
 rust = "latest"
 "pipx:hatch" = "latest"
-node = "lts"
 
 # Language tooling
 uv = "latest"
@@ -91,7 +90,3 @@ biome = "latest"
 [settings]
 experimental = true
 idiomatic_version_file_enable_tools = ["python"]
-
-[settings.node]
-compile = false
-mirror_url = "https://unofficial-builds.nodejs.org/download/release/"
