@@ -1,7 +1,7 @@
 ---
 description: Infrastructure specialist review
 mode: subagent
-hidden: true
+temperature: 0.1
 tools:
   edit: false
   write: false
