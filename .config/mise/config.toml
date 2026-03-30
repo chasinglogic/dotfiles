@@ -53,8 +53,6 @@ syft = "latest"
 
 # Languages
 rust = "latest"
-go = "latest"
-python = "3.13"
 "pipx:hatch" = "latest"
 node = "lts"
 

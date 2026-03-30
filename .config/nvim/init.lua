@@ -410,9 +410,22 @@ require('mini.extra').setup()
 -- Mason {{{
 require("mason").setup()
 require("mason-lspconfig").setup({
-    handlers = function(server_name)
-        require('lspconfig')[server_name].setup({})
-    end
+    handlers = {
+        function(server_name)
+            require('lspconfig')[server_name].setup({})
+        end,
+        ["nil_ls"] = function()
+            require('lspconfig').nil_ls.setup({
+                settings = {
+                    ["nil"] = {
+                        formatting = {
+                            command = { "alejandra" },
+                        },
+                    },
+                },
+            })
+        end,
+    }
 })
 require("mason-tool-installer").setup({
     ensure_installed = {
