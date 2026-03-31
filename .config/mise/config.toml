@@ -86,6 +86,7 @@ claude = "latest"
 codex = "latest"
 krew = "latest"
 biome = "latest"
+python = "3.11.3"
 
 [settings]
 experimental = true
