@@ -115,6 +115,6 @@ source_if_exists /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk
 
 source_if_exists "$HOME/.prompt.bash"
 
-for compfile in "$HOME/.local/share/bash-completions"/*; do
-	source "$compfile"
-done
+# for compfile in "$HOME/.local/share/bash-completions"/*; do
+# 	source "$compfile"
+# done
