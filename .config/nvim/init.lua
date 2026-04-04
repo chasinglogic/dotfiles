@@ -434,6 +434,7 @@ require("mason-lspconfig").setup({
                         analyses = {
                             unusedparams = true,
                         },
+                        templateExtensions = ["tmpl", "templ", "template"],
                     },
                 },
             })
