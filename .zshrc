@@ -52,3 +52,4 @@ autoload -Uz compinit && compinit
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /Users/chasinglogic/.local/share/mise/installs/terragrunt/v0.93.3/terragrunt terragrunt
+export PATH="$HOME/.npm-global/bin:$PATH"
