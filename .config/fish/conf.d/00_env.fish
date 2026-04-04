@@ -55,6 +55,7 @@ fish_add_path --path "$HOME/.local/share/gem/ruby/3.4.0/bin"
 fish_add_path --path "$HOME/.nix-profile/bin"
 fish_add_path --path "$HOME/.config/emacs/bin"
 fish_add_path --path "$HOME/.bun/bin"
+fish_add_path --path "$HOME/.npm-global/bin"
 
 # These have to be after the $PATH is set up.
 
