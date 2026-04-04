@@ -1,4 +1,6 @@
 mappings:
+  - match: AGENTS.md
+    skip: true
   - match: .config/nvim/snippets
     link_as_dir: true
   - match: .*gpg-agent.conf.darwin

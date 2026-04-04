@@ -39,10 +39,6 @@ just = "latest"
 fzf = "latest"
 delta = "latest"
 "github:bvaisvil/zenith" = "latest"
-"npm:@google/gemini-cli" = "latest"
-
-# For building and publishing my blog
-# hugo = "latest"
 
 # Load testing tool
 "cargo:oha" = "latest"
