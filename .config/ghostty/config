@@ -6,6 +6,7 @@ window-inherit-working-directory = false
 window-decoration = none
 clipboard-read = allow
 clipboard-write = allow
+maximize = true
 app-notifications = no-clipboard-copy
 
 config-file = ?macos-config
