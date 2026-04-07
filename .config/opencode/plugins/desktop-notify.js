@@ -9,6 +9,15 @@ function nowMs() {
   return Date.now()
 }
 
+async function getRepoRoot() {
+  try {
+    const { stdout } = await execFileAsync("git", ["rev-parse", "--show-toplevel"])
+    return stdout.trim()
+  } catch {
+    return process.cwd()
+  }
+}
+
 async function sendDesktopNotification(title, body) {
   const platform = process.platform
 
@@ -30,6 +39,7 @@ async function sendDesktopNotification(title, body) {
 
 export const DesktopNotifyPlugin = async ({ client }) => {
   let lastNotifiedAt = 0
+  const repoRoot = await getRepoRoot()
 
   async function notify(title, body) {
     const now = nowMs()
@@ -37,7 +47,7 @@ export const DesktopNotifyPlugin = async ({ client }) => {
 
     lastNotifiedAt = now
     try {
-      await sendDesktopNotification(title, body)
+      await sendDesktopNotification(title, `${repoRoot}\n${body}`)
     } catch (error) {
       await client.app.log({
         body: {
