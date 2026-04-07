@@ -1,0 +1,7 @@
+interface:
+  display_name: "Address Comments"
+  short_description: "Manual PR comments remediation"
+  default_prompt: "Use $address-comments to address unresolved PR comments, validate the changes, and resolve completed threads."
+
+policy:
+  allow_implicit_invocation: false

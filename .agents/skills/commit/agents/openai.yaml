@@ -1,0 +1,7 @@
+interface:
+  display_name: "Commit"
+  short_description: "Manual atomic git commit helper"
+  default_prompt: "Use $commit to review changes, create an atomic commit, and push if appropriate."
+
+policy:
+  allow_implicit_invocation: false
