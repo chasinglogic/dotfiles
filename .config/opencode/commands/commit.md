@@ -3,10 +3,21 @@ description: Commit the current work
 agent: build
 ---
 
-Commit the current changes. If the branch has a ticket number in it be sure to
-include it at the beginning of the commit summary. If there is no ticket number
-available then use the conventional commits standard prefixes.
+Review the current worktree before committing anything.
 
-Focus on creating atomic commits so they can easily be reverted if necessary.
+Create one or more atomic commits from the current changes. Split unrelated work
+into separate commits whenever feasible so the result is easy to review and
+revert.
 
-Push your commits if the branch is not `develop`, `main`, or `master`
+If the branch name contains a ticket identifier then begin the commit summary
+with that identifier.
+
+If there is no ticket identifier available then use an appropriate
+conventional-commit prefix such as `feat:`, `fix:`, `refactor:`, `docs:`, or
+`chore:`.
+
+Stage only the files that belong in the current atomic commit. Do not create
+empty commits.
+
+Push after committing if and only if the current branch is not `develop`,
+`main`, or `master`.

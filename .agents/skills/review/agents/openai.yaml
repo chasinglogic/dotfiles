@@ -1,0 +1,7 @@
+interface:
+  display_name: "Review"
+  short_description: "Manual multi-lens diff reviewer"
+  default_prompt: "Use $review to review the current branch diff against main and report prioritized findings."
+
+policy:
+  allow_implicit_invocation: false

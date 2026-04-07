@@ -3,11 +3,14 @@ description: Create a PR for this branch
 agent: build
 ---
 
-Create a Github pull request for this branch to whatever the default branch is
-for the repository.
+Create a GitHub pull request for the current branch targeting the repository
+default branch.
 
-If the branch is for a ticket then make the title of the pull request the
-summary of the ticket including the ticket number.
+If the branch name includes a ticket identifier then use the ticket number and
+ticket summary in the pull request title.
 
-The description of the pull request should include a changelog explaining what
-has been done and why.
+If there is no ticket identifier available then derive a clear human-readable
+title from the branch purpose or recent commits.
+
+The pull request description should be a concise changelog that explains what
+changed and why, not just a file listing.

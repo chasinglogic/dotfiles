@@ -1,0 +1,7 @@
+interface:
+  display_name: "PR"
+  short_description: "Manual GitHub pull request helper"
+  default_prompt: "Use $pr to create a GitHub pull request for the current branch with a title and changelog-based description."
+
+policy:
+  allow_implicit_invocation: false
