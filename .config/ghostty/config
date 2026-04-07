@@ -8,6 +8,7 @@ clipboard-read = allow
 clipboard-write = allow
 maximize = true
 app-notifications = no-clipboard-copy
+shell-integration-features = ssh-terminfo,ssh-env,sudo
 
 config-file = ?macos-config
 config-file = ?local-config
