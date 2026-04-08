@@ -11,9 +11,9 @@ mappings:
     target_os: Linux
   - match: .gemini/policies/.*
     link_as_dir: true
-  - match: .agents/.*
+  - match: .agents/$
     link_as_dir: true
-  - match: .config/opencode/agents/.*
+  - match: .config/opencode/agents/$
     link_as_dir: true
 
 modules:
