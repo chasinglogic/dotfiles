@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+path="$1"
+[ -n "$path" ] || exit 0
+branch=$(git -C "$path" branch --show-current 2>/dev/null) || exit 0
+[ -n "$branch" ] && printf "%s | " "$branch"
