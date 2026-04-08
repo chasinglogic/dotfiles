@@ -67,4 +67,5 @@ __pycache__/
 /WARP.md
 /GEMINI.md
 
-.claude/
+/.claude/
+/.codex
