@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+set -e
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: $(basename "$0") <pid>" >&2
+    exit 1
+fi
+
+target_pid="$1"
+
+cmd_args=$(ps -p "$target_pid" -o args= --no-headers 2>/dev/null) || {
+    echo "Error: Cannot read process $target_pid" >&2
+    exit 1
+}
+
+if [[ -z "$cmd_args" ]]; then
+    echo "Error: Could not determine command for PID $target_pid" >&2
+    exit 1
+fi
+
+echo "Watching PID $target_pid: $cmd_args" >&2
+
+while kill -0 "$target_pid" 2>/dev/null; do
+    sleep 1
+done
+
+,notify "Process Complete" "$cmd_args has completed"

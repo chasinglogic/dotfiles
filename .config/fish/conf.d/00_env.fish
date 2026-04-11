@@ -33,6 +33,11 @@ end
 
 set -gx COLORTERM truecolor
 
+# Fix for making python libraries work with nix-ld
+if set -q NIX_LD_LIBRARY_PATH
+    set -gx LD_LIBRARY_PATH "$NIX_LD_LIBRARY_PATH:$NIX_LD_LIBRARY_PATH"
+end
+
 # Storage for miscellaneous or system specific environment variables
 set -l local_env_vars "$HOME/.env.fish"
 if test -f $local_env_vars
