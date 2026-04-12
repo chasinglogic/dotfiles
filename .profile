@@ -17,6 +17,7 @@ function find_executable() {
 function source_if_exists() {
 	if [[ -f $1 ]]; then
 		debug "Sourcing $1 because it exists."
+		# shellcheck disable=SC1090
 		source "$1"
 	else
 		debug "Not source $1 because it could not be found." 2
@@ -51,15 +52,18 @@ export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 # Node version manager storage location
 export NOTES_DIR="$HOME/Dropbox/Notes"
 # Use Python3 for Virtualenvwrapper
-export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
+VIRTUALENVWRAPPER_PYTHON="$(which python3)"
+export VIRTUALENVWRAPPER_PYTHON
 # Plasma scale with HIDPI
 export PLASMA_USE_QT_SCALING=1
 # Packer's colorized output messes with terminals and other programs I use.
 export PACKER_NO_COLOR="1"
 # GPG can weirdly hang without this I've found
-export GPG_TTY=$(tty)
+GPG_TTY=$(tty)
+export GPG_TTY
 # Needed for the go compiler and tooling
 export GOPATH="$HOME/Code/go"
+export GOBIN="$GOPATH/bin"
 # Make helm work with our internal chart museum
 export GODEBUG=x509ignoreCN=0
 # don't put duplicate lines or lines starting with space in the history.
@@ -95,9 +99,9 @@ if [[ "$(uname)" == "Darwin" ]]; then
 	export CPPFLAGS="-I/opt/homebrew/opt/openssl@3/include"
 
 	if [[ -d "$HOME/Library/Python" ]]; then
-		for dir in $(find "$HOME/Library/Python" -maxdepth 1 -type d); do
+		while IFS= read -r -d '' dir; do
 			export PATH="$PATH:$dir/bin"
-		done
+		done < <(find "$HOME/Library/Python" -maxdepth 1 -type d -print0)
 	fi
 
 	if [[ -d "/usr/local/opt/postgresql@16" ]]; then
@@ -118,6 +122,11 @@ fi
 
 export COLORTERM=truecolor
 
+# Fix for making python libraries work with nix-ld.
+if [[ -n "$NIX_LD_LIBRARY_PATH" ]]; then
+	export LD_LIBRARY_PATH="$NIX_LD_LIBRARY_PATH${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+fi
+
 # Storage for miscellaneous or system specific environment variables
 source_if_exists "$HOME/.env.bash"
 # Setup rustup, cargo path
@@ -132,6 +141,13 @@ add_to_path "/Applications/PyCharm CE.app/Contents/MacOS"
 add_to_path "/Applications/PyCharm.app/Contents/MacOS"
 add_to_path "/Applications/Docker.app/Contents/Resources/bin"
 add_to_path "$HOME/.pulumi/bin"
+add_to_path "$HOME/.krew/bin"
+add_to_path /opt/google-cloud-sdk/bin
+add_to_path "$HOME/.local/share/gem/ruby/3.4.0/bin"
+add_to_path "$HOME/.nix-profile/bin"
+add_to_path "$HOME/.config/emacs/bin"
+add_to_path "$HOME/.bun/bin"
+add_to_path "$HOME/.npm-global/bin"
 
 source_if_exists "$HOME/.cargo/env"
 source_if_exists "$HOME/.ghcup/env"
@@ -150,10 +166,6 @@ source_if_exists "$HOME/.env.local"
 [ -x /usr/bin/dircolors ] && eval "alias ls='ls --color'"
 source_if_exists "$HOME/.aliases.sh"
 source_if_exists "$HOME/.aliases.local.sh"
-
-if [ -d "$HOME/.krew" ]; then
-	export PATH="${HOME}/.krew/bin:$PATH"
-fi
 
 # This has to be after the $PATH is set up.
 # FZF default find command
@@ -174,4 +186,5 @@ if [[ "$EDITOR" != "code --wait" ]]; then
 fi
 
 debug "PATH=$PATH" 2
+# shellcheck source=/dev/null
 . "$HOME/.cargo/env"
