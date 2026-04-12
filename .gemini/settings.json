@@ -1,7 +1,7 @@
 {
   "security": {
     "auth": {
-      "selectedType": "gemini-api-key"
+      "selectedType": "oauth-personal"
     },
     "enablePermanentToolApproval": true
   },
@@ -31,11 +31,14 @@
     "directWebFetch": true
   },
   "telemetry": {
-      "enabled": true,
-      "target": "local",
-      "otlpEndpoint": "http://raza.beefalo-drum.ts.net:4317"
+    "enabled": true,
+    "target": "local",
+    "otlpEndpoint": "http://raza.beefalo-drum.ts.net:4317"
   },
   "context": {
-    "fileName": ["AGENTS.md", "GEMINI.md"]
+    "fileName": [
+      "AGENTS.md",
+      "GEMINI.md"
+    ]
   }
 }
