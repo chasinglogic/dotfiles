@@ -3,16 +3,19 @@
 # PROMPT #
 ##########
 
-# Catppuccin-aligned palette
-# KEY_COLOR maps to fish's 89DCEB (Sky) — tput 117 is closest 256-color match
-# HOST_COLOR maps to fish's E64553 (Red) — tput 167
-# ORANGE maps to fish's FAB387 (Peach) — tput 209
-# CWD_COLOR uses fish_color_cwd default (typically cyan-ish)
+# Catppuccin Mocha palette (256-color approximations)
+# Text    cdd6f4 → 189   Normal/default text
+# Sky     89DCEB → 117   Key labels (vcs=, kube=)
+# Yellow  f9e2af → 223   CWD path
+# Peach   fab387 → 216   λ/Δ suffix
+# Red     f38ba8 → 211   Host, error status, production kube
+# Blue    89b4fa → 111   (reserved, fish_color_command)
+TEXT_COLOR="$(tput setaf 189)"
 KEY_COLOR="$(tput setaf 117)"
-HOST_COLOR="$(tput setaf 203)"
-SUFFIX_COLOR="$(tput setaf 215)"
-CWD_COLOR="$(tput setaf 229)"
-RED="$(tput setaf 196)"
+CWD_COLOR="$(tput setaf 223)"
+SUFFIX_COLOR="$(tput setaf 216)"
+HOST_COLOR="$(tput setaf 211)"
+RED="$(tput setaf 211)"
 RESET="$(tput sgr0)"
 
 function __git_branch_prompt {
@@ -45,7 +48,7 @@ function __prompt_command {
 	local branch
 	branch=$(__git_branch_prompt)
 	if [[ -n "$branch" ]]; then
-		PS1+="\[${KEY_COLOR}\]vcs\[${RESET}\]=${branch} "
+		PS1+="\[${KEY_COLOR}\]vcs\[${RESET}\]\[${TEXT_COLOR}\]=${branch} "
 	fi
 
 	if command -v kubectl >/dev/null 2>&1; then
@@ -54,15 +57,15 @@ function __prompt_command {
 		if [[ -n "$active_context" ]]; then
 			local kube_val
 			if [[ "$active_context" == "production" ]]; then
-				kube_val="\[${RED}\]${active_context}\[${RESET}\]"
+				kube_val="\[${RED}\]${active_context}"
 			else
-				kube_val="${active_context}"
+				kube_val="\[${TEXT_COLOR}\]${active_context}"
 			fi
-			PS1+="\[${KEY_COLOR}\]kube\[${RESET}\]=${kube_val} "
+			PS1+="\[${KEY_COLOR}\]kube\[${RESET}\]${kube_val} "
 		fi
 	fi
 
-	PS1+="\n"
+	PS1+="\[${RESET}\]\n"
 
 	# --- Line 2: [pipestatus] @host λ/Δ ---
 	# Pipestatus: show non-zero exit code
