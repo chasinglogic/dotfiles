@@ -48,7 +48,7 @@ function __prompt_command {
 	local branch
 	branch=$(__git_branch_prompt)
 	if [[ -n "$branch" ]]; then
-		PS1+="\[${KEY_COLOR}\]vcs\[${RESET}\]\[${TEXT_COLOR}\]=${branch} "
+		PS1+="\[${KEY_COLOR}\]vcs=\[${RESET}\]\[${TEXT_COLOR}\]${branch} "
 	fi
 
 	if command -v kubectl >/dev/null 2>&1; then
@@ -61,7 +61,7 @@ function __prompt_command {
 			else
 				kube_val="\[${TEXT_COLOR}\]${active_context}"
 			fi
-			PS1+="\[${KEY_COLOR}\]kube\[${RESET}\]${kube_val} "
+			PS1+="\[${KEY_COLOR}\]kube=\[${RESET}\]${kube_val} "
 		fi
 	fi
 
