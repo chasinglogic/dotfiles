@@ -1,6 +1,4 @@
-if [[ $- == *i* ]] && [ -n "$SSH_CLIENT" ]; then
-	exec fish
-fi
+# shellcheck shell=bash
 
 # A colon-separated list of values controlling how commands are saved on the
 # history list.  If the list  of  values  includes ignorespace,  lines  which
@@ -107,15 +105,22 @@ shopt -s autocd
 source "$HOME/.profile"
 source "$HOME/.functions.sh"
 
+if command -v mise >/dev/null 2>&1; then
+	eval "$(mise activate bash)"
+fi
+
 # MacOS sucks.
 source_if_exists /opt/homebrew/etc/profile.d/bash_completion.sh
 source_if_exists /usr/share/bash-completion/bash_completion
 source_if_exists /etc/bash_completion
 source_if_exists /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc
+source_if_exists "$HOME/.openclaw/completions/openclaw.bash"
+source_if_exists "$HOME/.openclaw/completions/openclaw.sh"
+
+if [[ $- == *i* ]]; then
+	# Match the custom Fish bindings in Bash's readline setup.
+	bind '"\e\C-h": backward-kill-word'
+	bind '"\ey": yank-pop'
+fi
 
 source_if_exists "$HOME/.prompt.bash"
-
-# for compfile in "$HOME/.local/share/bash-completions"/*; do
-# 	source "$compfile"
-# done
-export PATH="$HOME/.npm-global/bin:$PATH"
