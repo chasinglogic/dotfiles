@@ -4,6 +4,8 @@ import { promisify } from "node:util"
 const execFileAsync = promisify(execFile)
 
 const MIN_NOTIFY_GAP_MS = 3000
+const ESC = "\u001b"
+const BEL = "\u0007"
 
 function nowMs() {
   return Date.now()
@@ -18,23 +20,16 @@ async function getRepoRoot() {
   }
 }
 
+function wrapForTmux(sequence) {
+  if (!process.env.TMUX) return sequence
+
+  return `${ESC}Ptmux;${sequence.split(ESC).join(`${ESC}${ESC}`)}${ESC}\\`
+}
+
 async function sendDesktopNotification(title, body) {
-  const platform = process.platform
-
-  if (platform === "darwin") {
-    await execFileAsync("osascript", [
-      "-e",
-      `display notification ${JSON.stringify(body)} with title ${JSON.stringify(title)}`,
-    ])
-    return
-  }
-
-  if (platform === "linux") {
-    await execFileAsync("notify-send", [title, body, "--app-name=opencode"])
-    return
-  }
-
-  process.stdout.write("\u0007")
+  const message = `${title}: ${body}`.replace(/[\r\n]+/g, " ")
+  const sequence = `${ESC}]9;${message}${BEL}`
+  process.stdout.write(wrapForTmux(sequence))
 }
 
 export const DesktopNotifyPlugin = async ({ client }) => {
