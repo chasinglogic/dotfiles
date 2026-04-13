@@ -10,12 +10,13 @@
 # Peach   fab387 → 216   λ/Δ suffix
 # Red     f38ba8 → 211   Host, error status, production kube
 # Blue    89b4fa → 111   (reserved, fish_color_command)
-TEXT_COLOR="$(tput setaf 189)"
-KEY_COLOR="$(tput setaf 117)"
-CWD_COLOR="$(tput setaf 223)"
-SUFFIX_COLOR="$(tput setaf 216)"
-HOST_COLOR="$(tput setaf 211)"
-RED="$(tput setaf 211)"
+# Bumped one shade brighter in 256-color space for more pop
+TEXT_COLOR="$(tput setaf 195)"
+KEY_COLOR="$(tput setaf 123)"
+CWD_COLOR="$(tput setaf 229)"
+SUFFIX_COLOR="$(tput setaf 222)"
+HOST_COLOR="$(tput setaf 217)"
+RED="$(tput setaf 217)"
 RESET="$(tput sgr0)"
 
 function __git_branch_prompt {
