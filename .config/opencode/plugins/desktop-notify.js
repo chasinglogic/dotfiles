@@ -1,4 +1,5 @@
 import { execFile } from "node:child_process"
+import path from "node:path"
 import { promisify } from "node:util"
 
 const execFileAsync = promisify(execFile)
@@ -34,7 +35,7 @@ async function sendDesktopNotification(title, body) {
 
 export const DesktopNotifyPlugin = async ({ client }) => {
   let lastNotifiedAt = 0
-  const repoRoot = await getRepoRoot()
+  const repoName = path.basename(await getRepoRoot())
 
   async function notify(title, body) {
     const now = nowMs()
@@ -42,7 +43,7 @@ export const DesktopNotifyPlugin = async ({ client }) => {
 
     lastNotifiedAt = now
     try {
-      await sendDesktopNotification(title, `${repoRoot}\n${body}`)
+      await sendDesktopNotification(title, `${repoName}\n${body}`)
     } catch (error) {
       await client.app.log({
         body: {
