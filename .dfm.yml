@@ -20,5 +20,5 @@ modules:
   - repository: git@github.com:chasinglogic/secrets.git
 
 llm:
-  model_provider: gemini
+  model_provider: gemini-cli
   commit_messages: true
