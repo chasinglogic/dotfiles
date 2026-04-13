@@ -13,6 +13,7 @@ if [[ "$VIM_PROG" == "nvim" ]]; then
 fi
 
 alias k='kubectl'
+alias kk='k9s'
 alias logs='kubectl logs'
 
 alias tf='tofu'
@@ -55,3 +56,5 @@ fi
 if [[ -x "$(find_executable hwatch)" ]]; then
 	alias watch="hwatch"
 fi
+
+alias oc='opencode'
