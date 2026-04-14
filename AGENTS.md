@@ -121,7 +121,7 @@ This guide distills the WARP.md guidance (now removed) into a single source for 
 ## Tooling & Integration Notes
 - `dfm`: After structural changes, run `dfm status` followed by `dfm apply --dry-run` before linking to a real $HOME. Document new mappings in `.dfm.yml` with clear `match` patterns.
 - `wezterm`: Config uses `config_builder` and an `is_os` helper based on `wezterm.target_triple`. Additional OS-specific tweaks should branch through that helper.
-- `tmux`: Prefix is `M-l` with a secondary `C-l`. Avoid adding conflicting bindings. To test, `tmux source-file ~/.tmux.conf` inside an existing session.
+- `tmux`: Prefix is `C-b`. Avoid adding conflicting bindings. To test, `tmux source-file ~/.tmux.conf` inside an existing session.
 - `Neovim`: The config expects `vim.pack`. Avoid mixing plugin managers. To refresh dependencies, `nvim --headless "+lua vim.cmd('Lazy! sync')" +qa` if migrating, else follow the existing pattern.
 - `projector` integration: The `sp` function relies on `projector list/find`. If you change its behaviour, keep compatibility with both interactive and query-driven modes.
 - `kctx` expects the `kubectl` alias `k`; leave that alias intact. When adding kube helpers, prefer functions in `.functions.sh` so both shells share them.
