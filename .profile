@@ -1,5 +1,11 @@
 # shellcheck shell=bash
 
+if [ -n "PROFILE_SOURCED" ]; then
+    return
+fi
+
+export PROFILE_SOURCED=1
+
 function debug() {
 	LEVEL="${2:-1}"
 	DEBUG_LEVEL="${CL_DEBUG:-0}"

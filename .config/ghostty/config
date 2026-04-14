@@ -10,5 +10,27 @@ app-notifications = no-clipboard-copy
 shell-integration = bash
 shell-integration-features = ssh-terminfo,ssh-env,sudo
 
+# Reuse the old tmux Ctrl+l leader for native Ghostty split and tab management.
+keybind = ctrl+l>v=new_split:right
+keybind = ctrl+l>shift+s=new_split:down
+keybind = ctrl+l>h=goto_split:left
+keybind = ctrl+l>j=goto_split:down
+keybind = ctrl+l>k=goto_split:up
+keybind = ctrl+l>l=goto_split:right
+keybind = ctrl+l>x=close_surface
+keybind = ctrl+l>t=new_tab
+keybind = ctrl+l>c=new_tab
+keybind = ctrl+l>n=next_tab
+keybind = ctrl+l>p=previous_tab
+keybind = ctrl+l>1=goto_tab:1
+keybind = ctrl+l>2=goto_tab:2
+keybind = ctrl+l>3=goto_tab:3
+keybind = ctrl+l>4=goto_tab:4
+keybind = ctrl+l>5=goto_tab:5
+keybind = ctrl+l>6=goto_tab:6
+keybind = ctrl+l>7=goto_tab:7
+keybind = ctrl+l>8=goto_tab:8
+keybind = ctrl+l>9=last_tab
+
 config-file = ?macos-config
 config-file = ?local-config
