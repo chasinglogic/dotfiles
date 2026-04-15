@@ -1,3 +1,4 @@
+command = fish --login
 theme = "catppuccin-mocha"
 font-size = 12
 macos-option-as-alt = true
@@ -7,10 +8,10 @@ clipboard-read = allow
 clipboard-write = allow
 maximize = true
 app-notifications = no-clipboard-copy
-shell-integration = bash
+shell-integration = fish
 shell-integration-features = ssh-terminfo,ssh-env,sudo
 
-# Reuse the old tmux Ctrl+l leader for native Ghostty split and tab management.
+keybind = ctrl+l>z=toggle_split_zoom
 keybind = ctrl+l>v=new_split:right
 keybind = ctrl+l>shift+s=new_split:down
 keybind = ctrl+l>h=goto_split:left

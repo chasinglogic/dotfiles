@@ -149,4 +149,4 @@ if [[ $- == *i* ]]; then
 	bind '"\ey": yank-pop'
 fi
 
-source_if_exists "$HOME/.prompt.bash"
+# source_if_exists "$HOME/.prompt.bash"

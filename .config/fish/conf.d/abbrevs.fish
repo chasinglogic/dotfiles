@@ -11,7 +11,7 @@ abbr --add tf tofu
 abbr --add tg terragrunt
 abbr --add dotfiles "cd (dfm where)"
 
-abbr --add e "nvim ."
+abbr --add e "nvim"
 
 abbr --add pu pulumi
 abbr --add pup "pulumi up"
@@ -40,3 +40,5 @@ if command -q bat
 end
 
 abbr --add kk "k9s"
+
+abbr --add oc "opencode"
