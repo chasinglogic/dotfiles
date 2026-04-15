@@ -1,3 +1,3 @@
-command = bash --login
+command = /run/current-system/sw/bin/fish --login
 window-decoration = auto
 font-size = 17
