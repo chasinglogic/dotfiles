@@ -15,11 +15,10 @@ config.color_scheme = 'Catppuccin Mocha'
 -- config.harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' }
 
 if is_linux then
-    config.font_size = 13.0
+    config.font_size = 12.0
 else
     config.font_size = 17.0
 end
-config.line_height = 1.1
 
 config.window_frame = {
     font = wezterm.font({ family = 'JetBrains Mono', weight = 'Bold' }),
@@ -29,7 +28,7 @@ config.window_frame = {
 config.window_padding = {
     left = 0,
     right = 0,
-    top = '0.5cell',
+    top = 0,
     bottom = 0,
 }
 
@@ -53,6 +52,37 @@ local keys = {
         action = actions.ToggleFullScreen
     }
 }
+
+config.leader = { key = 'l', mods = 'CTRL', timeout_milliseconds = 1000 }
+
+local leader_keys = {
+    { key = 'z', action = actions.TogglePaneZoomState },
+    { key = 'v', action = actions.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+    { key = 'S', mods = 'SHIFT',                                                   action = actions.SplitVertical { domain = 'CurrentPaneDomain' } },
+    { key = 'h', action = actions.ActivatePaneDirection 'Left' },
+    { key = 'j', action = actions.ActivatePaneDirection 'Down' },
+    { key = 'k', action = actions.ActivatePaneDirection 'Up' },
+    { key = 'l', action = actions.ActivatePaneDirection 'Right' },
+    { key = 'x', action = actions.CloseCurrentPane { confirm = false } },
+    { key = 't', action = actions.SpawnTab 'CurrentPaneDomain' },
+    { key = 'c', action = actions.SpawnTab 'CurrentPaneDomain' },
+    { key = 'n', action = actions.ActivateTabRelative(1) },
+    { key = 'p', action = actions.ActivateTabRelative(-1) },
+    { key = '1', action = actions.ActivateTab(0) },
+    { key = '2', action = actions.ActivateTab(1) },
+    { key = '3', action = actions.ActivateTab(2) },
+    { key = '4', action = actions.ActivateTab(3) },
+    { key = '5', action = actions.ActivateTab(4) },
+    { key = '6', action = actions.ActivateTab(5) },
+    { key = '7', action = actions.ActivateTab(6) },
+    { key = '8', action = actions.ActivateTab(7) },
+    { key = '9', action = actions.ActivateLastTab },
+}
+
+for _, key in ipairs(leader_keys) do
+    key.mods = key.mods and (key.mods .. '|LEADER') or 'LEADER'
+    table.insert(keys, key)
+end
 
 if is_linux then
     for i = 1, 9 do
@@ -96,6 +126,8 @@ end
 fish_path = fish_path[1]
 if fish_path ~= nil then
     config.default_prog = { fish_path, '-l' }
+else
+    config.default_prog = { 'fish', '-l' }
 end
 
 config.warn_about_missing_glyphs = false
