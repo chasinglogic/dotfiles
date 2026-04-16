@@ -142,7 +142,7 @@ local MiniDeps = require("mini.deps")
 MiniDeps.setup()
 
 MiniDeps.add("catppuccin/nvim")
-MiniDeps.add("challenger-deep-theme/vim")
+MiniDeps.add("edeneast/nightfox.nvim")
 -- LSP helpers
 MiniDeps.add("neovim/nvim-lspconfig")
 MiniDeps.add("mason-org/mason.nvim")
@@ -718,4 +718,18 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 -- }}}
 -- }}}
-vim.cmd("colorscheme catppuccin-mocha")
+
+local set_theme = function()
+    if vim.o.background == 'dark' then
+        vim.cmd("colorscheme carbonfox")
+    else
+        vim.cmd("colorscheme dayfox")
+    end
+end
+
+set_theme()
+
+vim.api.nvim_create_autocmd("OptionSet", {
+    pattern = "background",
+    callback = set_theme
+})

@@ -2,6 +2,8 @@ local wezterm = require 'wezterm'
 local actions = wezterm.action
 local config = wezterm.config_builder()
 
+config.max_fps = 120
+
 local is_linux = wezterm.target_triple:find("linux") ~= nil
 
 ---- Appearance Settings -----
