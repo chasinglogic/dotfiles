@@ -1,12 +1,12 @@
-set -g KEY_COLOR (set_color 89DCEB)
+set -g KEY_COLOR (set_color 8BE9FD)
 set -g NORMAL (set_color normal)
 
 function fish_prompt --description 'Write out the prompt'
     set -l last_pipestatus $pipestatus
     set -lx __fish_last_status $status # Export for __fish_print_pipestatus.
-    set -l orange (set_color FAB387)
+    set -l orange (set_color FFB86C)
     set -q fish_color_status
-    or set -g fish_color_status red
+    or set -g fish_color_status FF5555
 
     if __git_is_dirty
         set -f suffix "$orange"λ
@@ -39,7 +39,7 @@ function status_segment
 end
 
 function __prompt_host
-    set -l host_color (set_color E64553)
+    set -l host_color (set_color BD93F9)
     set -f host (hostname | sed 's/.local//')
     if test -n "$SSH_CLIENT"
         set -f host "$USER@$host"

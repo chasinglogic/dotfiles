@@ -3,20 +3,18 @@
 # PROMPT #
 ##########
 
-# Catppuccin Mocha palette (256-color approximations)
-# Text    cdd6f4 → 189   Normal/default text
-# Sky     89DCEB → 117   Key labels (vcs=, kube=)
-# Yellow  f9e2af → 223   CWD path
-# Peach   fab387 → 216   λ/Δ suffix
-# Red     f38ba8 → 211   Host, error status, production kube
-# Blue    89b4fa → 111   (reserved, fish_color_command)
-# Bumped one shade brighter in 256-color space for more pop
-TEXT_COLOR="$(tput setaf 195)"
+# Dracula palette (256-color approximations)
+# Foreground f8f8f2 → 231   Normal/default text
+# Cyan       8be9fd → 123   Key labels (vcs=, kube=)
+# Orange     ffb86c → 215   CWD path and λ/Δ suffix
+# Purple     bd93f9 → 141   Host
+# Red        ff5555 → 203   Error status, production kube
+TEXT_COLOR="$(tput setaf 231)"
 KEY_COLOR="$(tput setaf 123)"
-CWD_COLOR="$(tput setaf 229)"
-SUFFIX_COLOR="$(tput setaf 222)"
-HOST_COLOR="$(tput setaf 217)"
-RED="$(tput setaf 217)"
+CWD_COLOR="$(tput setaf 215)"
+SUFFIX_COLOR="$(tput setaf 215)"
+HOST_COLOR="$(tput setaf 141)"
+RED="$(tput setaf 203)"
 RESET="$(tput sgr0)"
 
 function __git_branch_prompt {

@@ -142,7 +142,10 @@ local MiniDeps = require("mini.deps")
 MiniDeps.setup()
 
 MiniDeps.add("catppuccin/nvim")
-MiniDeps.add("edeneast/nightfox.nvim")
+MiniDeps.add({
+    source = "dracula/vim",
+    name = "dracula"
+})
 -- LSP helpers
 MiniDeps.add("neovim/nvim-lspconfig")
 MiniDeps.add("mason-org/mason.nvim")
@@ -574,6 +577,8 @@ nmap('<leader>fs', '<CMD>wa<CR>', '[F]ile [S]ave')
 nmap('<leader>fq', '<CMD>wq<CR>', '[F]ile save and [Q]uit')
 nmap('<leader>ft', '<CMD>Fyler kind=split_left_most<CR>', '[F]ile [T]ree')
 
+nmap('<leader>spu', MiniDeps.update, '[S]ystem [P]lugin [U]pdate')
+
 nmap('<leader>w', '<C-w>', '[W]indows')
 nmap('<leader>r', '<CMD>source ~/.config/nvim/init.lua<CR>')
 nmap('<leader>u', '<CMD>DepsUpdate<CR>', 'Update plugins')
@@ -721,9 +726,10 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
 local set_theme = function()
     if vim.o.background == 'dark' then
-        vim.cmd("colorscheme carbonfox")
+        vim.cmd("colorscheme dracula")
     else
-        vim.cmd("colorscheme dayfox")
+        -- Need to find a good one
+        vim.cmd("colorscheme default")
     end
 end
 
