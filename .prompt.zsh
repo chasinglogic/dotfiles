@@ -39,9 +39,9 @@ function aws_profile {
     fi
 }
 
-COMMAND_STATUS="%(?..%B%F{red}!! %b%f)"
-HOSTNAME="%F{blue}%n@%m%f"
-PWD_PROMPT="%f%~"
+COMMAND_STATUS="%(?..%B%F{203}!! %b%f)"
+HOSTNAME="%F{141}%n@%m%f"
+PWD_PROMPT="%F{215}%~%f"
 
 setopt prompt_subst
 
@@ -59,9 +59,9 @@ function set_prompt {
     fi
 
     if [[ $SHORT_PROMPT -ne 0 && "$DISABLE_SHORT_PROMPT" == "" ]]; then
-        export PROMPT="$PWD_PROMPT %F{green}\$(branch_prompt_info) %f%F{yellow}\$(lambda_or_delta)%f "
+        export PROMPT="$PWD_PROMPT %F{green}\$(branch_prompt_info) %f%F{215}\$(lambda_or_delta)%f "
     else
-        export PROMPT="$COMMAND_STATUS\$(venv_name)\$(aws_profile)\$(kube_context) $PWD_PROMPT %F{green}\$(branch_prompt_info) %F{yellow}\$(lambda_or_delta)%f "
+        export PROMPT="$COMMAND_STATUS\$(venv_name)\$(aws_profile)\$(kube_context) $PWD_PROMPT %F{green}\$(branch_prompt_info) %F{215}\$(lambda_or_delta)%f "
     fi
 }
 
