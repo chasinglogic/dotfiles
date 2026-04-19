@@ -1,5 +1,6 @@
 command = fish --login
-theme = dark:Carbonfox,light:Dayfox
+theme = light:Dayfox,dark:Carbonfox
+theme = Carbonfox
 font-size = 12
 macos-option-as-alt = true
 window-inherit-working-directory = false
