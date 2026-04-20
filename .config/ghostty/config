@@ -1,6 +1,9 @@
 command = fish --login
 theme = Dracula
 font-size = 12
+font-feature = +dilg
+font-feature = +calt
+font-feature = +liga
 macos-option-as-alt = true
 window-inherit-working-directory = false
 window-decoration = none
