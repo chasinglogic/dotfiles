@@ -724,18 +724,4 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 -- }}}
 -- }}}
 
-local set_theme = function()
-    if vim.o.background == 'dark' then
-        vim.cmd("colorscheme dracula")
-    else
-        -- Need to find a good one
-        vim.cmd("colorscheme default")
-    end
-end
-
-set_theme()
-
-vim.api.nvim_create_autocmd("OptionSet", {
-    pattern = "background",
-    callback = set_theme
-})
+vim.cmd([[colorscheme dracula]])
