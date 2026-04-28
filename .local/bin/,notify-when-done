@@ -25,4 +25,4 @@ while kill -0 "$target_pid" 2>/dev/null; do
     sleep 1
 done
 
-,notify "Process Complete" "$cmd_args has completed"
+,notify -s "Process complete" "Process Complete" "$cmd_args has completed"
