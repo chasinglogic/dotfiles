@@ -21,16 +21,25 @@ def exec_command(*args):
         return False
 
 
-def notify(title, description):
+def notify_linux(title, description, sound) -> bool:
+    # 1. Try notify-send (Linux/BSD)
+    # --expire-time=5000 is 5 seconds
+    if exec_command("notify-send", f"--expire-time={5000}", title, description):
+        if sound:
+            exec_command("spd-say", sound)
+        return True
+
+    return False
+
+
+def notify(title, description, sound):
     """
     Attempts to send a desktop notification using platform-specific tools.
     1. Tries 'notify-send' (common on Linux/BSD).
     2. Tries 'osascript' with JavaScript (macOS).
     3. Fails if neither succeeds.
     """
-    # 1. Try notify-send (Linux/BSD)
-    # --expire-time=5000 is 5 seconds
-    if exec_command("notify-send", f"--expire-time={5000}", title, description):
+    if notify_linux(title, description, sound):
         return
 
     # 2. Try osascript with JavaScript (macOS)
@@ -65,6 +74,13 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--sound",
+        "-s",
+        help="A string to say when the notification is sent using spd-say",
+        type=str,
+    )
+
+    parser.add_argument(
         "title",
         type=str,
         nargs="?",
@@ -82,4 +98,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    notify(args.title, args.description)
+    notify(args.title, args.description, args.sound)
