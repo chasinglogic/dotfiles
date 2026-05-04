@@ -53,3 +53,8 @@ autoload -Uz compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /Users/chasinglogic/.local/share/mise/installs/terragrunt/v0.93.3/terragrunt terragrunt
 export PATH="$HOME/.npm-global/bin:$PATH"
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/chasinglogic/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions

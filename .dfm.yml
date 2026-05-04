@@ -21,4 +21,4 @@ modules:
 
 llm:
   model_provider: gemini-cli
-  commit_messages: true
+  # commit_messages: true
