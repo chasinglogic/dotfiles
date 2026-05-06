@@ -1,5 +1,85 @@
 [tools]
+# Existing personal tools.
 "github:asdine/cueimports" = "latest"
+
+# Everyday shell and terminal workflow.
+bat = "latest"
+delta = "latest"
+fd = "latest"
+fzf = "latest"
+jq = "latest"
+ripgrep = "latest"
+yq = "latest"
+starship = "latest"
+hwatch = "latest"
+
+# Build, automation, and repository maintenance.
+act = "latest"
+gh = "latest"
+just = "latest"
+usage = "latest"
+
+# Programming languages and runtimes.
+bun = "latest"
+elixir = "latest"
+go = "latest"
+node = "latest"
+rust = "latest"
+poetry = "latest"
+uv = "latest"
+
+# Language tooling, formatters, and linters.
+biome = "latest"
+"npm:eslint" = "latest"
+golangci-lint = "latest"
+# Avoid current registry "latest" resolving to nightly builds.
+goreleaser = "2.15.4"
+ruff = "latest"
+shellcheck = "latest"
+shfmt = "latest"
+tree-sitter = "latest"
+
+# Cloud, infrastructure-as-code, and secret management.
+age = "latest"
+aws = "latest"
+opentofu = "latest"
+pulumi = "latest"
+sops = "latest"
+terraform = "latest"
+terragrunt = "latest"
+tflint = "latest"
+
+# Kubernetes and cluster operations.
+k9s = "latest"
+kind = "latest"
+kube-capacity = "latest"
+kubebuilder = "latest"
+kubectl = "latest"
+helm = "latest"
+krew = "latest"
+
+# Container workflows and supply-chain/security scanning.
+cosign = "latest"
+docker-compose = "latest"
+grype = "latest"
+syft = "latest"
+
+# API and performance diagnostics.
+gdu = "latest"
+grpcurl = "latest"
+hyperfine = "latest"
+oha = "latest"
+
+# Data and local database tooling.
+duckdb = "latest"
+
+# AI and assistant CLIs.
+codex = "latest"
+gemini-cli = "latest"
+opencode = "latest"
+
+# Personal workflows.
+hugo = "latest"
 
 [settings]
 experimental = true
