@@ -38,6 +38,7 @@ ruff = "latest"
 shellcheck = "latest"
 shfmt = "latest"
 tree-sitter = "latest"
+"pipx:python-lsp-server[all]" = "latest"
 
 # Cloud, infrastructure-as-code, and secret management.
 age = "latest"
