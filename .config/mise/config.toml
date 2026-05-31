@@ -21,11 +21,9 @@ usage = "latest"
 
 # Programming languages and runtimes.
 bun = "latest"
-elixir = "latest"
 go = "latest"
 node = "latest"
 rust = "latest"
-poetry = "latest"
 uv = "latest"
 
 # Language tooling, formatters, and linters.
