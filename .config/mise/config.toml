@@ -79,7 +79,13 @@ opencode = "latest"
 
 # Personal workflows.
 hugo = "latest"
+"github:chasinglogic/dfm" = "latest"
+github-cli = "latest"
+git-filter-repo = "latest"
+gomigrate = "latest"
+python = "latest"
 
 [settings]
 experimental = true
 idiomatic_version_file_enable_tools = ["python"]
+lockfile = true

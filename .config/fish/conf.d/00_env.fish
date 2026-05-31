@@ -56,6 +56,7 @@ fish_add_path --path "$HOME/.pulumi/bin"
 fish_add_path --path "$HOME/.krew/bin"
 fish_add_path --path "$HOME/.krew/bin"
 fish_add_path --path /opt/google-cloud-sdk/bin
+fish_add_path --path /opt/homebrew/share/google-cloud-sdk/bin
 fish_add_path --path "$HOME/.local/share/gem/ruby/3.4.0/bin"
 fish_add_path --path "$HOME/.nix-profile/bin"
 fish_add_path --path "$HOME/.config/emacs/bin"
