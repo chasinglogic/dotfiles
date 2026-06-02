@@ -84,6 +84,7 @@ github-cli = "latest"
 git-filter-repo = "latest"
 gomigrate = "latest"
 python = "latest"
+"github:chasinglogic/projector" = "latest"
 
 [settings]
 experimental = true
