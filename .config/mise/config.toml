@@ -85,6 +85,7 @@ git-filter-repo = "latest"
 gomigrate = "latest"
 python = "latest"
 "github:chasinglogic/projector" = "latest"
+deno = "latest"
 
 [settings]
 experimental = true
