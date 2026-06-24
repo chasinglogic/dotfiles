@@ -20,7 +20,7 @@ just = "latest"
 usage = "latest"
 
 # Programming languages and runtimes.
-bun = "latest"
+deno = "latest"
 go = "latest"
 node = "latest"
 rust = "latest"
@@ -85,7 +85,6 @@ git-filter-repo = "latest"
 gomigrate = "latest"
 python = "latest"
 "github:chasinglogic/projector" = "latest"
-deno = "latest"
 
 [settings]
 experimental = true
