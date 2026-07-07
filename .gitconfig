@@ -54,6 +54,7 @@
     b = branch
     update = !git add . && git commit --amend --no-edit && git push --force-with-lease
     lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    all-gas-no-brakes = commit --no-verify
 
 [pager]
     branch = false
