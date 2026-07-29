@@ -72,11 +72,6 @@ oha = "latest"
 # Data and local database tooling.
 duckdb = "latest"
 
-# AI and assistant CLIs.
-codex = "latest"
-gemini-cli = "latest"
-opencode = "latest"
-
 # Personal workflows.
 hugo = "latest"
 "github:chasinglogic/dfm" = "latest"
