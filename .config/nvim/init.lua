@@ -454,8 +454,8 @@ require("mason-tool-installer").setup({
         "clojure-lsp",
         "docker-compose-language-service",
         "dockerfile-language-server",
-        "erb-formatter",
-        "erb-lint",
+        -- "erb-formatter",
+        -- "erb-lint",
         "eslint_d",
         "expert", -- elixir
         "gopls",
