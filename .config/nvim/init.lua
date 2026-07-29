@@ -268,6 +268,7 @@ local treesitter_langs = {
     "css",
     "dockerfile",
     "embedded_template",
+    "elixir",
     "fish",
     "go",
     "gotmpl",
@@ -456,6 +457,7 @@ require("mason-tool-installer").setup({
         "erb-formatter",
         "erb-lint",
         "eslint_d",
+        "expert", -- elixir
         "gopls",
         "helm-ls",
         "html-lsp",
