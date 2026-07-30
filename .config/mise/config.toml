@@ -75,11 +75,13 @@ duckdb = "latest"
 # Personal workflows.
 hugo = "latest"
 "github:chasinglogic/dfm" = "latest"
+"github:chasinglogic/projector" = "latest"
 github-cli = "latest"
 git-filter-repo = "latest"
 gomigrate = "latest"
+
+# Language runtimes
 python = "latest"
-"github:chasinglogic/projector" = "latest"
 erlang = "latest"
 elixir = "latest"
 
@@ -87,3 +89,5 @@ elixir = "latest"
 experimental = true
 idiomatic_version_file_enable_tools = ["python"]
 lockfile = true
+
+minimum_release_age_excludes = ["codex", "oha"]
