@@ -165,8 +165,9 @@ MiniDeps.add("stevearc/oil.nvim")
 MiniDeps.add("Bekaboo/dropbar.nvim")
 -- Do git stuff with vim, like magit
 MiniDeps.add("tpope/vim-fugitive")
--- Automatically MiniDeps.add end or similar constructs
-MiniDeps.add("tpope/vim-endwise")
+-- Automatically add end or similar constructs
+MiniDeps.add("brianhuster/treesitter-endwise.nvim")
+-- MiniDeps.add("tpope/vim-endwise")
 -- Useful commands like Rename, Delete, SudoWrite
 MiniDeps.add("tpope/vim-eunuch")
 MiniDeps.add("Olical/conjure")
@@ -464,8 +465,8 @@ require("mason-tool-installer").setup({
         "lua_ls",
         "nil_ls",
         "python-lsp-server",
-        -- "rubocop",
-        -- "ruby-lsp",
+        "rubocop",
+        "ruby-lsp",
         "ruff",
         "rust-analyzer",
         "shellcheck",

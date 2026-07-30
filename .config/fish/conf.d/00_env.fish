@@ -59,6 +59,8 @@ fish_add_path --path /opt/google-cloud-sdk/bin
 fish_add_path --path /opt/homebrew/share/google-cloud-sdk/bin
 fish_add_path --path "$HOME/.local/share/gem/ruby/3.4.0/bin"
 fish_add_path --path "$HOME/.nix-profile/bin"
+fish_add_path --path /run/current-system/sw/bin
+fish_add_path --path /nix/var/nix/profiles/default/bin
 fish_add_path --path "$HOME/.config/emacs/bin"
 fish_add_path --path "$HOME/.bun/bin"
 fish_add_path --path "$HOME/.npm-global/bin"
