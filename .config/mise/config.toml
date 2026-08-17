@@ -78,7 +78,9 @@ hugo = "latest"
 "github:chasinglogic/projector" = "latest"
 github-cli = "latest"
 git-filter-repo = "latest"
-gomigrate = "latest"
+
+"github:openai/codex" = "latest"
+"github:anomalyco/opencode" = "latest"
 
 # Language runtimes
 python = "latest"
