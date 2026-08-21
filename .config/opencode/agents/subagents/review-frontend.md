@@ -1,6 +1,8 @@
 ---
 description: Frontend specialist review
 mode: subagent
+model: openai/gpt-5.6-luna
+variant: high
 temperature: 0.1
 tools:
   edit: false

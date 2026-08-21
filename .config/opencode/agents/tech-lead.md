@@ -1,6 +1,8 @@
 ---
 description: Tech Lead
 mode: primary
+model: openai/gpt-5.6-sol
+variant: high
 tools:
   edit: true
   write: true
