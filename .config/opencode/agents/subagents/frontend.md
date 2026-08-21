@@ -1,6 +1,8 @@
 ---
 description: Frontend Engineer
 mode: subagent
+model: openai/gpt-5.6-terra
+variant: medium
 tools:
   edit: true
   write: true

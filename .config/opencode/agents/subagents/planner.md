@@ -1,6 +1,8 @@
 ---
 description: Implementation Planner
 mode: subagent
+model: openai/gpt-5.6-sol
+variant: high
 tools:
   edit: false
   write: false

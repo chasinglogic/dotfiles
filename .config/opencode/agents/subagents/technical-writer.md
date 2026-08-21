@@ -1,6 +1,8 @@
 ---
 description: Technical Writer
 mode: subagent
+model: openai/gpt-5.6-luna
+variant: low
 tools:
     edit: false
     write: false
