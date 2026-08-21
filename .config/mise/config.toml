@@ -79,7 +79,7 @@ hugo = "latest"
 github-cli = "latest"
 git-filter-repo = "latest"
 
-"github:openai/codex" = "latest"
+codex = "latest"
 "github:anomalyco/opencode" = "latest"
 
 # Language runtimes
