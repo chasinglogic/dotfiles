@@ -86,6 +86,7 @@ codex = "latest"
 python = "latest"
 erlang = "latest"
 elixir = "latest"
+"github:nklmilojevic/sofka" = "latest"
 
 [settings]
 experimental = true
