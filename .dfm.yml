@@ -35,12 +35,22 @@ mappings:
   skip: false
   dest: ""
   target_os: ""
-- match: .pi/agent/.*
+- match: .pi/agent/extensions($|/.*)
   link_as_dir: true
   skip: false
   dest: ""
   target_os: ""
-- match: "(^|/)\\.pi/agent($|/.*)"
+- match: .pi/agent/skills($|/.*)
+  link_as_dir: true
+  skip: false
+  dest: ""
+  target_os: ""
+- match: .pi/agent/prompts($|/.*)
+  link_as_dir: true
+  skip: false
+  dest: ""
+  target_os: ""
+- match: .pi/agent/themes($|/.*)
   link_as_dir: true
   skip: false
   dest: ""

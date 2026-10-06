@@ -1,6 +1,4 @@
 {
-  "lastChangelogVersion": "1.0.4",
-  "deviceId": "73badc8a-8e08-4273-a461-4fd0daded729",
   "packages": [
     "npm:pi-web-access",
     "npm:pi-subagents"

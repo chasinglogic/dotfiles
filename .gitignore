@@ -2,3 +2,10 @@
 *.pyc
 env/*
 node_modules/*
+
+# Pi machine-local state. Declarative config/resources under .pi/agent stay tracked.
+.pi/agent/auth.json
+.pi/agent/models-store.json
+.pi/agent/npm/
+.pi/agent/pi-subagents/
+.pi/agent/sessions/
