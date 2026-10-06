@@ -85,10 +85,11 @@ codex = "latest"
 # Language runtimes
 python = "latest"
 "github:nklmilojevic/sofka" = "latest"
+"github:earendil-works/pi" = "latest"
 
 [settings]
 experimental = true
 idiomatic_version_file_enable_tools = ["python"]
 lockfile = true
 
-minimum_release_age_excludes = ["codex", "oha"]
+minimum_release_age_excludes = ["codex", "oha", "github:earendil-works/pi"]
