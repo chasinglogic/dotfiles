@@ -1,5 +1,9 @@
 # shellcheck shell=bash
 
+if [ -n "$SSH_TTY" ] || [ -n "$SSH_CLIENT" ]; then
+    exec fish
+fi
+
 # A colon-separated list of values controlling how commands are saved on the
 # history list.  If the list  of  values  includes ignorespace,  lines  which
 # begin  with  a space character are not saved in the history list.  A value of

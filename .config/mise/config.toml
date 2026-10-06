@@ -84,8 +84,6 @@ codex = "latest"
 
 # Language runtimes
 python = "latest"
-erlang = "latest"
-elixir = "latest"
 "github:nklmilojevic/sofka" = "latest"
 
 [settings]
