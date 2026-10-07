@@ -12,6 +12,7 @@ ripgrep = "latest"
 yq = "latest"
 starship = "latest"
 hwatch = "latest"
+neovim = "latest"
 
 # Build, automation, and repository maintenance.
 act = "latest"
@@ -92,4 +93,9 @@ experimental = true
 idiomatic_version_file_enable_tools = ["python"]
 lockfile = true
 
-minimum_release_age_excludes = ["codex", "oha", "github:earendil-works/pi"]
+minimum_release_age_excludes = [
+    "codex", 
+    "oha", 
+    "github:earendil-works/pi", 
+    "github:chasinglogic/dfm",
+]

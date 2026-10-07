@@ -1,6 +1,11 @@
 {
   "packages": [
     "npm:pi-web-access",
-    "npm:pi-subagents"
-  ]
+    "npm:pi-subagents",
+    "npm:pi-lens",
+    "npm:@narumitw/pi-usage",
+    "npm:@dietrichgebert/ponytail"
+  ],
+  "lastChangelogVersion": "1.0.4",
+  "deviceId": "fb9c2809-9aa0-4fce-948e-0ee968b2637b"
 }
