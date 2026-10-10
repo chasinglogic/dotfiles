@@ -3,7 +3,6 @@
     "npm:pi-web-access",
     "npm:pi-subagents",
     "npm:pi-lens",
-    "npm:@narumitw/pi-usage",
     "npm:@dietrichgebert/ponytail"
   ],
   "lastChangelogVersion": "1.0.4",
