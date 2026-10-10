@@ -73,7 +73,9 @@ prompt_for_commit_message: false
 pull_only: false
 repository: ""
 root_dir: ""
-hooks: {}
+hooks:
+  post_sync:
+    - pi update --extensions
 llm:
   model_provider: ""
   model: ""
