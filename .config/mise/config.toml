@@ -99,4 +99,6 @@ minimum_release_age_excludes = [
     "oha", 
     "github:earendil-works/pi", 
     "github:chasinglogic/dfm",
+    "gemini",
+    "hugo",
 ]
