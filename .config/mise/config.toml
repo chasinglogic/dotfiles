@@ -32,7 +32,7 @@ biome = "latest"
 "npm:eslint" = "latest"
 golangci-lint = "latest"
 # Avoid current registry "latest" resolving to nightly builds.
-goreleaser = "2.18.2"
+goreleaser = "2.18.3"
 ruff = "latest"
 shellcheck = "latest"
 shfmt = "latest"
@@ -87,6 +87,7 @@ codex = "latest"
 python = "latest"
 "github:nklmilojevic/sofka" = "latest"
 "github:earendil-works/pi" = "latest"
+gemini = { version = "latest", allow_builds = ["@github/keytar", "node-pty"] }
 
 [settings]
 experimental = true
