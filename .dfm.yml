@@ -77,7 +77,6 @@ hooks:
   post_sync:
     - pi update --extensions
 llm:
-  model_provider: ""
-  model: ""
-  commit_messages: false
-  commit_message_prompt: ""
+  model_provider: "pi"
+  model: "openai/gpt-6-sol"
+  commit_messages: true
