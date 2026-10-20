@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -xeuo
+
+brew update
+brew upgrade --yes
+mise upgrade --bump
