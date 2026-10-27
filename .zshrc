@@ -35,17 +35,24 @@ plugins=(
 )
 
 echo "Sourcing oh-my-zsh..."
-source "$ZSH/oh-my-zsh.sh"
+# source "$ZSH/oh-my-zsh.sh"
 
 # User configuration
 
 echo "Sourcing my configs..."
 source "$HOME/.profile"
-# source_if_exists "$HOME/.prompt.zsh"
+if command -v starship >/dev/null 2>&1; then
+	eval "$(starship init zsh)"
+else
+	source_if_exists "$HOME/.prompt.zsh"
+fi
 source_if_exists "$HOME/.functions.sh"
 source_if_exists "$HOME/.env.sh"
 source_if_exists "$HOME/.aliases.sh"
 source_if_exists "$HOME/.local.sh"
+
+# Use Emacs line editing even when EDITOR is nvim.
+bindkey -e
 
 # initialise completions with ZSH's compinit
 autoload -Uz compinit && compinit

@@ -1,0 +1,37 @@
+# Match .config/fish/functions/fish_prompt.fish without replacing fish's prompt.
+format = "$directory$git_branch$kubernetes\n$status${custom.host}${custom.suffix}"
+add_newline = false
+
+[directory]
+format = "[$path](green) "
+truncation_length = 0
+fish_style_pwd_dir_length = 1
+
+[git_branch]
+format = "[vcs=](#8BE9FD)[$branch](#F8F8F2) "
+
+[kubernetes]
+disabled = false
+style = "#F8F8F2"
+format = "[kube=](#8BE9FD)[$context]($style) "
+
+[[kubernetes.contexts]]
+context_pattern = "production"
+style = "#FF5555"
+
+[status]
+disabled = false
+pipestatus = true
+format = "[\\[$status\\]](bold #FF5555) "
+pipestatus_format = "[\\[$pipestatus\\]](bold #FF5555) "
+pipestatus_segment_format = "$status"
+
+[custom.host]
+when = "true"
+command = "host=$(hostname | sed 's/\\.local//'); if [ -n \"$SSH_CLIENT\" ]; then printf '%s@%s' \"$USER\" \"$host\"; else printf '@%s' \"$host\"; fi"
+format = "[$output](#BD93F9) "
+
+[custom.suffix]
+when = "true"
+command = "if [ -n \"$(git diff --shortstat 2>/dev/null)\" ]; then printf 'Δ'; else printf 'λ'; fi"
+format = "[$output](#FFB86C) "
