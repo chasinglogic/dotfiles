@@ -32,7 +32,7 @@ biome = "latest"
 "npm:eslint" = "latest"
 golangci-lint = "latest"
 # Avoid current registry "latest" resolving to nightly builds.
-goreleaser = "2.18.3"
+goreleaser = "2.19.0"
 ruff = "latest"
 shellcheck = "latest"
 shfmt = "latest"
@@ -90,6 +90,7 @@ python = "latest"
 gemini = { version = "latest", allow_builds = ["@github/keytar", "node-pty"] }
 "github:gruntwork-io/boilerplate" = "latest"
 "github:pre-commit/pre-commit" = "latest"
+"github:starship/starship" = "latest"
 
 [settings]
 experimental = true
