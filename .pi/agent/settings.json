@@ -8,6 +8,5 @@
   "lastChangelogVersion": "1.4.0",
   "deviceId": "fb9c2809-9aa0-4fce-948e-0ee968b2637b",
   "defaultProvider": "openai",
-  "defaultModel": "gpt-6-sol",
-  "lastChangelogVersion": "1.0.4"
+  "defaultModel": "gpt-6-sol"
 }

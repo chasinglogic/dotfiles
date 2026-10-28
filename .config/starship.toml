@@ -1,5 +1,5 @@
-# Match .config/fish/functions/fish_prompt.fish without replacing fish's prompt.
-format = "$directory$git_branch$kubernetes\n$status${custom.host}${custom.suffix}"
+# Match the fallback fish prompt when Starship is installed.
+format = "$directory$git_branch$kubernetes\n$status$username$hostname$git_status${custom.suffix}"
 add_newline = false
 
 [directory]
@@ -26,12 +26,17 @@ format = "[\\[$status\\]](bold #FF5555) "
 pipestatus_format = "[\\[$pipestatus\\]](bold #FF5555) "
 pipestatus_segment_format = "$status"
 
-[custom.host]
-when = "true"
-command = "host=$(hostname | sed 's/\\.local//'); if [ -n \"$SSH_CLIENT\" ]; then printf '%s@%s' \"$USER\" \"$host\"; else printf '@%s' \"$host\"; fi"
-format = "[$output](#BD93F9) "
+[username]
+format = "[$user](#BD93F9)"
+
+[hostname]
+ssh_only = false
+trim_at = ".local"
+format = "[@$hostname](#BD93F9) "
 
 [custom.suffix]
 when = "true"
-command = "if [ -n \"$(git diff --shortstat 2>/dev/null)\" ]; then printf 'Δ'; else printf 'λ'; fi"
-format = "[$output](#FFB86C) "
+format = "[λ](#FFB86C) "
+
+[git_status]
+style = 'bold white'
