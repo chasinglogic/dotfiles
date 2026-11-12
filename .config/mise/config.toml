@@ -32,7 +32,7 @@ biome = "latest"
 "npm:eslint" = "latest"
 golangci-lint = "latest"
 # Avoid current registry "latest" resolving to nightly builds.
-goreleaser = "2.19.0"
+goreleaser = "2.20.1"
 ruff = "latest"
 shellcheck = "latest"
 shfmt = "latest"
