@@ -1,9 +1,5 @@
 # shellcheck shell=bash
 
-if [ -n "$SSH_TTY" ] || [ -n "$SSH_CLIENT" ]; then
-    exec fish
-fi
-
 # A colon-separated list of values controlling how commands are saved on the
 # history list.  If the list  of  values  includes ignorespace,  lines  which
 # begin  with  a space character are not saved in the history list.  A value of
@@ -19,25 +15,25 @@ fi
 export HISTCONTROL=ignoredups:erasedups
 
 
- # A colon-separated list of patterns used to decide which command lines should
- # be saved on the history list.  If a command  line matches one of the
- # patterns in the value of HISTIGNORE, it is not saved on the history list.
- # Each pattern is anchored at the beginning of the line and must match the
- # complete line (bash does not  implicitly ap‐ pend a “*”).  Each pattern is
- # tested against the line after the checks specified by HISTCONTROL are
- # applied.  In addition to the normal shell pattern matching characters, “&”
- # matches the previous history  line.   A  backslash escapes the “&”; the
- # backslash is removed before attempting a match.  If the first line of
- # a multi-line compound command  was  saved,  the second and subsequent lines
- # are not tested, and are added to the history regardless of the value of
- # HISTIGNORE.  If the first line was not saved, the second and subsequent
- # lines of  the  command  are not saved either.  The pattern matching honors
- # the setting of the extglob shell option. HISTIGNORE  subsumes  some of the
- # function of HISTCONTROL.  A pattern of “&” is identical to “ignoredups”, and
- # a pattern of “[ ]*” is identical to “ignorespace”.  Combining these two
- # patterns, separating them  with  a  colon, provides the functionality of
- # “ignoreboth”.
- export HISTIGNORE="exit:cd:ls:bg:fg:history"
+# A colon-separated list of patterns used to decide which command lines should
+# be saved on the history list.  If a command  line matches one of the
+# patterns in the value of HISTIGNORE, it is not saved on the history list.
+# Each pattern is anchored at the beginning of the line and must match the
+# complete line (bash does not  implicitly ap‐ pend a “*”).  Each pattern is
+# tested against the line after the checks specified by HISTCONTROL are
+# applied.  In addition to the normal shell pattern matching characters, “&”
+# matches the previous history  line.   A  backslash escapes the “&”; the
+# backslash is removed before attempting a match.  If the first line of
+# a multi-line compound command  was  saved,  the second and subsequent lines
+# are not tested, and are added to the history regardless of the value of
+# HISTIGNORE.  If the first line was not saved, the second and subsequent
+# lines of  the  command  are not saved either.  The pattern matching honors
+# the setting of the extglob shell option. HISTIGNORE  subsumes  some of the
+# function of HISTCONTROL.  A pattern of “&” is identical to “ignoredups”, and
+# a pattern of “[ ]*” is identical to “ignorespace”.  Combining these two
+# patterns, separating them  with  a  colon, provides the functionality of
+# “ignoreboth”.
+export HISTIGNORE="exit:cd:ls:bg:fg:history"
 
 # The number of commands to remember in the command  history  (see
 # HISTORY  below).   If  the value is 0, commands are not saved in
@@ -153,4 +149,4 @@ if [[ $- == *i* ]]; then
 	bind '"\ey": yank-pop'
 fi
 
-# source_if_exists "$HOME/.prompt.bash"
+source_if_exists "$HOME/.prompt.bash"
