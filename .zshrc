@@ -45,3 +45,11 @@ if command -v terragrunt >/dev/null 2>&1; then
 	autoload -U +X bashcompinit && bashcompinit
 	complete -o nospace -C "$(command -v terragrunt)" terragrunt
 fi
+
+# Load fzf's native key bindings and fuzzy completion after compinit.
+if command -v fzf >/dev/null 2>&1; then
+	export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS }--bind=ctrl-k:kill-line"
+	# Prefer stronger, shorter matches over recency in history search.
+	export FZF_CTRL_R_OPTS="--scheme=default --tiebreak=length"
+	source <(fzf --zsh)
+fi
