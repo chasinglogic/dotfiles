@@ -2,6 +2,15 @@
 # PROMPT #
 ##########
 
+function branch_prompt_info {
+    local branch
+    branch=$(git symbolic-ref --quiet --short HEAD 2>/dev/null) ||
+        branch=$(git rev-parse --short HEAD 2>/dev/null) || return 0
+
+    # Branch names can contain percent signs, which Zsh interprets in prompts.
+    printf '± %s' "${branch//\%/%%}"
+}
+
 function asterisk_if_dirty {
     [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]] && echo "*"
 }

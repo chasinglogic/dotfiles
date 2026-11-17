@@ -1,44 +1,7 @@
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="robbyrussell"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-DISABLE_AUTO_UPDATE="true"
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(
-	aliases
-	aws
-	branch
-	bundler
-	docker
-	docker-compose
-	gitfast
-	golang
-	gem
-	helm
-	kubectl
-	mix-fast
-	pip
-	podman
-	rust
-	virtualenv
-)
-
-# source "$ZSH/oh-my-zsh.sh"
-
-# User configuration
-
 source "$HOME/.profile"
+if command -v mise >/dev/null 2>&1; then
+	eval "$(mise activate zsh)"
+fi
 if command -v starship >/dev/null 2>&1; then
 	eval "$(starship init zsh)"
 else
@@ -49,17 +12,32 @@ source_if_exists "$HOME/.env.sh"
 source_if_exists "$HOME/.aliases.sh"
 source_if_exists "$HOME/.local.sh"
 
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=1000000
+SAVEHIST=1000000
+setopt EXTENDED_HISTORY SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
+
 # Use Emacs line editing even when EDITOR is nvim.
 bindkey -e
 
-# initialise completions with ZSH's compinit
-autoload -Uz compinit && compinit
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^X^E' edit-command-line
+bindkey '^[[A' history-beginning-search-backward
+bindkey '^[[B' history-beginning-search-forward
 
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /Users/chasinglogic/.local/share/mise/installs/terragrunt/v0.93.3/terragrunt terragrunt
-export PATH="$HOME/.npm-global/bin:$PATH"
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/chasinglogic/.docker/completions $fpath)
+if [[ -d "$HOME/.docker/completions" ]]; then
+	fpath=("$HOME/.docker/completions" $fpath)
+fi
+
 autoload -Uz compinit
 compinit
-# End of Docker CLI completions
+
+zmodload zsh/complist
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+if command -v terragrunt >/dev/null 2>&1; then
+	autoload -U +X bashcompinit && bashcompinit
+	complete -o nospace -C "$(command -v terragrunt)" terragrunt
+fi
