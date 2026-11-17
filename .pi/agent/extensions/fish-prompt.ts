@@ -2,7 +2,6 @@ import { isAbsolute, relative, resolve, sep } from "node:path";
 import {
 	CustomEditor,
 	type ExtensionAPI,
-	type ExtensionContext,
 	type KeybindingsManager,
 } from "@earendil-works/pi-coding-agent";
 import type { Usage } from "@earendil-works/pi-ai";
@@ -44,8 +43,6 @@ const addUsage = (totals: Usage, usage: Usage) => {
 	totals.cost.total += usage.cost.total;
 };
 
-let gitGlyph = "λ";
-
 class PromptEditor extends CustomEditor {
 	constructor(tui: TUI, theme: EditorTheme, keybindings: KeybindingsManager) {
 		super(tui, theme, keybindings);
@@ -53,7 +50,7 @@ class PromptEditor extends CustomEditor {
 
 	render(width: number): string[] {
 		if (width <= 2) return super.render(width);
-		const prefix = `${color(ORANGE, gitGlyph)} `;
+		const prefix = `${color(ORANGE, "λ")} `;
 		return super.render(width - 2).map((line, index) => `${index === 1 ? prefix : "  "}${line}`);
 	}
 
@@ -63,23 +60,10 @@ class PromptEditor extends CustomEditor {
 }
 
 export default function (pi: ExtensionAPI) {
-	let activeTui: TUI | undefined;
-
-	const refreshGitGlyph = async (ctx: ExtensionContext) => {
-		const result = await pi.exec("git", ["diff", "--quiet", "--"], { cwd: ctx.cwd }).catch(() => undefined);
-		gitGlyph = result?.code === 1 ? "Δ" : "λ";
-		activeTui?.requestRender();
-	};
-
-	pi.on("agent_start", (_event, ctx) => void refreshGitGlyph(ctx));
-	pi.on("agent_end", (_event, ctx) => void refreshGitGlyph(ctx));
-
 	pi.on("session_start", (_event, ctx) => {
 		if (ctx.mode !== "tui") return;
 
-		void refreshGitGlyph(ctx);
 		ctx.ui.setFooter((tui, theme, data) => {
-			activeTui = tui;
 			const unsubscribe = data.onBranchChange(() => tui.requestRender());
 			return {
 				dispose: unsubscribe,
@@ -133,7 +117,6 @@ export default function (pi: ExtensionAPI) {
 			};
 		});
 		ctx.ui.setEditorComponent((tui, theme, keybindings) => {
-			activeTui = tui;
 			return new PromptEditor(tui, theme, keybindings);
 		});
 	});
