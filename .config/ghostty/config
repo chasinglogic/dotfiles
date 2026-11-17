@@ -1,4 +1,4 @@
-command = fish --login
+command = zsh --login
 theme = Dracula
 font-size = 12
 font-feature = +dilg

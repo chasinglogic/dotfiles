@@ -34,12 +34,10 @@ plugins=(
 	virtualenv
 )
 
-echo "Sourcing oh-my-zsh..."
 # source "$ZSH/oh-my-zsh.sh"
 
 # User configuration
 
-echo "Sourcing my configs..."
 source "$HOME/.profile"
 if command -v starship >/dev/null 2>&1; then
 	eval "$(starship init zsh)"
