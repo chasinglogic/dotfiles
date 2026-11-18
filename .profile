@@ -143,6 +143,7 @@ add_to_path "/Applications/Docker.app/Contents/Resources/bin"
 add_to_path "$HOME/.pulumi/bin"
 add_to_path "$HOME/.krew/bin"
 add_to_path /opt/google-cloud-sdk/bin
+add_to_path /opt/homebrew/share/google-cloud-sdk/bin
 add_to_path "$HOME/.local/share/gem/ruby/3.4.0/bin"
 add_to_path "$HOME/.nix-profile/bin"
 add_to_path "$HOME/.config/emacs/bin"
