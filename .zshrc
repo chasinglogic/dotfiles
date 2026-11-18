@@ -12,6 +12,9 @@ source_if_exists "$HOME/.env.sh"
 source_if_exists "$HOME/.aliases.sh"
 source_if_exists "$HOME/.local.sh"
 
+# Treat punctuation as word boundaries for Emacs-style editing.
+WORDCHARS=''
+
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=1000000
 SAVEHIST=1000000
