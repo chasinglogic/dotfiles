@@ -8,7 +8,7 @@
   "lastChangelogVersion": "1.5.2",
   "deviceId": "fb9c2809-9aa0-4fce-948e-0ee968b2637b",
   "defaultProvider": "openai",
-  "defaultModel": "gpt-6.1-sol",
+  "defaultModel": "gpt-6.2-sol",
   "extensionChangelogVersions": {
     "{\"source\":\"npm:pi-web-access\",\"scope\":\"user\"}": "0.48.0",
     "{\"source\":\"npm:pi-subagents\",\"scope\":\"user\"}": "0.89.0",
